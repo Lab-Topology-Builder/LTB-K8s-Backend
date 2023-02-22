@@ -16,6 +16,11 @@ plugins:
   #     repository: Lab-Topology-Builder/LTB-Kubernetes-Operator
   #     branch: main
   # - social
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.details
 theme:
   name: material
   logo: assets/images/LTB_Text_RGB.svg
@@ -30,6 +35,7 @@ theme:
     - search.highlight
     - search.suggest
     - content.action.edit
+    - content.code.copy
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
