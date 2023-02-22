@@ -10,8 +10,8 @@ nav:
 plugins:
   - search
   # - git-authors
-  - git-revision-date-localized:
-      fallback_to_build_date: true
+  # - git-revision-date-localized:
+  #     fallback_to_build_date: true
   # - git-committers:
   #     repository: Lab-Topology-Builder/LTB-Kubernetes-Operator
   #     branch: main
