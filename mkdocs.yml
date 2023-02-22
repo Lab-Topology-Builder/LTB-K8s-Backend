@@ -1,0 +1,53 @@
+site_name: LTB Kubernetes Operator
+site_url: https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/
+repo_name: GitHub
+repo_url: https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator
+nav:
+  - Home: README.md
+  - Architecture: architecture.md
+  - User Guide: user-guide.md
+  - About: about.md
+plugins:
+  - search
+  - git-authors
+  - git-revision-date-localized:
+      fallback_to_build_date: true
+  # - git-committers:
+  #     repository: Lab-Topology-Builder/LTB-Kubernetes-Operator
+  #     branch: main
+  # - social
+theme:
+  name: material
+  logo: assets/images/LTB_Text_RGB.svg
+  favicon: assets/images/favicon.ico
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    # - navigation.footer
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - search.highlight
+    - search.suggest
+    - content.action.edit
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: green
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: green
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+# copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
+edit_uri: blob/main/docs/
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator
