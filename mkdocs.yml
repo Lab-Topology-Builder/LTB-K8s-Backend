@@ -9,7 +9,7 @@ nav:
   - About: about.md
 plugins:
   - search
-  - git-authors
+  # - git-authors
   - git-revision-date-localized:
       fallback_to_build_date: true
   # - git-committers:

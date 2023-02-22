@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
           set-safe-directory: true
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           key: ${{ github.ref }}
           path: .cache
