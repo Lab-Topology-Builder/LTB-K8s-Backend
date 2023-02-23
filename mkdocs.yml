@@ -6,6 +6,7 @@ nav:
   - Home: README.md
   - Architecture: architecture.md
   - User Guide: user-guide.md
+  - Developer Setup: dev-setup.md
   - About: about.md
 plugins:
   - search
