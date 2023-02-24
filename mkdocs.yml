@@ -1,12 +1,18 @@
 site_name: LTB Kubernetes Operator
+site_description: A Kubernetes Operator for the Lab Topology Builder.
+site_author: Jan Untersander, Tsigereda Nebai Kidane
 site_url: https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/
-repo_name: GitHub
+repo_name: Lab-Topology-Builder/LTB-Kubernetes-Operator
 repo_url: https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator
+copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
+
 nav:
   - Home: README.md
-  - Architecture: architecture.md
+  - Architecture:
+    - Lab Topology Builder Architecture: architecture/ltb-architecture.md
   - User Guide: user-guide.md
   - Developer Setup: dev-setup.md
+  - Concepts: concepts.md 
   - About: about.md
 plugins:
   - search
@@ -18,10 +24,20 @@ plugins:
   #     branch: main
   # - social
 markdown_extensions:
+  - abbr
+  - attr_list
+  - admonition
+  - def_list
+  - footnotes
+  - toc:
+      permalink: true
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.snippets:
+      auto_append:
+        - docs-includes/glossary.md
 theme:
   name: material
   logo: assets/images/LTB_Text_RGB.svg
@@ -33,7 +49,7 @@ theme:
     # - navigation.footer
     # - navigation.tabs
     # - navigation.tabs.sticky
-    - search.highlight
+    # - search.highlight
     - search.suggest
     - content.action.edit
     - content.code.copy
