@@ -12,9 +12,12 @@ It is responsible for the following tasks:
 
 - Parsing the YAML topology files
 - Deploying/Destroying the containers and VMs
+- Exposes 
 - Expose information on how to access the deployed containers and VMs
+- Provide remote SSH capabilities
 - Provide remote Wireshark capture capabilities
 - Managing reservations
+- User Management
 
 It is composed of the following components:
 

@@ -37,7 +37,7 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.snippets:
       auto_append:
-        - docs-includes/glossary.md
+        - doc-includes/glossary.md
 theme:
   name: material
   logo: assets/images/LTB_Text_RGB.svg
