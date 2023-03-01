@@ -18,19 +18,28 @@ Restart WSL with `wsl.exe --shutdown` and opening the WSL again.
 ```bash
 sudo mkdir -p /etc/rancher/k3s/
 sudo vim /etc/rancher/k3s/config.yaml
+```
+```yaml
+# /etc/rancher/k3s/config.yaml
 write-kubeconfig-mode: "0644"
-
 ```
 ```bash
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.26.1+k3s1" sudo -E sh -
+ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/k3s.yaml
+echo "export KUBECONFIG=${KUBECONFIG}:${HOME}/.kube/k3s.yaml" >> ~/.bashrc
 ```
 ## Option 2: K3D install
 Prerequisites:
 Docker Desktop installed and running or Docker installed in WSL
 ```bash
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v5.4.7 bash
-
 ```
+
+## Option 3: K0s install
+```bash
+curl -sSfL https://get.k0s.sh | K0S_VERSION=v1.26.1+k0s.0 sudo -E sh
+```
+
 
 ## Operator SDK install
 ### [Prerequisites](https://v1-11-x.sdk.operatorframework.io/docs/installation/#prerequisites)
@@ -93,7 +102,7 @@ operator-sdk_linux_amd64: OK
 ### 3. [Install the release binary in your PATH](https://v1-11-x.sdk.operatorframework.io/docs/installation/#3-install-the-release-binary-in-your-path)
 
 ```sh
-chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/
+chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-sdk
 ```
 Verify the installation:
 
@@ -109,7 +118,7 @@ Visit official downloads page and grab file using either wget command or curl co
 GO_VERSION="1.20.1" # go version
 ARCH="amd64" # go archicture
 wget -L "https://golang.org/dl/go${GO_VERSION}.linux-${ARCH}.tar.gz"
-rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.1.linux-amd64.tar.gz
+rm -rf /usr/local/go && tar -C /usr/local -xzf go${GO_VERSION}.linux-${ARCH}.tar.gz
 ```
 
 Step 2  - Add to PATH
