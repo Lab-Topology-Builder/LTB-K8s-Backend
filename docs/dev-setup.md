@@ -1,5 +1,5 @@
-# Development setup
-
+# Development cluster setup
+Setup for a development Kubernetes cluster.
 ## Prerequisites
 WSL version 0.67.6 and higher
 
