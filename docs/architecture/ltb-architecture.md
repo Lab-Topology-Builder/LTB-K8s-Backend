@@ -12,19 +12,25 @@ It is responsible for the following tasks:
 
 - Parsing the YAML topology files
 - Deploying/Destroying the containers and VMs
+- Exposes status of lab deployments
 - Exposes 
 - Expose information on how to access the deployed containers and VMs
 - Provide remote SSH capabilities
 - Provide remote Wireshark capture capabilities
 - Managing reservations
+- Exposes node resource usage
 - User Management
 
 It is composed of the following components:
 
-- [Orchestration](#orchestration)
-- [Reservations](#reservations)
-- [Running lab store](#running-lab-store)
-- [Template store](#template-store)
+- [Lab Topology Builder Architecture](#lab-topology-builder-architecture)
+  - [Backend](#backend)
+    - [Orchestration](#orchestration)
+    - [Reservations](#reservations)
+    - [Running lab store](#running-lab-store)
+    - [Template store](#template-store)
+    - [Authentication](#authentication)
+  - [Frontend](#frontend)
 
 ### Orchestration
 
@@ -38,4 +44,14 @@ There are 4 different types of tasks:
 - RemovalTask
 - MirrorInterfaceTask
 - SnapshotTask
+
+### Reservations
+The reservation component is responsible for reserving system resources in advance.
+
+### Running lab store
+This component is responsible for storing information about running labs.
+### Template store
+This component is responsible for storing lab templates.
+### Authentication
+This component is responsible for user authentication and management.
 ## Frontend
