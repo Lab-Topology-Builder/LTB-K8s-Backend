@@ -1,11 +1,12 @@
 # Lab Topology Builder Architecture
 
+## LTBv1 Architecture
 Currently the LTB is composed of two main components:
 
 - [Frontend](#frontend) built with React
 - [Backend](#backend) built with Django
 
-## Backend
+### Backend
 
 The backend is accessible via API and a Admin Web UI.
 It is responsible for the following tasks:
@@ -24,15 +25,16 @@ It is responsible for the following tasks:
 It is composed of the following components:
 
 - [Lab Topology Builder Architecture](#lab-topology-builder-architecture)
-  - [Backend](#backend)
-    - [Orchestration](#orchestration)
-    - [Reservations](#reservations)
-    - [Running lab store](#running-lab-store)
-    - [Template store](#template-store)
-    - [Authentication](#authentication)
-  - [Frontend](#frontend)
+  - [LTBv1 Architecture](#ltbv1-architecture)
+    - [Backend](#backend)
+      - [Orchestration](#orchestration)
+      - [Reservations](#reservations)
+      - [Running lab store](#running-lab-store)
+      - [Template store](#template-store)
+      - [Authentication](#authentication)
+    - [Frontend](#frontend)
 
-### Orchestration
+#### Orchestration
 
 The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
 There are 4 different types of tasks:
@@ -45,13 +47,13 @@ There are 4 different types of tasks:
 - MirrorInterfaceTask
 - SnapshotTask
 
-### Reservations
+#### Reservations
 The reservation component is responsible for reserving system resources in advance.
 
-### Running lab store
+#### Running lab store
 This component is responsible for storing information about running labs.
-### Template store
+#### Template store
 This component is responsible for storing lab templates.
-### Authentication
+#### Authentication
 This component is responsible for user authentication and management.
-## Frontend
+### Frontend
