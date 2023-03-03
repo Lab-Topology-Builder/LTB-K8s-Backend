@@ -6,29 +6,33 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="A Kubernetes Operator for the Lab Topology Builder.">
       
       
-        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/">
+        <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="prev" href="..">
+        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/ltb-architecture/">
       
       
-        <link rel="next" href="../user-guide/">
+        <link rel="prev" href="../..">
       
-      <link rel="icon" href="../assets/images/favicon.ico">
+      
+        <link rel="next" href="../../user-guide/">
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Architecture - LTB Kubernetes Operator</title>
+        <title>Lab Topology Builder Architecture - LTB Kubernetes Operator</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ffa9267a.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ffa9267a.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
       
       
 
@@ -44,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -72,6 +76,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#lab-topology-builder-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -82,9 +91,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="LTB Kubernetes Operator" class="md-header__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
+    <a href="../.." title="LTB Kubernetes Operator" class="md-header__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
       
-  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
+  <img src="../../assets/images/LTB_Text_RGB.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -100,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture
+              Lab Topology Builder Architecture
             
           </span>
         </div>
@@ -172,7 +181,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    Lab-Topology-Builder/LTB-Kubernetes-Operator
   </div>
 </a>
       </div>
@@ -201,9 +210,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="LTB Kubernetes Operator" class="md-nav__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
+    <a href="../.." title="LTB Kubernetes Operator" class="md-nav__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
       
-  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
+  <img src="../../assets/images/LTB_Text_RGB.svg" alt="logo">
 
     </a>
     LTB Kubernetes Operator
@@ -216,7 +225,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    Lab-Topology-Builder/LTB-Kubernetes-Operator
   </div>
 </a>
     </div>
@@ -231,7 +240,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -247,16 +256,153 @@
     
   
   
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Lab Topology Builder Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Architecture
+        Lab Topology Builder Architecture
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ltbv1-architecture" class="md-nav__link">
+    LTBv1 Architecture
+  </a>
+  
+    <nav class="md-nav" aria-label="LTBv1 Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    Backend
+  </a>
+  
+    <nav class="md-nav" aria-label="Backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#orchestration" class="md-nav__link">
+    Orchestration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reservations" class="md-nav__link">
+    Reservations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-lab-store" class="md-nav__link">
+    Running lab store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-store" class="md-nav__link">
+    Template store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    Authentication
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    Deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    Frontend
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -269,7 +415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/" class="md-nav__link">
+      <a href="../../user-guide/" class="md-nav__link">
         User Guide
       </a>
     </li>
@@ -284,7 +430,37 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/" class="md-nav__link">
+      <a href="../../dev-setup/" class="md-nav__link">
+        Developer Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
         About
       </a>
     </li>
@@ -308,6 +484,91 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ltbv1-architecture" class="md-nav__link">
+    LTBv1 Architecture
+  </a>
+  
+    <nav class="md-nav" aria-label="LTBv1 Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    Backend
+  </a>
+  
+    <nav class="md-nav" aria-label="Backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#orchestration" class="md-nav__link">
+    Orchestration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reservations" class="md-nav__link">
+    Reservations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-lab-store" class="md-nav__link">
+    Running lab store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-store" class="md-nav__link">
+    Template store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    Authentication
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    Deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    Frontend
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -322,7 +583,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/architecture.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/architecture/ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -330,9 +591,80 @@
   
 
 
-  <h1>Architecture</h1>
-
-
+<h1 id="lab-topology-builder-architecture">Lab Topology Builder Architecture<a class="headerlink" href="#lab-topology-builder-architecture" title="Permanent link">&para;</a></h1>
+<h2 id="ltbv1-architecture">LTBv1 Architecture<a class="headerlink" href="#ltbv1-architecture" title="Permanent link">&para;</a></h2>
+<p>Currently the <abbr title="Lab Topology Builder">LTB</abbr> is composed of two main components:</p>
+<ul>
+<li><a href="#frontend">Frontend</a> built with React</li>
+<li><a href="#backend">Backend</a> built with Django</li>
+<li><a href="#deployment">Deployment</a> built with docker-compose</li>
+</ul>
+<h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h3>
+<p>The backend is accessible via API and a Admin Web UI.
+It is responsible for the following tasks:</p>
+<ul>
+<li>Parsing the YAML topology files</li>
+<li>Deploying/Destroying the containers and VMs</li>
+<li>Exposes status of lab deployments</li>
+<li>Exposes information on how to access the deployed containers and VMs</li>
+<li>Provides remote SSH capabilities</li>
+<li>Provides remote Wireshark capture capabilities</li>
+<li>Managing reservations (Create, Delete, etc.)</li>
+<li>Exposes node resource usage</li>
+<li>User Management</li>
+<li>Exposes information about a device (version, groups, etc.)</li>
+<li>Exposes device metrics</li>
+</ul>
+<p>It is composed of the following components:</p>
+<ul>
+<li><a href="#lab-topology-builder-architecture">Lab Topology Builder Architecture</a></li>
+<li><a href="#ltbv1-architecture">LTBv1 Architecture</a><ul>
+<li><a href="#backend">Backend</a></li>
+<li><a href="#orchestration">Orchestration</a></li>
+<li><a href="#reservations">Reservations</a></li>
+<li><a href="#running-lab-store">Running lab store</a></li>
+<li><a href="#template-store">Template store</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#deployment">Deployment</a></li>
+<li><a href="#frontend">Frontend</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="orchestration">Orchestration<a class="headerlink" href="#orchestration" title="Permanent link">&para;</a></h4>
+<p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
+There are 4 different types of tasks:</p>
+<ul>
+<li>DeploymentTask</li>
+<li>Deploys containers in docker</li>
+<li>Deploys VMs using <abbr title="Kernel-based Virtual Machine">KVM</abbr></li>
+<li>Creates connections between containers and VMs using an <abbr title="Open vSwitch">OVS</abbr> bridge</li>
+<li>RemovalTask</li>
+<li>Removes a running lab</li>
+<li>MirrorInterfaceTask</li>
+<li>Creates a mirror interface on a connection</li>
+<li>SnapshotTask</li>
+<li>Takes a snapshot of a running lab</li>
+</ul>
+<h4 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h4>
+<p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
+<ul>
+<li>Create a reservation</li>
+<li>Delte a reservation</li>
+<li>Update a reservation</li>
+</ul>
+<h4 id="running-lab-store">Running lab store<a class="headerlink" href="#running-lab-store" title="Permanent link">&para;</a></h4>
+<p>This component is responsible for storing information about running labs, such as:</p>
+<ul>
+<li>The devices taking part in the running lab, inclusive of the interfaces</li>
+<li>Connection information</li>
+</ul>
+<h4 id="template-store">Template store<a class="headerlink" href="#template-store" title="Permanent link">&para;</a></h4>
+<p>This component is responsible for storing lab templates.</p>
+<h4 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h4>
+<p>This component is responsible for user authentication and management.</p>
+<h3 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h3>
+<p>The deployment component is responsible for deploying the <abbr title="Lab Topology Builder">LTB</abbr> backend and frontend components.</p>
+<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
 
 
 
@@ -357,6 +689,10 @@
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
+    </div>
   
   
     Made with
@@ -390,10 +726,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.2a6f1dda.min.js"></script>
+      <script src="../../assets/javascripts/bundle.2a6f1dda.min.js"></script>
       
     
   </body>
