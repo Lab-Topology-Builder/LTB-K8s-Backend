@@ -19,7 +19,7 @@ The following naming conventions are used in the project:
 - **networkDeviceName**: a name of a network device
 - **networkDeviceGroup**: a group the network device belongs to
 - **labReservation**: a reservation of resources for a lab instance
-- TODO: add more
+// TODO: add more
 
 ## Coding
 
