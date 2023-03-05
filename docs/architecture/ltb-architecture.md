@@ -59,7 +59,7 @@ There are 4 different types of tasks:
 The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:
 
 - Create a reservation
-- Delte a reservation
+- Delete a reservation
 - Update a reservation
 
 #### Running lab store
