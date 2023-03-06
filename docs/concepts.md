@@ -27,4 +27,3 @@ Lab Template is a YAML file that defines the topology of the lab. It contains in
 ## Lab Instance (Lab)
 
 Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.
-
