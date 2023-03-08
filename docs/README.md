@@ -1,3 +1,3 @@
-# LTB Kubernetes Operator Documentation
+# LTB K8s Backend Documentation
 
-The LTB Kubernetes Operator manages LTB Lab Template Deployments.
+The LTB K8s Backend manages LTB Lab Template Deployments and User management.
