@@ -2,32 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/</loc>
-         <lastmod>2023-03-03</lastmod>
+         <lastmod>2023-03-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/about/</loc>
-         <lastmod>2023-03-03</lastmod>
+         <lastmod>2023-03-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/coding-conventions/</loc>
+         <lastmod>2023-03-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/concepts/</loc>
-         <lastmod>2023-03-03</lastmod>
+         <lastmod>2023-03-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/dev-setup/</loc>
-         <lastmod>2023-03-03</lastmod>
+         <lastmod>2023-03-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/user-guide/</loc>
-         <lastmod>2023-03-03</lastmod>
+         <lastmod>2023-03-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/ltb-architecture/</loc>
-         <lastmod>2023-03-03</lastmod>
+         <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/k8s-ltb-architecture/</loc>
+         <lastmod>2023-03-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/kvm-docker-ltb-architecture/</loc>
+         <lastmod>2023-03-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

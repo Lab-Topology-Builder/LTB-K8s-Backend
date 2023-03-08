@@ -12,27 +12,27 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/concepts/">
+        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/k8s-ltb-architecture/">
       
       
-        <link rel="prev" href="../user-guide/">
+        <link rel="prev" href="../..">
       
       
-        <link rel="next" href="../dev-setup/">
+        <link rel="next" href="../kvm-docker-ltb-architecture/">
       
-      <link rel="icon" href="../assets/images/favicon.ico">
+      <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Concepts - LTB Kubernetes Operator</title>
+        <title>Lab Topology Builder Architecture (K8s) - LTB Kubernetes Operator</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ffa9267a.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ffa9267a.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
       
       
 
@@ -48,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#concepts" class="md-skip">
+        <a href="#kubernetes-lab-topology-builder-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -91,9 +91,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="LTB Kubernetes Operator" class="md-header__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
+    <a href="../.." title="LTB Kubernetes Operator" class="md-header__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
       
-  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
+  <img src="../../assets/images/LTB_Text_RGB.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Concepts
+              Lab Topology Builder Architecture (K8s)
             
           </span>
         </div>
@@ -210,9 +210,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="LTB Kubernetes Operator" class="md-nav__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
+    <a href="../.." title="LTB Kubernetes Operator" class="md-nav__button md-logo" aria-label="LTB Kubernetes Operator" data-md-component="logo">
       
-  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
+  <img src="../../assets/images/LTB_Text_RGB.svg" alt="logo">
 
     </a>
     LTB Kubernetes Operator
@@ -240,7 +240,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -253,14 +253,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
       
@@ -269,7 +271,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
           Architecture
@@ -280,11 +282,93 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../architecture/k8s-ltb-architecture/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Lab Topology Builder Architecture (K8s)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Lab Topology Builder Architecture (K8s)
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    Frontend
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    Backend
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c4-model" class="md-nav__link">
+    C4 Model
+  </a>
+  
+    <nav class="md-nav" aria-label="C4 Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-context-diagram" class="md-nav__link">
+    System Context Diagram
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-diagram" class="md-nav__link">
+    Container Diagram
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-diagram" class="md-nav__link">
+    Component Diagram
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -296,7 +380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
+      <a href="../kvm-docker-ltb-architecture/" class="md-nav__link">
         Lab Topology Builder Architecture (KVM/Docker)
       </a>
     </li>
@@ -318,7 +402,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/" class="md-nav__link">
+      <a href="../../user-guide/" class="md-nav__link">
         User Guide
       </a>
     </li>
@@ -331,108 +415,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Concepts
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
         Concepts
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#lab-topology-builder-ltb" class="md-nav__link">
-    Lab Topology Builder (LTB)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ltb-kubernetes-operator" class="md-nav__link">
-    LTB Kubernetes Operator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-cr" class="md-nav__link">
-    Custom Resource (CR)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-definition-crd" class="md-nav__link">
-    Custom Resource Definition (CRD)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kubernetes-cluster" class="md-nav__link">
-    Kubernetes Cluster
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-template" class="md-nav__link">
-    Lab Template
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#device" class="md-nav__link">
-    Device
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab" class="md-nav__link">
-    Lab
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-instance-lab" class="md-nav__link">
-    Lab Instance (Lab)
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -445,7 +432,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-setup/" class="md-nav__link">
+      <a href="../../dev-setup/" class="md-nav__link">
         Developer Setup
       </a>
     </li>
@@ -460,7 +447,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../coding-conventions/" class="md-nav__link">
+      <a href="../../coding-conventions/" class="md-nav__link">
         Coding Conventions
       </a>
     </li>
@@ -475,7 +462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/" class="md-nav__link">
+      <a href="../../about/" class="md-nav__link">
         About
       </a>
     </li>
@@ -509,65 +496,50 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#lab-topology-builder-ltb" class="md-nav__link">
-    Lab Topology Builder (LTB)
+  <a href="#frontend" class="md-nav__link">
+    Frontend
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ltb-kubernetes-operator" class="md-nav__link">
-    LTB Kubernetes Operator
+  <a href="#backend" class="md-nav__link">
+    Backend
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-resource-cr" class="md-nav__link">
-    Custom Resource (CR)
+  <a href="#c4-model" class="md-nav__link">
+    C4 Model
+  </a>
+  
+    <nav class="md-nav" aria-label="C4 Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-context-diagram" class="md-nav__link">
+    System Context Diagram
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-definition-crd" class="md-nav__link">
-    Custom Resource Definition (CRD)
+        
+          <li class="md-nav__item">
+  <a href="#container-diagram" class="md-nav__link">
+    Container Diagram
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#kubernetes-cluster" class="md-nav__link">
-    Kubernetes Cluster
+        
+          <li class="md-nav__item">
+  <a href="#component-diagram" class="md-nav__link">
+    Component Diagram
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-template" class="md-nav__link">
-    Lab Template
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#device" class="md-nav__link">
-    Device
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab" class="md-nav__link">
-    Lab
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-instance-lab" class="md-nav__link">
-    Lab Instance (Lab)
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -586,7 +558,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/concepts.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/architecture/k8s-ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -594,39 +566,46 @@
   
 
 
-<h1 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h1>
-<h2 id="lab-topology-builder-ltb">Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#lab-topology-builder-ltb" title="Permanent link">&para;</a></h2>
-<p><abbr title="Lab Topology Builder">LTB</abbr> is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
-<!-- TODO: add LTB image -->
-
-<h2 id="ltb-kubernetes-operator"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator<a class="headerlink" href="#ltb-kubernetes-operator" title="Permanent link">&para;</a></h2>
-<p><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator is a custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.</p>
-<!-- TODO: add image -->
-
-<h2 id="custom-resource-cr">Custom Resource (CR)<a class="headerlink" href="#custom-resource-cr" title="Permanent link">&para;</a></h2>
-<p>Custom Resource is an extension of <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes API that allows you to create your own objects and store them in the Kubernetes cluster.  In <abbr title="Lab Topology Builder">LTB</abbr>, CR is the YAML file that is provided by the user.</p>
-<h2 id="custom-resource-definition-crd">Custom Resource Definition (CRD)<a class="headerlink" href="#custom-resource-definition-crd" title="Permanent link">&para;</a></h2>
-<p>Custom Resource Definition (CRD) is a Kubernetes API that allows you to define your own custom resources.</p>
-<!-- TODO: add code example -->
-
-<h2 id="kubernetes-cluster">Kubernetes Cluster<a class="headerlink" href="#kubernetes-cluster" title="Permanent link">&para;</a></h2>
-<p>Kubernetes Cluster is a set of nodes that run containerized applications. It is managed by the Kubernetes operator.</p>
-<!-- TODO: add image -->
-
-<h2 id="lab-template">Lab Template<a class="headerlink" href="#lab-template" title="Permanent link">&para;</a></h2>
-<p>Lab Template is a YAML file that defines the topology of the lab. It contains information about the devices that are part of the lab, as well as the network topology.</p>
-<!-- TODO: add code example -->
-
-<h2 id="device">Device<a class="headerlink" href="#device" title="Permanent link">&para;</a></h2>
-<p>A device is either a KubeVirt <abbr title="Virtual Machine">VM</abbr> or a container. It has a device type, a device version, and a device name.</p>
-<h2 id="lab">Lab<a class="headerlink" href="#lab" title="Permanent link">&para;</a></h2>
-<p>Lab is a YAML file (CR) that defines a lab instance. It holds the details from the lab template, and some additional information, such as the lab name.
-It also has a status field that is updated by the Kubernetes operator.</p>
-<!-- TODO: add code example -->
-
-<h2 id="lab-instance-lab">Lab Instance (Lab)<a class="headerlink" href="#lab-instance-lab" title="Permanent link">&para;</a></h2>
-<p>Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.</p>
-<!-- TODO: add image -->
+<h1 id="kubernetes-lab-topology-builder-architecture">Kubernetes Lab Topology Builder Architecture<a class="headerlink" href="#kubernetes-lab-topology-builder-architecture" title="Permanent link">&para;</a></h1>
+<p>The Kubernetes Lab Topology Builder (K8s-<abbr title="Lab Topology Builder">LTB</abbr>) is a Kubernetes native version of the Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>).
+It is composed of a <a href="#frontend">Frontend</a> and a <a href="#backend">Backend</a>.</p>
+<p><img alt="Architecture Overview" src="../../assets/drawings/LTB-Architecture.drawio.svg" /></p>
+<h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
+<p>The frontend is responsible for the following tasks:</p>
+<ul>
+<li>Providing a web UI for the user to interact with the labs.</li>
+<li>Providing a web UI for the admin to manage:</li>
+<li>users</li>
+<li>lab templates</li>
+<li>lab deployments</li>
+<li>reservations</li>
+</ul>
+<h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
+<p>The backend is composed of the following components:</p>
+<ul>
+<li>API</li>
+<li>Operator</li>
+</ul>
+<p>The backend is responsible for the following tasks:</p>
+<ul>
+<li>parsing the yaml topology files</li>
+<li>deploying/destroying the containers and vms</li>
+<li>exposes status of lab deployments</li>
+<li>exposes information on how to access the deployed containers and vms</li>
+<li>provides remote ssh capabilities</li>
+<li>provides remote Wireshark capture capabilities</li>
+<li>managing reservations (create, delete, etc.)</li>
+<li>exposes node resource usage</li>
+<li>user management</li>
+<li>exposes information about a device (version, groups, etc.)</li>
+</ul>
+<h2 id="c4-model">C4 Model<a class="headerlink" href="#c4-model" title="Permanent link">&para;</a></h2>
+<h3 id="system-context-diagram">System Context Diagram<a class="headerlink" href="#system-context-diagram" title="Permanent link">&para;</a></h3>
+<p><img alt="C4 System Context" src="../../assets/drawings/C4-System-Context.drawio.svg" /></p>
+<h3 id="container-diagram">Container Diagram<a class="headerlink" href="#container-diagram" title="Permanent link">&para;</a></h3>
+<p><img alt="C4 Container" src="../../assets/drawings/C4-Container.drawio.svg" /></p>
+<h3 id="component-diagram">Component Diagram<a class="headerlink" href="#component-diagram" title="Permanent link">&para;</a></h3>
+<p><img alt="C4 Component" src="../../assets/drawings/C4-Component.drawio.svg" /></p>
 
 
 
@@ -688,10 +667,10 @@ It also has a status field that is updated by the Kubernetes operator.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.2a6f1dda.min.js"></script>
+      <script src="../../assets/javascripts/bundle.2a6f1dda.min.js"></script>
       
     
   </body>

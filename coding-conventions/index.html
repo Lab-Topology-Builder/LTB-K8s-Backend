@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/concepts/">
+        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/coding-conventions/">
       
       
-        <link rel="prev" href="../user-guide/">
+        <link rel="prev" href="../dev-setup/">
       
       
-        <link rel="next" href="../dev-setup/">
+        <link rel="next" href="../about/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Concepts - LTB Kubernetes Operator</title>
+        <title>Coding Conventions - LTB Kubernetes Operator</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#concepts" class="md-skip">
+        <a href="#coding-conventions" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Concepts
+              Coding Conventions
             
           </span>
         </div>
@@ -331,108 +331,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Concepts
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
         Concepts
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#lab-topology-builder-ltb" class="md-nav__link">
-    Lab Topology Builder (LTB)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ltb-kubernetes-operator" class="md-nav__link">
-    LTB Kubernetes Operator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-cr" class="md-nav__link">
-    Custom Resource (CR)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-definition-crd" class="md-nav__link">
-    Custom Resource Definition (CRD)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kubernetes-cluster" class="md-nav__link">
-    Kubernetes Cluster
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-template" class="md-nav__link">
-    Lab Template
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#device" class="md-nav__link">
-    Device
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab" class="md-nav__link">
-    Lab
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-instance-lab" class="md-nav__link">
-    Lab Instance (Lab)
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -458,11 +361,85 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../coding-conventions/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Coding Conventions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Coding Conventions
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming" class="md-nav__link">
+    Naming
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naming-conventions-in-go" class="md-nav__link">
+    Naming conventions in Go
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming conventions in Go">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coding" class="md-nav__link">
+    Coding
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -509,64 +486,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#lab-topology-builder-ltb" class="md-nav__link">
-    Lab Topology Builder (LTB)
+  <a href="#naming" class="md-nav__link">
+    Naming
   </a>
+  
+    <nav class="md-nav" aria-label="Naming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naming-conventions-in-go" class="md-nav__link">
+    Naming conventions in Go
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming conventions in Go">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ltb-kubernetes-operator" class="md-nav__link">
-    LTB Kubernetes Operator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-cr" class="md-nav__link">
-    Custom Resource (CR)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-resource-definition-crd" class="md-nav__link">
-    Custom Resource Definition (CRD)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kubernetes-cluster" class="md-nav__link">
-    Kubernetes Cluster
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-template" class="md-nav__link">
-    Lab Template
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#device" class="md-nav__link">
-    Device
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab" class="md-nav__link">
-    Lab
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-instance-lab" class="md-nav__link">
-    Lab Instance (Lab)
+  <a href="#coding" class="md-nav__link">
+    Coding
   </a>
   
 </li>
@@ -586,7 +540,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/concepts.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/coding-conventions.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -594,39 +548,31 @@
   
 
 
-<h1 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h1>
-<h2 id="lab-topology-builder-ltb">Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#lab-topology-builder-ltb" title="Permanent link">&para;</a></h2>
-<p><abbr title="Lab Topology Builder">LTB</abbr> is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
-<!-- TODO: add LTB image -->
+<h1 id="coding-conventions">Coding Conventions<a class="headerlink" href="#coding-conventions" title="Permanent link">&para;</a></h1>
+<h2 id="naming">Naming<a class="headerlink" href="#naming" title="Permanent link">&para;</a></h2>
+<p>The following naming conventions are used in the project:</p>
+<h3 id="naming-conventions-in-go"><a href="https://golang.org/doc/effective_go#names">Naming conventions in Go</a><a class="headerlink" href="#naming-conventions-in-go" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>camelCase</em> for variables and functions</li>
+<li><em>PascalCase</em> for types and functions that need to be exported</li>
+</ul>
+<h4 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>labStatus</strong>: variable name for a status of a lab instance</li>
+<li><strong>GetLabStatus</strong>: name for an exported function</li>
+</ul>
+<!-- TODO move to CRD spec explanation
+ - **device**: a device that is part of a lab network
+- **deviceType**: a type of a network device
+- **deviceVersion**: a version of a network device
+- **deviceName**: a name of a network device
+- **deviceGroup**: a group the network device belongs to
+- **labReservation**: a reservation of resources for a lab instance -->
 
-<h2 id="ltb-kubernetes-operator"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator<a class="headerlink" href="#ltb-kubernetes-operator" title="Permanent link">&para;</a></h2>
-<p><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator is a custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.</p>
-<!-- TODO: add image -->
-
-<h2 id="custom-resource-cr">Custom Resource (CR)<a class="headerlink" href="#custom-resource-cr" title="Permanent link">&para;</a></h2>
-<p>Custom Resource is an extension of <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes API that allows you to create your own objects and store them in the Kubernetes cluster.  In <abbr title="Lab Topology Builder">LTB</abbr>, CR is the YAML file that is provided by the user.</p>
-<h2 id="custom-resource-definition-crd">Custom Resource Definition (CRD)<a class="headerlink" href="#custom-resource-definition-crd" title="Permanent link">&para;</a></h2>
-<p>Custom Resource Definition (CRD) is a Kubernetes API that allows you to define your own custom resources.</p>
-<!-- TODO: add code example -->
-
-<h2 id="kubernetes-cluster">Kubernetes Cluster<a class="headerlink" href="#kubernetes-cluster" title="Permanent link">&para;</a></h2>
-<p>Kubernetes Cluster is a set of nodes that run containerized applications. It is managed by the Kubernetes operator.</p>
-<!-- TODO: add image -->
-
-<h2 id="lab-template">Lab Template<a class="headerlink" href="#lab-template" title="Permanent link">&para;</a></h2>
-<p>Lab Template is a YAML file that defines the topology of the lab. It contains information about the devices that are part of the lab, as well as the network topology.</p>
-<!-- TODO: add code example -->
-
-<h2 id="device">Device<a class="headerlink" href="#device" title="Permanent link">&para;</a></h2>
-<p>A device is either a KubeVirt <abbr title="Virtual Machine">VM</abbr> or a container. It has a device type, a device version, and a device name.</p>
-<h2 id="lab">Lab<a class="headerlink" href="#lab" title="Permanent link">&para;</a></h2>
-<p>Lab is a YAML file (CR) that defines a lab instance. It holds the details from the lab template, and some additional information, such as the lab name.
-It also has a status field that is updated by the Kubernetes operator.</p>
-<!-- TODO: add code example -->
-
-<h2 id="lab-instance-lab">Lab Instance (Lab)<a class="headerlink" href="#lab-instance-lab" title="Permanent link">&para;</a></h2>
-<p>Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.</p>
-<!-- TODO: add image -->
+<h2 id="coding">Coding<a class="headerlink" href="#coding" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The Go extension in VSCode has a linting capability, so that will be used for linting.</li>
+</ul>
 
 
 

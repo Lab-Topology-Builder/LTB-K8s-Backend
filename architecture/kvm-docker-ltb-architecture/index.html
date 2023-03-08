@@ -12,10 +12,10 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/ltb-architecture/">
+        <link rel="canonical" href="https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/architecture/kvm-docker-ltb-architecture/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../k8s-ltb-architecture/">
       
       
         <link rel="next" href="../../user-guide/">
@@ -25,7 +25,7 @@
     
     
       
-        <title>Lab Topology Builder Architecture - LTB Kubernetes Operator</title>
+        <title>Lab Topology Builder Architecture (KVM/Docker) - LTB Kubernetes Operator</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#lab-topology-builder-architecture" class="md-skip">
+        <a href="#current-kvmdocker-base-ltb-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Lab Topology Builder Architecture
+              Lab Topology Builder Architecture (KVM/Docker)
             
           </span>
         </div>
@@ -282,6 +282,20 @@
               
   
   
+  
+    <li class="md-nav__item">
+      <a href="../k8s-ltb-architecture/" class="md-nav__link">
+        Lab Topology Builder Architecture (K8s)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
     
   
   
@@ -294,12 +308,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Lab Topology Builder Architecture
+          Lab Topology Builder Architecture (KVM/Docker)
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Lab Topology Builder Architecture
+        Lab Topology Builder Architecture (KVM/Docker)
       </a>
       
         
@@ -318,27 +332,12 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ltbv1-architecture" class="md-nav__link">
-    LTBv1 Architecture
-  </a>
-  
-    <nav class="md-nav" aria-label="LTBv1 Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#backend" class="md-nav__link">
     Backend
   </a>
   
     <nav class="md-nav" aria-label="Backend">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#orchestration" class="md-nav__link">
-    Orchestration
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#reservations" class="md-nav__link">
@@ -372,23 +371,18 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#deployment" class="md-nav__link">
     Deployment
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#frontend" class="md-nav__link">
     Frontend
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -430,6 +424,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../dev-setup/" class="md-nav__link">
         Developer Setup
       </a>
@@ -445,8 +454,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/" class="md-nav__link">
-        Concepts
+      <a href="../../coding-conventions/" class="md-nav__link">
+        Coding Conventions
       </a>
     </li>
   
@@ -494,27 +503,12 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ltbv1-architecture" class="md-nav__link">
-    LTBv1 Architecture
-  </a>
-  
-    <nav class="md-nav" aria-label="LTBv1 Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#backend" class="md-nav__link">
     Backend
   </a>
   
     <nav class="md-nav" aria-label="Backend">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#orchestration" class="md-nav__link">
-    Orchestration
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#reservations" class="md-nav__link">
@@ -548,23 +542,18 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#deployment" class="md-nav__link">
     Deployment
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#frontend" class="md-nav__link">
     Frontend
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -583,7 +572,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/architecture/ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator/blob/main/docs/architecture/kvm-docker-ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -591,46 +580,35 @@
   
 
 
-<h1 id="lab-topology-builder-architecture">Lab Topology Builder Architecture<a class="headerlink" href="#lab-topology-builder-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="ltbv1-architecture">LTBv1 Architecture<a class="headerlink" href="#ltbv1-architecture" title="Permanent link">&para;</a></h2>
-<p>Currently the <abbr title="Lab Topology Builder">LTB</abbr> is composed of two main components:</p>
+<h1 id="current-kvmdocker-base-ltb-architecture">Current (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-base <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#current-kvmdocker-base-ltb-architecture" title="Permanent link">&para;</a></h1>
+<p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
 <ul>
 <li><a href="#frontend">Frontend</a> built with React</li>
 <li><a href="#backend">Backend</a> built with Django</li>
 <li><a href="#deployment">Deployment</a> built with docker-compose</li>
 </ul>
-<h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h3>
+<h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
 <p>The backend is accessible via API and a Admin Web UI.
 It is responsible for the following tasks:</p>
 <ul>
-<li>Parsing the YAML topology files</li>
-<li>Deploying/Destroying the containers and VMs</li>
-<li>Exposes status of lab deployments</li>
-<li>Exposes information on how to access the deployed containers and VMs</li>
-<li>Provides remote SSH capabilities</li>
-<li>Provides remote Wireshark capture capabilities</li>
-<li>Managing reservations (Create, Delete, etc.)</li>
-<li>Exposes node resource usage</li>
-<li>User Management</li>
-<li>Exposes information about a device (version, groups, etc.)</li>
-<li>Exposes device metrics</li>
+<li>parsing the yaml topology files</li>
+<li>deploying/destroying the containers and vms</li>
+<li>exposes status of lab deployments</li>
+<li>exposes information on how to access the deployed containers and vms</li>
+<li>provides remote ssh capabilities</li>
+<li>provides remote Wireshark capture capabilities</li>
+<li>managing reservations (create, delete, etc.)</li>
+<li>exposes node resource usage</li>
+<li>user management</li>
+<li>exposes information about a device (version, groups, etc.)</li>
 </ul>
 <p>It is composed of the following components:</p>
 <ul>
-<li><a href="#lab-topology-builder-architecture">Lab Topology Builder Architecture</a></li>
-<li><a href="#ltbv1-architecture">LTBv1 Architecture</a><ul>
-<li><a href="#backend">Backend</a></li>
-<li><a href="#orchestration">Orchestration</a></li>
 <li><a href="#reservations">Reservations</a></li>
 <li><a href="#running-lab-store">Running lab store</a></li>
 <li><a href="#template-store">Template store</a></li>
 <li><a href="#authentication">Authentication</a></li>
-<li><a href="#deployment">Deployment</a></li>
-<li><a href="#frontend">Frontend</a></li>
 </ul>
-</li>
-</ul>
-<h4 id="orchestration">Orchestration<a class="headerlink" href="#orchestration" title="Permanent link">&para;</a></h4>
 <p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
 There are 4 different types of tasks:</p>
 <ul>
@@ -645,26 +623,27 @@ There are 4 different types of tasks:</p>
 <li>SnapshotTask</li>
 <li>Takes a snapshot of a running lab</li>
 </ul>
-<h4 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h4>
+<h3 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h3>
 <p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
 <ul>
 <li>Create a reservation</li>
-<li>Delte a reservation</li>
+<li>Delete a reservation</li>
 <li>Update a reservation</li>
 </ul>
-<h4 id="running-lab-store">Running lab store<a class="headerlink" href="#running-lab-store" title="Permanent link">&para;</a></h4>
+<h3 id="running-lab-store">Running lab store<a class="headerlink" href="#running-lab-store" title="Permanent link">&para;</a></h3>
 <p>This component is responsible for storing information about running labs, such as:</p>
 <ul>
 <li>The devices taking part in the running lab, inclusive of the interfaces</li>
 <li>Connection information</li>
 </ul>
-<h4 id="template-store">Template store<a class="headerlink" href="#template-store" title="Permanent link">&para;</a></h4>
+<h3 id="template-store">Template store<a class="headerlink" href="#template-store" title="Permanent link">&para;</a></h3>
 <p>This component is responsible for storing lab templates.</p>
-<h4 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h4>
+<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
 <p>This component is responsible for user authentication and management.</p>
-<h3 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h3>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
 <p>The deployment component is responsible for deploying the <abbr title="Lab Topology Builder">LTB</abbr> backend and frontend components.</p>
-<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
+<h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
+<p>The frontend allows users to access their labs and their devices.</p>
 
 
 
