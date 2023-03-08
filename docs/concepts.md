@@ -10,26 +10,31 @@ LTB is a tool that allows you to build a topology of virtual machines and contai
 LTB Kubernetes Operator is a custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.
 <!-- TODO: add image -->
 
-## LTB Custom Resource (CR)
+## Custom Resource (CR)
 
-LTB Custom Resource is an extension of LTB Kubernetes API that allows you to create your own objects and store them in the Kubernetes cluster.
+Custom Resource is an extension of LTB Kubernetes API that allows you to create your own objects and store them in the Kubernetes cluster.  In LTB, CR is the YAML file that is provided by the user.
 
-## LTB Custom Resource Definition (CRD)
+## Custom Resource Definition (CRD)
 
-LTB Custom Resource Definition (CRD) is a Kubernetes API that allows you to define your own custom resources. In LTB, CRD is the lab template (YAML) that is provided by the user.
+Custom Resource Definition (CRD) is a Kubernetes API that allows you to define your own custom resources.
 <!-- TODO: add code example -->
 
-## LTB Kubernetes Cluster
+## Kubernetes Cluster
 
-LTB Kubernetes Cluster is a set of nodes that run containerized applications. It is managed by the Kubernetes operator.
+Kubernetes Cluster is a set of nodes that run containerized applications. It is managed by the Kubernetes operator.
 <!-- TODO: add image -->
 
-## LTB Lab Template
+## Lab Template
 
-LTB Lab Template is a YAML file that defines the topology of the lab. It contains information about the virtual machines and containers that are part of the lab, as well as the network topology.
+Lab Template is a YAML file that defines the topology of the lab. It contains information about the virtual machines and containers that are part of the lab, as well as the network topology.
 <!-- TODO: add code example -->
 
-## LTB Lab Instance (Lab)
+## Lab
 
-LTB Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.
+Lab is a YAML file (CR) that defines a lab instance. It holds the details from the lab template, and some additional information, such as the lab name.
+<!-- TODO: add code example -->
+
+## Lab Instance (Lab)
+
+Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.
 <!-- TODO: add image -->
