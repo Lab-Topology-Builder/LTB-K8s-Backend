@@ -9,11 +9,12 @@ copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
 nav:
   - Home: README.md
   - Architecture:
-    - Lab Topology Builder Architecture: architecture/ltb-architecture.md
+    - Lab Topology Builder Architecture (K8s): architecture/k8s-ltb-architecture.md
+    - Lab Topology Builder Architecture (KVM/Docker): architecture/kvm-docker-ltb-architecture.md
   - User Guide: user-guide.md
-  - Developer Setup: dev-setup.md
   - Concepts: concepts.md
-  - Conventions: conventions.md 
+  - Developer Setup: dev-setup.md
+  - Coding Conventions: coding-conventions.md
   - About: about.md
 plugins:
   - search
