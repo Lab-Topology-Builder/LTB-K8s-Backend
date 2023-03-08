@@ -26,12 +26,17 @@ Kubernetes Cluster is a set of nodes that run containerized applications. It is 
 
 ## Lab Template
 
-Lab Template is a YAML file that defines the topology of the lab. It contains information about the virtual machines and containers that are part of the lab, as well as the network topology.
+Lab Template is a YAML file that defines the topology of the lab. It contains information about the devices that are part of the lab, as well as the network topology.
 <!-- TODO: add code example -->
+
+## Device
+
+A device is either a KubeVirt VM or a container. It has a device type, a device version, and a device name.
 
 ## Lab
 
 Lab is a YAML file (CR) that defines a lab instance. It holds the details from the lab template, and some additional information, such as the lab name.
+It also has a status field that is updated by the Kubernetes operator.
 <!-- TODO: add code example -->
 
 ## Lab Instance (Lab)
