@@ -1,9 +1,9 @@
-site_name: LTB Kubernetes Operator
-site_description: A Kubernetes Operator for the Lab Topology Builder.
+site_name: LTB K8s Backend
+site_description: A Kubernetes Operator and User management for the Lab Topology Builder.
 site_author: Jan Untersander, Tsigereda Nebai Kidane
-site_url: https://Lab-Topology-Builder.github.io/LTB-Kubernetes-Operator/
-repo_name: Lab-Topology-Builder/LTB-Kubernetes-Operator
-repo_url: https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator
+site_url: https://lab-topology-builder.github.io/LTB-K8s-Backend/
+repo_name: Lab-Topology-Builder/LTB-K8s-Backend
+repo_url: https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/
 copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
 
 nav:
@@ -75,4 +75,4 @@ edit_uri: blob/main/docs/
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Lab-Topology-Builder/LTB-Kubernetes-Operator
+      link: https://github.com/Lab-Topology-Builder/LTB-K8s-Backend

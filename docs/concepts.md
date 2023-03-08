@@ -21,7 +21,7 @@ Custom Resource Definition (CRD) is a Kubernetes API that allows you to define y
 
 ## Kubernetes Cluster
 
-Kubernetes Cluster is a set of nodes that run containerized applications. It is managed by the Kubernetes operator.
+Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes.
 <!-- TODO: add image -->
 
 ## Lab Template
@@ -39,7 +39,7 @@ Lab is a YAML file (CR) that defines a lab instance. It holds the details from t
 It also has a status field that is updated by the Kubernetes operator.
 <!-- TODO: add code example -->
 
-## Lab Instance (Lab)
+## Lab Instance (Lab) (LTB)
 
 Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.
 <!-- TODO: add image -->
