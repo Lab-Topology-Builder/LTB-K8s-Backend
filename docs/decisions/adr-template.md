@@ -1,4 +1,4 @@
-# {short title of solved problem and solution}
+# Template for Design Decisions {short title of solved problem and solution}
 
 ## Context and Problem Statement
 

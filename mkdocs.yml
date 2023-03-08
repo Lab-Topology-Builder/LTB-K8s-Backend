@@ -6,18 +6,11 @@ repo_name: Lab-Topology-Builder/LTB-K8s-Backend
 repo_url: https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/
 copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
 
-nav:
-  - Home: README.md
-  - Architecture:
-    - Lab Topology Builder Architecture (K8s): architecture/k8s-ltb-architecture.md
-    - Lab Topology Builder Architecture (KVM/Docker): architecture/kvm-docker-ltb-architecture.md
-  - User Guide: user-guide.md
-  - Concepts: concepts.md
-  - Developer Setup: dev-setup.md
-  - Coding Conventions: coding-conventions.md
-  - About: about.md
 plugins:
   - search
+  # - exclude:
+  #     glob:
+  #       - decisions/adr-template.md
   # - git-authors
   # - git-revision-date-localized:
   #     fallback_to_build_date: true
