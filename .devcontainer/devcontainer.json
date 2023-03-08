@@ -10,7 +10,7 @@
 		},
 		"ghcr.io/devcontainers-contrib/features/mkdocs:2": {
 			"version": "latest",
-			"plugins": "mkdocs-material pymdown-extensions mkdocstrings[crystal,python] mkdocs-monorepo-plugin mkdocs-pdf-export-plugin mkdocs-awesome-pages-plugin"
+			"plugins": "mkdocs-material pymdown-extensions mkdocs-exclude mkdocstrings[crystal,python] mkdocs-monorepo-plugin mkdocs-print-site-plugin mkdocs-awesome-pages-plugin"
 		},
 		// Uncomment if docker is needed in devcontainer
 		// "ghcr.io/devcontainers/features/docker-in-docker:2": {
