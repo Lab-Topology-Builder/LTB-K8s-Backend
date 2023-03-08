@@ -12,8 +12,9 @@ nav:
     - Lab Topology Builder Architecture (K8s): architecture/k8s-ltb-architecture.md
     - Lab Topology Builder Architecture (KVM/Docker): architecture/kvm-docker-ltb-architecture.md
   - User Guide: user-guide.md
+  - Concepts: concepts.md
   - Developer Setup: dev-setup.md
-  - Concepts: concepts.md 
+  - Coding Conventions: coding-conventions.md
   - About: about.md
 plugins:
   - search
