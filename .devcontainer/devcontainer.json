@@ -32,7 +32,8 @@
 				"GitHub.vscode-pull-request-github",
 				"GitHub.copilot",
 				"aaron-bond.better-comments",
-				"usernamehw.errorlens"
+				"usernamehw.errorlens",
+				"Okteto.remote-kubernetes"
 			]
 		}
 	},
