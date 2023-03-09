@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/user-guide/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/">
       
       
-        <link rel="prev" href="../dev-setup/">
+        <link rel="prev" href="../architecture/kvm-docker-ltb-architecture/">
       
       
-        <link rel="next" href="../architecture/k8s-ltb-architecture/">
+        <link rel="next" href="0000-use-markdown-architectural-decision-records/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>User guide - LTB K8s Backend</title>
+        <title>Decisions - LTB K8s Backend</title>
       
     
     
@@ -76,6 +76,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#decisions" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -104,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              User guide
+              Decisions
             
           </span>
         </div>
@@ -308,19 +313,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
         User guide
       </a>
-      
     </li>
   
 
@@ -394,14 +391,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
       
       
       
@@ -410,7 +409,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_8">
           <span class="md-nav__icon md-icon"></span>
           Decisions
@@ -421,11 +420,21 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Decisions
       </a>
+      
     </li>
   
 
@@ -437,7 +446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
+      <a href="0000-use-markdown-architectural-decision-records/" class="md-nav__link">
         Use Markdown Architectural Decision Records
       </a>
     </li>
@@ -451,7 +460,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/adr-template/" class="md-nav__link">
+      <a href="adr-template/" class="md-nav__link">
         Template for Design Decisions {short title of solved problem and solution}
       </a>
     </li>
@@ -482,6 +491,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -496,7 +507,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/user-guide.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/decisions/README.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -504,9 +515,11 @@
   
 
 
-  <h1>User guide</h1>
-
-
+<h1 id="decisions">Decisions<a class="headerlink" href="#decisions" title="Permanent link">&para;</a></h1>
+<p>This directory contains decision records for the Kubernetes based Lab Topology Builder.</p>
+<p>For new ADRs, please use <a href="adr-template/">adr-template.md</a> as basis.
+More information on MADR is available at <a href="https://adr.github.io/madr/">https://adr.github.io/madr/</a>.
+General information about architectural decision records is available at <a href="https://adr.github.io/">https://adr.github.io/</a>.</p>
 
 
 
