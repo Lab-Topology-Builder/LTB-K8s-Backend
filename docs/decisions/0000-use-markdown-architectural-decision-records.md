@@ -24,4 +24,4 @@ Chosen option: "MADR 2.1.2", because
 * The MADR structure is comprehensible and facilitates usage & maintenance.
 * The MADR project is vivid.
 * Version 2.1.2 is the latest one available when starting to document ADRs.
-* A Visual Studio Code extension [ADR Manager](https://marketplace.visualstudio.com/items?itemName=StevenChen.vscode-adr-manager)for MADR exits, which makes managing ADRs easy.
+* A Visual Studio Code extension [ADR Manager](https://marketplace.visualstudio.com/items?itemName=StevenChen.vscode-adr-manager) for MADR exits, which makes managing ADRs easy.
