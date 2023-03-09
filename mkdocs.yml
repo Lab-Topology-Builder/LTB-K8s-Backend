@@ -15,6 +15,7 @@ nav:
   - Concepts: concepts.md
   - Development Cluster Setup: dev-cluster-setup.md
   - Coding Conventions: coding-conventions.md
+  - Test Concepts: test-concepts.md
   - About: about.md
 plugins:
   - search
