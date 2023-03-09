@@ -18,6 +18,9 @@ nav:
   - About: about.md
 plugins:
   - search
+  # - exclude:
+  #     glob:
+  #       - decisions/adr-template.md
   # - git-authors
   # - git-revision-date-localized:
   #     fallback_to_build_date: true
