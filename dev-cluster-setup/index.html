@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/dev-setup/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/dev-cluster-setup/">
       
       
         <link rel="prev" href="../concepts/">
       
       
-        <link rel="next" href="../user-guide/">
+        <link rel="next" href="../coding-conventions/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Development setup - LTB K8s Backend</title>
+        <title>Development Cluster Setup - LTB K8s Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#development-setup" class="md-skip">
+        <a href="#development-cluster-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Development setup
+              Development Cluster Setup
             
           </span>
         </div>
@@ -241,7 +241,7 @@
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        LTB K8s Backend Documentation
+        Home
       </a>
     </li>
   
@@ -254,10 +254,58 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../about/" class="md-nav__link">
-        About
+      <a href="../architecture/k8s-ltb-architecture/" class="md-nav__link">
+        Lab Topology Builder Architecture (K8s)
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
+        Lab Topology Builder Architecture (KVM/Docker)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -270,8 +318,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../coding-conventions/" class="md-nav__link">
-        Coding Conventions
+      <a href="../user-guide/" class="md-nav__link">
+        User Guide
       </a>
     </li>
   
@@ -310,12 +358,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Development setup
+          Development Cluster Setup
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Development setup
+        Development Cluster Setup
       </a>
       
         
@@ -350,6 +398,13 @@
         <li class="md-nav__item">
   <a href="#option-2-k3d-install" class="md-nav__link">
     Option 2: K3D install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-3-k0s-install" class="md-nav__link">
+    Option 3: K0s install
   </a>
   
 </li>
@@ -418,8 +473,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../user-guide/" class="md-nav__link">
-        User guide
+      <a href="../coding-conventions/" class="md-nav__link">
+        Coding Conventions
       </a>
     </li>
   
@@ -432,135 +487,10 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-          Architecture
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_7">
-          <span class="md-nav__icon md-icon"></span>
-          Architecture
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../architecture/k8s-ltb-architecture/" class="md-nav__link">
-        Kubernetes Lab Topology Builder Architecture
+      <a href="../about/" class="md-nav__link">
+        About
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
-        Current (KVM/Docker)-base LTB Architecture
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
-          Decisions
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_8">
-          <span class="md-nav__icon md-icon"></span>
-          Decisions
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
-        Decisions
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
-        Use Markdown Architectural Decision Records
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../decisions/adr-template/" class="md-nav__link">
-        Template for Design Decisions {short title of solved problem and solution}
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -608,6 +538,13 @@
         <li class="md-nav__item">
   <a href="#option-2-k3d-install" class="md-nav__link">
     Option 2: K3D install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-3-k0s-install" class="md-nav__link">
+    Option 3: K0s install
   </a>
   
 </li>
@@ -675,7 +612,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/dev-setup.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/dev-cluster-setup.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -683,29 +620,37 @@
   
 
 
-<h1 id="development-setup">Development setup<a class="headerlink" href="#development-setup" title="Permanent link">&para;</a></h1>
+<h1 id="development-cluster-setup">Development cluster setup<a class="headerlink" href="#development-cluster-setup" title="Permanent link">&para;</a></h1>
+<p>Setup for a development Kubernetes cluster.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>WSL version 0.67.6 and higher</p>
-<p>Active Ubuntu WSL needed:
+<p>Active Ubuntu WSL needed:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/wsl.conf
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># /etc/wsl.conf</span>
 <span class="o">[</span>boot<span class="o">]</span>
 <span class="nv">systemd</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
-Restart WSL with <code>wsl.exe --shutdown</code> and opening the WSL again.</p>
+<p>Restart WSL with <code>wsl.exe --shutdown</code> and opening the WSL again.</p>
 <h2 id="option-1-k3s-install">Option 1: K3S install<a class="headerlink" href="#option-1-k3s-install" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/rancher/k3s/
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/rancher/k3s/
 sudo<span class="w"> </span>vim<span class="w"> </span>/etc/rancher/k3s/config.yaml
-write-kubeconfig-mode:<span class="w"> </span><span class="s2">&quot;0644&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/rancher/k3s/config.yaml</span>
+<span class="nt">write-kubeconfig-mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0644&quot;</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sfL<span class="w"> </span>https://get.k3s.io<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">INSTALL_K3S_VERSION</span><span class="o">=</span><span class="s2">&quot;v1.26.1+k3s1&quot;</span><span class="w"> </span>sudo<span class="w"> </span>-E<span class="w"> </span>sh<span class="w"> </span>-
-</code></pre></div></p>
+ln<span class="w"> </span>-s<span class="w"> </span>/etc/rancher/k3s/k3s.yaml<span class="w"> </span>~/.kube/k3s.yaml
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;export KUBECONFIG=</span><span class="si">${</span><span class="nv">KUBECONFIG</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/.kube/k3s.yaml&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</code></pre></div>
 <h2 id="option-2-k3d-install">Option 2: K3D install<a class="headerlink" href="#option-2-k3d-install" title="Permanent link">&para;</a></h2>
 <p>Prerequisites:
-Docker Desktop installed and running or Docker installed in WSL
+Docker Desktop installed and running or Docker installed in WSL</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">TAG</span><span class="o">=</span>v5.4.7<span class="w"> </span>bash
-</code></pre></div></p>
+</code></pre></div>
+<h2 id="option-3-k0s-install">Option 3: K0s install<a class="headerlink" href="#option-3-k0s-install" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sSfL<span class="w"> </span>https://get.k0s.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">K0S_VERSION</span><span class="o">=</span>v1.26.1+k0s.0<span class="w"> </span>sudo<span class="w"> </span>-E<span class="w"> </span>sh
+</code></pre></div>
 <h2 id="operator-sdk-install">Operator SDK install<a class="headerlink" href="#operator-sdk-install" title="Permanent link">&para;</a></h2>
 <h3 id="prerequisites_1"><a href="https://v1-11-x.sdk.operatorframework.io/docs/installation/#prerequisites">Prerequisites</a><a class="headerlink" href="#prerequisites_1" title="Permanent link">&para;</a></h3>
 <ul>
@@ -713,10 +658,10 @@ Docker Desktop installed and running or Docker installed in WSL
 <li><a href="https://gnupg.org/">gpg</a> version 2.0+</li>
 </ul>
 <h3 id="1-download-the-release-binary">1. Download the release binary<a class="headerlink" href="#1-download-the-release-binary" title="Permanent link">&para;</a></h3>
-<p>Set platform information:
+<p>Set platform information:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="k">$(case</span><span class="w"> </span><span class="k">$(</span>uname<span class="w"> </span>-m<span class="k">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>x86_64<span class="k">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span>amd64<span class="w"> </span><span class="p">;;</span><span class="w"> </span>aarch64<span class="o">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span>arm64<span class="w"> </span><span class="p">;;</span><span class="w"> </span>*<span class="o">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="k">$(</span>uname<span class="w"> </span>-m<span class="k">)</span><span class="w"> </span><span class="p">;;</span><span class="w"> </span><span class="k">esac</span><span class="o">)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">OS</span><span class="o">=</span><span class="k">$(</span>uname<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print tolower($0)}&#39;</span><span class="k">)</span>
-</code></pre></div></p>
+</code></pre></div>
 <p>Download the binary for your platform:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">OPERATOR_SDK_Version</span><span class="o">=</span><span class="m">1</span>.26.1
 <span class="nb">export</span><span class="w"> </span><span class="nv">OPERATOR_SDK_DL_URL</span><span class="o">=</span>https://github.com/operator-framework/operator-sdk/releases/download/<span class="si">${</span><span class="nv">OPERATOR_SDK_Version</span><span class="si">}</span>
@@ -744,27 +689,27 @@ gpg<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;Oper
 <div class="highlight"><pre><span></span><code><span class="go">operator-sdk_linux_amd64: OK</span>
 </code></pre></div>
 <h3 id="3-install-the-release-binary-in-your-path">3. <a href="https://v1-11-x.sdk.operatorframework.io/docs/installation/#3-install-the-release-binary-in-your-path">Install the release binary in your PATH</a><a class="headerlink" href="#3-install-the-release-binary-in-your-path" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>operator-sdk_<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>_<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>mv<span class="w"> </span>operator-sdk_<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>_<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span><span class="w"> </span>/usr/local/bin/
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>operator-sdk_<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>_<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>mv<span class="w"> </span>operator-sdk_<span class="si">${</span><span class="nv">OS</span><span class="si">}</span>_<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span><span class="w"> </span>/usr/local/bin/operator-sdk
 </code></pre></div>
-Verify the installation:</p>
+<p>Verify the installation:</p>
 <div class="highlight"><pre><span></span><code>operator-sdk<span class="w"> </span>version
 </code></pre></div>
 <h2 id="install-go">Install Go<a class="headerlink" href="#install-go" title="Permanent link">&para;</a></h2>
 <p>Step 1 - Downloading Go lang binary files
-Visit official downloads page and grab file using either wget command or curl command:
+Visit official downloads page and grab file using either wget command or curl command:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># let us download a file with curl on Linux command line #</span>
 <span class="nv">GO_VERSION</span><span class="o">=</span><span class="s2">&quot;1.20.1&quot;</span><span class="w"> </span><span class="c1"># go version</span>
 <span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;amd64&quot;</span><span class="w"> </span><span class="c1"># go archicture</span>
 wget<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;https://golang.org/dl/go</span><span class="si">${</span><span class="nv">GO_VERSION</span><span class="si">}</span><span class="s2">.linux-</span><span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span>
-rm<span class="w"> </span>-rf<span class="w"> </span>/usr/local/go<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>tar<span class="w"> </span>-C<span class="w"> </span>/usr/local<span class="w"> </span>-xzf<span class="w"> </span>go1.20.1.linux-amd64.tar.gz
-</code></pre></div></p>
-<p>Step 2  - Add to PATH
+rm<span class="w"> </span>-rf<span class="w"> </span>/usr/local/go<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>tar<span class="w"> </span>-C<span class="w"> </span>/usr/local<span class="w"> </span>-xzf<span class="w"> </span>go<span class="si">${</span><span class="nv">GO_VERSION</span><span class="si">}</span>.linux-<span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span>.tar.gz
+</code></pre></div>
+<p>Step 2  - Add to PATH</p>
 <div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$PATH:/usr/local/go/bin&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">source</span><span class="w"> </span>~/.bashrc
-</code></pre></div></p>
-<p>Step 3 - Verify that you've installed Go by opening a command prompt and typing the following command:
+</code></pre></div>
+<p>Step 3 - Verify that you've installed Go by opening a command prompt and typing the following command:</p>
 <div class="highlight"><pre><span></span><code>go<span class="w"> </span>version
-</code></pre></div></p>
+</code></pre></div>
 
 
 
