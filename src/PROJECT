@@ -1,0 +1,9 @@
+domain: github.com/lab-topology-builder
+layout:
+- go.kubebuilder.io/v3
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+  scorecard.sdk.operatorframework.io/v2: {}
+projectName: operator
+repo: github.com/Lab-Topology-Builder/LTB-K8s-Backend/operator
+version: "3"

@@ -1,0 +1,36 @@
+# Most of the data need to be checked
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: labinstancesets.github.com/lab-topology-builder
+spec:
+  group: lab-topology-builder #/apis/group/version
+  names:
+    kind: LabInstanceSet # need to check this
+    listKind: LabInstanceSetList
+    plural: labinstancesets
+    singular: labinstanceset
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            template:
+              properties:
+                metadata:
+                  type: object
+                spec:
+                  properties:
+                    source:
+                      type: object
+                    destination:
+                      type: object
+                  type: object
