@@ -23,14 +23,61 @@ spec:
           metadata:
             type: object
           spec:
+            generators:
+            list:
+              properties:
+                elements:
+                  items:
+                    x-kubernetes-preserve-unknown-fields: true
+                  type: array
             template:
               properties:
                 metadata:
+                  properties:
+                    labels:
+                      type: object
+                    name:
+                      type: string
+                    namespace:
+                      type: string
                   type: object
                 spec:
                   properties:
-                    source:
-                      type: object
-                    destination:
-                      type: object
+                    hosts:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          image:
+                            properties:
+                              type:
+                                type: string
+                              version:
+                                type: string
+                            type: object
+                          interfaces:
+                            items:
+                              properties:
+                                connects:
+                                  items:
+                                    properties:
+                                      name:
+                                        type: string
+                                      tag:
+                                        type: string
+                                      ipv6:
+                                        type: string
+                                      ipv4:
+                                        type: string
+                                      mac:
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            type: array
+                          config:
+                            type: string
+                        type: object
+                      type: array
                   type: object
+
