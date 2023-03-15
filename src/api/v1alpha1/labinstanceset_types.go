@@ -77,7 +77,7 @@ type HostInterface struct {
 
 type NeighborInterface struct {
 	NeighborName string `json:"name"`
-	Interface    int    `json:"tag"`
+	Interface    int    `json:"interface"`
 }
 
 // LabInstanceSetStatus defines the observed state of LabInstanceSet

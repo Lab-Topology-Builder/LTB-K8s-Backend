@@ -91,13 +91,13 @@ spec:
                                 properties:
                                   connects:
                                     properties:
+                                      interface:
+                                        type: integer
                                       name:
                                         type: string
-                                      tag:
-                                        type: integer
                                     required:
+                                    - interface
                                     - name
-                                    - tag
                                     type: object
                                   ipv4:
                                     type: string
