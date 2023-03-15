@@ -29,7 +29,55 @@ type LabInstanceSetSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of LabInstanceSet. Edit labinstanceset_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Generators []LabInstanceGenerator `json:"generators"`
+	Template   LabInstanceTemplate    `json:"template"`
+}
+
+type LabInstanceGenerator struct {
+	Elements []LabInstanceElement `json:"elements"`
+}
+
+type LabInstanceElement struct {
+	Name string `json:"name"`
+}
+
+type LabInstanceTemplate struct {
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              LabInstanceTemplateSpec `json:"spec,omitempty"`
+}
+
+type LabInstanceTemplateSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of lab instance
+	Hosts []LabInstanceHost `json:"hosts"`
+}
+
+type LabInstanceHost struct {
+	Name        string          `json:"name"`
+	Image       HostImage       `json:"image"`
+	Coordinates Coordinate      `json:"coordinates,omitempty"`
+	Interfaces  []HostInterface `json:"interfaces"`
+	Config      string          `json:"config,omitempty"`
+}
+
+type HostImage struct {
+	Type    string `json:"type"`
+	Version string `json:"version"`
+}
+
+type Coordinate struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
+type HostInterface struct {
+	Connects NeighborInterface `json:"connects"`
+	Ipv4     string            `json:"ipv4,omitempty"`
+	Ipv6     string            `json:"ipv6,omitempty"`
+}
+
+type NeighborInterface struct {
+	NeighborName string `json:"name"`
+	Interface    int    `json:"tag"`
 }
 
 // LabInstanceSetStatus defines the observed state of LabInstanceSet

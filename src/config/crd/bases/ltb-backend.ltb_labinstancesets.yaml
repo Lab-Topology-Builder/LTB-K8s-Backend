@@ -35,10 +35,93 @@ spec:
           spec:
             description: LabInstanceSetSpec defines the desired state of LabInstanceSet
             properties:
-              foo:
+              generators:
                 description: Foo is an example field of LabInstanceSet. Edit labinstanceset_types.go
                   to remove/update
-                type: string
+                items:
+                  properties:
+                    elements:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      type: array
+                  required:
+                  - elements
+                  type: object
+                type: array
+              template:
+                properties:
+                  metadata:
+                    type: object
+                  spec:
+                    properties:
+                      hosts:
+                        description: INSERT ADDITIONAL SPEC FIELDS - desired state
+                          of lab instance
+                        items:
+                          properties:
+                            config:
+                              type: string
+                            coordinates:
+                              properties:
+                                x:
+                                  type: integer
+                                "y":
+                                  type: integer
+                              required:
+                              - x
+                              - "y"
+                              type: object
+                            image:
+                              properties:
+                                type:
+                                  type: string
+                                version:
+                                  type: string
+                              required:
+                              - type
+                              - version
+                              type: object
+                            interfaces:
+                              items:
+                                properties:
+                                  connects:
+                                    properties:
+                                      name:
+                                        type: string
+                                      tag:
+                                        type: integer
+                                    required:
+                                    - name
+                                    - tag
+                                    type: object
+                                  ipv4:
+                                    type: string
+                                  ipv6:
+                                    type: string
+                                required:
+                                - connects
+                                type: object
+                              type: array
+                            name:
+                              type: string
+                          required:
+                          - image
+                          - interfaces
+                          - name
+                          type: object
+                        type: array
+                    required:
+                    - hosts
+                    type: object
+                type: object
+            required:
+            - generators
+            - template
             type: object
           status:
             description: LabInstanceSetStatus defines the observed state of LabInstanceSet
