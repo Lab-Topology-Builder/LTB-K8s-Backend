@@ -1,4 +1,4 @@
-apiVersion: ltb.ltb/v1alpha1
+apiVersion: ltb-backend.ltb/v1alpha1
 kind: LabInstanceSet
 metadata:
   labels:

@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
+	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
 )
 
 // LabInstanceSetReconciler reconciles a LabInstanceSet object
@@ -33,9 +33,9 @@ type LabInstanceSetReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=ltb.ltb,resources=labinstancesets,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=ltb.ltb,resources=labinstancesets/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=ltb.ltb,resources=labinstancesets/finalizers,verbs=update
+//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -57,6 +57,6 @@ func (r *LabInstanceSetReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 // SetupWithManager sets up the controller with the Manager.
 func (r *LabInstanceSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&ltbv1alpha1.LabInstanceSet{}).
+		For(&ltbbackendv1alpha1.LabInstanceSet{}).
 		Complete(r)
 }

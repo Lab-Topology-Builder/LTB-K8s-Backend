@@ -12,7 +12,7 @@ metadata:
   name: labinstanceset-viewer-role
 rules:
 - apiGroups:
-  - ltb.ltb
+  - ltb-backend.ltb
   resources:
   - labinstancesets
   verbs:
@@ -20,7 +20,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - ltb.ltb
+  - ltb-backend.ltb
   resources:
   - labinstancesets/status
   verbs:

@@ -12,7 +12,7 @@ resources:
     namespaced: true
   controller: true
   domain: ltb
-  group: ltb
+  group: ltb-backend
   kind: LabInstanceSet
   path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1
   version: v1alpha1
