@@ -9,4 +9,44 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: labinstanceset-sample
 spec:
-  # TODO(user): Add fields here
+  generator:
+    labinstances:
+      - name: "labinstance1"
+      - name: "labinstance2"
+  template:
+    spec:
+      hosts:
+        -
+          name: CE1-A
+          image:
+            type: csr1000v
+            version: 17.2.1r
+          interfaces:
+            - connects:
+                interface: 1
+                name: PE1
+          config: |-
+            hostname CE1-A
+            !
+            cdp run
+            ipv6 unicast-routing
+            !
+            interface GigabitEthernet1
+              description Link to PE1
+              ip address 172.16.1.2 255.255.255.252
+              cdp enable
+              no shut
+            !
+            interface GigabitEthernet2
+              ip address 10.60.0.1 255.255.255.0
+              ipv6 address 2001:DB8:1::1/64
+              ipv6 enable
+              cdp enable
+              no shut
+            !
+            interface GigabitEthernet3
+              ip address 10.60.2.1 255.255.255.0
+              cdp enable
+              no shut
+            !
+            end

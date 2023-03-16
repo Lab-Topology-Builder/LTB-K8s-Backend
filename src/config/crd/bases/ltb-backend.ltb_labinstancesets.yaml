@@ -35,24 +35,20 @@ spec:
           spec:
             description: LabInstanceSetSpec defines the desired state of LabInstanceSet
             properties:
-              generators:
-                items:
-                  properties:
-                    elements:
-                      items:
-                        properties:
-                          name:
-                            maxLength: 32
-                            minLength: 5
-                            type: string
-                        required:
-                        - name
-                        type: object
-                      type: array
-                  required:
-                  - elements
-                  type: object
-                type: array
+              generator:
+                properties:
+                  labinstances:
+                    items:
+                      properties:
+                        name:
+                          maxLength: 32
+                          minLength: 1
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                type: object
               template:
                 properties:
                   metadata:
@@ -66,16 +62,6 @@ spec:
                           properties:
                             config:
                               type: string
-                            coordinates:
-                              properties:
-                                x:
-                                  type: integer
-                                "y":
-                                  type: integer
-                              required:
-                              - x
-                              - "y"
-                              type: object
                             image:
                               properties:
                                 type:
@@ -95,7 +81,7 @@ spec:
                                         type: integer
                                       name:
                                         maxLength: 32
-                                        minLength: 5
+                                        minLength: 1
                                         type: string
                                     required:
                                     - interface
@@ -124,7 +110,7 @@ spec:
                     type: object
                 type: object
             required:
-            - generators
+            - generator
             - template
             type: object
           status:

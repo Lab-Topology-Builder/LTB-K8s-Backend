@@ -28,17 +28,17 @@ type LabInstanceSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Generators []LabInstanceGenerator `json:"generators"`
-	Template   LabInstanceTemplate    `json:"template"`
+	Generator LabInstanceGenerator `json:"generator"`
+	Template  LabInstanceTemplate  `json:"template"`
 }
 
 type LabInstanceGenerator struct {
-	Elements []LabInstanceElement `json:"elements"`
+	LabInstances []LabInstanceElement `json:"labinstances,omitempty"`
 }
 
 type LabInstanceElement struct {
 	// +kubebuilder:validation:MaxLength=32
-	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`
 }
 
@@ -57,20 +57,14 @@ type LabInstanceHost struct {
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`
 
-	Image       HostImage       `json:"image"`
-	Coordinates Coordinate      `json:"coordinates,omitempty"`
-	Interfaces  []HostInterface `json:"interfaces"`
-	Config      string          `json:"config,omitempty"`
+	Image      HostImage       `json:"image"`
+	Interfaces []HostInterface `json:"interfaces"`
+	Config     string          `json:"config,omitempty"`
 }
 
 type HostImage struct {
 	Type    string `json:"type"`
 	Version string `json:"version"`
-}
-
-type Coordinate struct {
-	X int `json:"x"`
-	Y int `json:"y"`
 }
 
 type HostInterface struct {
@@ -81,7 +75,7 @@ type HostInterface struct {
 
 type NeighborInterface struct {
 	// +kubebuilder:validation:MaxLength=32
-	// +kubebuilder:validation:MinLength=5
+	// +kubebuilder:validation:MinLength=1
 	NeighborName string `json:"name"`
 
 	Interface int `json:"interface"`

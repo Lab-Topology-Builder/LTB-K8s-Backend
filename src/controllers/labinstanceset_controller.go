@@ -51,21 +51,19 @@ type LabInstanceSetReconciler struct {
 func (r *LabInstanceSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 	log := r.Log.WithValues("labinstanceset", req.NamespacedName)
-	//labinstanceset := &ltbbackendv1alpha1.LabInstanceSet{}
 	//
-	// Fetch the LabInstanceSet instance
+	log.Info("Managing resources.")
+	//
+	//labinstanceset := &ltbbackendv1alpha1.LabInstanceSet{}
 	//err := r.Get(ctx, req.NamespacedName, labinstanceset)
 	//if err != nil {
 	//	if errors.IsNotFound(err) {
 	//		log.Info("LabInstanceSet resource not found. Ignoring since object must be deleted")
 	//		return ctrl.Result{}, nil
 	//	}
-	//	log.Error(err, "Failed to get LabInstanceSet")
-	//	return ctrl.Result{}, err
+	//	return ctrl.Result{Requeue: false}, err
 	//}
-
-	log.Info("Managing resources.")
-
+	//
 	// Check if the
 	// TODO(user): your logic here
 
