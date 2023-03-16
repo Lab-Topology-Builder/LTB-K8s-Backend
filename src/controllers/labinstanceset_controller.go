@@ -25,12 +25,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
+	"github.com/go-logr/logr"
 )
 
 // LabInstanceSetReconciler reconciles a LabInstanceSet object
 type LabInstanceSetReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
+	Log    logr.Logger
 }
 
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets,verbs=get;list;watch;create;update;patch;delete
@@ -48,7 +50,23 @@ type LabInstanceSetReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabInstanceSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+	log := r.Log.WithValues("labinstanceset", req.NamespacedName)
+	//labinstanceset := &ltbbackendv1alpha1.LabInstanceSet{}
+	//
+	// Fetch the LabInstanceSet instance
+	//err := r.Get(ctx, req.NamespacedName, labinstanceset)
+	//if err != nil {
+	//	if errors.IsNotFound(err) {
+	//		log.Info("LabInstanceSet resource not found. Ignoring since object must be deleted")
+	//		return ctrl.Result{}, nil
+	//	}
+	//	log.Error(err, "Failed to get LabInstanceSet")
+	//	return ctrl.Result{}, err
+	//}
 
+	log.Info("Managing resources.")
+
+	// Check if the
 	// TODO(user): your logic here
 
 	return ctrl.Result{}, nil

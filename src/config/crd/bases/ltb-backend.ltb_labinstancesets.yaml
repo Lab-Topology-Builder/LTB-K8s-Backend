@@ -36,14 +36,14 @@ spec:
             description: LabInstanceSetSpec defines the desired state of LabInstanceSet
             properties:
               generators:
-                description: Foo is an example field of LabInstanceSet. Edit labinstanceset_types.go
-                  to remove/update
                 items:
                   properties:
                     elements:
                       items:
                         properties:
                           name:
+                            maxLength: 32
+                            minLength: 5
                             type: string
                         required:
                         - name
@@ -94,6 +94,8 @@ spec:
                                       interface:
                                         type: integer
                                       name:
+                                        maxLength: 32
+                                        minLength: 5
                                         type: string
                                     required:
                                     - interface
@@ -108,6 +110,8 @@ spec:
                                 type: object
                               type: array
                             name:
+                              maxLength: 32
+                              minLength: 1
                               type: string
                           required:
                           - image

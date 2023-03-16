@@ -28,7 +28,6 @@ type LabInstanceSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of LabInstanceSet. Edit labinstanceset_types.go to remove/update
 	Generators []LabInstanceGenerator `json:"generators"`
 	Template   LabInstanceTemplate    `json:"template"`
 }
@@ -38,6 +37,8 @@ type LabInstanceGenerator struct {
 }
 
 type LabInstanceElement struct {
+	// +kubebuilder:validation:MaxLength=32
+	// +kubebuilder:validation:MinLength=5
 	Name string `json:"name"`
 }
 
@@ -52,7 +53,10 @@ type LabInstanceTemplateSpec struct {
 }
 
 type LabInstanceHost struct {
-	Name        string          `json:"name"`
+	// +kubebuilder:validation:MaxLength=32
+	// +kubebuilder:validation:MinLength=1
+	Name string `json:"name"`
+
 	Image       HostImage       `json:"image"`
 	Coordinates Coordinate      `json:"coordinates,omitempty"`
 	Interfaces  []HostInterface `json:"interfaces"`
@@ -76,8 +80,11 @@ type HostInterface struct {
 }
 
 type NeighborInterface struct {
+	// +kubebuilder:validation:MaxLength=32
+	// +kubebuilder:validation:MinLength=5
 	NeighborName string `json:"name"`
-	Interface    int    `json:"interface"`
+
+	Interface int `json:"interface"`
 }
 
 // LabInstanceSetStatus defines the observed state of LabInstanceSet
