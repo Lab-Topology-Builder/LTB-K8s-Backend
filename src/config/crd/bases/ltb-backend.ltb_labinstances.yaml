@@ -5,20 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.10.0
   creationTimestamp: null
-  name: labinstancesets.ltb-backend.ltb
+  name: labinstances.ltb-backend.ltb
 spec:
   group: ltb-backend.ltb
   names:
-    kind: LabInstanceSet
-    listKind: LabInstanceSetList
-    plural: labinstancesets
-    singular: labinstanceset
+    kind: LabInstance
+    listKind: LabInstanceList
+    plural: labinstances
+    singular: labinstance
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: LabInstanceSet is the Schema for the labinstancesets API
+        description: LabInstance is the Schema for the labinstances API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,29 +33,22 @@ spec:
           metadata:
             type: object
           spec:
-            description: LabInstanceSetSpec defines the desired state of LabInstanceSet
+            description: LabInstanceSpec defines the desired state of LabInstance
             properties:
-              generator:
+              labInstanceSetReference:
+                type: string
+              name:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
-                properties:
-                  labInstances:
-                    items:
-                      properties:
-                        name:
-                          maxLength: 32
-                          minLength: 1
-                          type: string
-                      required:
-                      - name
-                      type: object
-                    type: array
-                type: object
+                type: string
+              templateReference:
+                type: string
             required:
-            - generator
+            - name
+            - templateReference
             type: object
           status:
-            description: LabInstanceSetStatus defines the observed state of LabInstanceSet
+            description: LabInstanceStatus defines the observed state of LabInstance
             type: object
         type: object
     served: true

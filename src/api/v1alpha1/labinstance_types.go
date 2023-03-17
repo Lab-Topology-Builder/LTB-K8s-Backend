@@ -23,25 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// LabInstanceSetSpec defines the desired state of LabInstanceSet
-type LabInstanceSetSpec struct {
+// LabInstanceSpec defines the desired state of LabInstance
+type LabInstanceSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Generator LabInstanceGenerator `json:"generator"`
+	LabInstanceName         string `json:"name"`
+	TemplateReference       string `json:"templateReference"`
+	LabInstanceSetReference string `json:"labInstanceSetReference,omitempty"`
 }
 
-type LabInstanceGenerator struct {
-	LabInstances []LabInstanceElement `json:"labInstances,omitempty"`
-}
-
-type LabInstanceElement struct {
-	// +kubebuilder:validation:MaxLength=32
-	// +kubebuilder:validation:MinLength=1
-	Name string `json:"name"`
-}
-
-// LabInstanceSetStatus defines the observed state of LabInstanceSet
-type LabInstanceSetStatus struct {
+// LabInstanceStatus defines the observed state of LabInstance
+type LabInstanceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -49,24 +41,24 @@ type LabInstanceSetStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// LabInstanceSet is the Schema for the labinstancesets API
-type LabInstanceSet struct {
+// LabInstance is the Schema for the labinstances API
+type LabInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   LabInstanceSetSpec   `json:"spec,omitempty"`
-	Status LabInstanceSetStatus `json:"status,omitempty"`
+	Spec   LabInstanceSpec   `json:"spec,omitempty"`
+	Status LabInstanceStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// LabInstanceSetList contains a list of LabInstanceSet
-type LabInstanceSetList struct {
+// LabInstanceList contains a list of LabInstance
+type LabInstanceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []LabInstanceSet `json:"items"`
+	Items           []LabInstance `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&LabInstanceSet{}, &LabInstanceSetList{})
+	SchemeBuilder.Register(&LabInstance{}, &LabInstanceList{})
 }

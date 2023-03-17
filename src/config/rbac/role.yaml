@@ -8,6 +8,32 @@ rules:
 - apiGroups:
   - ltb-backend.ltb
   resources:
+  - labinstances
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - labinstances/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - labinstances/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
   - labinstancesets
   verbs:
   - create
@@ -27,6 +53,32 @@ rules:
   - ltb-backend.ltb
   resources:
   - labinstancesets/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - labtemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - labtemplates/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - labtemplates/status
   verbs:
   - get
   - patch

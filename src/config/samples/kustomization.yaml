@@ -1,4 +1,6 @@
 ## Append samples you want in your CSV to this file as resources ##
 resources:
 - ltb-backend_v1alpha1_labinstanceset.yaml
+- ltb-backend_v1alpha1_labinstance.yaml
+- ltb-backend_v1alpha1_labtemplate.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
