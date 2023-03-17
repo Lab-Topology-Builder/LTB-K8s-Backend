@@ -9,4 +9,13 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: labtemplate-sample
 spec:
-  # TODO(user): Add fields here
+  template:
+    name: "labtemplate-sample"
+    spec:
+      hosts:
+        - image:
+            type: "ubuntu"
+            version: "20.04"
+          interfaces:
+            - connects:
+#TODO: continue working here...
