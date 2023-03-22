@@ -20,16 +20,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // LabInstanceSpec defines the desired state of LabInstance
 type LabInstanceSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	LabInstanceName         string `json:"name"`
-	TemplateReference       string `json:"templateReference"`
-	LabInstanceSetReference string `json:"labInstanceSetReference,omitempty"`
+	LabInstanceName      string      `json:"name"`
+	LabTemplateReference LabTemplate `json:"labTemplateReference"`
 }
 
 // LabInstanceStatus defines the observed state of LabInstance
