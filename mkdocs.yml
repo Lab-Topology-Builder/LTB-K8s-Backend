@@ -13,9 +13,10 @@ nav:
     - Lab Topology Builder Architecture (KVM/Docker): architecture/kvm-docker-ltb-architecture.md
   - User Guide: user-guide.md
   - Concepts: concepts.md
-  - Development Cluster Setup: dev-cluster-setup.md
-  - Coding Conventions: coding-conventions.md
-  - Test Concepts: test-concepts.md
+  - Contributor:
+    - Development Cluster Setup: contributor/dev-cluster-setup.md
+    - Coding Conventions: contributor/coding-conventions.md
+    - Test Concepts: contributor/test-concepts.md
   - About: about.md
 plugins:
   - search
