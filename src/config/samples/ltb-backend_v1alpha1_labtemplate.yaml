@@ -1,0 +1,21 @@
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: LabTemplate
+metadata:
+  labels:
+    app.kubernetes.io/name: labtemplate
+    app.kubernetes.io/instance: labtemplate-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: labtemplate-sample
+spec:
+  template:
+    name: "labtemplate-sample"
+    spec:
+      hosts:
+        - image:
+            type: "ubuntu"
+            version: "20.04"
+          interfaces:
+            - connects:
+#TODO: continue working here...

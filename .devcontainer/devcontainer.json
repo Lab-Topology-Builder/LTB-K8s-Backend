@@ -12,12 +12,11 @@
 			"version": "latest",
 			"plugins": "mkdocs-material pymdown-extensions mkdocs-exclude mkdocstrings[crystal,python] mkdocs-monorepo-plugin mkdocs-print-site-plugin mkdocs-awesome-pages-plugin"
 		},
-		// Uncomment if docker is needed in devcontainer
-		// "ghcr.io/devcontainers/features/docker-in-docker:2": {
-		// 	"version": "latest",
-		// 	"enableNonRootDocker": "true",
-		// 	"moby": "true"
-		// },
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"version": "latest",
+			"enableNonRootDocker": "true",
+			"moby": "true"
+		},
 		"ghcr.io/rio/features/k9s:1": {}
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -31,9 +30,16 @@
 				"golang.go",
 				"GitHub.vscode-pull-request-github",
 				"GitHub.copilot",
-				"aaron-bond.better-comments",
-				"usernamehw.errorlens",
-				"Okteto.remote-kubernetes"
+				"Okteto.remote-kubernetes",
+				"streetsidesoftware.code-spell-checker",
+				"editorconfig.editorconfig",
+				"davidanson.vscode-markdownlint",
+				"yzhang.markdown-all-in-one",
+				"redhat.vscode-yaml",
+				"ms-vscode.makefile-tools",
+				"gruntfuggly.todo-tree",
+				"okteto.kubernetes-context",
+				"stevenchen.vscode-adr-manager"
 			]
 		}
 	},
