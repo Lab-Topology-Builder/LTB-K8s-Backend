@@ -3,21 +3,13 @@
 {
 	"name": "K8s Dev Container",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "ghcr.io/lab-topology-builder/k8s-operator-devcontainer:main",
+	"image": "ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.1",
 	"features": {
-		"ghcr.io/devcontainers-contrib/features/kubectx-kubens:1": {
-			"version": "latest"
-		},
-		"ghcr.io/devcontainers-contrib/features/mkdocs:2": {
-			"version": "latest",
-			"plugins": "mkdocs-material pymdown-extensions mkdocs-exclude mkdocstrings[crystal,python] mkdocs-monorepo-plugin mkdocs-print-site-plugin mkdocs-awesome-pages-plugin"
-		},
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"version": "latest",
 			"enableNonRootDocker": "true",
 			"moby": "true"
-		},
-		"ghcr.io/rio/features/k9s:1": {}
+		}
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
