@@ -22,6 +22,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -65,12 +66,28 @@ func (r *LabTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 
+	found := &appsv1.Deployment{}
+	err = r.Get(ctx, types.NamespacedName{Name: labTemplate.Name, Namespace: labTemplate.Namespace}, found)
+	if err != nil && errors.IsNotFound(err) {
+		dep := r.deploymentForLabTemplate(labTemplate)
+		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
+		err = r.Create(ctx, dep)
+		if err != nil {
+			log.Error(err, "Failed to create new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
+			return ctrl.Result{}, err
+		}
+		// Deployment created successfully - return and requeue
+		return ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get Deployment")
+		return ctrl.Result{}, err
+	}
+
 	return ctrl.Result{}, nil
 }
 
 func (r *LabTemplateReconciler) deploymentForLabTemplate(labTemplate *ltbbackendv1alpha1.LabTemplate) *appsv1.Deployment {
 	ls := labelsForLabTemplate(labTemplate.Name)
-	hosts := labTemplate.Spec.BasicTemplate.Spec.Hosts
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      labTemplate.Name,
@@ -82,16 +99,16 @@ func (r *LabTemplateReconciler) deploymentForLabTemplate(labTemplate *ltbbackend
 			},
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
-					Labels:    labTemplate.Labels,
 					Name:      labTemplate.Name,
 					Namespace: labTemplate.Namespace,
+					Labels:    ls,
 				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
-						Name: "MPLS",
+						Name:  labTemplate.Spec.BasicTemplate.Name,
+						Image: "ubuntu:latest",
 						Ports: []corev1.ContainerPort{{
 							ContainerPort: 8080,
-							Name:          "labtemplate",
 						}},
 					}},
 				},
