@@ -52,6 +52,9 @@ type LabInstanceReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
+// TODO: check if lab template exists, if not, throw an error
+// TODO: Check if deployment already exists, if not create a new one, or update an existing one
+// TODO: Check how to make the reference to the lab template, maybe try to make use of the context to get the lab template
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
