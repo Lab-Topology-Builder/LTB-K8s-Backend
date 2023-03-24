@@ -35,73 +35,56 @@ spec:
           spec:
             description: LabTemplateSpec defines the desired state of LabTemplate
             properties:
-              template:
-                properties:
-                  label:
-                    type: string
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                  spec:
-                    properties:
-                      hosts:
-                        items:
-                          properties:
-                            config:
-                              type: string
-                            image:
-                              properties:
-                                type:
-                                  type: string
-                                version:
-                                  type: string
-                              required:
-                              - type
-                              - version
-                              type: object
-                            interfaces:
-                              items:
-                                properties:
-                                  connects:
-                                    properties:
-                                      interface:
-                                        type: integer
-                                      name:
-                                        maxLength: 32
-                                        minLength: 1
-                                        type: string
-                                    required:
-                                    - interface
-                                    - name
-                                    type: object
-                                  ipv4:
-                                    type: string
-                                  ipv6:
-                                    type: string
-                                required:
-                                - connects
-                                type: object
-                              type: array
-                            name:
-                              maxLength: 32
-                              minLength: 1
-                              type: string
-                          required:
-                          - image
-                          - interfaces
-                          - name
-                          type: object
-                        type: array
-                    required:
-                    - hosts
-                    type: object
-                required:
-                - name
-                - spec
-                type: object
+              hosts:
+                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+                  Important: Run "make" to regenerate code after modifying this file'
+                items:
+                  properties:
+                    config:
+                      type: string
+                    image:
+                      properties:
+                        type:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - type
+                      type: object
+                    interfaces:
+                      items:
+                        properties:
+                          connects:
+                            properties:
+                              interface:
+                                type: integer
+                              name:
+                                maxLength: 32
+                                minLength: 1
+                                type: string
+                            required:
+                            - interface
+                            - name
+                            type: object
+                          ipv4:
+                            type: string
+                          ipv6:
+                            type: string
+                        required:
+                        - connects
+                        type: object
+                      type: array
+                    name:
+                      maxLength: 32
+                      minLength: 1
+                      type: string
+                  required:
+                  - image
+                  - name
+                  type: object
+                type: array
             required:
-            - template
+            - hosts
             type: object
           status:
             description: LabTemplateStatus defines the observed state of LabTemplate

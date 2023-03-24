@@ -13,11 +13,11 @@ spec:
     name: "labtemplate-sample"
     spec:
       hosts:
-      - name: "host1"
+      - name: "sample-host-1"
         image:
           type: "ubuntu"
-          version: "20.04"
-        interfaces:
-        - connects:
-            name: "eth0"
-            interface: 0
+          version: "latest"
+      - name: "sample-host-2"
+        image:
+          type: "ubuntu"
+          version: "latest"

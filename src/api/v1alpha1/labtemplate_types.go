@@ -24,24 +24,15 @@ import (
 type LabTemplateSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-
-	Name      string  `json:"name"`
-	Namespace string  `json:"namespace,omitempty"`
-	Label     string  `json:"label,omitempty"`
-	LabSpec   LabSpec `json:"spec"`
-}
-
-type LabSpec struct {
 	Hosts []LabInstanceHost `json:"hosts"`
 }
 
 type LabInstanceHost struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Name string `json:"name"`
-
+	Name       string          `json:"name"`
 	Image      HostImage       `json:"image"`
-	Interfaces []HostInterface `json:"interfaces"`
+	Interfaces []HostInterface `json:"interfaces,omitempty"`
 	Config     string          `json:"config,omitempty"`
 }
 
@@ -53,7 +44,7 @@ type HostInterface struct {
 
 type HostImage struct {
 	Type    string `json:"type"`
-	Version string `json:"version"`
+	Version string `json:"version,omitempty"`
 }
 
 type NeighborInterface struct {

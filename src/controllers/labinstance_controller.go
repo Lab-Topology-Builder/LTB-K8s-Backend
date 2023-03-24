@@ -62,23 +62,31 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	err := r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("LabInstance resource not found. Ignoring since object must be deleted")
+			log.Info("LabInstance resource not found.")
 			return ctrl.Result{}, nil
 		}
 		log.Error(err, "Failed to get LabInstance")
 		return ctrl.Result{}, err
 	}
 
-	found := &appsv1.Deployment{}
+	labTemplate := &ltbbackendv1alpha1.LabTemplate{}
+	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("LabTemplate resource not found.")
+			return ctrl.Result{}, nil
+		}
+		log.Error(err, "Failed to get LabTemplate")
+		return ctrl.Result{}, err
+	}
+
+	found := &corev1.Pod{}
 
 	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, found)
 
-	labTemplate := &ltbbackendv1alpha1.LabTemplate{}
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
-
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new deployment
-		dep := r.deploymentForLabInstance(labInstance, labTemplate)
+		dep := r.deployLabInstance(labInstance, labTemplate)
 		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
 		err = r.Create(ctx, dep)
 		if err != nil {
@@ -94,45 +102,38 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) deploymentForLabInstance(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *appsv1.Deployment {
-	ls := labelsForLabInstance(labInstance.Name)
-
-	dep := &appsv1.Deployment{
+func (r *LabInstanceReconciler) deployLabInstance(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
+	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      labInstance.Name,
 			Namespace: labInstance.Namespace,
 		},
-		Spec: appsv1.DeploymentSpec{
-			Selector: &metav1.LabelSelector{
-				MatchLabels: ls,
-			},
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: ls,
-					Name:   labInstance.Spec.LabTemplateReference,
-				},
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{{
-						Image: "ubuntu:latest",
-						Name:  labInstance.Spec.LabInstanceName,
-						Ports: []corev1.ContainerPort{{ContainerPort: 8080}},
-					}},
-				},
-			},
+		Spec: corev1.PodSpec{
+			Containers: mapContainersToHosts(labTemplate),
 		},
 	}
-	// Set LabInstance instance as the owner and controller
-	ctrl.SetControllerReference(labInstance, dep, r.Scheme)
-	return dep
+
+	ctrl.SetControllerReference(labInstance, pod, r.Scheme)
+	return pod
 }
 
-func labelsForLabInstance(name string) map[string]string {
-	return map[string]string{"app": "labinstance", "labinstance_cr": name}
+func mapContainersToHosts(labTemplate *ltbbackendv1alpha1.LabTemplate) []corev1.Container {
+	hosts := labTemplate.Spec.Template.Spec.Hosts
+	containers := []corev1.Container{}
+	for _, host := range hosts {
+		containers = append(containers, corev1.Container{
+			Name:    host.Name,
+			Image:   host.Image.Type + ":" + host.Image.Version,
+			Command: []string{"/bin/sleep", "365d"},
+		})
+	}
+	return containers
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *LabInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&ltbbackendv1alpha1.LabInstance{}).
+		Owns(&appsv1.Deployment{}).
 		Complete(r)
 }
