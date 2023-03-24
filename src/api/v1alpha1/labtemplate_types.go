@@ -25,17 +25,13 @@ type LabTemplateSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	BasicTemplate BasicLabTemplate `json:"template"`
+	Name      string  `json:"name"`
+	Namespace string  `json:"namespace,omitempty"`
+	Label     string  `json:"label,omitempty"`
+	LabSpec   LabSpec `json:"spec"`
 }
 
-type BasicLabTemplate struct {
-	Name      string               `json:"name"`
-	Namespace string               `json:"namespace,omitempty"`
-	Label     string               `json:"label,omitempty"`
-	Spec      BasicLabTemplateSpec `json:"spec"`
-}
-
-type BasicLabTemplateSpec struct {
+type LabSpec struct {
 	Hosts []LabInstanceHost `json:"hosts"`
 }
 

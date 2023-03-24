@@ -19,12 +19,6 @@ package controllers
 import (
 	"context"
 
-	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -53,75 +47,9 @@ type LabTemplateReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := log.FromContext(ctx)
-
-	labTemplate := &ltbbackendv1alpha1.LabTemplate{}
-	err := r.Get(ctx, req.NamespacedName, labTemplate)
-	if err != nil {
-		if errors.IsNotFound(err) {
-			log.Info("LabTemplate not found")
-			return ctrl.Result{}, nil
-		}
-		log.Error(err, "Unable to get LabTemplate")
-		return ctrl.Result{}, err
-	}
-
-	found := &appsv1.Deployment{}
-	err = r.Get(ctx, types.NamespacedName{Name: labTemplate.Name, Namespace: labTemplate.Namespace}, found)
-	if err != nil && errors.IsNotFound(err) {
-		dep := r.deploymentForLabTemplate(labTemplate)
-		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
-		err = r.Create(ctx, dep)
-		if err != nil {
-			log.Error(err, "Failed to create new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
-			return ctrl.Result{}, err
-		}
-		// Deployment created successfully - return and requeue
-		return ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Deployment")
-		return ctrl.Result{}, err
-	}
+	_ = log.FromContext(ctx)
 
 	return ctrl.Result{}, nil
-}
-
-func (r *LabTemplateReconciler) deploymentForLabTemplate(labTemplate *ltbbackendv1alpha1.LabTemplate) *appsv1.Deployment {
-	ls := labelsForLabTemplate(labTemplate.Name)
-	dep := &appsv1.Deployment{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labTemplate.Name,
-			Namespace: labTemplate.Namespace,
-		},
-		Spec: appsv1.DeploymentSpec{
-			Selector: &metav1.LabelSelector{
-				MatchLabels: ls,
-			},
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      labTemplate.Name,
-					Namespace: labTemplate.Namespace,
-					Labels:    ls,
-				},
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{{
-						Name:  labTemplate.Spec.BasicTemplate.Name,
-						Image: "ubuntu:latest",
-						Ports: []corev1.ContainerPort{{
-							ContainerPort: 8080,
-						}},
-					}},
-				},
-			},
-		},
-	}
-	// Set LabTemplate instance as the owner and controller
-	ctrl.SetControllerReference(labTemplate, dep, r.Scheme)
-	return dep
-}
-
-func labelsForLabTemplate(name string) map[string]string {
-	return map[string]string{"app": "labtemplate", "labtemplate_cr": name}
 }
 
 // SetupWithManager sets up the controller with the Manager.
