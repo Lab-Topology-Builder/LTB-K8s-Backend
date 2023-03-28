@@ -34,6 +34,8 @@ import (
 	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
 	"github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/controllers"
 	//+kubebuilder:scaffold:imports
+
+	"kubevirt.io/client-go/kubecli"
 )
 
 var (

@@ -22,8 +22,12 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	kubevirtv1 "kubevirt.io/api/core/v1"
+
+	// kubevirtClientv1 "kubevirt.io/client-go/api/v1"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -80,13 +84,11 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 
-	found := &corev1.Pod{}
-
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, found)
-
+	foundPod := &corev1.Pod{}
+	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new deployment
-		pod := r.deployLabInstance(labInstance, labTemplate)
+		pod := r.mapTemplateToPod(labInstance, labTemplate)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
 		if err != nil {
@@ -99,17 +101,40 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "Failed to get Pod")
 		return ctrl.Result{}, err
 	}
+	foundVM := &kubevirtv1.VirtualMachine{}
+	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
+	if err != nil && errors.IsNotFound(err) {
+		// Define a new deployment
+		vm := r.mapTemplateToVM(labInstance, labTemplate)
+		log.Info("Creating a new Pod", "Pod.Namespace", vm.Namespace, "Pod.Name", vm.Name)
+		err = r.Create(ctx, vm)
+		if err != nil {
+			log.Error(err, "Failed to create new Pod", "Pod.Namespace", vm.Namespace, "Pod.Name", vm.Name)
+			return ctrl.Result{}, err
+		}
+		// Pod created successfully - return and requeue
+		return ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get Pod")
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) deployLabInstance(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
+func (r *LabInstanceReconciler) mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      labInstance.Name,
 			Namespace: labInstance.Namespace,
 		},
 		Spec: corev1.PodSpec{
-			Containers: mapContainersToHosts(labTemplate),
+			Containers: []corev1.Container{
+				{
+					Name:    labTemplate.Spec.Nodes[0].Name,
+					Image:   labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version,
+					Command: []string{"/bin/sleep", "365d"},
+				},
+			},
 		},
 	}
 
@@ -117,18 +142,48 @@ func (r *LabInstanceReconciler) deployLabInstance(labInstance *ltbbackendv1alpha
 	return pod
 }
 
-func mapContainersToHosts(labTemplate *ltbbackendv1alpha1.LabTemplate) []corev1.Container {
-	nodes := labTemplate.Spec.Nodes
-	containers := []corev1.Container{}
-	for _, node := range nodes {
-		containers = append(containers, corev1.Container{
-			Name:    node.Name,
-			Image:   node.Image.Type + ":" + node.Image.Version,
-			Command: []string{"/bin/sleep", "365d"},
-		})
+func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *kubevirtv1.VirtualMachine {
+	vm := &kubevirtv1.VirtualMachine{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      labInstance.Name,
+			Namespace: labInstance.Namespace,
+		},
+		Spec: kubevirtv1.VirtualMachineSpec{
+			Running: &[]bool{true}[0],
+			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+				Spec: kubevirtv1.VirtualMachineInstanceSpec{
+					Domain: kubevirtv1.DomainSpec{
+						Resources: kubevirtv1.ResourceRequirements{
+							Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
+						},
+						CPU: &kubevirtv1.CPU{Cores: 1},
+						Devices: kubevirtv1.Devices{
+							Disks: []kubevirtv1.Disk{
+								{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+								{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+							},
+						},
+					},
+					Volumes: []kubevirtv1.Volume{{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version}}}, {Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: labTemplate.Spec.Nodes[0].Config}}}},
+				},
+			},
+		},
 	}
-	return containers
+	return vm
 }
+
+// func mapContainersToHosts(labTemplate *ltbbackendv1alpha1.LabTemplate) []corev1.Container {
+// 	nodes := labTemplate.Spec.Nodes
+// 	containers := []corev1.Container{}
+// 	for _, node := range nodes {
+// 		containers = append(containers, corev1.Container{
+// 			Name:    node.Name,
+// 			Image:   node.Image.Type + ":" + node.Image.Version,
+// 			Command: []string{"/bin/sleep", "365d"},
+// 		})
+// 	}
+// 	return containers
+// }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *LabInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
