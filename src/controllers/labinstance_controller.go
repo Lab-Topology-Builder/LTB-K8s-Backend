@@ -86,17 +86,17 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new deployment
-		dep := r.deployLabInstance(labInstance, labTemplate)
-		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
-		err = r.Create(ctx, dep)
+		pod := r.deployLabInstance(labInstance, labTemplate)
+		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
+		err = r.Create(ctx, pod)
 		if err != nil {
-			log.Error(err, "Failed to create new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
+			log.Error(err, "Failed to create new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 			return ctrl.Result{}, err
 		}
-		// Deployment created successfully - return and requeue
+		// Pod created successfully - return and requeue
 		return ctrl.Result{Requeue: true}, nil
 	} else if err != nil {
-		log.Error(err, "Failed to get Deployment")
+		log.Error(err, "Failed to get Pod")
 		return ctrl.Result{}, err
 	}
 	return ctrl.Result{}, nil
@@ -118,12 +118,12 @@ func (r *LabInstanceReconciler) deployLabInstance(labInstance *ltbbackendv1alpha
 }
 
 func mapContainersToHosts(labTemplate *ltbbackendv1alpha1.LabTemplate) []corev1.Container {
-	hosts := labTemplate.Spec.Template.Spec.Hosts
+	nodes := labTemplate.Spec.Nodes
 	containers := []corev1.Container{}
-	for _, host := range hosts {
+	for _, node := range nodes {
 		containers = append(containers, corev1.Container{
-			Name:    host.Name,
-			Image:   host.Image.Type + ":" + host.Image.Version,
+			Name:    node.Name,
+			Image:   node.Image.Type + ":" + node.Image.Version,
 			Command: []string{"/bin/sleep", "365d"},
 		})
 	}

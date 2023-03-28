@@ -36,14 +36,11 @@ spec:
             description: LabInstanceSpec defines the desired state of LabInstance
             properties:
               labTemplateReference:
-                type: string
-              name:
                 description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                   Important: Run "make" to regenerate code after modifying this file'
                 type: string
             required:
             - labTemplateReference
-            - name
             type: object
           status:
             description: LabInstanceStatus defines the observed state of LabInstance

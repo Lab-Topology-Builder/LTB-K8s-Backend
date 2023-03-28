@@ -24,7 +24,6 @@ import (
 type LabInstanceSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	LabInstanceName      string `json:"name"`
 	LabTemplateReference string `json:"labTemplateReference"`
 }
 

@@ -35,9 +35,18 @@ spec:
           spec:
             description: LabTemplateSpec defines the desired state of LabTemplate
             properties:
-              hosts:
-                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-                  Important: Run "make" to regenerate code after modifying this file'
+              connections:
+                items:
+                  properties:
+                    neighbors:
+                      maxLength: 32
+                      minLength: 1
+                      type: string
+                  required:
+                  - neighbors
+                  type: object
+                type: array
+              nodes:
                 items:
                   properties:
                     config:
@@ -54,24 +63,10 @@ spec:
                     interfaces:
                       items:
                         properties:
-                          connects:
-                            properties:
-                              interface:
-                                type: integer
-                              name:
-                                maxLength: 32
-                                minLength: 1
-                                type: string
-                            required:
-                            - interface
-                            - name
-                            type: object
                           ipv4:
                             type: string
                           ipv6:
                             type: string
-                        required:
-                        - connects
                         type: object
                       type: array
                     name:
@@ -84,7 +79,8 @@ spec:
                   type: object
                 type: array
             required:
-            - hosts
+            - connections
+            - nodes
             type: object
           status:
             description: LabTemplateStatus defines the observed state of LabTemplate

@@ -9,5 +9,4 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: labinstance-sample
 spec:
-  name: "labinstance-sample"
   labTemplateReference: "labtemplate-sample"

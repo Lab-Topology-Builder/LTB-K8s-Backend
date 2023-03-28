@@ -9,15 +9,14 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: labtemplate-sample
 spec:
-  template:
-    name: "labtemplate-sample"
-    spec:
-      hosts:
-      - name: "sample-host-1"
-        image:
-          type: "ubuntu"
-          version: "latest"
-      - name: "sample-host-2"
-        image:
-          type: "ubuntu"
-          version: "latest"
+  nodes:
+  - name: "sample-host-1"
+    image:
+      type: "ubuntu"
+      version: "latest"
+  - name: "sample-host-2"
+    image:
+      type: "ubuntu"
+      version: "latest"
+  connections:
+  - neighbors: "TestHost1:1,TestHost2:1"

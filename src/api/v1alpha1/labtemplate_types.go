@@ -22,37 +22,33 @@ import (
 
 // LabTemplateSpec defines the desired state of LabTemplate
 type LabTemplateSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	Hosts []LabInstanceHost `json:"hosts"`
+	Nodes       []LabInstanceNodes `json:"nodes"`
+	Connections []Connection       `json:"connections"`
 }
 
-type LabInstanceHost struct {
+type LabInstanceNodes struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
 	Name       string          `json:"name"`
-	Image      HostImage       `json:"image"`
-	Interfaces []HostInterface `json:"interfaces,omitempty"`
+	Image      NodeImage       `json:"image"`
+	Interfaces []NodeInterface `json:"interfaces,omitempty"`
 	Config     string          `json:"config,omitempty"`
 }
 
-type HostInterface struct {
-	Connects NeighborInterface `json:"connects"`
-	Ipv4     string            `json:"ipv4,omitempty"`
-	Ipv6     string            `json:"ipv6,omitempty"`
+type NodeInterface struct {
+	Ipv4 string `json:"ipv4,omitempty"`
+	Ipv6 string `json:"ipv6,omitempty"`
 }
 
-type HostImage struct {
+type NodeImage struct {
 	Type    string `json:"type"`
 	Version string `json:"version,omitempty"`
 }
 
-type NeighborInterface struct {
+type Connection struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	NeighborName string `json:"name"`
-
-	Interface int `json:"interface"`
+	Neighbors string `json:"neighbors"`
 }
 
 // LabTemplateStatus defines the observed state of LabTemplate
