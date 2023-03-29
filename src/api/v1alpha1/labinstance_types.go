@@ -31,6 +31,9 @@ type LabInstanceSpec struct {
 type LabInstanceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	Phase      string `json:"phase"`
+	LastUpdate string `json:"lastUpdate,omitempty"`
+	AppVersion string `json:"appVersion,omitempty"`
 }
 
 //+kubebuilder:object:root=true

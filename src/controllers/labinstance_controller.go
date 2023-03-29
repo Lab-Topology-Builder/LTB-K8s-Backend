@@ -101,6 +101,16 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "Failed to get Pod")
 		return ctrl.Result{}, err
 	}
+
+	// Check status of the pod
+	if labInstance.Status.Phase != "running" {
+		labInstance.Status.Phase = "running"
+		if err := r.Status().Update(ctx, labInstance); err != nil {
+			log.Error(err, "Failed to update LabInstance status")
+			return ctrl.Result{}, err
+		}
+	}
+
 	foundVM := &kubevirtv1.VirtualMachine{}
 	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
@@ -135,6 +145,9 @@ func (r *LabInstanceReconciler) mapTemplateToPod(labInstance *ltbbackendv1alpha1
 					Command: []string{"/bin/sleep", "365d"},
 				},
 			},
+		},
+		Status: corev1.PodStatus{
+			Phase: "running",
 		},
 	}
 
