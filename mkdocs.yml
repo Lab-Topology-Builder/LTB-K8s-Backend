@@ -8,21 +8,14 @@ copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
 
 nav:
   - Home: README.md
-  - Architecture:
-    - Lab Topology Builder Architecture (K8s): architecture/k8s-ltb-architecture.md
-    - Lab Topology Builder Architecture (KVM/Docker): architecture/kvm-docker-ltb-architecture.md
-  - User Guide: user-guide.md
-  - Concepts: concepts.md
-  - Contributor:
-    - Development Cluster Setup: contributor/dev-cluster-setup.md
-    - Coding Conventions: contributor/coding-conventions.md
-    - Test Concepts: contributor/test-concepts.md
-  - About: about.md
+  - ...
 plugins:
   - search
-  # - exclude:
-  #     glob:
-  #       - decisions/adr-template.md
+  - awesome-pages:
+  - exclude:
+      glob:
+        - decisions/adr-template.md
+        - decisions/README.md
   # - git-authors
   # - git-revision-date-localized:
   #     fallback_to_build_date: true
@@ -60,6 +53,7 @@ theme:
     - search.suggest
     - content.action.edit
     - content.code.copy
+    - navigation.indexes
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
