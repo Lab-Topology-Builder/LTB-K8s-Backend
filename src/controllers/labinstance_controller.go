@@ -83,11 +83,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "Failed to get LabTemplate")
 		return ctrl.Result{}, err
 	}
+	log.Info("LabTemplate resource found.", "LabTemplate.Namespace", labTemplate.Namespace, "LabTemplate.Name", labTemplate.Name)
 
 	foundPod := &corev1.Pod{}
 	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
-		// Define a new deployment
+		// Define a new Pod
 		pod := r.mapTemplateToPod(labInstance, labTemplate)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
@@ -104,15 +105,15 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	foundVM := &kubevirtv1.VirtualMachine{}
 	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
-		// Define a new deployment
+		// Define a new VM
 		vm := r.mapTemplateToVM(labInstance, labTemplate)
-		log.Info("Creating a new Pod", "Pod.Namespace", vm.Namespace, "Pod.Name", vm.Name)
+		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
 		err = r.Create(ctx, vm)
 		if err != nil {
-			log.Error(err, "Failed to create new Pod", "Pod.Namespace", vm.Namespace, "Pod.Name", vm.Name)
+			log.Error(err, "Failed to create new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
 			return ctrl.Result{}, err
 		}
-		// Pod created successfully - return and requeue
+		// VM created successfully - return and requeue
 		return ctrl.Result{Requeue: true}, nil
 	} else if err != nil {
 		log.Error(err, "Failed to get Pod")
@@ -143,13 +144,14 @@ func (r *LabInstanceReconciler) mapTemplateToPod(labInstance *ltbbackendv1alpha1
 }
 
 func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *kubevirtv1.VirtualMachine {
+	bool := true
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      labInstance.Name,
 			Namespace: labInstance.Namespace,
 		},
 		Spec: kubevirtv1.VirtualMachineSpec{
-			Running: &[]bool{true}[0],
+			Running: &bool,
 			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
 				Spec: kubevirtv1.VirtualMachineInstanceSpec{
 					Domain: kubevirtv1.DomainSpec{
@@ -164,7 +166,9 @@ func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.
 							},
 						},
 					},
-					Volumes: []kubevirtv1.Volume{{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version}}}, {Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: labTemplate.Spec.Nodes[0].Config}}}},
+					Volumes: []kubevirtv1.Volume{
+						{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version}}},
+						{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: labTemplate.Spec.Nodes[0].Config}}}},
 				},
 			},
 		},
