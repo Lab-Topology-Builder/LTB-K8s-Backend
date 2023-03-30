@@ -202,7 +202,7 @@ func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.
 		} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
 			return fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
 		} else {
-			fmt.Printf("pod %s still starting or pending, waiting 5 seconds...\n", pod.Name)
+			fmt.Printf("pod %s still starting, waiting 5 seconds...\n", pod.Name)
 			time.Sleep(5 * time.Second)
 			err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
 			if err != nil {
