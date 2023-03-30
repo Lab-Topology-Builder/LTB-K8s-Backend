@@ -18,6 +18,8 @@ package controllers
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -104,12 +106,9 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	// Check status of the pod
-	if labInstance.Status.Phase != "running" {
-		labInstance.Status.Phase = "running"
-		if err := r.Status().Update(ctx, labInstance); err != nil {
-			log.Error(err, "Failed to update LabInstance status")
-			return ctrl.Result{}, err
-		}
+	if err := r.checkPodStatus(ctx, foundPod); err != nil {
+		log.Error(err, "Failed to check Pod status")
+		return ctrl.Result{}, err
 	}
 
 	foundVM := &kubevirtv1.VirtualMachine{}
@@ -129,6 +128,13 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "Failed to get Pod")
 		return ctrl.Result{}, err
 	}
+
+	// Check status of the VM
+	if err := r.checkVMStatus(ctx, foundVM); err != nil {
+		log.Error(err, "Failed to check VM status")
+		return ctrl.Result{}, err
+	}
+
 	return ctrl.Result{}, nil
 }
 
@@ -147,9 +153,7 @@ func (r *LabInstanceReconciler) mapTemplateToPod(labInstance *ltbbackendv1alpha1
 				},
 			},
 		},
-		Status: corev1.PodStatus{
-			Phase: "running",
-		},
+		Status: labInstance.Status.Phase,
 	}
 
 	ctrl.SetControllerReference(labInstance, pod, r.Scheme)
@@ -187,6 +191,46 @@ func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.
 		},
 	}
 	return vm
+}
+
+func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) error {
+	for {
+		phase := pod.Status.Phase
+		fmt.Printf("Pod status: %v\n", phase)
+		if phase == corev1.PodRunning {
+			return nil
+		} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
+			return fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
+		} else {
+			fmt.Printf("pod %s still starting or pending, waiting 5 seconds...\n", pod.Name)
+			time.Sleep(5 * time.Second)
+			err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
+			if err != nil {
+				return err
+			}
+
+		}
+	}
+}
+
+func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) error {
+	for {
+
+		if vm.Status.Ready {
+			fmt.Printf("VM Ready")
+			return nil
+		} else if vm.Status.StartFailure != nil {
+			return fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
+		} else {
+			fmt.Printf("vm %s still being creating or pending, waiting 5 seconds...\n", vm.Name)
+			time.Sleep(5 * time.Second)
+			err := r.Get(ctx, types.NamespacedName{Name: vm.Name, Namespace: vm.Namespace}, vm)
+			if err != nil {
+				return err
+			}
+
+		}
+	}
 }
 
 // func mapContainersToHosts(labTemplate *ltbbackendv1alpha1.LabTemplate) []corev1.Container {
