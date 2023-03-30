@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -31,9 +32,9 @@ type LabInstanceSpec struct {
 type LabInstanceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Phase      string `json:"phase"`
-	LastUpdate string `json:"lastUpdate,omitempty"`
-	AppVersion string `json:"appVersion,omitempty"`
+	Phase      corev1.PodStatus `json:"phase,omitempty"`
+	LastUpdate string           `json:"lastUpdate,omitempty"`
+	AppVersion string           `json:"appVersion,omitempty"`
 }
 
 //+kubebuilder:object:root=true
