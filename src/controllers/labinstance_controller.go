@@ -19,15 +19,12 @@ package controllers
 import (
 	"context"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	kubevirtv1 "kubevirt.io/api/core/v1"
-
-	// kubevirtClientv1 "kubevirt.io/client-go/api/v1"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -206,6 +203,7 @@ func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.
 func (r *LabInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&ltbbackendv1alpha1.LabInstance{}).
-		Owns(&appsv1.Deployment{}).
+		Owns(&corev1.Pod{}).
+		Owns(&kubevirtv1.VirtualMachine{}).
 		Complete(r)
 }
