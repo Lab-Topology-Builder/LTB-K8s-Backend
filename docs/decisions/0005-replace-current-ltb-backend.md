@@ -11,4 +11,4 @@ The LTB K8s Backend could replace the current LTB Backend fully or partially by 
 
 ## Decision Outcome
 
-Chosen option: "Replace current LTB Backend fully", because this helps to avoid api dependencies and reduces the amount of services to be managed.
+Chosen option: "Replace current LTB Backend fully", because huge parts of the current LTB Backend would need to be rewritten to be compatible with the new LTB K8s operator.
