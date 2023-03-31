@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/test-concepts/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0001-operator-SDK/">
       
       
-        <link rel="prev" href="../dev-cluster-setup/">
+        <link rel="prev" href="../0000-use-markdown-architectural-decision-records/">
       
       
-        <link rel="next" href="../../decisions/0000-use-markdown-architectural-decision-records/">
+        <link rel="next" href="../0002-operator-scope/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Test Concept - LTB K8s Backend</title>
+        <title>Operator SDK - LTB K8s Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#test-concept" class="md-skip">
+        <a href="#operator-sdk" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Test Concept
+              Operator SDK
             
           </span>
         </div>
@@ -367,16 +367,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
       
       
         
@@ -393,7 +391,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
           Contributor
@@ -406,7 +404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../coding-conventions/" class="md-nav__link">
+      <a href="../../contributor/coding-conventions/" class="md-nav__link">
         Coding Conventions
       </a>
     </li>
@@ -420,7 +418,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-cluster-setup/" class="md-nav__link">
+      <a href="../../contributor/dev-cluster-setup/" class="md-nav__link">
         Development cluster setup
       </a>
     </li>
@@ -432,100 +430,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Test Concept
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../contributor/test-concepts/" class="md-nav__link">
         Test Concept
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-categories" class="md-nav__link">
-    Test categories
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tools" class="md-nav__link">
-    Tools
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#strategies-test-approach" class="md-nav__link">
-    Strategies: Test Approach
-  </a>
-  
-    <nav class="md-nav" aria-label="Strategies: Test Approach">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#unit-tests" class="md-nav__link">
-    Unit Tests
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-tests" class="md-nav__link">
-    Integration Tests
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    Environment
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -543,14 +452,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
       
       
         
@@ -579,7 +490,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Decisions
@@ -592,7 +503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
+      <a href="../0000-use-markdown-architectural-decision-records/" class="md-nav__link">
         Use Markdown Architectural Decision Records
       </a>
     </li>
@@ -604,11 +515,73 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Operator SDK
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Operator SDK
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context-and-problem-statement" class="md-nav__link">
+    Context and Problem Statement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    Considered Options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-outcome" class="md-nav__link">
+    Decision Outcome
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-information" class="md-nav__link">
+    More Information
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -620,7 +593,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-operator-scope/" class="md-nav__link">
+      <a href="../0002-operator-scope/" class="md-nav__link">
         Operator Scope
       </a>
     </li>
@@ -634,7 +607,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-api-and-operator-run-in-one-container/" class="md-nav__link">
+      <a href="../0003-api-and-operator-run-in-one-container/" class="md-nav__link">
         API and Operator Run in One Container
       </a>
     </li>
@@ -648,7 +621,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-dev-container/" class="md-nav__link">
+      <a href="../0004-dev-container/" class="md-nav__link">
         DevContainer
       </a>
     </li>
@@ -662,7 +635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
+      <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
         Replace Current LTB Backend
       </a>
     </li>
@@ -676,7 +649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-lab-instance-set/" class="md-nav__link">
+      <a href="../0006-lab-instance-set/" class="md-nav__link">
         Lab Instance Set
       </a>
     </li>
@@ -690,7 +663,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-deployment-to-k8s/" class="md-nav__link">
+      <a href="../0007-deployment-to-k8s/" class="md-nav__link">
         Deployment to K8s
       </a>
     </li>
@@ -704,7 +677,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
+      <a href="../0008-namespace-per-labinstance/" class="md-nav__link">
         Namespace Per LabInstance
       </a>
     </li>
@@ -745,56 +718,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
+  <a href="#context-and-problem-statement" class="md-nav__link">
+    Context and Problem Statement
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-categories" class="md-nav__link">
-    Test categories
+  <a href="#considered-options" class="md-nav__link">
+    Considered Options
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#tools" class="md-nav__link">
-    Tools
+  <a href="#decision-outcome" class="md-nav__link">
+    Decision Outcome
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#strategies-test-approach" class="md-nav__link">
-    Strategies: Test Approach
-  </a>
-  
-    <nav class="md-nav" aria-label="Strategies: Test Approach">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#unit-tests" class="md-nav__link">
-    Unit Tests
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-tests" class="md-nav__link">
-    Integration Tests
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    Environment
+  <a href="#more-information" class="md-nav__link">
+    More Information
   </a>
   
 </li>
@@ -814,7 +760,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/contributor/test-concepts.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/decisions/0001-operator-SDK.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -822,31 +768,27 @@
   
 
 
-<h1 id="test-concept">Test Concept<a class="headerlink" href="#test-concept" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This document outlines the approaches, methodologies, and types of tests that will be used to ensure the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components are functioning as expected.</p>
-<h2 id="test-categories">Test categories<a class="headerlink" href="#test-categories" title="Permanent link">&para;</a></h2>
-<p>The tests will primarily focus on the following category:</p>
+<h1 id="operator-sdk">Operator SDK<a class="headerlink" href="#operator-sdk" title="Permanent link">&para;</a></h1>
+<h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>It's best practice to use an SDK to build operators for Kubernetes. The SDK provides a higher level of abstraction for creating Kubernetes operators, which makes it easier to write and manage operators.
+There are multiple SDKs available for building operators.
+We need a SDK that's flexible and easy to use and can be used with Go.</p>
+<h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li><em>Functionality and Logic</em>: This includes automated integration tests to evaluate how the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend interacts with other components of the <abbr title="Lab Topology Builder">LTB</abbr> application, such as the operator's function in a Kubernetes cluster with a K8s API server and other resources.</li>
+<li>Operator SDK (Operator Framework)</li>
+<li>KubeBuilder</li>
+<li>Kopf</li>
+<li>KUDO</li>
+<li>Metacontroller</li>
 </ul>
-<p>Testing in the other categories, such as Security and Performance, will be considered later time and their specifics will be determined accordingly.</p>
-<h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
-<p>The tools that are going to be used to perform the tests are:</p>
+<h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Operator SDK", because it provides a high level of abstraction for creating Kubernetes operators, which makes it easier to write and manage operators.
+Additionally, there are tools and libraries for building and testing the operator included in Operator SDK, it's easy to use and can be used with Go.</p>
+<h2 id="more-information">More Information<a class="headerlink" href="#more-information" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://github.com/stretchr/testify">Testify</a>: a go package that provides a set of features to perform unit tests, such as assertions, mocks, etc.</li>
-<li><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a>: a Go library that helps write integration tests for Kubernetes controllers by setting up an instance of etcd and a Kubernetes API server, without kubelet, controller-manager, or other components.</li>
-<li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write epxressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
-<li><a href="https://onsi.github.io/gomega/">Gomega</a>: a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the <a href="https://onsi.github.io/ginkgo/">Ginkgo</a> testing framework.</li>
+<li><a href="https://sdk.operatorframework.io/">Operator SDK</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Tools to build an operator</a></li>
 </ul>
-<h2 id="strategies-test-approach">Strategies: Test Approach<a class="headerlink" href="#strategies-test-approach" title="Permanent link">&para;</a></h2>
-<p>The following test approaches are going to be used to test the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components:</p>
-<h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h3>
-<p>Unit tests are going to be used to test small pieces of code, such as functions, which don't involve setting up testing Kubernetes environment with a K8s API server and other resources.</p>
-<h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h3>
-<p>Integration tests are going to be used to test the different components of the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend, such as the operator, the controllers, etc., and how they interact with each other.</p>
-<h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h2>
-<p><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> is going to be used to set up a testing Kubernetes environment with a K8s API server and other resources.</p>
 
 
 
