@@ -190,6 +190,53 @@ func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.
 	return vm
 }
 
+// TODO: continue working on this
+//func (r *LabInstanceReconciler) defineFieldsForKubectl(podStatus corev1.PodStatus, pod *corev1.Pod) {
+// Define fields for kubectl
+//	header := []string{"NAME", "AGE", "STATUS", "POD-NAME"}
+//	formatString := "{{.metadata.name}}\t{{.metadata.creationTimestamp}}\t{{.status.phase}}\t{{.metadata.name}}"
+//	if podStatus.Phase == corev1.PodRunning {
+//		podName := "All"
+//	}
+//
+//}
+
+// Just ignore this function for now: this is the updated version of the function checkPodStatus and is work in progress
+func (r *LabInstanceReconciler) getPodStatus(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance) (corev1.PodStatus, string, error) {
+	podList := &corev1.PodList{}
+	var podName string
+	var podStatus corev1.PodStatus
+	var err error
+
+	listOpts := []client.ListOption{client.InNamespace(labInstance.Namespace)}
+	if err := r.List(ctx, podList, listOpts...); err != nil {
+		return corev1.PodStatus{}, "None", err
+	}
+	for _, pod := range podList.Items {
+		if pod.Status.Phase == corev1.PodFailed {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
+			break
+		} else if pod.Status.Phase == corev1.PodUnknown {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
+			break
+		} else if pod.Status.Phase == corev1.PodRunning {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = nil
+		} else if pod.Status.Phase == corev1.PodPending {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
+			break
+		}
+	}
+	return podStatus, podName, err
+}
+
 func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) error {
 	for {
 		phase := pod.Status.Phase
