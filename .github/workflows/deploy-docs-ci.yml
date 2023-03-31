@@ -20,5 +20,5 @@ jobs:
           key: ${{ github.ref }}
           path: .cache
       - run: git config --global --add safe.directory /__w/LTB-K8s-Backend/LTB-K8s-Backend
-      - run: pip install mkdocs-material mkdocs-git-authors-plugin mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin-2 pillow cairosvg mkdocs-glightbox
+      - run: pip install mkdocs-material mkdocs-git-authors-plugin mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin-2 pillow cairosvg mkdocs-glightbox mkdocs-print-site-plugin mkdocs-awesome-pages-plugin
       - run: mkdocs gh-deploy --force
