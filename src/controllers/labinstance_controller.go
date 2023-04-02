@@ -72,7 +72,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	labTemplate := &ltbbackendv1alpha1.LabTemplate{}
 	// TODO: Maybe add fatal error handling here
-	if shouldReturn, result, err := r.getLabTemplate(err, ctx, labInstance, labTemplate); shouldReturn {
+	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
 
@@ -99,9 +99,9 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) getLabTemplate(err error, ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Info("LabTemplate resource not found.")
@@ -116,8 +116,9 @@ func (r *LabInstanceReconciler) getLabTemplate(err error, ctx context.Context, l
 
 func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	node := labTemplate.Spec.Nodes[0]
 	foundVM := &kubevirtv1.VirtualMachine{}
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
+	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
 
 		vm := mapTemplateToVM(labInstance, labTemplate)
@@ -130,8 +131,7 @@ func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *lt
 		}
 
 		return nil, true, ctrl.Result{Requeue: true}, nil
-	}
-	if err != nil {
+	} else if err != nil {
 		log.Error(err, "Failed to get VM")
 		return nil, true, ctrl.Result{}, err
 	}
@@ -140,8 +140,9 @@ func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *lt
 
 func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	node := labTemplate.Spec.Nodes[1]
 	foundPod := &corev1.Pod{}
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundPod)
+	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		pod := mapTemplateToPod(labInstance, labTemplate)
@@ -154,18 +155,17 @@ func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *l
 		}
 		// Pod created successfully - return and requeue
 		return pod, true, ctrl.Result{Requeue: true}, nil
-	}
-	if err != nil {
+	} else if err != nil {
 		log.Error(err, "Failed to get Pod")
 		return foundPod, true, ctrl.Result{}, err
 	}
-	log.Error(err, "Pod already exists")
 	return foundPod, false, ctrl.Result{}, nil
 }
 
 func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
+	node := labTemplate.Spec.Nodes[1]
 	metadata := metav1.ObjectMeta{
-		Name:      labTemplate.Spec.Nodes[0].Name,
+		Name:      node.Name,
 		Namespace: labInstance.Namespace,
 	}
 	pod := &corev1.Pod{
@@ -173,8 +173,8 @@ func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *
 		Spec: corev1.PodSpec{
 			Containers: []corev1.Container{
 				{
-					Name:    labTemplate.Spec.Nodes[0].Name,
-					Image:   labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version,
+					Name:    node.Name,
+					Image:   node.Image.Type + ":" + node.Image.Version,
 					Command: []string{"/bin/sleep", "365d"},
 				},
 			},
@@ -186,12 +186,13 @@ func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *
 
 func mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *kubevirtv1.VirtualMachine {
 	running := true
+	node := labTemplate.Spec.Nodes[0]
 	resources := kubevirtv1.ResourceRequirements{
 		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
 	}
 	cpu := &kubevirtv1.CPU{Cores: 1}
 	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name,
+		Name:      node.Name,
 		Namespace: labInstance.Namespace,
 	}
 	disks := []kubevirtv1.Disk{
@@ -199,8 +200,8 @@ func mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *l
 		{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
 	}
 	volumes := []kubevirtv1.Volume{
-		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version}}},
-		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: labTemplate.Spec.Nodes[0].Config}}}}
+		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
+		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}}}
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec: kubevirtv1.VirtualMachineSpec{
