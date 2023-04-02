@@ -84,35 +84,20 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 	log.Info("LabTemplate resource found.", "LabTemplate.Namespace", labTemplate.Namespace, "LabTemplate.Name", labTemplate.Name)
 
-	foundPod := &corev1.Pod{}
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundPod)
-	if err != nil && errors.IsNotFound(err) {
-		// Define a new Pod
-		pod := r.mapTemplateToPod(labInstance, labTemplate)
-		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
-		err = r.Create(ctx, pod)
-		if err != nil {
-			log.Error(err, "Failed to create new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
-			return ctrl.Result{}, err
-		}
-		// Pod created successfully - return and requeue
-		return ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Pod")
-		return ctrl.Result{}, err
-	}
+	r.reconcilePod(ctx, labInstance, labTemplate)
 
 	// Check status of the pod
-	if err := r.checkPodStatus(ctx, foundPod); err != nil {
+	if result, err := r.checkPodStatus(ctx, foundPod); err != nil {
 		log.Error(err, "Failed to check Pod status")
-		return ctrl.Result{}, err
+		return result, err
 	}
 
 	foundVM := &kubevirtv1.VirtualMachine{}
 	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new VM
-		vm := r.mapTemplateToVM(labInstance, labTemplate)
+		vm := mapTemplateToVM(labInstance, labTemplate)
+		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
 		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
 		err = r.Create(ctx, vm)
 		if err != nil {
@@ -121,26 +106,52 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		}
 		// VM created successfully - return and requeue
 		return ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Pod")
+	}
+	if err != nil {
+		log.Error(err, "Failed to get VM")
 		return ctrl.Result{}, err
 	}
 
 	// Check status of the VM
-	if err := r.checkVMStatus(ctx, foundVM); err != nil {
+	if result, err := r.checkVMStatus(ctx, foundVM); err != nil {
 		log.Error(err, "Failed to check VM status")
-		return ctrl.Result{}, err
+		return result, err
 	}
 
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
+func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (ctrl.Result, *corev1.Pod, error) {
+	log := log.FromContext(ctx)
+	foundPod := &corev1.Pod{}
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundPod)
+	if err != nil && errors.IsNotFound(err) {
+		// Define a new Pod
+		pod := mapTemplateToPod(labInstance, labTemplate)
+		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
+		err = r.Create(ctx, pod)
+		if err != nil {
+			log.Error(err, "Failed to create new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
+			return ctrl.Result{}, pod, err
+		}
+		// Pod created successfully - return and requeue
+		return ctrl.Result{Requeue: true}, pod, nil
+	}
+	if err != nil {
+		log.Error(err, "Failed to get Pod")
+		return ctrl.Result{}, foundPod, err
+	}
+	log.Error(err, "Pod already exists")
+	return ctrl.Result{}, foundPod, nil
+}
+
+func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
+	metadata := metav1.ObjectMeta{
+		Name:      labTemplate.Spec.Nodes[0].Name,
+		Namespace: labInstance.Namespace,
+	}
 	pod := &corev1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name,
-			Namespace: labInstance.Namespace,
-		},
+		ObjectMeta: metadata,
 		Spec: corev1.PodSpec{
 			Containers: []corev1.Container{
 				{
@@ -150,39 +161,42 @@ func (r *LabInstanceReconciler) mapTemplateToPod(labInstance *ltbbackendv1alpha1
 				},
 			},
 		},
-		Status: labInstance.Status.Phase,
+		Status: labInstance.Status.Phase, // TODO check if this is needed
 	}
-
-	ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 	return pod
 }
 
-func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *kubevirtv1.VirtualMachine {
-	bool := true
+func mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *kubevirtv1.VirtualMachine {
+	running := true
+	resources := kubevirtv1.ResourceRequirements{
+		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
+	}
+	cpu := &kubevirtv1.CPU{Cores: 1}
+	metadata := metav1.ObjectMeta{
+		Name:      labInstance.Name,
+		Namespace: labInstance.Namespace,
+	}
+	disks := []kubevirtv1.Disk{
+		{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+		{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+	}
+	volumes := []kubevirtv1.Volume{
+		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version}}},
+		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: labTemplate.Spec.Nodes[0].Config}}}}
 	vm := &kubevirtv1.VirtualMachine{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name,
-			Namespace: labInstance.Namespace,
-		},
+		ObjectMeta: metadata,
 		Spec: kubevirtv1.VirtualMachineSpec{
-			Running: &bool,
+			Running: &running,
 			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
 				Spec: kubevirtv1.VirtualMachineInstanceSpec{
 					Domain: kubevirtv1.DomainSpec{
-						Resources: kubevirtv1.ResourceRequirements{
-							Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
-						},
-						CPU: &kubevirtv1.CPU{Cores: 1},
+						Resources: resources,
+						CPU:       cpu,
 						Devices: kubevirtv1.Devices{
-							Disks: []kubevirtv1.Disk{
-								{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-								{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-							},
+							Disks: disks,
 						},
 					},
-					Volumes: []kubevirtv1.Volume{
-						{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + labTemplate.Spec.Nodes[0].Image.Type + ":" + labTemplate.Spec.Nodes[0].Image.Version}}},
-						{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: labTemplate.Spec.Nodes[0].Config}}}},
+					Volumes: volumes,
 				},
 			},
 		},
@@ -190,40 +204,36 @@ func (r *LabInstanceReconciler) mapTemplateToVM(labInstance *ltbbackendv1alpha1.
 	return vm
 }
 
-func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) error {
+func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) (ctrl.Result, error) {
 	for {
 		phase := pod.Status.Phase
 		fmt.Printf("Pod status: %v\n", phase)
 		if phase == corev1.PodRunning {
-			return nil
+			return ctrl.Result{}, nil
 		} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
-			return fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
+			return ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
 		} else {
-			fmt.Printf("pod %s still starting, waiting 5 seconds...\n", pod.Name)
-			time.Sleep(5 * time.Second)
 			err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
 			if err != nil {
-				return err
+				return ctrl.Result{RequeueAfter: 2 * time.Second}, err
 			}
 
 		}
 	}
 }
 
-func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) error {
+func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) (ctrl.Result, error) {
 	for {
 
 		if vm.Status.Ready {
 			fmt.Printf("VM Ready")
-			return nil
+			return ctrl.Result{}, nil
 		} else if vm.Status.StartFailure != nil {
-			return fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
+			return ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
 		} else {
-			fmt.Printf("vm %s still being creating or pending, waiting 5 seconds...\n", vm.Name)
-			time.Sleep(5 * time.Second)
 			err := r.Get(ctx, types.NamespacedName{Name: vm.Name, Namespace: vm.Namespace}, vm)
 			if err != nil {
-				return err
+				return ctrl.Result{RequeueAfter: 2 * time.Second}, err
 			}
 
 		}
