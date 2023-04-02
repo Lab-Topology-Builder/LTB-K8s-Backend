@@ -43,6 +43,7 @@ type NodeInterface struct {
 type NodeImage struct {
 	Type    string `json:"type"`
 	Version string `json:"version,omitempty"`
+	Kind    string `json:"kind,omitempty"`
 }
 
 type Connection struct {

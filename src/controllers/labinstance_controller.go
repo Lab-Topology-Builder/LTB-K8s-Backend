@@ -33,7 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
+	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
 )
 
 // LabInstanceReconciler reconciles a LabInstance object
@@ -55,11 +55,10 @@ type LabInstanceReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
-// TODO: Check if deployment already exists, if not create a new one, or update an existing one
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
-	labInstance := &ltbbackendv1alpha1.LabInstance{}
+	labInstance := &ltbv1alpha1.LabInstance{}
 	err := r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -70,36 +69,50 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 
-	labTemplate := &ltbbackendv1alpha1.LabTemplate{}
+	labTemplate := &ltbv1alpha1.LabTemplate{}
 	// TODO: Maybe add fatal error handling here
 	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
 
-	pod, shouldReturn, result, err := r.reconcilePod(ctx, labInstance, labTemplate)
-	if shouldReturn {
-		return result, err
+	nodes := labTemplate.Spec.Nodes
+	pods := []*corev1.Pod{}
+	vms := []*kubevirtv1.VirtualMachine{}
+	for _, node := range nodes {
+		if node.Image.Kind == "vm" {
+			vm, shouldReturn, result, err := r.reconcileVM(ctx, labInstance, &node)
+			if shouldReturn {
+				return result, err
+			}
+			vms = append(vms, vm)
+		} else {
+			// If not vm, assume it is a pod
+			pod, shouldReturn, result, err := r.reconcilePod(ctx, labInstance, &node)
+			if shouldReturn {
+				return result, err
+			}
+			pods = append(pods, pod)
+		}
 	}
 
-	// Check status of the pod
-	if shouldReturn, result, err := r.checkPodStatus(ctx, pod); shouldReturn {
-		return result, err
+	for _, pod := range pods {
+		// Check status of the pod
+		if shouldReturn, result, err := r.checkPodStatus(ctx, pod); shouldReturn {
+			return result, err
+		}
 	}
 
-	foundVM, shouldReturn, result, err := r.reconcileVM(ctx, labInstance, labTemplate)
-	if shouldReturn {
-		return result, err
-	}
-
-	// Check status of the VM
-	if shouldReturn, result, err := r.checkVMStatus(ctx, foundVM); shouldReturn {
-		return result, err
+	for _, vm := range vms {
+		// Check status of the VM
+		if shouldReturn, result, err := r.checkVMStatus(ctx, vm); shouldReturn {
+			return result, err
+		}
 	}
 
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
 	if err != nil {
@@ -114,38 +127,13 @@ func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance 
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	node := labTemplate.Spec.Nodes[0]
-	foundVM := &kubevirtv1.VirtualMachine{}
-	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundVM)
-	if err != nil && errors.IsNotFound(err) {
-
-		vm := mapTemplateToVM(labInstance, labTemplate)
-		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
-		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
-		err = r.Create(ctx, vm)
-		if err != nil {
-			log.Error(err, "Failed to create new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
-			return nil, true, ctrl.Result{}, err
-		}
-
-		return nil, true, ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get VM")
-		return nil, true, ctrl.Result{}, err
-	}
-	return foundVM, false, ctrl.Result{}, nil
-}
-
-func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (*corev1.Pod, bool, ctrl.Result, error) {
-	log := log.FromContext(ctx)
-	node := labTemplate.Spec.Nodes[1]
 	foundPod := &corev1.Pod{}
 	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
-		pod := mapTemplateToPod(labInstance, labTemplate)
+		pod := mapTemplateToPod(labInstance, node)
 		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
@@ -162,8 +150,30 @@ func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *l
 	return foundPod, false, ctrl.Result{}, nil
 }
 
-func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
-	node := labTemplate.Spec.Nodes[1]
+func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	foundVM := &kubevirtv1.VirtualMachine{}
+	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundVM)
+	if err != nil && errors.IsNotFound(err) {
+
+		vm := mapTemplateToVM(labInstance, node)
+		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
+		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
+		err = r.Create(ctx, vm)
+		if err != nil {
+			log.Error(err, "Failed to create new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
+			return nil, true, ctrl.Result{}, err
+		}
+
+		return nil, true, ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get VM")
+		return nil, true, ctrl.Result{}, err
+	}
+	return foundVM, false, ctrl.Result{}, nil
+}
+
+func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      node.Name,
 		Namespace: labInstance.Namespace,
@@ -184,9 +194,8 @@ func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *
 	return pod
 }
 
-func mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *kubevirtv1.VirtualMachine {
+func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
 	running := true
-	node := labTemplate.Spec.Nodes[0]
 	resources := kubevirtv1.ResourceRequirements{
 		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
 	}
@@ -235,7 +244,7 @@ func mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *l
 //}
 
 // Just ignore this function for now: this is the updated version of the function checkPodStatus and is work in progress
-func (r *LabInstanceReconciler) getPodStatus(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance) (corev1.PodStatus, string, error) {
+func (r *LabInstanceReconciler) getPodStatus(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (corev1.PodStatus, string, error) {
 	podList := &corev1.PodList{}
 	var podName string
 	var podStatus corev1.PodStatus
@@ -298,7 +307,7 @@ func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv
 // SetupWithManager sets up the controller with the Manager.
 func (r *LabInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&ltbbackendv1alpha1.LabInstance{}).
+		For(&ltbv1alpha1.LabInstance{}).
 		Owns(&corev1.Pod{}).
 		Owns(&kubevirtv1.VirtualMachine{}).
 		Complete(r)
