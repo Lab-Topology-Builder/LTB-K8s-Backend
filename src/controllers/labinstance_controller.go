@@ -87,10 +87,10 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.reconcilePod(ctx, labInstance, labTemplate)
 
 	// Check status of the pod
-	if result, err := r.checkPodStatus(ctx, foundPod); err != nil {
-		log.Error(err, "Failed to check Pod status")
-		return result, err
-	}
+	// if result, err := r.checkPodStatus(ctx, foundPod); err != nil {
+	// 	log.Error(err, "Failed to check Pod status")
+	// 	return result, err
+	// }
 
 	foundVM := &kubevirtv1.VirtualMachine{}
 	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
