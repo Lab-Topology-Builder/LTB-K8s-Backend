@@ -73,76 +73,96 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	labTemplate := &ltbbackendv1alpha1.LabTemplate{}
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
-	if err != nil {
-		if errors.IsNotFound(err) {
-			log.Info("LabTemplate resource not found.")
-			return ctrl.Result{}, nil
-		}
-		log.Error(err, "Failed to get LabTemplate")
-		return ctrl.Result{}, err
+	// TODO: Maybe add fatal error handling here
+	if shouldReturn, result, err := r.getLabTemplate(err, ctx, labInstance, labTemplate); shouldReturn {
+		return result, err
 	}
-	log.Info("LabTemplate resource found.", "LabTemplate.Namespace", labTemplate.Namespace, "LabTemplate.Name", labTemplate.Name)
 
-	r.reconcilePod(ctx, labInstance, labTemplate)
+	pod, shouldReturn, result, err := r.reconcilePod(ctx, labInstance, labTemplate)
+	if shouldReturn {
+		return result, err
+	}
 
 	// Check status of the pod
-	// if result, err := r.checkPodStatus(ctx, foundPod); err != nil {
-	// 	log.Error(err, "Failed to check Pod status")
-	// 	return result, err
-	// }
-
-	foundVM := &kubevirtv1.VirtualMachine{}
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
-	if err != nil && errors.IsNotFound(err) {
-		// Define a new VM
-		vm := mapTemplateToVM(labInstance, labTemplate)
-		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
-		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
-		err = r.Create(ctx, vm)
-		if err != nil {
-			log.Error(err, "Failed to create new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
-			return ctrl.Result{}, err
-		}
-		// VM created successfully - return and requeue
-		return ctrl.Result{Requeue: true}, nil
+	if shouldReturn, result, err := r.checkPodStatus(ctx, pod); shouldReturn {
+		return result, err
 	}
-	if err != nil {
-		log.Error(err, "Failed to get VM")
-		return ctrl.Result{}, err
+
+	foundVM, shouldReturn, result, err := r.reconcileVM(ctx, labInstance, labTemplate)
+	if shouldReturn {
+		return result, err
 	}
 
 	// Check status of the VM
-	if result, err := r.checkVMStatus(ctx, foundVM); err != nil {
-		log.Error(err, "Failed to check VM status")
+	if shouldReturn, result, err := r.checkVMStatus(ctx, foundVM); shouldReturn {
 		return result, err
 	}
 
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (ctrl.Result, *corev1.Pod, error) {
+func (r *LabInstanceReconciler) getLabTemplate(err error, ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			log.Info("LabTemplate resource not found.")
+			return true, ctrl.Result{}, nil
+		}
+		log.Error(err, "Failed to get LabTemplate")
+		return true, ctrl.Result{}, err
+	}
+	log.Info("LabTemplate resource found.", "LabTemplate.Namespace", labTemplate.Namespace, "LabTemplate.Name", labTemplate.Name)
+	return false, ctrl.Result{}, nil
+}
+
+func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	foundVM := &kubevirtv1.VirtualMachine{}
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundVM)
+	if err != nil && errors.IsNotFound(err) {
+
+		vm := mapTemplateToVM(labInstance, labTemplate)
+		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
+		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
+		err = r.Create(ctx, vm)
+		if err != nil {
+			log.Error(err, "Failed to create new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
+			return nil, true, ctrl.Result{}, err
+		}
+
+		return nil, true, ctrl.Result{Requeue: true}, nil
+	}
+	if err != nil {
+		log.Error(err, "Failed to get VM")
+		return nil, true, ctrl.Result{}, err
+	}
+	return foundVM, false, ctrl.Result{}, nil
+}
+
+func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		pod := mapTemplateToPod(labInstance, labTemplate)
+		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
 		if err != nil {
 			log.Error(err, "Failed to create new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
-			return ctrl.Result{}, pod, err
+			return pod, true, ctrl.Result{}, err
 		}
 		// Pod created successfully - return and requeue
-		return ctrl.Result{Requeue: true}, pod, nil
+		return pod, true, ctrl.Result{Requeue: true}, nil
 	}
 	if err != nil {
 		log.Error(err, "Failed to get Pod")
-		return ctrl.Result{}, foundPod, err
+		return foundPod, true, ctrl.Result{}, err
 	}
 	log.Error(err, "Pod already exists")
-	return ctrl.Result{}, foundPod, nil
+	return foundPod, false, ctrl.Result{}, nil
 }
 
 func mapTemplateToPod(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *ltbbackendv1alpha1.LabTemplate) *corev1.Pod {
@@ -204,39 +224,75 @@ func mapTemplateToVM(labInstance *ltbbackendv1alpha1.LabInstance, labTemplate *l
 	return vm
 }
 
-func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) (ctrl.Result, error) {
-	for {
-		phase := pod.Status.Phase
-		fmt.Printf("Pod status: %v\n", phase)
-		if phase == corev1.PodRunning {
-			return ctrl.Result{}, nil
-		} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
-			return ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
-		} else {
-			err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
-			if err != nil {
-				return ctrl.Result{RequeueAfter: 2 * time.Second}, err
-			}
+// TODO: continue working on this
+//func (r *LabInstanceReconciler) defineFieldsForKubectl(podStatus corev1.PodStatus, pod *corev1.Pod) {
+// Define fields for kubectl
+//	header := []string{"NAME", "AGE", "STATUS", "POD-NAME"}
+//	formatString := "{{.metadata.name}}\t{{.metadata.creationTimestamp}}\t{{.status.phase}}\t{{.metadata.name}}"
+//	if podStatus.Phase == corev1.PodRunning {
+//		podName := "All"
+//	}
+//
+//}
 
+// Just ignore this function for now: this is the updated version of the function checkPodStatus and is work in progress
+func (r *LabInstanceReconciler) getPodStatus(ctx context.Context, labInstance *ltbbackendv1alpha1.LabInstance) (corev1.PodStatus, string, error) {
+	podList := &corev1.PodList{}
+	var podName string
+	var podStatus corev1.PodStatus
+	var err error
+
+	listOpts := []client.ListOption{client.InNamespace(labInstance.Namespace)}
+	if err := r.List(ctx, podList, listOpts...); err != nil {
+		return corev1.PodStatus{}, "None", err
+	}
+	for _, pod := range podList.Items {
+		if pod.Status.Phase == corev1.PodFailed {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
+			break
+		} else if pod.Status.Phase == corev1.PodUnknown {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
+			break
+		} else if pod.Status.Phase == corev1.PodRunning {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = nil
+		} else if pod.Status.Phase == corev1.PodPending {
+			podStatus = pod.Status
+			podName = pod.Name
+			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
+			break
 		}
+	}
+	return podStatus, podName, err
+}
+
+func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) (bool, ctrl.Result, error) {
+	phase := pod.Status.Phase
+	fmt.Printf("Pod status: %v\n", phase)
+	if phase == corev1.PodRunning {
+		return false, ctrl.Result{}, nil
+	} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
+		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
+	} else {
+		err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
+		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, err
 	}
 }
 
-func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) (ctrl.Result, error) {
-	for {
-
-		if vm.Status.Ready {
-			fmt.Printf("VM Ready")
-			return ctrl.Result{}, nil
-		} else if vm.Status.StartFailure != nil {
-			return ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
-		} else {
-			err := r.Get(ctx, types.NamespacedName{Name: vm.Name, Namespace: vm.Namespace}, vm)
-			if err != nil {
-				return ctrl.Result{RequeueAfter: 2 * time.Second}, err
-			}
-
-		}
+func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) (bool, ctrl.Result, error) {
+	if vm.Status.Ready {
+		fmt.Printf("VM Ready")
+		return false, ctrl.Result{}, nil
+	} else if vm.Status.StartFailure != nil {
+		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
+	} else {
+		err := r.Get(ctx, types.NamespacedName{Name: vm.Name, Namespace: vm.Namespace}, vm)
+		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, err
 	}
 }
 
