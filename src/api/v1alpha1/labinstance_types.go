@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kubevirtv1 "kubevirt.io/api/core/v1"
 )
 
 // LabInstanceSpec defines the desired state of LabInstance
@@ -33,10 +32,10 @@ type LabInstanceSpec struct {
 type LabInstanceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	PodStatus  corev1.PodStatus                `json:"phase,omitempty"`
-	VMStatus   kubevirtv1.VirtualMachineStatus `json:"vmStatus,omitempty"`
-	LastUpdate string                          `json:"lastUpdate,omitempty"`
-	AppVersion string                          `json:"appVersion,omitempty"`
+	PodStatus  corev1.PodStatus `json:"phase,omitempty"`
+	VMStatus   string           `json:"vmStatus,omitempty"`
+	LastUpdate string           `json:"lastUpdate,omitempty"`
+	AppVersion string           `json:"appVersion,omitempty"`
 }
 
 //+kubebuilder:object:root=true

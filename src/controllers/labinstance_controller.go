@@ -97,27 +97,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			pods = append(pods, pod)
 		}
 	}
-
-	//for _, pod := range pods {
-	// Check status of the pod
-	//	if shouldReturn, result, err := r.checkPodStatus(ctx, pod); shouldReturn {
-	//		return result, err
-	//	}
-	//}
-
-	for _, vm := range vms {
-		// Check status of the VM
-		if shouldReturn, result, err := r.checkVMStatus(ctx, vm); shouldReturn {
-			return result, err
-		}
-	}
-
 	// check labInstance status
 	result, labInstanceStatus, err = r.getLabInstanceStatus(ctx, pods, vms, labInstance)
 	if err != nil {
 		return result, err
 	}
-	fmt.Printf("\nLabInstance status: %v\n", labInstanceStatus.PodStatus.Phase)
+	fmt.Printf("\nLabInstance status: %v\n", labInstanceStatus)
 
 	return ctrl.Result{}, nil
 }
@@ -242,21 +227,9 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	return vm
 }
 
-// TODO: continue working on this
-//func (r *LabInstanceReconciler) defineFieldsForKubectl(podStatus corev1.PodStatus, pod *corev1.Pod) {
-// Define fields for kubectl
-//	header := []string{"NAME", "AGE", "STATUS", "POD-NAME"}
-//	formatString := "{{.metadata.name}}\t{{.metadata.creationTimestamp}}\t{{.status.phase}}\t{{.metadata.name}}"
-//	if podStatus.Phase == corev1.PodRunning {
-//		podName := "All"
-//	}
-//
-//}
-
-// Just ignore this function for now: this is the updated version of the function checkPodStatus and is work in progress
 func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) (ctrl.Result, ltbv1alpha1.LabInstanceStatus, error) {
 	var podStatus corev1.PodStatus
-	// var vmStatus kubevirtv1.VirtualMachineStatus
+	var vmStatus string
 	var result ctrl.Result
 	for _, pod := range pods {
 		result, status, err := r.checkPodStatus(ctx, pod)
@@ -266,17 +239,29 @@ func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods [
 		} else {
 			if status.Phase != corev1.PodRunning {
 				podStatus.Phase = status.Phase
+				break
 			} else {
 				podStatus.Phase = corev1.PodRunning
 			}
 		}
 	}
 	labInstance.Status.PodStatus = podStatus
-	// TODO: continue working on this
-	//for _, vm := range vms {
-	//	vmStatus = vm.Status
-	//}
-	//labInstance.Status.VMStatus = vmStatus
+
+	for _, vm := range vms {
+		result, status, err := r.checkVMStatus(ctx, vm)
+
+		if err != nil {
+			return result, labInstance.Status, err
+		} else {
+			if status.Ready {
+				vmStatus = "VM Ready"
+			} else {
+				vmStatus = "Not Ready"
+				break
+			}
+		}
+	}
+	labInstance.Status.VMStatus = vmStatus
 	return result, labInstance.Status, nil
 }
 
