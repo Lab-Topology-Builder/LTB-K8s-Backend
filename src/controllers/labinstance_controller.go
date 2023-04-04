@@ -57,9 +57,12 @@ type LabInstanceReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	var labInstanceStatus ltbv1alpha1.LabInstanceStatus
+	var err error
+	var result ctrl.Result
 
 	labInstance := &ltbv1alpha1.LabInstance{}
-	err := r.Get(ctx, req.NamespacedName, labInstance)
+	err = r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Info("LabInstance resource not found.")
@@ -95,12 +98,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		}
 	}
 
-	for _, pod := range pods {
-		// Check status of the pod
-		if shouldReturn, result, err := r.checkPodStatus(ctx, pod); shouldReturn {
-			return result, err
-		}
-	}
+	//for _, pod := range pods {
+	// Check status of the pod
+	//	if shouldReturn, result, err := r.checkPodStatus(ctx, pod); shouldReturn {
+	//		return result, err
+	//	}
+	//}
 
 	for _, vm := range vms {
 		// Check status of the VM
@@ -108,6 +111,13 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			return result, err
 		}
 	}
+
+	// check labInstance status
+	result, labInstanceStatus, err = r.getLabInstanceStatus(ctx, pods, vms, labInstance)
+	if err != nil {
+		return result, err
+	}
+	fmt.Printf("\nLabInstance status: %v\n", labInstanceStatus.PodStatus.Phase)
 
 	return ctrl.Result{}, nil
 }
@@ -189,7 +199,7 @@ func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 				},
 			},
 		},
-		Status: labInstance.Status.Phase, // TODO check if this is needed
+		Status: labInstance.Status.PodStatus, // TODO check if this is needed
 	}
 	return pod
 }
@@ -244,63 +254,54 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 //}
 
 // Just ignore this function for now: this is the updated version of the function checkPodStatus and is work in progress
-func (r *LabInstanceReconciler) getPodStatus(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (corev1.PodStatus, string, error) {
-	podList := &corev1.PodList{}
-	var podName string
+func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) (ctrl.Result, ltbv1alpha1.LabInstanceStatus, error) {
 	var podStatus corev1.PodStatus
-	var err error
-
-	listOpts := []client.ListOption{client.InNamespace(labInstance.Namespace)}
-	if err := r.List(ctx, podList, listOpts...); err != nil {
-		return corev1.PodStatus{}, "None", err
-	}
-	for _, pod := range podList.Items {
-		if pod.Status.Phase == corev1.PodFailed {
-			podStatus = pod.Status
-			podName = pod.Name
-			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
-			break
-		} else if pod.Status.Phase == corev1.PodUnknown {
-			podStatus = pod.Status
-			podName = pod.Name
-			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
-			break
-		} else if pod.Status.Phase == corev1.PodRunning {
-			podStatus = pod.Status
-			podName = pod.Name
-			err = nil
-		} else if pod.Status.Phase == corev1.PodPending {
-			podStatus = pod.Status
-			podName = pod.Name
-			err = fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, pod.Status.Phase)
-			break
+	// var vmStatus kubevirtv1.VirtualMachineStatus
+	var result ctrl.Result
+	for _, pod := range pods {
+		result, status, err := r.checkPodStatus(ctx, pod)
+		labInstance.Status.PodStatus = status
+		if err != nil {
+			return result, labInstance.Status, err
+		} else {
+			if status.Phase != corev1.PodRunning {
+				podStatus.Phase = status.Phase
+			} else {
+				podStatus.Phase = corev1.PodRunning
+			}
 		}
 	}
-	return podStatus, podName, err
+	labInstance.Status.PodStatus = podStatus
+	// TODO: continue working on this
+	//for _, vm := range vms {
+	//	vmStatus = vm.Status
+	//}
+	//labInstance.Status.VMStatus = vmStatus
+	return result, labInstance.Status, nil
 }
 
-func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) (ctrl.Result, corev1.PodStatus, error) {
 	phase := pod.Status.Phase
-	fmt.Printf("Pod status: %v\n", phase)
+	//fmt.Printf("Pod status: %v\n", phase)
 	if phase == corev1.PodRunning {
-		return false, ctrl.Result{}, nil
+		return ctrl.Result{}, pod.Status, nil
 	} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
+		return ctrl.Result{RequeueAfter: 2 * time.Second}, pod.Status, fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
 	} else {
 		err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, err
+		return ctrl.Result{RequeueAfter: 2 * time.Second}, pod.Status, err
 	}
 }
 
-func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) (ctrl.Result, kubevirtv1.VirtualMachineStatus, error) {
 	if vm.Status.Ready {
-		fmt.Printf("VM Ready")
-		return false, ctrl.Result{}, nil
+		//fmt.Printf("VM Ready")
+		return ctrl.Result{}, vm.Status, nil
 	} else if vm.Status.StartFailure != nil {
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
+		return ctrl.Result{RequeueAfter: 2 * time.Second}, vm.Status, fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
 	} else {
 		err := r.Get(ctx, types.NamespacedName{Name: vm.Name, Namespace: vm.Namespace}, vm)
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, err
+		return ctrl.Result{RequeueAfter: 2 * time.Second}, vm.Status, err
 	}
 }
 
