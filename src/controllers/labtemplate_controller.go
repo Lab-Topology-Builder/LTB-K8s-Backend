@@ -27,7 +27,6 @@ import (
 	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
 )
 
-// LabTemplateReconciler reconciles a LabTemplate object
 type LabTemplateReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme

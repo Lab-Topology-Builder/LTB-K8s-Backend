@@ -18,7 +18,6 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: LabTemplate is the Schema for the labtemplates API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,7 +32,6 @@ spec:
           metadata:
             type: object
           spec:
-            description: LabTemplateSpec defines the desired state of LabTemplate
             properties:
               connections:
                 items:
@@ -85,7 +83,6 @@ spec:
             - nodes
             type: object
           status:
-            description: LabTemplateStatus defines the observed state of LabTemplate
             type: object
         type: object
     served: true

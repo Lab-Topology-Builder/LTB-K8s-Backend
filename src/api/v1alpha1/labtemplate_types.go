@@ -20,7 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// LabTemplateSpec defines the desired state of LabTemplate
 type LabTemplateSpec struct {
 	Nodes       []LabInstanceNodes `json:"nodes"`
 	Connections []Connection       `json:"connections"`
@@ -52,16 +51,12 @@ type Connection struct {
 	Neighbors string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
 }
 
-// LabTemplateStatus defines the observed state of LabTemplate
 type LabTemplateStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// LabTemplate is the Schema for the labtemplates API
 type LabTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -72,7 +67,6 @@ type LabTemplate struct {
 
 //+kubebuilder:object:root=true
 
-// LabTemplateList contains a list of LabTemplate
 type LabTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

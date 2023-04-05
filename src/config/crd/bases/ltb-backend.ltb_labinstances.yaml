@@ -20,15 +20,14 @@ spec:
       name: STATUS
       type: string
     - jsonPath: .status.podstatus
-      name: ALLPODSSTATUS
+      name: PODS_STATUS
       type: string
     - jsonPath: .status.vmstatus
-      name: ALLVMSSTATUS
+      name: VMS_STATUS
       type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: LabInstance is the Schema for the labinstances API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -43,24 +42,17 @@ spec:
           metadata:
             type: object
           spec:
-            description: LabInstanceSpec defines the desired state of LabInstance
             properties:
               labTemplateReference:
-                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-                  Important: Run "make" to regenerate code after modifying this file'
                 type: string
             required:
             - labTemplateReference
             type: object
           status:
-            description: LabInstanceStatus defines the observed state of LabInstance
             properties:
               podstatus:
                 type: string
               status:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
-                  of cluster Important: Run "make" to regenerate code after modifying
-                  this file'
                 type: string
               vmstatus:
                 type: string

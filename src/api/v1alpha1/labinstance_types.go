@@ -20,17 +20,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// LabInstanceSpec defines the desired state of LabInstance
 type LabInstanceSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	LabTemplateReference string `json:"labTemplateReference"`
 }
 
-// LabInstanceStatus defines the observed state of LabInstance
 type LabInstanceStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	Status    string `json:"status,omitempty"`
 	PodStatus string `json:"podstatus,omitempty"`
 	VMStatus  string `json:"vmstatus,omitempty"`
@@ -39,10 +33,9 @@ type LabInstanceStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="STATUS",type=string,JSONPath=`.status.status`
-//+kubebuilder:printcolumn:name="ALLPODSSTATUS",type=string,JSONPath=`.status.podstatus`
-//+kubebuilder:printcolumn:name="ALLVMSSTATUS",type=string,JSONPath=`.status.vmstatus`
+//+kubebuilder:printcolumn:name="PODS_STATUS",type=string,JSONPath=`.status.podstatus`
+//+kubebuilder:printcolumn:name="VMS_STATUS",type=string,JSONPath=`.status.vmstatus`
 
-// LabInstance is the Schema for the labinstances API
 type LabInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -52,7 +45,6 @@ type LabInstance struct {
 }
 
 // +kubebuilder:object:root=true
-// LabInstanceList contains a list of LabInstance
 type LabInstanceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

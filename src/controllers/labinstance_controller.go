@@ -18,7 +18,6 @@ package controllers
 
 import (
 	"context"
-	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -96,9 +95,6 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	// Update LabInstance status according to the status of the pods and vms
 	updateLabInstanceStatus(ctx, pods, vms, labInstance)
-
-	fmt.Printf("\nLabInstance status => PodsStatus: %s VMsStatus: %s\n", labInstance.Status.PodStatus, labInstance.Status.VMStatus)
-	fmt.Printf("LabInstanceStatus: %s\n", labInstance.Status.Status)
 
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
@@ -257,7 +253,6 @@ func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 			labInstance.Status.Status = labInstance.Status.VMStatus
 		}
 	}
-	fmt.Println("LabInstance Status: ", labInstance.Status)
 }
 
 // SetupWithManager sets up the controller with the Manager.
