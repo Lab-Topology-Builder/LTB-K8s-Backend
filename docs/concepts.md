@@ -10,11 +10,19 @@ LTB is a tool that allows you to build a topology of virtual machines and contai
 LTB Kubernetes Operator is a custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.
 <!-- TODO: add image -->
 
+## Kubernetes operator
+
+A Kubernetes operator is an application-specific controller that extends the functionality of the Kubernetes API to create, configure, and manage instances of complex applications on behalf of a Kubernetes user 1. It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages 1.
+A Kubernetes operator is a software extension that makes use of custom resources and custom controllers to manage applications and their components using the Kubernetes API.
+
 ## Custom Resource (CR)
 
-Custom Resource is an extension of LTB Kubernetes API that allows you to create your own objects and store them in the Kubernetes cluster.  In LTB, CR is the YAML file that is provided by the user.
+A custom resource is an extension of the Kubernetes API that allows you to define and manage your own API objects.
+It provides a way to store and retrieve structured data and can be used with a custom controller to provide a declarative API.
+Custom resources can be defined as a Kubernetes API extension using Custom Resource Definitions (CRDs) or via API aggregation.
 
 ## Custom Resource Definition (CRD)
+
 
 Custom Resource Definition (CRD) is a Kubernetes API that allows you to define your own custom resources.
 <!-- TODO: add code example -->
