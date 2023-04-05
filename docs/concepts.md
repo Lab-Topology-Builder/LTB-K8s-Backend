@@ -1,5 +1,10 @@
 # Concepts
 
+## Kubernetes Cluster
+
+Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes.
+<!-- TODO: add image -->
+
 ## Lab Topology Builder (LTB)
 
 LTB is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
@@ -17,37 +22,39 @@ It builds upon the basic Kubernetes resource and controller concepts but include
 
 ## Custom Resource (CR)
 
-A custom resource is an extension of the Kubernetes API that allows you to define and manage your own API objects.
+A [custom resource](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-controllers) (CR) is an extension of the Kubernetes API that allows you to define and manage your own API objects.
 It provides a way to store and retrieve structured data and can be used with a custom controller to provide a declarative API.
 Custom resources can be defined as a Kubernetes API extension using Custom Resource Definitions (CRDs) or via API aggregation.
 
 ## Custom Resource Definition (CRD)
 
-
-Custom Resource Definition (CRD) is a Kubernetes API that allows you to define your own custom resources.
+A [custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions) (CRD) is a Kubernetes native resource.
+Defining a CRD object creates a new custom resource with a name and schema that you specify.
+The custom resource created from a CRD object can be either namespaced or cluster-scoped.
+CustomResourceDefinitions themselves are non-namespaced and are available to all namespaces.
 <!-- TODO: add code example -->
-
-## Kubernetes Cluster
-
-Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes.
-<!-- TODO: add image -->
 
 ## Lab Template
 
 Lab Template is a YAML file that defines the topology of the lab. It contains information about the devices that are part of the lab, as well as the network topology.
 <!-- TODO: add code example -->
 
-## Device
+## Node
 
-A device is either a KubeVirt VM or a container. It has a device type, a device version, and a device name.
+In a network, a node represents any device that is connected.
+Within LTB, a node can be either a KubeVirt virtual machine or a container.
+Each node is characterized by its type, version, and name.
+
+## Network Topology
+
+The arrangement or pattern in which all nodes on a network are connected together is referred to as the network’s topology.
 
 ## Lab
 
-Lab is a YAML file (CR) that defines a lab instance. It holds the details from the lab template, and some additional information, such as the lab name.
-It also has a status field that is updated by the Kubernetes operator.
-<!-- TODO: add code example -->
+A lab defines a set of nodes that are connected together according to a network topology.
 
-## Lab Instance (Lab) (LTB)
+## Lab Instance
 
-Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.
-<!-- TODO: add image -->
+A lab instance is a custom resource and describes a lab that is deployed in a Kubernetes cluster.
+It defines the name, which lab template to use and also has a status field that is updated by the operator.
+<!-- TODO: add example -->
