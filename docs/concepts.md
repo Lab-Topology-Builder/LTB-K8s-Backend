@@ -7,7 +7,7 @@ Kubernetes Cluster is a set of nodes that run containerized applications managed
 
 ## Lab Topology Builder (LTB)
 
-LTB is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
+The Lab Topology Builder (LTB) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
 <!-- TODO: add LTB image -->
 
 ## LTB Kubernetes Operator
