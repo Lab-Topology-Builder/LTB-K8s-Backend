@@ -304,6 +304,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#kubernetes-cluster" class="md-nav__link">
+    Kubernetes Cluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#lab-topology-builder-ltb" class="md-nav__link">
     Lab Topology Builder (LTB)
   </a>
@@ -313,6 +320,13 @@
         <li class="md-nav__item">
   <a href="#ltb-kubernetes-operator" class="md-nav__link">
     LTB Kubernetes Operator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-operator" class="md-nav__link">
+    Kubernetes operator
   </a>
   
 </li>
@@ -332,13 +346,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-cluster" class="md-nav__link">
-    Kubernetes Cluster
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#lab-template" class="md-nav__link">
     Lab Template
   </a>
@@ -346,8 +353,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#device" class="md-nav__link">
-    Device
+  <a href="#node" class="md-nav__link">
+    Node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-topology" class="md-nav__link">
+    Network Topology
   </a>
   
 </li>
@@ -360,8 +374,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lab-instance-lab-ltb" class="md-nav__link">
-    Lab Instance (Lab) (LTB)
+  <a href="#lab-instance" class="md-nav__link">
+    Lab Instance
   </a>
   
 </li>
@@ -578,6 +592,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -718,6 +734,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
+        K8s Aggreted API Over Standalone API
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -751,6 +781,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#kubernetes-cluster" class="md-nav__link">
+    Kubernetes Cluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#lab-topology-builder-ltb" class="md-nav__link">
     Lab Topology Builder (LTB)
   </a>
@@ -760,6 +797,13 @@
         <li class="md-nav__item">
   <a href="#ltb-kubernetes-operator" class="md-nav__link">
     LTB Kubernetes Operator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-operator" class="md-nav__link">
+    Kubernetes operator
   </a>
   
 </li>
@@ -779,13 +823,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-cluster" class="md-nav__link">
-    Kubernetes Cluster
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#lab-template" class="md-nav__link">
     Lab Template
   </a>
@@ -793,8 +830,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#device" class="md-nav__link">
-    Device
+  <a href="#node" class="md-nav__link">
+    Node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-topology" class="md-nav__link">
+    Network Topology
   </a>
   
 </li>
@@ -807,8 +851,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#lab-instance-lab-ltb" class="md-nav__link">
-    Lab Instance (Lab) (LTB)
+  <a href="#lab-instance" class="md-nav__link">
+    Lab Instance
   </a>
   
 </li>
@@ -837,38 +881,48 @@
 
 
 <h1 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h1>
-<h2 id="lab-topology-builder-ltb">Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#lab-topology-builder-ltb" title="Permanent link">&para;</a></h2>
-<p><abbr title="Lab Topology Builder">LTB</abbr> is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
-<!-- TODO: add LTB image -->
-
-<h2 id="ltb-kubernetes-operator"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator<a class="headerlink" href="#ltb-kubernetes-operator" title="Permanent link">&para;</a></h2>
-<p><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator is a custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.</p>
-<!-- TODO: add image -->
-
-<h2 id="custom-resource-cr">Custom Resource (<abbr title="Custom Resource">CR</abbr>)<a class="headerlink" href="#custom-resource-cr" title="Permanent link">&para;</a></h2>
-<p>Custom Resource is an extension of <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes API that allows you to create your own objects and store them in the Kubernetes cluster.  In <abbr title="Lab Topology Builder">LTB</abbr>, <abbr title="Custom Resource">CR</abbr> is the YAML file that is provided by the user.</p>
-<h2 id="custom-resource-definition-crd">Custom Resource Definition (<abbr title="Custom Resource Definition">CRD</abbr>)<a class="headerlink" href="#custom-resource-definition-crd" title="Permanent link">&para;</a></h2>
-<p>Custom Resource Definition (<abbr title="Custom Resource Definition">CRD</abbr>) is a Kubernetes API that allows you to define your own custom resources.</p>
-<!-- TODO: add code example -->
-
 <h2 id="kubernetes-cluster">Kubernetes Cluster<a class="headerlink" href="#kubernetes-cluster" title="Permanent link">&para;</a></h2>
 <p>Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes.</p>
 <!-- TODO: add image -->
+
+<h2 id="lab-topology-builder-ltb">Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#lab-topology-builder-ltb" title="Permanent link">&para;</a></h2>
+<p>The Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
+<!-- TODO: add LTB image -->
+
+<h2 id="ltb-kubernetes-operator"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator<a class="headerlink" href="#ltb-kubernetes-operator" title="Permanent link">&para;</a></h2>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator  custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.</p>
+<!-- TODO: add image -->
+
+<h2 id="kubernetes-operator">Kubernetes operator<a class="headerlink" href="#kubernetes-operator" title="Permanent link">&para;</a></h2>
+<p>A Kubernetes operator is an application-specific controller that extends the functionality of the Kubernetes API to create, configure, and manage instances of complex applications on behalf of a Kubernetes user.
+It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages.</p>
+<h2 id="custom-resource-cr">Custom Resource (<abbr title="Custom Resource">CR</abbr>)<a class="headerlink" href="#custom-resource-cr" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-controllers">custom resource</a> (<abbr title="Custom Resource">CR</abbr>) is an extension of the Kubernetes API that allows you to define and manage your own API objects.
+It provides a way to store and retrieve structured data and can be used with a custom controller to provide a declarative API.
+Custom resources can be defined as a Kubernetes API extension using Custom Resource Definitions (CRDs) or via API aggregation.</p>
+<h2 id="custom-resource-definition-crd">Custom Resource Definition (<abbr title="Custom Resource Definition">CRD</abbr>)<a class="headerlink" href="#custom-resource-definition-crd" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions">custom resource definition</a> (<abbr title="Custom Resource Definition">CRD</abbr>) is a Kubernetes native resource.
+Defining a <abbr title="Custom Resource Definition">CRD</abbr> object creates a new custom resource with a name and schema that you specify.
+The custom resource created from a <abbr title="Custom Resource Definition">CRD</abbr> object can be either namespaced or cluster-scoped.
+CustomResourceDefinitions themselves are non-namespaced and are available to all namespaces.</p>
+<!-- TODO: add code example -->
 
 <h2 id="lab-template">Lab Template<a class="headerlink" href="#lab-template" title="Permanent link">&para;</a></h2>
 <p>Lab Template is a YAML file that defines the topology of the lab. It contains information about the devices that are part of the lab, as well as the network topology.</p>
 <!-- TODO: add code example -->
 
-<h2 id="device">Device<a class="headerlink" href="#device" title="Permanent link">&para;</a></h2>
-<p>A device is either a KubeVirt <abbr title="Virtual Machine">VM</abbr> or a container. It has a device type, a device version, and a device name.</p>
+<h2 id="node">Node<a class="headerlink" href="#node" title="Permanent link">&para;</a></h2>
+<p>In a network, a node represents any device that is connected.
+Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a KubeVirt virtual machine or a container.
+Each node is characterized by its type, version, and name.</p>
+<h2 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h2>
+<p>The arrangement or pattern in which all nodes on a network are connected together is referred to as the network’s topology.</p>
 <h2 id="lab">Lab<a class="headerlink" href="#lab" title="Permanent link">&para;</a></h2>
-<p>Lab is a YAML file (<abbr title="Custom Resource">CR</abbr>) that defines a lab instance. It holds the details from the lab template, and some additional information, such as the lab name.
-It also has a status field that is updated by the Kubernetes operator.</p>
-<!-- TODO: add code example -->
-
-<h2 id="lab-instance-lab-ltb">Lab Instance (Lab) (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#lab-instance-lab-ltb" title="Permanent link">&para;</a></h2>
-<p>Lab Instance is a deployment of the lab template. It is deployed by the Kubernetes Operator in the Kubernetes cluster.</p>
-<!-- TODO: add image -->
+<p>A lab defines a set of nodes that are connected together according to a network topology.</p>
+<h2 id="lab-instance">Lab Instance<a class="headerlink" href="#lab-instance" title="Permanent link">&para;</a></h2>
+<p>A lab instance is a custom resource and describes a lab that is deployed in a Kubernetes cluster.
+It defines the name, which lab template to use and also has a status field that is updated by the operator.</p>
+<!-- TODO: add example -->
 
 
 

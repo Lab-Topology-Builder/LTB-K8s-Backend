@@ -90,4 +90,9 @@
          <lastmod>2023-04-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0009-k8s-aggreted-api-over-standalone-api/</loc>
+         <lastmod>2023-04-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
