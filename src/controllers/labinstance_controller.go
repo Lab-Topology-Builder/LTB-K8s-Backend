@@ -19,7 +19,6 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -58,8 +57,6 @@ type LabInstanceReconciler struct {
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	var err error
-	var result ctrl.Result
-	var shouldReturn bool
 	labInstance := &ltbv1alpha1.LabInstance{}
 	err = r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
@@ -96,11 +93,9 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			pods = append(pods, pod)
 		}
 	}
-	// check labInstance status
-	shouldReturn, result, err = r.getLabInstanceStatus(ctx, pods, vms, labInstance)
-	if shouldReturn {
-		return result, err
-	}
+
+	// Update LabInstance status according to the status of the pods and vms
+	updateLabInstanceStatus(ctx, pods, vms, labInstance)
 
 	fmt.Printf("\nLabInstance status => PodsStatus: %s VMsStatus: %s\n", labInstance.Status.PodStatus, labInstance.Status.VMStatus)
 	fmt.Printf("LabInstanceStatus: %s\n", labInstance.Status.Status)
@@ -125,7 +120,6 @@ func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance 
 		log.Error(err, "Failed to get LabTemplate")
 		return true, ctrl.Result{}, err
 	}
-	log.Info("LabTemplate resource found.", "LabTemplate.Namespace", labTemplate.Namespace, "LabTemplate.Name", labTemplate.Name)
 	return false, ctrl.Result{}, nil
 }
 
@@ -233,43 +227,27 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	return vm
 }
 
-func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
-	var podStatus string
-	var vmStatus string
-	var result ctrl.Result
-	var shouldReturn bool
+func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
+	var podStatus corev1.PodPhase
+	var vmStatus kubevirtv1.VirtualMachinePrintableStatus
 	for _, pod := range pods {
-		shouldReturn, result, status, err := r.checkPodStatus(ctx, pod)
-		fmt.Printf("Pod Status: %v\n", status)
-		labInstance.Status.PodStatus = string(status.Phase)
-		if err != nil {
-			return shouldReturn, result, err
-		} else {
-			if status.Phase != corev1.PodRunning {
-				podStatus = string(status.Phase)
-				break
-			}
-			podStatus = string(corev1.PodRunning)
-
+		podStatus = pod.Status.Phase
+		if pod.Status.Phase != corev1.PodRunning {
+			labInstance.Status.PodStatus = string(pod.Status.Phase)
+			break
 		}
 	}
-	labInstance.Status.PodStatus = podStatus
+	labInstance.Status.PodStatus = string(podStatus)
 
 	for _, vm := range vms {
-		shouldReturn, result, status, err := r.checkVMStatus(ctx, vm)
-
-		if err != nil {
-			return shouldReturn, result, err
-		} else {
-			if status.Ready {
-				vmStatus = "VM Ready"
-			} else {
-				vmStatus = "Not Ready"
-				break
-			}
+		vmStatus = vm.Status.PrintableStatus
+		if !vm.Status.Ready {
+			labInstance.Status.VMStatus = string(vmStatus)
+			break
 		}
 	}
-	labInstance.Status.VMStatus = vmStatus
+	labInstance.Status.VMStatus = string(vmStatus)
+
 	if labInstance.Status.PodStatus == "Running" && labInstance.Status.VMStatus == "VM Ready" {
 		labInstance.Status.Status = "Running"
 	} else {
@@ -280,30 +258,6 @@ func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods [
 		}
 	}
 	fmt.Println("LabInstance Status: ", labInstance.Status)
-	return shouldReturn, result, nil
-}
-
-func (r *LabInstanceReconciler) checkPodStatus(ctx context.Context, pod *corev1.Pod) (bool, ctrl.Result, corev1.PodStatus, error) {
-	phase := pod.Status.Phase
-	if phase == corev1.PodRunning {
-		return false, ctrl.Result{}, pod.Status, nil
-	} else if phase == corev1.PodFailed || phase == corev1.PodUnknown {
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, pod.Status, fmt.Errorf("pod %s in %s is in %v state", pod.Name, pod.Namespace, phase)
-	} else {
-		err := r.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, pod)
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, pod.Status, err
-	}
-}
-
-func (r *LabInstanceReconciler) checkVMStatus(ctx context.Context, vm *kubevirtv1.VirtualMachine) (bool, ctrl.Result, kubevirtv1.VirtualMachineStatus, error) {
-	if vm.Status.Ready {
-		return false, ctrl.Result{}, vm.Status, nil
-	} else if vm.Status.StartFailure != nil {
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, vm.Status, fmt.Errorf("vm %s in %s failed and has %v state", vm.Name, vm.Namespace, vm.Status.StartFailure)
-	} else {
-		err := r.Get(ctx, types.NamespacedName{Name: vm.Name, Namespace: vm.Namespace}, vm)
-		return true, ctrl.Result{RequeueAfter: 2 * time.Second}, vm.Status, err
-	}
 }
 
 // SetupWithManager sets up the controller with the Manager.
