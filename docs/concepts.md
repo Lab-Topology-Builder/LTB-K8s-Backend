@@ -7,13 +7,13 @@ LTB is a tool that allows you to build a topology of virtual machines and contai
 
 ## LTB Kubernetes Operator
 
-LTB Kubernetes Operator is a custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.
+The LTB Kubernetes Operator  custom Kubernetes controller that allows you to deploy and manage applications and their components on Kubernetes using custom resources.
 <!-- TODO: add image -->
 
 ## Kubernetes operator
 
-A Kubernetes operator is an application-specific controller that extends the functionality of the Kubernetes API to create, configure, and manage instances of complex applications on behalf of a Kubernetes user 1. It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages 1.
-A Kubernetes operator is a software extension that makes use of custom resources and custom controllers to manage applications and their components using the Kubernetes API.
+A Kubernetes operator is an application-specific controller that extends the functionality of the Kubernetes API to create, configure, and manage instances of complex applications on behalf of a Kubernetes user.
+It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages.
 
 ## Custom Resource (CR)
 
