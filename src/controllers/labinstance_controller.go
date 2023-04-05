@@ -108,14 +108,14 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		labInstance.Status.Status = "Running"
 	} else {
 		if labInstanceStatus.PodStatus != "Running" {
-			labInstance.Status.Status = labInstanceStatus.PodStatus
+			labInstance.Status.Status = string(labInstanceStatus.PodStatus)
 		} else {
 			labInstance.Status.Status = labInstanceStatus.VMStatus
 		}
 	}
 
-	fmt.Printf("\nLabInstance status => PodsStatus: %v VMsStatus: %v\n", labInstance.Status.PodStatus, labInstance.Status.VMStatus)
-	fmt.Printf("LabInstanceStatus: %v\n", labInstance.Status.Status)
+	fmt.Printf("\nLabInstance status => PodsStatus: %s VMsStatus: %s\n", labInstance.Status.PodStatus, labInstance.Status.VMStatus)
+	fmt.Printf("LabInstanceStatus: %s\n", labInstance.Status.Status)
 
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
@@ -246,25 +246,26 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 }
 
 func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, ltbv1alpha1.LabInstanceStatus, error) {
-	var podStatus corev1.PodStatus
+	var podStatus string
 	var vmStatus string
 	var result ctrl.Result
 	var shouldReturn bool
 	for _, pod := range pods {
 		shouldReturn, result, status, err := r.checkPodStatus(ctx, pod)
+		fmt.Printf("Pod Status: %v\n", status)
 		labInstance.Status.PodStatus = string(status.Phase)
 		if err != nil {
 			return shouldReturn, result, labInstance.Status, err
 		} else {
 			if status.Phase != corev1.PodRunning {
-				podStatus.Phase = status.Phase
+				podStatus = string(status.Phase)
 				break
-			} else {
-				podStatus.Phase = corev1.PodRunning
 			}
+			podStatus = string(corev1.PodRunning)
+
 		}
 	}
-	labInstance.Status.PodStatus = string(podStatus.Phase)
+	labInstance.Status.PodStatus = podStatus
 
 	for _, vm := range vms {
 		shouldReturn, result, status, err := r.checkVMStatus(ctx, vm)
@@ -281,6 +282,7 @@ func (r *LabInstanceReconciler) getLabInstanceStatus(ctx context.Context, pods [
 		}
 	}
 	labInstance.Status.VMStatus = vmStatus
+	fmt.Println("LabInstance Status: ", labInstance.Status)
 	return shouldReturn, result, labInstance.Status, nil
 }
 

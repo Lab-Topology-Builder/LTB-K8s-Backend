@@ -39,8 +39,8 @@ type LabInstanceStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="STATUS",type=string,JSONPath=`.status.status`
-//+kubebuilder:printcolumn:name="PODsSTATUS",type=string,JSONPath=`.status.podstatus`
-//+kubebuilder:printcolumn:name="VMsSTATUS",type=string,JSONPath=`.status.vmstatus`
+//+kubebuilder:printcolumn:name="ALLPODSSTATUS",type=string,JSONPath=`.status.podstatus`
+//+kubebuilder:printcolumn:name="ALLVMSSTATUS",type=string,JSONPath=`.status.vmstatus`
 
 // LabInstance is the Schema for the labinstances API
 type LabInstance struct {

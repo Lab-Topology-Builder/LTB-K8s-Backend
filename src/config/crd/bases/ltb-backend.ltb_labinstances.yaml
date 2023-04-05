@@ -20,10 +20,10 @@ spec:
       name: STATUS
       type: string
     - jsonPath: .status.podstatus
-      name: PODsSTATUS
+      name: ALLPODSSTATUS
       type: string
     - jsonPath: .status.vmstatus
-      name: VMsSTATUS
+      name: ALLVMSSTATUS
       type: string
     name: v1alpha1
     schema:
