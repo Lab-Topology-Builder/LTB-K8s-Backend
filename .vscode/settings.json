@@ -10,5 +10,13 @@
     "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format"
   ],
   "markdown.extension.toc.updateOnSave": false,
-  "makefile.makefilePath": "src/Makefile"
+  "makefile.makefilePath": "src/Makefile",
+  "cSpell.words": [
+    "kubebuilder",
+    "metav",
+    "podstatus",
+    "printcolumn",
+    "subresource",
+    "vmstatus"
+  ]
 }
