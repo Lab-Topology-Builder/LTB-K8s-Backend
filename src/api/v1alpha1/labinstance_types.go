@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -32,14 +31,16 @@ type LabInstanceSpec struct {
 type LabInstanceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	PodStatus  corev1.PodStatus `json:"phase,omitempty"`
-	VMStatus   string           `json:"vmStatus,omitempty"`
-	LastUpdate string           `json:"lastUpdate,omitempty"`
-	AppVersion string           `json:"appVersion,omitempty"`
+	Status    string `json:"status,omitempty"`
+	PodStatus string `json:"podstatus,omitempty"`
+	VMStatus  string `json:"vmstatus,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="STATUS",type=string,JSONPath=`.status.status`
+//+kubebuilder:printcolumn:name="PODsSTATUS",type=string,JSONPath=`.status.podstatus`
+//+kubebuilder:printcolumn:name="VMsSTATUS",type=string,JSONPath=`.status.vmstatus`
 
 // LabInstance is the Schema for the labinstances API
 type LabInstance struct {
@@ -50,8 +51,7 @@ type LabInstance struct {
 	Status LabInstanceStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-
+// +kubebuilder:object:root=true
 // LabInstanceList contains a list of LabInstance
 type LabInstanceList struct {
 	metav1.TypeMeta `json:",inline"`

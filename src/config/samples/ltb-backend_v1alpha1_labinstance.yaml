@@ -10,3 +10,4 @@ metadata:
   name: labinstance-sample
 spec:
   labTemplateReference: "labtemplate-sample"
+
