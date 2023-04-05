@@ -18,7 +18,6 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: LabInstanceSet is the Schema for the labinstancesets API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,11 +32,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: LabInstanceSetSpec defines the desired state of LabInstanceSet
             properties:
               generator:
-                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-                  Important: Run "make" to regenerate code after modifying this file'
                 properties:
                   labInstances:
                     items:
@@ -55,7 +51,6 @@ spec:
             - generator
             type: object
           status:
-            description: LabInstanceSetStatus defines the observed state of LabInstanceSet
             type: object
         type: object
     served: true

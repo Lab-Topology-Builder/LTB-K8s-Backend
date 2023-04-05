@@ -33,7 +33,10 @@ import (
 
 	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
 	"github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/controllers"
+
 	//+kubebuilder:scaffold:imports
+
+	kubevirtv1 "kubevirt.io/api/core/v1"
 )
 
 var (
@@ -46,6 +49,9 @@ func init() {
 
 	utilruntime.Must(ltbbackendv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+
+	// Add kubevirt scheme
+	utilruntime.Must(kubevirtv1.AddToScheme(scheme))
 }
 
 func main() {

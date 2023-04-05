@@ -27,7 +27,6 @@ import (
 	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1"
 )
 
-// LabTemplateReconciler reconciles a LabTemplate object
 type LabTemplateReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
@@ -48,8 +47,6 @@ type LabTemplateReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
-
-	// TODO(user): your logic here
 
 	return ctrl.Result{}, nil
 }

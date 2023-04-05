@@ -28,7 +28,6 @@ import (
 	"github.com/go-logr/logr"
 )
 
-// LabInstanceSetReconciler reconciles a LabInstanceSet object
 type LabInstanceSetReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
@@ -51,20 +50,7 @@ type LabInstanceSetReconciler struct {
 func (r *LabInstanceSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 	log := r.Log.WithValues("labinstanceset", req.NamespacedName)
-	//
 	log.Info("Managing resources.")
-	//
-	//labinstanceset := &ltbbackendv1alpha1.LabInstanceSet{}
-	//err := r.Get(ctx, req.NamespacedName, labinstanceset)
-	//if err != nil {
-	//	if errors.IsNotFound(err) {
-	//		log.Info("LabInstanceSet resource not found. Ignoring since object must be deleted")
-	//		return ctrl.Result{}, nil
-	//	}
-	//	return ctrl.Result{Requeue: false}, err
-	//}
-	//
-	// Check if the
 	// TODO(user): your logic here
 
 	return ctrl.Result{}, nil

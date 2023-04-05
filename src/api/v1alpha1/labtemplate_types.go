@@ -20,64 +20,43 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// LabTemplateSpec defines the desired state of LabTemplate
 type LabTemplateSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	BasicTemplate BasicLabTemplate `json:"template"`
+	Nodes       []LabInstanceNodes `json:"nodes"`
+	Connections []Connection       `json:"connections"`
 }
 
-type BasicLabTemplate struct {
-	Name      string               `json:"name"`
-	Namespace string               `json:"namespace,omitempty"`
-	Label     string               `json:"label,omitempty"`
-	Spec      BasicLabTemplateSpec `json:"spec"`
-}
-
-type BasicLabTemplateSpec struct {
-	Hosts []LabInstanceHost `json:"hosts"`
-}
-
-type LabInstanceHost struct {
+type LabInstanceNodes struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Name string `json:"name"`
-
-	Image      HostImage       `json:"image"`
-	Interfaces []HostInterface `json:"interfaces"`
+	Name       string          `json:"name"`
+	Image      NodeImage       `json:"image"`
+	Interfaces []NodeInterface `json:"interfaces,omitempty"`
 	Config     string          `json:"config,omitempty"`
 }
 
-type HostInterface struct {
-	Connects NeighborInterface `json:"connects"`
-	Ipv4     string            `json:"ipv4,omitempty"`
-	Ipv6     string            `json:"ipv6,omitempty"`
+type NodeInterface struct {
+	Ipv4 string `json:"ipv4,omitempty"`
+	Ipv6 string `json:"ipv6,omitempty"`
 }
 
-type HostImage struct {
+type NodeImage struct {
 	Type    string `json:"type"`
-	Version string `json:"version"`
+	Version string `json:"version,omitempty"`
+	Kind    string `json:"kind,omitempty"`
 }
 
-type NeighborInterface struct {
+type Connection struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	NeighborName string `json:"name"`
-
-	Interface int `json:"interface"`
+	Neighbors string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
 }
 
-// LabTemplateStatus defines the observed state of LabTemplate
 type LabTemplateStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// LabTemplate is the Schema for the labtemplates API
 type LabTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -88,7 +67,6 @@ type LabTemplate struct {
 
 //+kubebuilder:object:root=true
 
-// LabTemplateList contains a list of LabTemplate
 type LabTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

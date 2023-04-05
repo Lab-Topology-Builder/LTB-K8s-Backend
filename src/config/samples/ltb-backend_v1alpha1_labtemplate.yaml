@@ -9,13 +9,30 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: labtemplate-sample
 spec:
-  template:
-    name: "labtemplate-sample"
-    spec:
-      hosts:
-        - image:
-            type: "ubuntu"
-            version: "20.04"
-          interfaces:
-            - connects:
-#TODO: continue working here...
+  nodes:
+  - name: "sample-host-1"
+    image:
+      type: "ubuntu"
+      version: "22.04"
+      kind: "vm"
+    config: |-
+              #cloud-config
+              password: ubuntu
+              chpasswd: { expire: False }
+              ssh_authorized_keys:
+                - <your-ssh-pub-key>
+              packages:
+                - qemu-guest-agent
+              runcmd:
+                - [ systemctl, start, qemu-guest-agent ]
+  - name: "sample-host-2"
+    image:
+      type: "ubuntu"
+      version: "latest"
+  - name: "sample-host-3"
+    image:
+      type: "ubuntu"
+      version: "latest"
+      kind: "pod"
+  connections:
+  - neighbors: "TestHost1:1,TestHost2:1"

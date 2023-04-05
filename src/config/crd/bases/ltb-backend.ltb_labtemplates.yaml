@@ -18,7 +18,6 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: LabTemplate is the Schema for the labtemplates API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,78 +32,57 @@ spec:
           metadata:
             type: object
           spec:
-            description: LabTemplateSpec defines the desired state of LabTemplate
             properties:
-              template:
-                properties:
-                  label:
-                    type: string
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                  spec:
-                    properties:
-                      hosts:
-                        items:
-                          properties:
-                            config:
-                              type: string
-                            image:
-                              properties:
-                                type:
-                                  type: string
-                                version:
-                                  type: string
-                              required:
-                              - type
-                              - version
-                              type: object
-                            interfaces:
-                              items:
-                                properties:
-                                  connects:
-                                    properties:
-                                      interface:
-                                        type: integer
-                                      name:
-                                        maxLength: 32
-                                        minLength: 1
-                                        type: string
-                                    required:
-                                    - interface
-                                    - name
-                                    type: object
-                                  ipv4:
-                                    type: string
-                                  ipv6:
-                                    type: string
-                                required:
-                                - connects
-                                type: object
-                              type: array
-                            name:
-                              maxLength: 32
-                              minLength: 1
-                              type: string
-                          required:
-                          - image
-                          - interfaces
-                          - name
-                          type: object
-                        type: array
-                    required:
-                    - hosts
-                    type: object
-                required:
-                - name
-                - spec
-                type: object
+              connections:
+                items:
+                  properties:
+                    neighbors:
+                      maxLength: 32
+                      minLength: 1
+                      type: string
+                  required:
+                  - neighbors
+                  type: object
+                type: array
+              nodes:
+                items:
+                  properties:
+                    config:
+                      type: string
+                    image:
+                      properties:
+                        kind:
+                          type: string
+                        type:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - type
+                      type: object
+                    interfaces:
+                      items:
+                        properties:
+                          ipv4:
+                            type: string
+                          ipv6:
+                            type: string
+                        type: object
+                      type: array
+                    name:
+                      maxLength: 32
+                      minLength: 1
+                      type: string
+                  required:
+                  - image
+                  - name
+                  type: object
+                type: array
             required:
-            - template
+            - connections
+            - nodes
             type: object
           status:
-            description: LabTemplateStatus defines the observed state of LabTemplate
             type: object
         type: object
     served: true
