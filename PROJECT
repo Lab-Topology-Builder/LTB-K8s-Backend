@@ -5,7 +5,7 @@ plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: operator
-repo: github.com/Lab-Topology-Builder/LTB-K8s-Backend/src
+repo: github.com/Lab-Topology-Builder/LTB-K8s-Backend
 resources:
 - api:
     crdVersion: v1
@@ -14,7 +14,7 @@ resources:
   domain: ltb
   group: ltb-backend
   kind: LabInstanceSet
-  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1
+  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -23,7 +23,7 @@ resources:
   domain: ltb
   group: ltb-backend
   kind: LabInstance
-  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1
+  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -32,6 +32,6 @@ resources:
   domain: ltb
   group: ltb-backend
   kind: LabTemplate
-  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/src/api/v1alpha1
+  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1
   version: v1alpha1
 version: "3"
