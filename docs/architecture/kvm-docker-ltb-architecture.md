@@ -1,6 +1,10 @@
 
 # Current (KVM/Docker)-base LTB Architecture
 
+The following diagram shows the current KVM/Docker based LTB.
+
+![Current LTB Architecture](../assets/drawings/ltb-stack-node.svg)
+
 Currently the KVM/Docker based LTB is composed of the following containers:
 
 - [Frontend](#frontend) built with React
