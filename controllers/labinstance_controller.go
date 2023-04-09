@@ -31,6 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
+	// network "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
+
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 )
 
@@ -72,6 +74,31 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
+
+	// networkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
+	// networkAttachmentDefinition.Name = labInstance.Name
+	// networkAttachmentDefinition.Namespace = labInstance.Namespace
+	// networkAttachmentDefinition.Spec.Config = `{
+	//         "cniVersion": "0.3.1",
+	//         "type": "macvlan",
+	//         "mode": "bridge",
+	//         "ipam": {
+	//             "type": "host-local",
+	//             "ranges": [
+	//                 [ {
+	//                     "subnet": "10.10.0.0/24",
+	//                     "rangeStart": "10.10.0.10",
+	//                     "rangeEnd": "10.10.0.250"
+	//                 } ]
+	//             ]
+	//         }
+	//     }`
+
+	// err = r.Create(ctx, networkAttachmentDefinition)
+	// if err != nil {
+	// 	log.Error(err, "Failed to create NetworkAttachmentDefinition")
+	// 	return ctrl.Result{}, err
+	// }
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -122,7 +149,7 @@ func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance 
 func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
-	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundPod)
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		pod := mapTemplateToPod(labInstance, node)
@@ -145,7 +172,7 @@ func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *l
 func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundVM := &kubevirtv1.VirtualMachine{}
-	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundVM)
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + node.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
 
 		vm := mapTemplateToVM(labInstance, node)
@@ -167,8 +194,11 @@ func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *lt
 
 func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
-		Name:      node.Name,
+		Name:      labInstance.Name + node.Name,
 		Namespace: labInstance.Namespace,
+		Annotations: map[string]string{
+			"k8s.v1.cni.cncf.io/networks": "macvlan-conf-1",
+		},
 	}
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
@@ -192,7 +222,7 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	}
 	cpu := &kubevirtv1.CPU{Cores: 1}
 	metadata := metav1.ObjectMeta{
-		Name:      node.Name,
+		Name:      labInstance.Name + node.Name,
 		Namespace: labInstance.Namespace,
 	}
 	disks := []kubevirtv1.Disk{
