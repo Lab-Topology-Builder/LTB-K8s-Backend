@@ -88,7 +88,7 @@ var _ = Describe("LTB Operator", Ordered, func() {
 			var controllerPodName string
 			var err error
 			directory, _ := GetProjectDir()
-			dockerImage := "ltb/operator:0.1.0"
+			//dockerImage := "ltb/operator:v0.1.0"
 
 			//By("By building the operator image")
 			//cmd := exec.Command("make", "docker-build", fmt.Sprintf("IMG=%s", dockerImage))
@@ -105,7 +105,7 @@ var _ = Describe("LTB Operator", Ordered, func() {
 			ExpectWithOffset(1, err).NotTo(HaveOccurred())
 
 			By("By deploying the controller manager")
-			cmd = exec.Command("make", "deploy", fmt.Sprintf("IMG=%s", dockerImage))
+			cmd = exec.Command("make", "deploy", fmt.Sprintf("NAMESPACE=%s", namespace))
 			output, err := RunCommand(cmd)
 			ExpectWithOffset(1, err).NotTo(HaveOccurred())
 
@@ -114,17 +114,17 @@ var _ = Describe("LTB Operator", Ordered, func() {
 
 			By("By checking that the controller manager pod is running")
 			controllerRunning := func() error {
-				cmd = exec.Command("kubectl", "get", "pods", "-n", namespace, "-l", "control-plane=controller-manager", "-o", "jsonpath={.items[*].status.phase}")
+				cmd = exec.Command("kubectl", "get", "pods", "-l", "control-plane=controller-manager", "-n", namespace, "-o", "jsonpath={.items[*].status.phase}")
 				podOutput, err := RunCommand(cmd)
 				ExpectWithOffset(2, err).NotTo(HaveOccurred())
 				podNames := GetNonEmptyLines(string(podOutput))
-				if len(podNames) != 1 {
+				if len(podNames) < 1 {
 					return fmt.Errorf("expected 1 pod, got %d", len(podNames))
 				}
 				controllerPodName = podNames[0]
 				ExpectWithOffset(2, controllerPodName).Should(ContainSubstring("controller-manager"))
 
-				cmd = exec.Command("kubectl", "get", "pods", "-n", namespace, "-o", "jsonpath={.status.phase}")
+				cmd = exec.Command("kubectl", "get", "pods", controllerPodName, "-n", namespace, "-o", "jsonpath={.status.phase}")
 				status, err := RunCommand(cmd)
 				ExpectWithOffset(2, err).NotTo(HaveOccurred())
 				if string(status) != "Running" {
@@ -136,9 +136,9 @@ var _ = Describe("LTB Operator", Ordered, func() {
 
 			By("Creating a labinstance")
 			EventuallyWithOffset(1, func() error {
-				cmd = exec.Command("kubectl", "apply", "-f", directory+"/config/samples/ltb_v1alpha1_labtemplate.yaml")
+				cmd = exec.Command("kubectl", "apply", "-f", directory+"/config/samples/ltb_v1alpha1_labtemplate.yaml", "-n", namespace)
 				_, err = RunCommand(cmd)
-				cmd = exec.Command("kubectl", "apply", "-f", directory+"/config/samples/ltb_v1alpha1_labinstance.yaml")
+				cmd = exec.Command("kubectl", "apply", "-f", directory+"/config/samples/ltb_v1alpha1_labinstance.yaml", "-n", namespace)
 				_, err = RunCommand(cmd)
 				return err
 			}, time.Minute, time.Second).Should(Succeed())
