@@ -14,6 +14,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -40,6 +41,10 @@ var _ = Describe("LabInstance Controller", func() {
 		fakeClient      client.Client
 		err             error
 		running         bool
+		//kind            string
+		//gvk             schema.GroupVersionKind
+		//controllerRef   *metav1.OwnerReference
+		//req ctrl.Request
 	)
 
 	schemeBuilder := runtime.NewSchemeBuilder(kubevirtv1.AddToScheme)
@@ -48,7 +53,6 @@ var _ = Describe("LabInstance Controller", func() {
 	Expect(err).NotTo(HaveOccurred())
 
 	BeforeEach(func() {
-
 		testLabInstance = &ltbv1alpha1.LabInstance{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      LabInstanceName,
@@ -96,7 +100,7 @@ var _ = Describe("LabInstance Controller", func() {
 					{
 						Name:    testLabTemplate.Spec.Nodes[0].Name,
 						Image:   testLabTemplate.Spec.Nodes[0].Image.Type + ":" + testLabTemplate.Spec.Nodes[0].Image.Version,
-						Command: []string{"/bin/sleep", "3600"},
+						Command: []string{"/bin/sleep", "365d"},
 					},
 				},
 			},
@@ -146,35 +150,41 @@ var _ = Describe("LabInstance Controller", func() {
 			},
 		}
 
+		//kind = reflect.TypeOf(ltbv1alpha1.LabInstance{}).Name()
+		//gvk = ltbv1alpha1.GroupVersion.WithKind(kind)
+		//controllerRef = metav1.NewControllerRef(testLabInstance, gvk)
+
 	})
 
 	Context("Pod within a LabInstance", func() {
 		It("Should not exist before creation", func() {
 			fakeClient = fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
 			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testPod.Name, Namespace: testLabInstance.Namespace}, testPod)
-			By("Expecting an error when trying to get the Pod which does not exist")
+			By("By expecting the Pod to not exist")
 			Expect(err).To(HaveOccurred())
 			Expect(client.IgnoreNotFound(err)).To(Succeed())
 		})
 
 		It("Should exist after creation", func() {
-			By("Expecting the Pod to be created")
-			err = fakeClient.Create(context.Background(), testPod)
+			By("By creating a new Pod")
+			ctrl.SetControllerReference(testLabInstance, testPod, scheme.Scheme)
+			Expect(fakeClient.Create(context.Background(), testPod)).Should(Succeed())
+			By("By expecting the Pod to exist")
+			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testPod.Name, Namespace: testLabInstance.Namespace}, testPod)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(err).To(Succeed())
 		})
 
-		It("Should have a status after creation", func() {
-			By("Expecting the Pod to have a status")
-			testPodStatus := testPod.Status.Phase
-			Expect(testPodStatus).NotTo(BeNil())
+		It("Should have a status", func() {
+			By("By checking the status of the Pod")
+			Eventually(func() corev1.PodPhase {
+				return testPod.Status.Phase
+			}, Timeout, Interval).Should(Not(BeNil()))
 		})
 
 		It("Should be deleted after deletion", func() {
-			By("Expecting the Pod to be deleted")
+			By("By deleting the Pod")
 			err = fakeClient.Delete(context.Background(), testPod)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(err).To(Succeed())
 		})
 	})
 
@@ -182,26 +192,29 @@ var _ = Describe("LabInstance Controller", func() {
 		It("Should not exist before creation", func() {
 			fakeClient = fake.NewClientBuilder().WithScheme(vmScheme).Build()
 			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testVM.Name, Namespace: testLabInstance.Namespace}, testVM)
-			By("Expecting an error when trying to get the VirtualMachine which does not exist")
+			By("By expecting the VirtualMachine to not exist")
 			Expect(err).To(HaveOccurred())
 			Expect(client.IgnoreNotFound(err)).To(Succeed())
 		})
 
 		It("Should exist after creation", func() {
-			By("Expecting the VirtualMachine to be created")
+			By("By creating a new VirtualMachine")
 			err = fakeClient.Create(context.Background(), testVM)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(err).To(Succeed())
+			By("By expecting the VirtualMachine to exist")
+			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testVM.Name, Namespace: testLabInstance.Namespace}, testVM)
+			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("Should have a status after creation", func() {
-			By("Expecting the VirtualMachine to have a status")
+			By("By checking the status of the VirtualMachine")
 			testVMStatus := testVM.Status.Ready
 			Expect(testVMStatus).NotTo(BeNil())
 		})
 
 		It("Should be deleted after deletion", func() {
-			By("Expecting the VirtualMachine to be deleted")
+			By("By deleting the VirtualMachine")
 			err = fakeClient.Delete(context.Background(), testVM)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(err).To(Succeed())
