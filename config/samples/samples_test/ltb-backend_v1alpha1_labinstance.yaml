@@ -1,0 +1,13 @@
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: LabInstance
+metadata:
+  labels:
+    app.kubernetes.io/name: labinstance
+    app.kubernetes.io/instance: labinstance-test
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: labinstance-test
+spec:
+  labTemplateReference: "labtemplate-test"
+

@@ -1,0 +1,38 @@
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: LabTemplate
+metadata:
+  labels:
+    app.kubernetes.io/name: labtemplate
+    app.kubernetes.io/instance: labtemplate-test
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: labtemplate-test
+spec:
+  nodes:
+  - name: "test-node-1"
+    image:
+      type: "ubuntu"
+      version: "22.04"
+      kind: "vm"
+    config: |-
+              #cloud-config
+              password: ubuntu
+              chpasswd: { expire: False }
+              ssh_authorized_keys:
+                - <your-ssh-pub-key>
+              packages:
+                - qemu-guest-agent
+              runcmd:
+                - [ systemctl, start, qemu-guest-agent ]
+  - name: "test-node-2"
+    image:
+      type: "ubuntu"
+      version: "latest"
+  - name: "test-node-3"
+    image:
+      type: "ubuntu"
+      version: "latest"
+      kind: "pod"
+  connections:
+  - neighbors: "TestHost1:1,TestHost2:1"
