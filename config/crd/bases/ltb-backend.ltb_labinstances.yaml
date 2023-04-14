@@ -25,6 +25,12 @@ spec:
     - jsonPath: .status.vmstatus
       name: VMS_STATUS
       type: string
+    - jsonPath: .status.numpodsrunning
+      name: PODS_RUNNING
+      type: string
+    - jsonPath: .status.numvmsrunning
+      name: VMS_RUNNING
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -50,6 +56,10 @@ spec:
             type: object
           status:
             properties:
+              numpodsrunning:
+                type: string
+              numvmsrunning:
+                type: string
               podstatus:
                 type: string
               status:

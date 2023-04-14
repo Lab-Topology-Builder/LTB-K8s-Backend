@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -226,14 +227,17 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
 	var podStatus corev1.PodPhase
 	var vmStatus kubevirtv1.VirtualMachinePrintableStatus
+	var numVMsRunning, numPodsRunning int
 	for _, pod := range pods {
 		podStatus = pod.Status.Phase
 		if pod.Status.Phase != corev1.PodRunning {
 			labInstance.Status.PodStatus = string(pod.Status.Phase)
 			break
 		}
+		numPodsRunning++
 	}
 	labInstance.Status.PodStatus = string(podStatus)
+	labInstance.Status.NumPodsRunning = fmt.Sprint(numPodsRunning) + "/" + fmt.Sprint(len(pods))
 
 	for _, vm := range vms {
 		vmStatus = vm.Status.PrintableStatus
@@ -241,8 +245,10 @@ func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 			labInstance.Status.VMStatus = string(vmStatus)
 			break
 		}
+		numVMsRunning++
 	}
 	labInstance.Status.VMStatus = string(vmStatus)
+	labInstance.Status.NumVMsRunning = fmt.Sprint(numVMsRunning) + "/" + fmt.Sprint(len(vms))
 
 	if labInstance.Status.PodStatus == "Running" && labInstance.Status.VMStatus == "VM Ready" {
 		labInstance.Status.Status = "Running"
