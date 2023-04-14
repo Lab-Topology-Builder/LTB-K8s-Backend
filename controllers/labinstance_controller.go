@@ -230,8 +230,7 @@ func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	var numVMsRunning, numPodsRunning int
 	for _, pod := range pods {
 		podStatus = pod.Status.Phase
-		if pod.Status.Phase != corev1.PodRunning {
-			podStatus = pod.Status.Phase
+		if podStatus != corev1.PodRunning {
 			break
 		}
 		numPodsRunning++
@@ -241,7 +240,6 @@ func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	for _, vm := range vms {
 		vmStatus = vm.Status.PrintableStatus
 		if !vm.Status.Ready {
-			vmStatus = vm.Status.PrintableStatus
 			break
 		}
 		numVMsRunning++
