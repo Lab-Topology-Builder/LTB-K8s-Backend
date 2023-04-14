@@ -26,8 +26,6 @@ type LabInstanceSpec struct {
 
 type LabInstanceStatus struct {
 	Status         string `json:"status,omitempty"`
-	PodStatus      string `json:"podstatus,omitempty"`
-	VMStatus       string `json:"vmstatus,omitempty"`
 	NumPodsRunning string `json:"numpodsrunning,omitempty"`
 	NumVMsRunning  string `json:"numvmsrunning,omitempty"`
 }
@@ -35,8 +33,6 @@ type LabInstanceStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="STATUS",type=string,JSONPath=`.status.status`
-//+kubebuilder:printcolumn:name="PODS_STATUS",type=string,JSONPath=`.status.podstatus`
-//+kubebuilder:printcolumn:name="VMS_STATUS",type=string,JSONPath=`.status.vmstatus`
 //+kubebuilder:printcolumn:name="PODS_RUNNING",type=string,JSONPath=`.status.numpodsrunning`
 //+kubebuilder:printcolumn:name="VMS_RUNNING",type=string,JSONPath=`.status.numvmsrunning`
 

@@ -231,32 +231,30 @@ func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	for _, pod := range pods {
 		podStatus = pod.Status.Phase
 		if pod.Status.Phase != corev1.PodRunning {
-			labInstance.Status.PodStatus = string(pod.Status.Phase)
+			podStatus = pod.Status.Phase
 			break
 		}
 		numPodsRunning++
 	}
-	labInstance.Status.PodStatus = string(podStatus)
 	labInstance.Status.NumPodsRunning = fmt.Sprint(numPodsRunning) + "/" + fmt.Sprint(len(pods))
 
 	for _, vm := range vms {
 		vmStatus = vm.Status.PrintableStatus
 		if !vm.Status.Ready {
-			labInstance.Status.VMStatus = string(vmStatus)
+			vmStatus = vm.Status.PrintableStatus
 			break
 		}
 		numVMsRunning++
 	}
-	labInstance.Status.VMStatus = string(vmStatus)
 	labInstance.Status.NumVMsRunning = fmt.Sprint(numVMsRunning) + "/" + fmt.Sprint(len(vms))
 
-	if labInstance.Status.PodStatus == "Running" && labInstance.Status.VMStatus == "VM Ready" {
+	if podStatus == "Running" && vmStatus == "VM Ready" {
 		labInstance.Status.Status = "Running"
 	} else {
-		if labInstance.Status.PodStatus != "Running" {
-			labInstance.Status.Status = string(labInstance.Status.PodStatus)
+		if podStatus != "Running" {
+			labInstance.Status.Status = string(podStatus)
 		} else {
-			labInstance.Status.Status = labInstance.Status.VMStatus
+			labInstance.Status.Status = string(vmStatus)
 		}
 	}
 }
