@@ -70,7 +70,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	labTemplate := &ltbv1alpha1.LabTemplate{}
 	// TODO: Maybe add fatal error handling here
-	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
+	if shouldReturn, result, err := r.GetLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
 
@@ -106,7 +106,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
 	if err != nil {

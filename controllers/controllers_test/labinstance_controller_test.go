@@ -2,71 +2,42 @@ package controllers_test
 
 import (
 	"context"
-	"time"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
+	controller "github.com/Lab-Topology-Builder/LTB-K8s-Backend/controllers"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes/scheme"
-	kubevirtv1 "kubevirt.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
-
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-// TODO: Test the status of the pods and VMs
-
 var _ = Describe("LabInstance Controller", func() {
-
-	// Define utility constants for object names and testing timeouts/durations and intervals.
-	const (
-		LabTemplateName      = "test-labtemplate"
-		LabInstanceName      = "test-labinstance"
-		LabInstanceNamespace = "test-namespace"
-		Timeout              = time.Second * 10
-		Interval             = time.Millisecond * 250
-		config               = "#cloud-config\npassword: ubuntu\nchpasswd:\n{ expire: False }\nssh_authorized_keys:\n- <your-ssh-pub-key>\npackages:\n- qemu-guest-agent\nruncmd\n- [ systemctl, start, qemu-guest-agent ]"
-	)
 	var (
+		ctx             context.Context
+		r               *controller.LabInstanceReconciler
 		testLabInstance *ltbv1alpha1.LabInstance
 		testLabTemplate *ltbv1alpha1.LabTemplate
-		testPod         *corev1.Pod
-		testVM          *kubevirtv1.VirtualMachine
-		fakeClient      client.Client
+		result          ctrl.Result
 		err             error
-		running         bool
-		//kind            string
-		//gvk             schema.GroupVersionKind
-		//controllerRef   *metav1.OwnerReference
-		//req ctrl.Request
+		requeue         bool
+		client          client.Client
 	)
 
-	schemeBuilder := runtime.NewSchemeBuilder(kubevirtv1.AddToScheme)
-	vmScheme := runtime.NewScheme()
-	err = schemeBuilder.AddToScheme(vmScheme)
-	Expect(err).NotTo(HaveOccurred())
-
 	BeforeEach(func() {
+		ctx = context.Background()
 		testLabInstance = &ltbv1alpha1.LabInstance{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      LabInstanceName,
-				Namespace: LabInstanceNamespace,
+				Name: "test-labinstance",
 			},
 			Spec: ltbv1alpha1.LabInstanceSpec{
-				LabTemplateReference: LabTemplateName,
+				LabTemplateReference: "test-labtemplate",
 			},
 		}
-
 		testLabTemplate = &ltbv1alpha1.LabTemplate{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      LabTemplateName,
-				Namespace: LabInstanceNamespace,
+				Name: "test-labtemplate",
 			},
 			Spec: ltbv1alpha1.LabTemplateSpec{
 				Nodes: []ltbv1alpha1.LabInstanceNodes{
@@ -84,141 +55,22 @@ var _ = Describe("LabInstance Controller", func() {
 							Version: "20.04",
 							Kind:    "vm",
 						},
-						Config: config,
 					},
 				},
 			},
 		}
-
-		testPod = &corev1.Pod{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      testLabTemplate.Spec.Nodes[0].Name,
-				Namespace: testLabInstance.Namespace,
-			},
-			Spec: corev1.PodSpec{
-				Containers: []corev1.Container{
-					{
-						Name:    testLabTemplate.Spec.Nodes[0].Name,
-						Image:   testLabTemplate.Spec.Nodes[0].Image.Type + ":" + testLabTemplate.Spec.Nodes[0].Image.Version,
-						Command: []string{"/bin/sleep", "365d"},
-					},
-				},
-			},
-		}
-
-		running = true
-		resources := kubevirtv1.ResourceRequirements{
-			Requests: corev1.ResourceList{"memory": resource.MustParse("1024M")},
-		}
-		cpu := &kubevirtv1.CPU{Cores: 1}
-
-		disk := []kubevirtv1.Disk{
-			{Name: "containerdisk",
-				DiskDevice: kubevirtv1.DiskDevice{
-					Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-			{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{
-				Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-		}
-
-		volumes := []kubevirtv1.Volume{
-			{Name: "containerdisk",
-				VolumeSource: kubevirtv1.VolumeSource{
-					ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + testLabTemplate.Spec.Nodes[1].Image.Type + ":" + testLabTemplate.Spec.Nodes[1].Image.Version}}},
-			{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{
-				CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: testLabTemplate.Spec.Nodes[1].Config}}},
-		}
-
-		testVM = &kubevirtv1.VirtualMachine{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      testLabTemplate.Spec.Nodes[1].Name,
-				Namespace: testLabInstance.Namespace,
-			},
-			Spec: kubevirtv1.VirtualMachineSpec{
-				Running: &running,
-				Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-					Spec: kubevirtv1.VirtualMachineInstanceSpec{
-						Domain: kubevirtv1.DomainSpec{
-							Resources: resources,
-							CPU:       cpu,
-							Devices: kubevirtv1.Devices{
-								Disks: disk,
-							},
-						},
-						Volumes: volumes,
-					},
-				},
-			},
-		}
-
-		//kind = reflect.TypeOf(ltbv1alpha1.LabInstance{}).Name()
-		//gvk = ltbv1alpha1.GroupVersion.WithKind(kind)
-		//controllerRef = metav1.NewControllerRef(testLabInstance, gvk)
-
+		client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
+		r = &controller.LabInstanceReconciler{Client: client}
 	})
 
-	Context("Pod within a LabInstance", func() {
-		It("Should not exist before creation", func() {
-			fakeClient = fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
-			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testPod.Name, Namespace: testLabInstance.Namespace}, testPod)
-			By("By expecting the Pod to not exist")
-			Expect(err).To(HaveOccurred())
-			Expect(client.IgnoreNotFound(err)).To(Succeed())
-		})
+	Context("LabInstance controller functions", func() {
 
-		It("Should exist after creation", func() {
-			By("By creating a new Pod")
-			ctrl.SetControllerReference(testLabInstance, testPod, scheme.Scheme)
-			Expect(fakeClient.Create(context.Background(), testPod)).Should(Succeed())
-			By("By expecting the Pod to exist")
-			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testPod.Name, Namespace: testLabInstance.Namespace}, testPod)
+		It("should get the correct labtemplate", func() {
+			requeue, result, err = r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
 			Expect(err).NotTo(HaveOccurred())
-		})
-
-		It("Should have a status", func() {
-			By("By checking the status of the Pod")
-			Eventually(func() corev1.PodPhase {
-				return testPod.Status.Phase
-			}, Timeout, Interval).Should(Not(BeNil()))
-		})
-
-		It("Should be deleted after deletion", func() {
-			By("By deleting the Pod")
-			err = fakeClient.Delete(context.Background(), testPod)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(requeue).To(BeFalse())
+			Expect(result).To(Equal(ctrl.Result{}))
+			Expect(testLabTemplate.Name).To(Equal("test-labtemplate"))
 		})
 	})
-
-	Context("VirtualMachine within a LabInstance", func() {
-		It("Should not exist before creation", func() {
-			fakeClient = fake.NewClientBuilder().WithScheme(vmScheme).Build()
-			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testVM.Name, Namespace: testLabInstance.Namespace}, testVM)
-			By("By expecting the VirtualMachine to not exist")
-			Expect(err).To(HaveOccurred())
-			Expect(client.IgnoreNotFound(err)).To(Succeed())
-		})
-
-		It("Should exist after creation", func() {
-			By("By creating a new VirtualMachine")
-			err = fakeClient.Create(context.Background(), testVM)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(err).To(Succeed())
-			By("By expecting the VirtualMachine to exist")
-			err = fakeClient.Get(context.Background(), types.NamespacedName{Name: testVM.Name, Namespace: testLabInstance.Namespace}, testVM)
-			Expect(err).NotTo(HaveOccurred())
-		})
-
-		It("Should have a status after creation", func() {
-			By("By checking the status of the VirtualMachine")
-			testVMStatus := testVM.Status.Ready
-			Expect(testVMStatus).NotTo(BeNil())
-		})
-
-		It("Should be deleted after deletion", func() {
-			By("By deleting the VirtualMachine")
-			err = fakeClient.Delete(context.Background(), testVM)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(err).To(Succeed())
-		})
-	})
-
 })
