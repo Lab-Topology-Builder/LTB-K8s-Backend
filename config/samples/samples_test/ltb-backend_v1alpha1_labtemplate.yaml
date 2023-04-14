@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
   name: labtemplate-test
+  namespace: test
 spec:
   nodes:
   - name: "test-node-1"

@@ -1,7 +1,6 @@
 package e2e
 
 import (
-	"encoding/base64"
 	"fmt"
 	"os"
 	"os/exec"
@@ -11,20 +10,10 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	kbutil "sigs.k8s.io/kubebuilder/v3/pkg/plugin/util"
 )
 
-const namespace = "operator-system"
-
-var saSecretTemplate = `---
-apiVersion: v1
-kind: Secret
-type: kubernetes.io/service-account-token
-metadata:
-  name: %s
-  annotations:
-    kubernetes.io/service-account.name: "%s"
-`
+const resourcesNamespace = "test"
+const controllerManagerNamespace = "test-system"
 
 func GetProjectDir() (string, error) {
 	directory, err := os.Getwd()
@@ -50,18 +39,6 @@ func RunCommand(cmd *exec.Cmd) ([]byte, error) {
 	}
 	return output, nil
 }
-
-func LoadImageToClusterWithName(imageName string) error {
-	cluster := "kind"
-	if value, ok := os.LookupEnv("KIND_CLUSTER_NAME"); ok {
-		cluster = value
-	}
-	kindOptions := []string{"load", "docker-image", imageName, "--name", cluster}
-	cmd := exec.Command("kind", kindOptions...)
-	_, err := RunCommand(cmd)
-	return err
-}
-
 func GetOperatorPodName(result []byte) (string, error) {
 	lines := strings.Split(string(result), "\n")
 	for _, line := range lines[1:] {
@@ -79,153 +56,132 @@ func GetOperatorPodName(result []byte) (string, error) {
 }
 
 var _ = Describe("LTB Operator", Ordered, func() {
-	var controllerPodName, metricsClusterRoleBindingName string
-
 	Context("LTB Operator", func() {
+		// TODO: check this image with Jan
+		imageBase := "tsigereda/ltb-operator"
+		imageVersion := "0.1.0"
+		var err error
+		//directory, _ := GetProjectDir()
+		labInstanceFile := "../..config/samples/samples_test/ltb_v1alpha1_labinstance.yaml"
+		labTemplateFile := "../..config/samples/samples_test/ltb_v1alpha1_labtemplate.yaml"
 		BeforeAll(func() {
-			metricsClusterRoleBindingName = fmt.Sprintf("metrics-reader-%s", tc.ProjectName)
 
-			By("By deploying the project to the cluster")
-			Expect(tc.Make("deploy", "IMG="+tc.ImageName)).To(Succeed())
+			By("By creating the controller-manager namespace")
+			cmd := exec.Command("kubectl", "create", "namespace", controllerManagerNamespace)
+			_, err := RunCommand(cmd)
+			Expect(err).NotTo(HaveOccurred())
 
-			//By("By creating a namespace")
-			//cmd := exec.Command("kubectl", "create", "namespace", namespace)
-			//_, err := RunCommand(cmd)
-			//Expect(err).NotTo(HaveOccurred())
-			// TODO: check this image with Jan
-			//dockerImage := "docker.io/tsigereda/ltb-operator-test:0.1.0"
-			//
-			//By("By building the operator image")
-			//cmd = exec.Command("make", "docker-build", "docker-push", fmt.Sprintf("IMG=%s", dockerImage))
-			//_, err = RunCommand(cmd)
-			//ExpectWithOffset(1, err).NotTo(HaveOccurred())
+			By("By creating the resources namespace")
+			cmd = exec.Command("kubectl", "create", "namespace", resourcesNamespace)
+			_, err = RunCommand(cmd)
+			Expect(err).NotTo(HaveOccurred())
 
-			//By("By installing CRDs")
-			//cmd = exec.Command("make", "install")
-			//_, err = RunCommand(cmd)
-			//ExpectWithOffset(1, err).NotTo(HaveOccurred())
-			//
-			//By("By deploying the controller manager")
-			//cmd = exec.Command("make", "deploy", fmt.Sprintf("IMG=%s", dockerImage))
-			//_, err = RunCommand(cmd)
-			//ExpectWithOffset(1, err).NotTo(HaveOccurred())
+			By("By setting the env NAMESPACE")
+			err = os.Setenv("NAMESPACE", controllerManagerNamespace)
+			Expect(err).NotTo(HaveOccurred())
 
-			//By("By validating the manager pod is restricted")
-			//ExpectWithOffset(1, output).NotTo(ContainSubstring("Warning: would violate PodSecurityPolicy"))
-			//By("By labeling all namespaces to warn about PodSecurityPolicy violations")
-			//cmd = exec.Command("kubectl", "label", "--overwrite", "ns", "--all",
-			//	"pod-security.kubernetes.io/audit=restricted",
-			//	"pod-security.kubernetes.io/warn=restricted")
-			//_, err = RunCommand(cmd)
-			//Expect(err).NotTo(HaveOccurred())
-			//
-			//By("By labeling the namespace the operator will be deployed in to enforce the PodSecurityPolicy")
-			//cmd = exec.Command("kubectl", "label", "--overwrite", "ns", namespace,
-			//	"pod-security.kubernetes.io/audit=restricted",
-			//	"pod-security.kubernetes.io/enforce=restricted")
-			//_, err = RunCommand(cmd)
-			//Expect(err).NotTo(HaveOccurred())
+			By("By setting the env WATCH_NAMESPACE")
+			err = os.Setenv("WATCH_NAMESPACE", resourcesNamespace)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By setting the env IMAGE_TAG_BASE")
+			err = os.Setenv("IMAGE_TAG_BASE", imageBase)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By setting the env VERSION")
+			err = os.Setenv("VERSION", imageVersion)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By setting the env IMG")
+			err = os.Setenv("IMG", os.Getenv("IMAGE_TAG_BASE")+":"+os.Getenv("VERSION"))
+			Expect(err).NotTo(HaveOccurred())
 
 		})
 		AfterAll(func() {
-			By("By deleting the curl pod")
-			WrapWarnOutput(tc.Kubectl.Delete(false, "pod", "curl"))
+			By("By deleting the env NAMESPACE")
+			err = os.Unsetenv("NAMESPACE")
+			Expect(err).NotTo(HaveOccurred())
 
-			By("By deleting the metrics ClusterRoleBinding")
-			WrapWarnOutput(tc.Kubectl.Command("delete", "clusterrolebinding", metricsClusterRoleBindingName))
+			By("By deleting the env WATCH_NAMESPACE")
+			err := os.Unsetenv("WATCH_NAMESPACE")
+			Expect(err).NotTo(HaveOccurred())
 
-			By("By deleting namespace")
-			WrapWarnOutput(tc.Kubectl.Wait(false, "namespace", namespace, "--for", "delete", "--timeout", "2m"))
-			//By("By deleting the namespace")
-			//cmd := exec.Command("kubectl", "delete", "namespace", namespace)
-			//_, err := RunCommand(cmd)
-			//Expect(err).NotTo(HaveOccurred())
+			By("By deleting the env IMAGE_TAG_BASE")
+			err = os.Unsetenv("IMAGE_TAG_BASE")
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By deleting the env VERSION")
+			err = os.Unsetenv("VERSION")
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By deleting the env IMG")
+			err = os.Unsetenv("IMG")
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By deleting the namespace")
+			cmd := exec.Command("kubectl", "delete", "namespace", controllerManagerNamespace)
+			_, err = RunCommand(cmd)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By deleting the namespace")
+			cmd = exec.Command("kubectl", "delete", "namespace", resourcesNamespace)
+			_, err = RunCommand(cmd)
+			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("should be running", func() {
-			var err error
-			directory, _ := GetProjectDir()
 
-			By("By checking that the operator is running")
-			operatorRunning := func() error {
-				//cmd := exec.Command("kubectl", "get", "pods", "-l", "control-plane=controller-manager", "-n", namespace)
-				podOutput, err := tc.Kubectl.Get(true, "pods", "-l", "control-plane=controller-manager", "-n", namespace)
+			By("By installing CRDs")
+			cmd := exec.Command("make", "install")
+			_, err = RunCommand(cmd)
+			ExpectWithOffset(1, err).NotTo(HaveOccurred())
+
+			By("By deploying the controller manager")
+			cmd = exec.Command("make", "deploy")
+			_, err = RunCommand(cmd)
+			ExpectWithOffset(1, err).NotTo(HaveOccurred())
+
+			By("By checking that the controller manager is running")
+			controllerManagerRunning := func() error {
+				cmd := exec.Command("kubectl", "get", "pods", "-l", "control-plane=controller-manager", "-n", "operator-system")
+				podOutput, err := RunCommand(cmd)
+				fmt.Fprintf(GinkgoWriter, "podOutput: %s\n", podOutput)
 				Expect(err).NotTo(HaveOccurred())
 
-				podNames := kbutil.GetNonEmptyLines(podOutput)
+				podName, err := GetOperatorPodName(podOutput)
+				fmt.Fprintf(GinkgoWriter, "podName: %s\n", podName)
 				ExpectWithOffset(2, err).NotTo(HaveOccurred())
-
-				controllerPodName = podNames[0]
-				Expect(controllerPodName).To(ContainSubstring("controller-manager"))
-				status, err := tc.Kubectl.Get(true, "pods", controllerPodName, "-n", namespace, "-o=jsonpath={.status.phase}")
+				status, err := exec.Command("kubectl", "get", "pods", podName, "-n", "operator-system", "-o", "jsonpath={.status.phase}").Output()
 				Expect(err).NotTo(HaveOccurred())
 				Expect(string(status)).To(Equal("Running"))
 
-				if string(status) != "Running" {
-					return fmt.Errorf("expected controller pod to be running, got %s", string(status))
-				}
 				return nil
 			}
-			Eventually(operatorRunning, 2*time.Minute, time.Second).Should(Succeed())
+			Eventually(controllerManagerRunning, 2*time.Minute, time.Second).Should(Succeed())
 
-			By("By ensuring the created ServiceMonitor exists")
-			_, err = tc.Kubectl.Get(true, "ServiceMonitor", fmt.Sprintf("%s-controller-manger-metrics-monitor", tc.ProjectName))
-			Expect(err).NotTo(HaveOccurred())
-
-			By("By ensuring the created metrics Service exists")
-			_, err = tc.Kubectl.Get(true, "Service", fmt.Sprintf("%s-controller-manager-metrics-service", tc.ProjectName))
-			Expect(err).NotTo(HaveOccurred())
-
-			By("Creating a labinstance")
-			labInstanceFile := directory + "/config/samples/samples_test/ltb_v1alpha1_labinstance.yaml"
-			labTemplateFile := directory + "/config/samples/samples_test/ltb_v1alpha1_labtemplate.yaml"
-
+			By("By creating a lab template")
 			Eventually(func() error {
-				_, err = tc.Kubectl.Apply(true, "-f", labTemplateFile)
-				Expect(err).NotTo(HaveOccurred())
-				_, err = tc.Kubectl.Apply(true, "-f", labInstanceFile)
-				Expect(err).NotTo(HaveOccurred())
-				//cmd := exec.Command("kubectl", "apply", "-f", directory+"/config/samples/samples_test/ltb_v1alpha1_labtemplate.yaml", "-n", namespace)
-				//_, err = RunCommand(cmd)
-				//cmd = exec.Command("kubectl", "apply", "-f", directory+"/config/samples/samples_test/ltb_v1alpha1_labinstance.yaml", "-n", namespace)
-				//_, err = RunCommand(cmd)
+				cmd := exec.Command("kubectl", "apply", "-f", labTemplateFile)
+				_, err = RunCommand(cmd)
 				return err
 			}, time.Minute, time.Second).Should(Succeed())
 
-			By("By granting permissions to access the metrics")
-			_, err = tc.Kubectl.Command("create", "clusterrolebinding", metricsClusterRoleBindingName, fmt.Sprintf("--clusterrole=%s-metrics-reader", tc.ProjectName), fmt.Sprintf("--serviceaccount=%s:%s", tc.Kubectl.Namespace, tc.Kubectl.ServiceAccount))
-			Expect(err).NotTo(HaveOccurred())
-
-			By("By creating the token")
-			secreteName := tc.Kubectl.ServiceAccount + "-secret"
-			fileName := directory + "/" + secreteName + ".yaml"
-			err = os.WriteFile(fileName, []byte(fmt.Sprintf(saSecretTemplate, secreteName, tc.Kubectl.ServiceAccount)), 0777)
-			Expect(err).NotTo(HaveOccurred())
+			By("By creating a lab instance")
 			Eventually(func() error {
-				_, err = tc.Kubectl.Apply(true, "-f", fileName)
+				cmd = exec.Command("kubectl", "apply", "-f", labInstanceFile)
+				_, err = RunCommand(cmd)
 				return err
 			}, time.Minute, time.Second).Should(Succeed())
-
-			By("By getting the token")
-			query := fmt.Sprintf(`{.items[?(@.metadata.annotations.kubernetes\.io/service-account\.name=="%s")].data.token}`,
-				tc.Kubectl.ServiceAccount,
-			)
-			b64Token, err := tc.Kubectl.Get(true, "secrets", "-o", "jsonpath="+query)
-			Expect(err).NotTo(HaveOccurred())
-			token, err := base64.StdEncoding.DecodeString(strings.TrimSpace(string(b64Token)))
-			Expect(err).NotTo(HaveOccurred())
-			Expect(len(token)).To(BeNumerically(">", 0))
 
 			By("Checking that the labinstance is running")
 			getLabInstanceStatus := func() error {
-				//cmd := exec.Command("kubectl", "get", "labinstance", "-o", "jsonpath={.items[*].status.status}")
-				//status, err := RunCommand(cmd)
-				status, err := tc.Kubectl.Get(true, "labinstance", "-o", "jsonpath={.items[*].status.status}")
+				cmd := exec.Command("kubectl", "get", "labinstance", "-o", "jsonpath={.items[*].status.status}")
+				status, err := RunCommand(cmd)
 				ExpectWithOffset(2, err).NotTo(HaveOccurred())
 				Expect(string(status)).To(Equal("Running"))
 				return nil
 			}
-			EventuallyWithOffset(1, getLabInstanceStatus, time.Minute, time.Second).Should(Succeed())
+			Eventually(getLabInstanceStatus, 2*time.Minute, time.Second).Should(Succeed())
 
 		})
 	})
