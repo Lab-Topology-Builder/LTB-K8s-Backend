@@ -82,14 +82,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// because this is handled by the garbage collector and can be configured in the used kubectl client.
 	// labInstanceFinalizer := "labinstance.finalizer.ltb-backend.ltb"
 
-	// if labInstance.ObjectMeta.DeletionTimestamp.IsZero() {
 	// 	if !controllerutil.ContainsFinalizer(labInstance, labInstanceFinalizer) {
 	// 		controllerutil.AddFinalizer(labInstance, labInstanceFinalizer)
 	// 		if err := r.Update(ctx, labInstance); err != nil {
 	// 			return ctrl.Result{}, err
 	// 		}
-	// 	}
-	// } else {
+	// if labInstance.ObjectMeta.DeletionTimestamp.IsZero() {
 	// 	if controllerutil.ContainsFinalizer(labInstance, labInstanceFinalizer) {
 	// 		if err := r.waitForDeletion(ctx, labInstance); err != nil {
 	// 			return ctrl.Result{Requeue: true}, err
@@ -141,7 +139,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, nil
 }
 
-// Does not work
+// May work newest changes not tested
 // func (r *LabInstanceReconciler) waitForDeletion(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) error {
 // 	log := log.FromContext(ctx)
 // 	log.Info("Waiting for deletion of child resources")
