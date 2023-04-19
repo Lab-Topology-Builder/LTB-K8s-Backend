@@ -1,4 +1,4 @@
-# Tools and Frameworks used in the project
+# Tools and Frameworks
 
 The tools and frameworks used in the project are listed below.
 
