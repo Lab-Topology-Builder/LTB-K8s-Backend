@@ -37,6 +37,8 @@ import (
 	//+kubebuilder:scaffold:imports
 
 	kubevirtv1 "kubevirt.io/api/core/v1"
+
+	network "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
 )
 
 var (
@@ -52,6 +54,9 @@ func init() {
 
 	// Add kubevirt scheme
 	utilruntime.Must(kubevirtv1.AddToScheme(scheme))
+
+	// Add NetworkAttachmentDefinition scheme
+	utilruntime.Must(network.AddToScheme(scheme))
 }
 
 func main() {
