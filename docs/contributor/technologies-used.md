@@ -1,10 +1,15 @@
-# Tools and Technologies used in the project
+# Tools and Frameworks used in the project
 
-The project uses a number of tools and technologies to make the development process easier and more efficient. This document lists the tools and technologies used in the project.
+The tools and frameworks used in the project are listed below.
 
-## Tools
+## Go-based Operator SDK framework
 
-The following tools are used in the project:
+To create the LTB operator, we used the Go-based Operator-sdk framework, which helps us to make the LTB application Kubernetes native.
 
-- Go based Operator SDK is used to create the operator.
--
+## Kubevirt
+
+Kubevirt is a tool that provides a virtual machine management layer on top of Kubernetes. It allows us to deploy virtual machines on Kubernetes.
+
+## Kubernetes
+
+We use Kubernetes as the container orchestration platform for the LTB application.
