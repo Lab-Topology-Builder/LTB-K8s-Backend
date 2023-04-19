@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	// network "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
+	network "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 )
@@ -70,35 +70,11 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	labTemplate := &ltbv1alpha1.LabTemplate{}
-	// TODO: Maybe add fatal error handling here
 	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
 
-	// networkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
-	// networkAttachmentDefinition.Name = labInstance.Name
-	// networkAttachmentDefinition.Namespace = labInstance.Namespace
-	// networkAttachmentDefinition.Spec.Config = `{
-	//         "cniVersion": "0.3.1",
-	//         "type": "macvlan",
-	//         "mode": "bridge",
-	//         "ipam": {
-	//             "type": "host-local",
-	//             "ranges": [
-	//                 [ {
-	//                     "subnet": "10.10.0.0/24",
-	//                     "rangeStart": "10.10.0.10",
-	//                     "rangeEnd": "10.10.0.250"
-	//                 } ]
-	//             ]
-	//         }
-	//     }`
-
-	// err = r.Create(ctx, networkAttachmentDefinition)
-	// if err != nil {
-	// 	log.Error(err, "Failed to create NetworkAttachmentDefinition")
-	// 	return ctrl.Result{}, err
-	// }
+	r.reconcileNetwork(ctx, labInstance)
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -142,6 +118,61 @@ func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance 
 		}
 		log.Error(err, "Failed to get LabTemplate")
 		return true, ctrl.Result{}, err
+	}
+	return false, ctrl.Result{}, nil
+}
+
+func (r *LabInstanceReconciler) reconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	podNetworkDefinitionName := labInstance.Name + "pod"
+	vmNetworkDefinitionName := labInstance.Name + "vm"
+	networkdefinitionNames := []string{podNetworkDefinitionName, vmNetworkDefinitionName}
+	for _, networkDefinitionName := range networkdefinitionNames {
+		foundNetworkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
+		err := r.Get(ctx, types.NamespacedName{Name: networkDefinitionName, Namespace: labInstance.Namespace}, foundNetworkAttachmentDefinition)
+		if err != nil && errors.IsNotFound(err) {
+			networkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
+			networkAttachmentDefinition.Name = networkDefinitionName
+			networkAttachmentDefinition.Namespace = labInstance.Namespace
+			if networkDefinitionName == podNetworkDefinitionName {
+				// Don't change mode to "passthru" as it will takeover the kubernetes node interface and cause a network outage
+				networkAttachmentDefinition.Spec.Config = `{
+				"cniVersion": "0.3.1",
+				"name": "mynet",
+				"type": "bridge",
+				"bridge": "mynet0",
+				"ipam": {
+					"type": "host-local",
+					"ranges": [
+						[ {
+							"subnet": "10.10.0.0/24",
+							"rangeStart": "10.10.0.10",
+							"rangeEnd": "10.10.0.250"
+						} ]
+					]
+				}
+			}`
+			} else {
+				networkAttachmentDefinition.Spec.Config = `{
+					"cniVersion": "0.3.1",
+					"name": "mynet",
+					"type": "bridge",
+					"bridge": "mynet0",
+					"ipam": {}
+				}`
+			}
+			ctrl.SetControllerReference(labInstance, networkAttachmentDefinition, r.Scheme)
+			log.Info("Creating a new NetworkAttachmentDefinition", "NetworkAttachmentDefinition.Namespace", networkAttachmentDefinition.Namespace, "NetworkAttachmentDefinition.Name", networkAttachmentDefinition.Name)
+			err = r.Create(ctx, networkAttachmentDefinition)
+			if err != nil {
+				log.Error(err, "Failed to create NetworkAttachmentDefinition")
+				return true, ctrl.Result{}, err
+			}
+			return true, ctrl.Result{Requeue: true}, nil
+		} else if err != nil {
+			log.Error(err, "Failed to get NetworkAttachmentDefinition")
+			return true, ctrl.Result{}, err
+		}
 	}
 	return false, ctrl.Result{}, nil
 }
@@ -197,7 +228,7 @@ func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 		Name:      labInstance.Name + node.Name,
 		Namespace: labInstance.Namespace,
 		Annotations: map[string]string{
-			"k8s.v1.cni.cncf.io/networks": "macvlan-conf-1",
+			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "pod",
 		},
 	}
 	pod := &corev1.Pod{
@@ -231,7 +262,16 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	}
 	volumes := []kubevirtv1.Volume{
 		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
-		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}}}
+		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
+	}
+	networks := []kubevirtv1.Network{
+		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
+		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "vm"}}},
+	}
+	interfaces := []kubevirtv1.Interface{
+		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+	}
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec: kubevirtv1.VirtualMachineSpec{
@@ -242,10 +282,12 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 						Resources: resources,
 						CPU:       cpu,
 						Devices: kubevirtv1.Devices{
-							Disks: disks,
+							Disks:      disks,
+							Interfaces: interfaces,
 						},
 					},
-					Volumes: volumes,
+					Volumes:  volumes,
+					Networks: networks,
 				},
 			},
 		},
