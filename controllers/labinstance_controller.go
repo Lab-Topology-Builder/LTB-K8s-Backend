@@ -74,12 +74,11 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 
-	// Change propagation policy to Foreground to delete all child resources before deleting the LabInstance
-	// This is necessary because the LabInstance is the owner of the child resources and the default
-	// propagation policy is Background, which means that the child resources are deleted in after the
-	// LabInstance is deleted.
+	// Propagation policy handles the deletion order of parent and child resources.
+	// The default is background which means that the child
+	// source: https://kubernetes.io/blog/2021/05/14/using-finalizers-to-control-deletion/
 
-	// We should not implement waiting for the deletion of the child resources in a finalizer
+	// We should not implement waiting for the deletion of the pod and vm resources in a finalizer
 	// because this is handled by the garbage collector and can be configured in the used kubectl client.
 	// labInstanceFinalizer := "labinstance.finalizer.ltb-backend.ltb"
 
