@@ -180,7 +180,7 @@ func (r *LabInstanceReconciler) reconcileNetwork(ctx context.Context, labInstanc
 func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + node.Name, Namespace: labInstance.Namespace}, foundPod)
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		pod := mapTemplateToPod(labInstance, node)
@@ -203,7 +203,7 @@ func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *l
 func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundVM := &kubevirtv1.VirtualMachine{}
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + node.Name, Namespace: labInstance.Namespace}, foundVM)
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
 
 		vm := mapTemplateToVM(labInstance, node)
@@ -225,7 +225,7 @@ func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *lt
 
 func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + node.Name,
+		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
 		Annotations: map[string]string{
 			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "pod",
@@ -253,7 +253,7 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	}
 	cpu := &kubevirtv1.CPU{Cores: 1}
 	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + node.Name,
+		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
 	}
 	disks := []kubevirtv1.Disk{
