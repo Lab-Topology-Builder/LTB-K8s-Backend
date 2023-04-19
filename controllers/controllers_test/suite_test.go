@@ -31,6 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
+	kubevirtv1 "kubevirt.io/api/core/v1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -39,6 +40,7 @@ import (
 
 var cfg *rest.Config
 var k8sClient client.Client
+
 var testEnv *envtest.Environment
 
 func TestAPIs(t *testing.T) {
@@ -63,6 +65,8 @@ var _ = BeforeSuite(func() {
 	Expect(cfg).NotTo(BeNil())
 
 	err = ltbv1alpha1.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+	err = kubevirtv1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	//+kubebuilder:scaffold:scheme
