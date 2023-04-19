@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"context"
+	"time"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 	controller "github.com/Lab-Topology-Builder/LTB-K8s-Backend/controllers"
@@ -10,8 +11,11 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kubevirtv1 "kubevirt.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
+
+	"k8s.io/client-go/kubernetes/scheme"
+	kubevirtv1 "kubevirt.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
@@ -31,12 +35,15 @@ var _ = Describe("LabInstance Controller", func() {
 		podNode, vmNode *ltbv1alpha1.LabInstanceNodes
 		running         bool
 	)
+	const namespace = "test-namespace"
+	//k8sClient := K8sClient.GetClient()
 
 	BeforeEach(func() {
 		ctx = context.Background()
 		testLabInstance = &ltbv1alpha1.LabInstance{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "test-labinstance",
+				Name:      "test-labinstance",
+				Namespace: namespace,
 			},
 			Spec: ltbv1alpha1.LabInstanceSpec{
 				LabTemplateReference: "test-labtemplate",
@@ -44,7 +51,8 @@ var _ = Describe("LabInstance Controller", func() {
 		}
 		testLabTemplate = &ltbv1alpha1.LabTemplate{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "test-labtemplate",
+				Name:      "test-labtemplate",
+				Namespace: namespace,
 			},
 			Spec: ltbv1alpha1.LabTemplateSpec{
 				Nodes: []ltbv1alpha1.LabInstanceNodes{
@@ -70,7 +78,8 @@ var _ = Describe("LabInstance Controller", func() {
 		podNode = &testLabTemplate.Spec.Nodes[0]
 		testPod = &corev1.Pod{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: podNode.Name,
+				Name:      podNode.Name,
+				Namespace: namespace,
 			},
 			Spec: corev1.PodSpec{
 				Containers: []corev1.Container{
@@ -90,7 +99,8 @@ var _ = Describe("LabInstance Controller", func() {
 		}
 		cpu := &kubevirtv1.CPU{Cores: 1}
 		metadata := metav1.ObjectMeta{
-			Name: vmNode.Name,
+			Name:      vmNode.Name,
+			Namespace: namespace,
 		}
 		disks := []kubevirtv1.Disk{
 			{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
@@ -120,11 +130,11 @@ var _ = Describe("LabInstance Controller", func() {
 		}
 
 		client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
-		r = &controller.LabInstanceReconciler{Client: client}
+		r = &controller.LabInstanceReconciler{Client: client, Scheme: scheme.Scheme}
+
 	})
 
 	Context("LabInstance controller template functions", func() {
-
 		It("should get the correct labtemplate", func() {
 			requeue, result, err = r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
 			Expect(err).NotTo(HaveOccurred())
@@ -134,7 +144,6 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 
 		It("should map labtemplate to pod", func() {
-			podNode = &testLabTemplate.Spec.Nodes[0]
 			testPod = r.MapTemplateToPod(testLabInstance, podNode)
 			Expect(testPod.Name).To(Equal("test-node-1"))
 			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
@@ -142,7 +151,6 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 
 		It("should map labtemplate to vm", func() {
-			vmNode = &testLabTemplate.Spec.Nodes[1]
 			testVM = r.MapTemplateToVM(testLabInstance, vmNode)
 			Expect(testVM.Name).To(Equal("test-node-2"))
 			Expect(testVM.Spec.Template.Spec.Domain.Resources.Requests.Memory().String()).To(Equal("2048M"))
@@ -154,7 +162,32 @@ var _ = Describe("LabInstance Controller", func() {
 			Expect(testVM.Spec.Running).To(Equal(&running))
 
 		})
-	})
 
-	// Unable to test reconcile functions because it requires deployment of the pods and vms
+		It("should reconcile a pod", func() {
+			By("By creating the pod")
+			testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, podNode)
+			Expect(err).NotTo(HaveOccurred())
+			By("By getting the pod")
+			err = r.Get(ctx, types.NamespacedName{Name: podNode.Name, Namespace: testLabInstance.Namespace}, testPod)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(testPod.Name).To(Equal("test-node-1"))
+			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
+			Expect(testPod.Spec.Containers[0].Image).To(Equal("ubuntu:20.04"))
+		})
+
+		// I need to check this one
+		It("should reconcile a vm", func() {
+			By("By creating the vm")
+			testVM, requeue, result, err = r.ReconcileVM(ctx, testLabInstance, vmNode)
+			Expect(err).NotTo(HaveOccurred())
+
+			By("By getting the vm")
+			Eventually(func() error {
+				vm := &kubevirtv1.VirtualMachine{}
+				err = r.Get(ctx, types.NamespacedName{Name: vmNode.Name, Namespace: testLabInstance.Namespace}, vm)
+				return err
+			}, time.Minute, time.Second).ShouldNot(HaveOccurred())
+		})
+
+	})
 })
