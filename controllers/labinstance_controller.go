@@ -45,6 +45,11 @@ type LabInstanceReconciler struct {
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances/finalizers,verbs=update
+//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labtemplates,verbs=get
+//+kubebuilder:rbac:groups=apps,resources=pods,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=pods/status,verbs=get
+//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/status,verbs=get
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -68,6 +73,35 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.Error(err, "Failed to get LabInstance")
 		return ctrl.Result{}, err
 	}
+
+	// Change propagation policy to Foreground to delete all child resources before deleting the LabInstance
+	// This is necessary because the LabInstance is the owner of the child resources and the default
+	// propagation policy is Background, which means that the child resources are deleted in after the
+	// LabInstance is deleted.
+
+	// We should not implement waiting for the deletion of the child resources in a finalizer
+	// because this is handled by the garbage collector and can be configured in the used kubectl client.
+	// labInstanceFinalizer := "labinstance.finalizer.ltb-backend.ltb"
+
+	// if labInstance.ObjectMeta.DeletionTimestamp.IsZero() {
+	// 	if !controllerutil.ContainsFinalizer(labInstance, labInstanceFinalizer) {
+	// 		controllerutil.AddFinalizer(labInstance, labInstanceFinalizer)
+	// 		if err := r.Update(ctx, labInstance); err != nil {
+	// 			return ctrl.Result{}, err
+	// 		}
+	// 	}
+	// } else {
+	// 	if controllerutil.ContainsFinalizer(labInstance, labInstanceFinalizer) {
+	// 		if err := r.waitForDeletion(ctx, labInstance); err != nil {
+	// 			return ctrl.Result{Requeue: true}, err
+	// 		}
+	// 		controllerutil.RemoveFinalizer(labInstance, labInstanceFinalizer)
+	// 		if err := r.Update(ctx, labInstance); err != nil {
+	// 			return ctrl.Result{}, err
+	// 		}
+	// 	}
+	// 	return ctrl.Result{}, nil
+	// }
 
 	labTemplate := &ltbv1alpha1.LabTemplate{}
 	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
@@ -107,6 +141,32 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	return ctrl.Result{}, nil
 }
+
+// Does not work
+// func (r *LabInstanceReconciler) waitForDeletion(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) error {
+// 	log := log.FromContext(ctx)
+// 	log.Info("Waiting for deletion of child resources")
+
+// 	pods := &corev1.PodList{}
+// 	err := r.List(ctx, pods, client.InNamespace(labInstance.Namespace), client.MatchingLabels{"labinstance": labInstance.Name})
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	vms := &kubevirtv1.VirtualMachineList{}
+// 	err = r.List(ctx, vms, client.InNamespace(labInstance.Namespace), client.MatchingLabels{"labinstance": labInstance.Name})
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	if len(pods.Items) > 0 || len(vms.Items) > 0 {
+// 		log.Info("Waiting for deletion of child resources")
+// 		return goerrors.New("waiting for deletion of child resources")
+// 	}
+
+// 	log.Info("All child resources deleted")
+// 	return nil
+// }
 
 func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)

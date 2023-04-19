@@ -36,6 +36,10 @@
 				"ms-vscode.makefile-tools",
 				"gruntfuggly.todo-tree",
 				"okteto.kubernetes-context",
+				"mhutchie.git-graph",
+				"ms-vsliveshare.vsliveshare",
+				"eamodio.gitlens",
+				"oderwat.indent-rainbow",
 				"stevenchen.vscode-adr-manager"
 			]
 		}
