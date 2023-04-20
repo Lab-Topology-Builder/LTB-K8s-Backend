@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0000-use-markdown-architectural-decision-records/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/technologies-used/">
       
       
-        <link rel="prev" href="../../contributor/test-concepts/">
+        <link rel="prev" href="../dev-cluster-setup/">
       
       
-        <link rel="next" href="../0001-operator-SDK/">
+        <link rel="next" href="../test-concepts/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Use Markdown Architectural Decision Records - LTB K8s Backend</title>
+        <title>Tools and Frameworks - LTB K8s Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#use-markdown-architectural-decision-records" class="md-skip">
+        <a href="#tools-and-frameworks" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Use Markdown Architectural Decision Records
+              Tools and Frameworks
             
           </span>
         </div>
@@ -367,14 +367,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
       
       
         
@@ -393,7 +395,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
           Contributor
@@ -406,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributor/coding-conventions/" class="md-nav__link">
+      <a href="../coding-conventions/" class="md-nav__link">
         Coding Conventions
       </a>
     </li>
@@ -420,7 +422,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributor/dev-cluster-setup/" class="md-nav__link">
+      <a href="../dev-cluster-setup/" class="md-nav__link">
         Development cluster setup
       </a>
     </li>
@@ -432,11 +434,66 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../contributor/technologies-used/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Tools and Frameworks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Tools and Frameworks
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#go-based-operator-sdk-framework" class="md-nav__link">
+    Go-based Operator SDK framework
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubevirt" class="md-nav__link">
+    Kubevirt
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    Kubernetes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -448,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributor/test-concepts/" class="md-nav__link">
+      <a href="../test-concepts/" class="md-nav__link">
         Test Concept
       </a>
     </li>
@@ -468,16 +525,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
       
       
         
@@ -508,7 +563,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Decisions
@@ -519,66 +574,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Use Markdown Architectural Decision Records
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
         Use Markdown Architectural Decision Records
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context-and-problem-statement" class="md-nav__link">
-    Context and Problem Statement
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#considered-options" class="md-nav__link">
-    Considered Options
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision-outcome" class="md-nav__link">
-    Decision Outcome
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -590,7 +590,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-operator-SDK/" class="md-nav__link">
+      <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
         Operator SDK
       </a>
     </li>
@@ -604,7 +604,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-operator-scope/" class="md-nav__link">
+      <a href="../../decisions/0002-operator-scope/" class="md-nav__link">
         Operator Scope
       </a>
     </li>
@@ -618,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-api-and-operator-run-in-one-container/" class="md-nav__link">
+      <a href="../../decisions/0003-api-and-operator-run-in-one-container/" class="md-nav__link">
         API and Operator Run in One Container
       </a>
     </li>
@@ -632,7 +632,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-dev-container/" class="md-nav__link">
+      <a href="../../decisions/0004-dev-container/" class="md-nav__link">
         DevContainer
       </a>
     </li>
@@ -646,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
+      <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
         Replace Current LTB Backend
       </a>
     </li>
@@ -660,7 +660,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-lab-instance-set/" class="md-nav__link">
+      <a href="../../decisions/0006-lab-instance-set/" class="md-nav__link">
         Lab Instance Set
       </a>
     </li>
@@ -674,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-deployment-to-k8s/" class="md-nav__link">
+      <a href="../../decisions/0007-deployment-to-k8s/" class="md-nav__link">
         Deployment to K8s
       </a>
     </li>
@@ -688,7 +688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-namespace-per-labinstance/" class="md-nav__link">
+      <a href="../../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
         Namespace Per LabInstance
       </a>
     </li>
@@ -702,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
+      <a href="../../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
         K8s Aggreted API Over Standalone API
       </a>
     </li>
@@ -743,22 +743,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context-and-problem-statement" class="md-nav__link">
-    Context and Problem Statement
+  <a href="#go-based-operator-sdk-framework" class="md-nav__link">
+    Go-based Operator SDK framework
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#considered-options" class="md-nav__link">
-    Considered Options
+  <a href="#kubevirt" class="md-nav__link">
+    Kubevirt
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision-outcome" class="md-nav__link">
-    Decision Outcome
+  <a href="#kubernetes" class="md-nav__link">
+    Kubernetes
   </a>
   
 </li>
@@ -778,7 +778,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/decisions/0000-use-markdown-architectural-decision-records.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/contributor/technologies-used.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -786,30 +786,14 @@
   
 
 
-<h1 id="use-markdown-architectural-decision-records">Use Markdown Architectural Decision Records<a class="headerlink" href="#use-markdown-architectural-decision-records" title="Permanent link">&para;</a></h1>
-<h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>We want to record design decisions made in this project.
-Which format and structure should these records follow?</p>
-<h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://adr.github.io/madr/">MADR</a> 2.1.2 – The Markdown Architectural Decision Records</li>
-<li><a href="http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions">Michael Nygard's template</a> – The first incarnation of the term "ADR"</li>
-<li><a href="https://www.infoq.com/articles/sustainable-architectural-design-decisions">Sustainable Architectural Decisions</a> – The Y-Statements</li>
-<li>Other templates listed at <a href="https://github.com/joelparkerhenderson/architecture_decision_record">https://github.com/joelparkerhenderson/architecture_decision_record</a></li>
-<li>Formless – No conventions for file format and structure</li>
-</ul>
-<h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "MADR 2.1.2", because</p>
-<ul>
-<li>Implicit assumptions should be made explicit.
-  Design documentation is important to enable people understanding the decisions later on.
-  See also <a href="https://doi.org/10.1109/TSE.1986.6312940">A rational design process: How and why to fake it</a>.</li>
-<li>The MADR format is lean and fits our development style.</li>
-<li>The MADR structure is comprehensible and facilitates usage &amp; maintenance.</li>
-<li>The MADR project is vivid.</li>
-<li>Version 2.1.2 is the latest one available when starting to document ADRs.</li>
-<li>A Visual Studio Code extension <a href="https://marketplace.visualstudio.com/items?itemName=StevenChen.vscode-adr-manager">ADR Manager</a> for MADR exits, which makes managing ADRs easy.</li>
-</ul>
+<h1 id="tools-and-frameworks">Tools and Frameworks<a class="headerlink" href="#tools-and-frameworks" title="Permanent link">&para;</a></h1>
+<p>The tools and frameworks used in the project are listed below.</p>
+<h2 id="go-based-operator-sdk-framework">Go-based Operator SDK framework<a class="headerlink" href="#go-based-operator-sdk-framework" title="Permanent link">&para;</a></h2>
+<p>To create the <abbr title="Lab Topology Builder">LTB</abbr> operator, we used the Go-based Operator-sdk framework, which helps us to make the <abbr title="Lab Topology Builder">LTB</abbr> application Kubernetes native.</p>
+<h2 id="kubevirt">Kubevirt<a class="headerlink" href="#kubevirt" title="Permanent link">&para;</a></h2>
+<p>Kubevirt is a tool that provides a virtual machine management layer on top of Kubernetes. It allows us to deploy virtual machines on Kubernetes.</p>
+<h2 id="kubernetes">Kubernetes<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h2>
+<p>We use Kubernetes as the container orchestration platform for the <abbr title="Lab Topology Builder">LTB</abbr> application.</p>
 
 
 
