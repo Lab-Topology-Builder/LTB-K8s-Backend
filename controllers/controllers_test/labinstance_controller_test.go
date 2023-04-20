@@ -5,7 +5,7 @@ import (
 	"time"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
-	controller "github.com/Lab-Topology-Builder/LTB-K8s-Backend/controllers"
+	. "github.com/Lab-Topology-Builder/LTB-K8s-Backend/controllers"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
@@ -23,7 +23,7 @@ import (
 var _ = Describe("LabInstance Controller", func() {
 	var (
 		ctx             context.Context
-		r               *controller.LabInstanceReconciler
+		r               *LabInstanceReconciler
 		testLabInstance *ltbv1alpha1.LabInstance
 		testLabTemplate *ltbv1alpha1.LabTemplate
 		result          ctrl.Result
@@ -131,7 +131,7 @@ var _ = Describe("LabInstance Controller", func() {
 		}
 
 		client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testPod, testVM).Build()
-		r = &controller.LabInstanceReconciler{Client: client, Scheme: scheme.Scheme}
+		r = &LabInstanceReconciler{Client: client, Scheme: scheme.Scheme}
 
 	})
 
@@ -145,14 +145,14 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 
 		It("should map labtemplate to pod", func() {
-			testPod = r.MapTemplateToPod(testLabInstance, podNode)
+			testPod = MapTemplateToPod(testLabInstance, podNode)
 			Expect(testPod.Name).To(Equal("test-node-1"))
 			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
 			Expect(testPod.Spec.Containers[0].Image).To(Equal("ubuntu:20.04"))
 		})
 
 		It("should map labtemplate to vm", func() {
-			testVM = r.MapTemplateToVM(testLabInstance, vmNode)
+			testVM = MapTemplateToVM(testLabInstance, vmNode)
 			Expect(testVM.Name).To(Equal("test-node-2"))
 			Expect(testVM.Spec.Template.Spec.Domain.Resources.Requests.Memory().String()).To(Equal("2048M"))
 			Expect(testVM.Spec.Template.Spec.Domain.CPU.Cores).To(Equal(uint32(1)))

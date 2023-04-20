@@ -96,7 +96,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	// Update LabInstance status according to the status of the pods and vms
-	r.UpdateLabInstanceStatus(ctx, pods, vms, labInstance)
+	UpdateLabInstanceStatus(ctx, pods, vms, labInstance)
 
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
@@ -127,7 +127,7 @@ func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *l
 	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
-		pod := r.MapTemplateToPod(labInstance, node)
+		pod := MapTemplateToPod(labInstance, node)
 		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
@@ -150,7 +150,7 @@ func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *lt
 	err := r.Get(ctx, types.NamespacedName{Name: node.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
 
-		vm := r.MapTemplateToVM(labInstance, node)
+		vm := MapTemplateToVM(labInstance, node)
 		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
 		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
 		err = r.Create(ctx, vm)
@@ -167,7 +167,7 @@ func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *lt
 	return foundVM, false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      node.Name,
 		Namespace: labInstance.Namespace,
@@ -187,7 +187,7 @@ func (r *LabInstanceReconciler) MapTemplateToPod(labInstance *ltbv1alpha1.LabIns
 	return pod
 }
 
-func (r *LabInstanceReconciler) MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
+func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
 	running := true
 	resources := kubevirtv1.ResourceRequirements{
 		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
@@ -225,7 +225,7 @@ func (r *LabInstanceReconciler) MapTemplateToVM(labInstance *ltbv1alpha1.LabInst
 	return vm
 }
 
-func (r *LabInstanceReconciler) UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
+func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
 	var podStatus corev1.PodPhase
 	var vmStatus kubevirtv1.VirtualMachinePrintableStatus
 	var numVMsRunning, numPodsRunning int
