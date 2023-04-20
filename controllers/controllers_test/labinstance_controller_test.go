@@ -146,14 +146,14 @@ var _ = Describe("LabInstance Controller", func() {
 
 		It("should map labtemplate to pod", func() {
 			testPod = MapTemplateToPod(testLabInstance, podNode)
-			Expect(testPod.Name).To(Equal("test-node-1"))
+			Expect(testPod.Name).To(Equal("test-labinstance-test-node-1"))
 			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
 			Expect(testPod.Spec.Containers[0].Image).To(Equal("ubuntu:20.04"))
 		})
 
 		It("should map labtemplate to vm", func() {
 			testVM = MapTemplateToVM(testLabInstance, vmNode)
-			Expect(testVM.Name).To(Equal("test-node-2"))
+			Expect(testVM.Name).To(Equal("test-labinstance-test-node-2"))
 			Expect(testVM.Spec.Template.Spec.Domain.Resources.Requests.Memory().String()).To(Equal("2048M"))
 			Expect(testVM.Spec.Template.Spec.Domain.CPU.Cores).To(Equal(uint32(1)))
 			Expect(testVM.Spec.Template.Spec.Volumes[0].Name).To(Equal("containerdisk"))
@@ -168,9 +168,9 @@ var _ = Describe("LabInstance Controller", func() {
 			By("By creating the pod")
 			testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, podNode)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(requeue).To(BeFalse())
-			Expect(result).To(Equal(ctrl.Result{}))
-			Expect(testPod.Name).To(Equal("test-node-1"))
+			Expect(requeue).To(BeTrue())
+			Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+			Expect(testPod.Name).To(Equal("test-labinstance-test-node-1"))
 
 		})
 

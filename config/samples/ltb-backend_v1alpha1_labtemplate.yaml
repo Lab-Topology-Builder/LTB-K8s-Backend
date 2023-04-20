@@ -27,7 +27,7 @@ spec:
                 - [ systemctl, start, qemu-guest-agent ]
   - name: "sample-node-2"
     image:
-      type: "ubuntu"
+      type: "ghcr.io/insrapperswil/network-ninja"
       version: "latest"
   - name: "sample-node-3"
     image:
