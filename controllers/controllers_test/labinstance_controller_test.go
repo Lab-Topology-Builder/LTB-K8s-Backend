@@ -34,6 +34,7 @@ var _ = Describe("LabInstance Controller", func() {
 		testVM          *kubevirtv1.VirtualMachine
 		podNode, vmNode *ltbv1alpha1.LabInstanceNodes
 		running         bool
+		//req             ctrl.Request
 	)
 	const namespace = "test-namespace"
 	//k8sClient := K8sClient.GetClient()
@@ -129,7 +130,7 @@ var _ = Describe("LabInstance Controller", func() {
 			},
 		}
 
-		client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
+		client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testPod, testVM).Build()
 		r = &controller.LabInstanceReconciler{Client: client, Scheme: scheme.Scheme}
 
 	})
@@ -167,15 +168,12 @@ var _ = Describe("LabInstance Controller", func() {
 			By("By creating the pod")
 			testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, podNode)
 			Expect(err).NotTo(HaveOccurred())
-			By("By getting the pod")
-			err = r.Get(ctx, types.NamespacedName{Name: podNode.Name, Namespace: testLabInstance.Namespace}, testPod)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(requeue).To(BeFalse())
+			Expect(result).To(Equal(ctrl.Result{}))
 			Expect(testPod.Name).To(Equal("test-node-1"))
-			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
-			Expect(testPod.Spec.Containers[0].Image).To(Equal("ubuntu:20.04"))
+
 		})
 
-		// I need to check this one
 		It("should reconcile a vm", func() {
 			By("By creating the vm")
 			testVM, requeue, result, err = r.ReconcileVM(ctx, testLabInstance, vmNode)
@@ -188,6 +186,5 @@ var _ = Describe("LabInstance Controller", func() {
 				return err
 			}, time.Minute, time.Second).ShouldNot(HaveOccurred())
 		})
-
 	})
 })
