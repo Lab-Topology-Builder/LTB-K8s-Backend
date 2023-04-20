@@ -13,11 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+//+kubebuilder:scaffold:scheme
 
 package controllers
 
 import (
 	"context"
+	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -70,25 +72,25 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	labTemplate := &ltbv1alpha1.LabTemplate{}
-	if shouldReturn, result, err := r.getLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
+	if shouldReturn, result, err := r.GetLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
 
-	r.reconcileNetwork(ctx, labInstance)
+	r.ReconcileNetwork(ctx, labInstance)
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
 	vms := []*kubevirtv1.VirtualMachine{}
 	for _, node := range nodes {
 		if node.Image.Kind == "vm" {
-			vm, shouldReturn, result, err := r.reconcileVM(ctx, labInstance, &node)
+			vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
 			if shouldReturn {
 				return result, err
 			}
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.reconcilePod(ctx, labInstance, &node)
+			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
 			if shouldReturn {
 				return result, err
 			}
@@ -97,7 +99,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	// Update LabInstance status according to the status of the pods and vms
-	updateLabInstanceStatus(ctx, pods, vms, labInstance)
+	UpdateLabInstanceStatus(ctx, pods, vms, labInstance)
 
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
@@ -108,7 +110,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
 	if err != nil {
@@ -122,7 +124,7 @@ func (r *LabInstanceReconciler) getLabTemplate(ctx context.Context, labInstance 
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) reconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	podNetworkDefinitionName := labInstance.Name + "pod"
 	vmNetworkDefinitionName := labInstance.Name + "vm"
@@ -177,13 +179,13 @@ func (r *LabInstanceReconciler) reconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
-		pod := mapTemplateToPod(labInstance, node)
+		pod := MapTemplateToPod(labInstance, node)
 		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
@@ -200,13 +202,13 @@ func (r *LabInstanceReconciler) reconcilePod(ctx context.Context, labInstance *l
 	return foundPod, false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundVM := &kubevirtv1.VirtualMachine{}
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundVM)
 	if err != nil && errors.IsNotFound(err) {
 
-		vm := mapTemplateToVM(labInstance, node)
+		vm := MapTemplateToVM(labInstance, node)
 		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
 		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
 		err = r.Create(ctx, vm)
@@ -223,7 +225,7 @@ func (r *LabInstanceReconciler) reconcileVM(ctx context.Context, labInstance *lt
 	return foundVM, false, ctrl.Result{}, nil
 }
 
-func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -246,7 +248,7 @@ func mapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	return pod
 }
 
-func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
+func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
 	running := true
 	resources := kubevirtv1.ResourceRequirements{
 		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
@@ -295,34 +297,35 @@ func mapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	return vm
 }
 
-func updateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
+func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
 	var podStatus corev1.PodPhase
 	var vmStatus kubevirtv1.VirtualMachinePrintableStatus
+	var numVMsRunning, numPodsRunning int
 	for _, pod := range pods {
 		podStatus = pod.Status.Phase
-		if pod.Status.Phase != corev1.PodRunning {
-			labInstance.Status.PodStatus = string(pod.Status.Phase)
+		if podStatus != corev1.PodRunning {
 			break
 		}
+		numPodsRunning++
 	}
-	labInstance.Status.PodStatus = string(podStatus)
+	labInstance.Status.NumPodsRunning = fmt.Sprint(numPodsRunning) + "/" + fmt.Sprint(len(pods))
 
 	for _, vm := range vms {
 		vmStatus = vm.Status.PrintableStatus
 		if !vm.Status.Ready {
-			labInstance.Status.VMStatus = string(vmStatus)
 			break
 		}
+		numVMsRunning++
 	}
-	labInstance.Status.VMStatus = string(vmStatus)
+	labInstance.Status.NumVMsRunning = fmt.Sprint(numVMsRunning) + "/" + fmt.Sprint(len(vms))
 
-	if labInstance.Status.PodStatus == "Running" && labInstance.Status.VMStatus == "VM Ready" {
+	if podStatus == "Running" && vmStatus == "VM Ready" {
 		labInstance.Status.Status = "Running"
 	} else {
-		if labInstance.Status.PodStatus != "Running" {
-			labInstance.Status.Status = string(labInstance.Status.PodStatus)
+		if podStatus != "Running" {
+			labInstance.Status.Status = string(podStatus)
 		} else {
-			labInstance.Status.Status = labInstance.Status.VMStatus
+			labInstance.Status.Status = string(vmStatus)
 		}
 	}
 }

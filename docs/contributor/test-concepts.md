@@ -14,7 +14,7 @@ Testing in the other categories, such as Security and Performance, will be consi
 
 ## Tools
 
-The tools that are going to be used to perform the tests are:
+The tools listed below are going to be used to perform the tests mentioned above. Moreover, the tools are used in a suite test, which is created when a controller is scaffolded by the tool.
 
 - [Testify](https://github.com/stretchr/testify): a go package that provides a set of features to perform unit tests, such as assertions, mocks, etc.
 - [EnvTest](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest): a Go library that helps write integration tests for Kubernetes controllers by setting up an instance of etcd and a Kubernetes API server, without kubelet, controller-manager, or other components.

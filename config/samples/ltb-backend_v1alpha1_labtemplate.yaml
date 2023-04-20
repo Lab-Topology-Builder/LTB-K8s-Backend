@@ -10,7 +10,7 @@ metadata:
   name: labtemplate-sample
 spec:
   nodes:
-  - name: "sample-host-1"
+  - name: "sample-node-1"
     image:
       type: "ubuntu"
       version: "22.04"
@@ -25,11 +25,11 @@ spec:
                 - qemu-guest-agent
               runcmd:
                 - [ systemctl, start, qemu-guest-agent ]
-  - name: "sample-host-2"
+  - name: "sample-node-2"
     image:
       type: "ghcr.io/insrapperswil/network-ninja"
       version: "latest"
-  - name: "sample-host-3"
+  - name: "sample-node-3"
     image:
       type: "ubuntu"
       version: "latest"
