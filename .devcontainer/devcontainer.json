@@ -3,7 +3,7 @@
 {
 	"name": "K8s Dev Container",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.4",
+	"image": "ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.5",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"version": "latest",
