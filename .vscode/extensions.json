@@ -1,10 +1,7 @@
 {
     "recommendations": [
-        "mhutchie.git-graph",
         "aaron-bond.better-comments",
         "usernamehw.errorlens",
-        "ms-vsliveshare.vsliveshare",
-        "eamodio.gitlens",
-        "oderwat.indent-rainbow"
+        "ms-vsliveshare.vsliveshare"
     ]
 }
