@@ -1,0 +1,12 @@
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: NodeType
+metadata:
+  labels:
+    app.kubernetes.io/name: nodetype
+    app.kubernetes.io/instance: nodetype-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: nodetype-sample
+spec:
+  # TODO(user): Add fields here
