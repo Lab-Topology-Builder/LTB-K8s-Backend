@@ -17,9 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	kubevirtv1 "kubevirt.io/api/core/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -31,8 +29,8 @@ type NodeTypeSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of NodeType. Edit nodetype_types.go to remove/update
-	PodSpec corev1.PodSpec                `json:"podSpec,omitempty"`
-	VMSpec  kubevirtv1.VirtualMachineSpec `json:"vmSpec,omitempty"`
+	Kind     string `json:"kind,omitempty"`
+	NodeSpec string `json:"nodeSpec,omitempty"`
 }
 
 // NodeTypeStatus defines the observed state of NodeType

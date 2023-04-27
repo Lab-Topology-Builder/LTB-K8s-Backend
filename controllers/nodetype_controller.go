@@ -49,7 +49,18 @@ type NodeTypeReconciler struct {
 func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	nodetype := &ltbbackendv1alpha1.NodeType{}
+	err := r.Get(ctx, req.NamespacedName, nodetype)
+	if err != nil {
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	if nodetype.Spec.Kind == "vm" {
+		// check if valid vm spec
+	} else if nodetype.Spec.Kind == "container" {
+		// check if valid container spec
+	} else {
+		// invalid kind
+	}
 
 	return ctrl.Result{}, nil
 }
