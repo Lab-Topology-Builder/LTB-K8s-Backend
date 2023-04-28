@@ -29,10 +29,12 @@ spec:
     image:
       type: "ghcr.io/insrapperswil/network-ninja"
       version: "latest"
+    port: 22
   - name: "sample-node-3"
     image:
       type: "ubuntu"
       version: "latest"
       kind: "pod"
+    port: 22
   connections:
   - neighbors: "TestHost1:1,TestHost2:1"

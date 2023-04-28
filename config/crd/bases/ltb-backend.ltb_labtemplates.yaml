@@ -73,6 +73,9 @@ spec:
                       maxLength: 32
                       minLength: 1
                       type: string
+                    port:
+                      format: int32
+                      type: integer
                   required:
                   - image
                   - name
