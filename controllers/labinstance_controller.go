@@ -60,6 +60,7 @@ type LabInstanceReconciler struct {
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	var err error
+	// TODO: refactor not found error handling
 	labInstance := &ltbv1alpha1.LabInstance{}
 	err = r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
@@ -75,7 +76,6 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if shouldReturn, result, err := r.GetLabTemplate(ctx, labInstance, labTemplate); shouldReturn {
 		return result, err
 	}
-
 	r.ReconcileNetwork(ctx, labInstance)
 
 	nodes := labTemplate.Spec.Nodes
@@ -232,15 +232,24 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 		Annotations: map[string]string{
 			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "pod",
 		},
+		Labels: map[string]string{
+			"app": "remote-access",
+		},
 	}
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
+
 		Spec: corev1.PodSpec{
 			Containers: []corev1.Container{
 				{
 					Name:    node.Name,
 					Image:   node.Image.Type + ":" + node.Image.Version,
-					Command: []string{"/bin/sleep", "365d"},
+					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
+					Ports: []corev1.ContainerPort{
+						{
+							ContainerPort: node.Port,
+						},
+					},
 				},
 			},
 		},
