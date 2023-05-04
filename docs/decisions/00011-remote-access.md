@@ -2,13 +2,18 @@
 
 ## Context and Problem Statement
 
-Remote access to pods (containers) could be done using kubernetes service (load-balancer or node-port) for every node or using a jump host, which redirects the traffic to the node the user wants to access.
+For the labinstances to be usefull for the students, they need to be able to access the pods (containers) and VMs.
+The access should be restricted to the pods/VMs the user is allowed to access.
+It should be possible to access the pods/VMs console and or access it via multiple OOB protocols (SSH, RDP, VNC, ...).
 
 ## Considered Options
 
 * Kubernetes Service
-* Jump host
+* Gotty
+* ttyd
 
 ## Decision Outcome
 
-Chosen option: "Jump host", because it will be easy to manage the traffic and implement access control. We still haven't fully decided, which option we are going to use, but the jump host option will likely be our choice. We will start implementing the first option (Kubernetes service) and extend it later.
+Chosen option: "ttyd and Kubernetes Service", ttyd will be used as a jump host to access the pods/VMs console, and a Kubernetes service (LoadBalancer) will be used to access the pods/VMs via OOB protocols.
+Security for the console access will likely be easy to implement.
+Secure access via OOB protocols was considered, but will need to be reasearched further.
