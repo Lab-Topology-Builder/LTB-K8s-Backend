@@ -23,6 +23,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -83,6 +84,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.ReconcileNetwork(ctx, labInstance)
 
 	node := &ltbv1alpha1.LabInstanceNodes{}
+	r.ReconcileSvcAccRoleRoleBind(ctx, labInstance)
 
 	r.ReconcileService(ctx, labInstance, labTemplate, "-ttyd-service")
 	r.ReconcileService(ctx, labInstance, labTemplate, "-remote-access")
@@ -301,6 +303,42 @@ func (r *LabInstanceReconciler) ReconcilePodIngress(ctx context.Context, labInst
 	return false, ctrl.Result{}, nil
 }
 
+func (r *LabInstanceReconciler) ReconcileSvcAccRoleRoleBind(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	foundRole := &rbacv1.Role{}
+	foundSvcAcc := &corev1.ServiceAccount{}
+	foundRoleBind := &rbacv1.RoleBinding{}
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-ttyd-role", Namespace: labInstance.Namespace}, foundRole)
+	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-ttyd-svcacc", Namespace: labInstance.Namespace}, foundSvcAcc)
+	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-ttyd-rolebind", Namespace: labInstance.Namespace}, foundRoleBind)
+	if err != nil && errors.IsNotFound(err) {
+		svcAcc, role, roleBind := CreateSvcAccRoleRoleBind(labInstance)
+		ctrl.SetControllerReference(labInstance, svcAcc, r.Scheme)
+		ctrl.SetControllerReference(labInstance, role, r.Scheme)
+		ctrl.SetControllerReference(labInstance, roleBind, r.Scheme)
+		err = r.Create(ctx, svcAcc)
+		if err != nil {
+			log.Error(err, "Failed to create new ServiceAccount", "ServiceAccount.Namespace", labInstance.Namespace, "ServiceAccount.Name", svcAcc.Name)
+			return true, ctrl.Result{}, err
+		}
+		err = r.Create(ctx, role)
+		if err != nil {
+			log.Error(err, "Failed to create new Role", "Role.Namespace", labInstance.Namespace, "Role.Name", role.Name)
+			return true, ctrl.Result{}, err
+		}
+		err = r.Create(ctx, roleBind)
+		if err != nil {
+			log.Error(err, "Failed to create new RoleBinding", "RoleBinding.Namespace", labInstance.Namespace, "RoleBinding.Name", roleBind.Name)
+			return true, ctrl.Result{}, err
+		}
+		return true, ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get Role or ServiceAccount or RoleBinding")
+		return true, ctrl.Result{}, err
+	}
+	return false, ctrl.Result{}, nil
+}
+
 func CreatePodIngress(labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm *kubevirtv1.VirtualMachine, resourceType string, name string) *networkingv1.Ingress {
 	metadata := metav1.ObjectMeta{
 		Name:      name + "-ingress",
@@ -470,6 +508,7 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 		ObjectMeta: metadata,
 
 		Spec: corev1.PodSpec{
+			ServiceAccountName: labInstance.Name + "-ttyd-svcacc",
 			Containers: []corev1.Container{
 				{
 					Name:  labInstance.Name + "-ttyd-container",
@@ -527,6 +566,60 @@ func CreateService(labInstance *ltbv1alpha1.LabInstance, port int32) *corev1.Ser
 		},
 	}
 	return service
+}
+
+func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.ServiceAccount, *rbacv1.Role, *rbacv1.RoleBinding) {
+	serviceAccount := &corev1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      labInstance.Name + "-ttyd-svcacc",
+			Namespace: labInstance.Namespace,
+		},
+	}
+	role := &rbacv1.Role{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      labInstance.Name + "-ttyd-role",
+			Namespace: labInstance.Namespace,
+		},
+		Rules: []rbacv1.PolicyRule{
+			{
+				APIGroups: []string{""},
+				Resources: []string{"pods", "pods/log"},
+				Verbs:     []string{"get", "list"},
+			},
+			{
+				APIGroups: []string{""},
+				Resources: []string{"pods/exec"},
+				Verbs:     []string{"create"},
+			},
+			{
+				APIGroups: []string{"subresources.kubevirt.io"},
+				Resources: []string{"virtualmachineinstances/console"},
+				Verbs:     []string{"get", "list", "create", "update", "delete"},
+			},
+		},
+	}
+
+	roleBinding := &rbacv1.RoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      labInstance.Name + "-ttyd-rolebind",
+			Namespace: labInstance.Namespace,
+		},
+		Subjects: []rbacv1.Subject{
+			{
+				Kind:      "ServiceAccount",
+				Name:      labInstance.Name + "-ttyd-svcacc",
+				Namespace: labInstance.Namespace,
+			},
+		},
+		RoleRef: rbacv1.RoleRef{
+			Kind:     "Role",
+			Name:     labInstance.Name + "-ttyd-role",
+			APIGroup: "rbac.authorization.k8s.io",
+		},
+	}
+
+	return serviceAccount, role, roleBinding
+
 }
 
 // SetupWithManager sets up the controller with the Manager.
