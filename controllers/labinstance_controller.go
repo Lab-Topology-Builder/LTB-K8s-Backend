@@ -86,7 +86,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	r.ReconcileTtydService(ctx, labInstance)
 	// Reconile ttyd pod
-	r.ReconcilePod(ctx, labInstance, node, "ttydPod")
+	r.ReconcilePod(ctx, labInstance, node, "ttydPod", "ttyd")
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -101,7 +101,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node, "pod")
+			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node, "pod", node.Name)
 			if shouldReturn {
 				return result, err
 			}
@@ -191,11 +191,11 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, podType string) (*corev1.Pod, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, podType string, name string) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
 	var pod *corev1.Pod
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundPod)
+	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		if podType == "pod" {
