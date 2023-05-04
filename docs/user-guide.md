@@ -2,7 +2,7 @@
 
 ## Example Lab Template
 
-This is an example lab template. You can use this as a starting point for your own labs.
+This is an example of lab template, which you can use as a starting point for your own labs.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
@@ -39,11 +39,11 @@ spec:
   - neighbors: "TestHost1:1,TestHost2:1"
 ```
 
-The above lab template will defines three nodes and one connection between two of the nodes.
+The above lab template will define three nodes and one connection between two of the nodes.
 
 ## Example Lab Instance
 
-This is an example lab instance. You can use this as a starting point for your own labs.
+This is an example of lab instance, which you can use as a starting point for your own labs.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
@@ -54,4 +54,4 @@ spec:
   labTemplateReference: "labtemplate-sample"
 ```
 
-The above lab instance will create a lab instance called labinstance-sample based on the lab template with the name labtemplate-sample from the previous example.
+The above lab instance will create a lab instance called labinstance-sample using the data from the referenced resource labtemplate-sample, which is provided at the beginning as an example.
