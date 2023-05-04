@@ -20,20 +20,22 @@ The amount of available network interfaces is dynamic and depends on how many co
 
 ## Considered Options
 
-* Custom Resource
+* Custom Resources
 * Go
 
 ## Decision Outcome
 
-Chosen option: "Custom Resource", because it's not decided yet.
+Chosen option: "Custom Resources", because it will be possible to support all the cases mentioned in the decision drivers using go templates and a CRs. Implementing the types in Go does not seem to bring any major advantages, whereas using CRs will be easier for external users to extend the system with new node types.
 
 ### Positive Consequences
 
-* pro
+* Easy to extend during runtime
+* Easy to extend for external users
+* All decision drivers will be supported
 
 ### Negative Consequences
 
-* con
+* Go Templates are not as powerful as Go, which could make it harder for
 
 ## Links
 
