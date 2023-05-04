@@ -36,4 +36,4 @@ spec:
       kind: "pod"
   connections:
   - neighbors: "TestHost1:1,TestHost2:1"
-  port: 22
+  expose: true

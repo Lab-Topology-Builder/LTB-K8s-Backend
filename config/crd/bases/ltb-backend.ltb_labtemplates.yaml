@@ -44,6 +44,8 @@ spec:
                   - neighbors
                   type: object
                 type: array
+              expose:
+                type: boolean
               nodes:
                 items:
                   properties:
@@ -78,9 +80,6 @@ spec:
                   - name
                   type: object
                 type: array
-              port:
-                format: int32
-                type: integer
             required:
             - connections
             - nodes

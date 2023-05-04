@@ -89,7 +89,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.ReconcileService(ctx, labInstance, labTemplate, "-ttyd-service")
 	r.ReconcileService(ctx, labInstance, labTemplate, "-remote-access")
 	// Reconile ttyd pod
-	r.ReconcilePod(ctx, labInstance, labTemplate, node, "ttydPod", "ttyd")
+	r.ReconcilePod(ctx, labInstance, node, "ttydPod", "ttyd")
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -104,7 +104,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, labTemplate, &node, "pod", node.Name)
+			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node, "pod", node.Name)
 			if shouldReturn {
 				return result, err
 			}
@@ -194,7 +194,7 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate, node *ltbv1alpha1.LabInstanceNodes, podType string, name string) (*corev1.Pod, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, podType string, name string) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
 	var pod *corev1.Pod
@@ -202,7 +202,7 @@ func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *l
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		if podType == "pod" {
-			pod = MapTemplateToPod(labInstance, node, labTemplate)
+			pod = MapTemplateToPod(labInstance, node)
 		} else {
 			pod, _ = CreateTtydPodAndService(labInstance)
 		}
@@ -256,7 +256,7 @@ func (r *LabInstanceReconciler) ReconcileService(ctx context.Context, labInstanc
 		if name == "-ttyd-service" {
 			_, service = CreateTtydPodAndService(labInstance)
 		} else {
-			service = CreateService(labInstance, labTemplate.Spec.Port)
+			service = CreateService(labInstance, labTemplate.Spec.Expose)
 		}
 		ctrl.SetControllerReference(labInstance, service, r.Scheme)
 		log.Info("Creating a new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
@@ -382,7 +382,7 @@ func CreatePodIngress(labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm 
 	return ingress
 }
 
-func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, labTemplate *ltbv1alpha1.LabTemplate) *corev1.Pod {
+func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -404,7 +404,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
 					Ports: []corev1.ContainerPort{
 						{
-							ContainerPort: labTemplate.Spec.Port,
+							ContainerPort: 9090,
 						},
 					},
 				},
@@ -545,7 +545,13 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 	return pod, service
 }
 
-func CreateService(labInstance *ltbv1alpha1.LabInstance, port int32) *corev1.Service {
+func CreateService(labInstance *ltbv1alpha1.LabInstance, expose bool) *corev1.Service {
+	var serviceType corev1.ServiceType
+	if expose {
+		serviceType = corev1.ServiceTypeLoadBalancer
+	} else {
+		serviceType = corev1.ServiceTypeClusterIP
+	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      labInstance.Name + "-remote-access",
@@ -554,15 +560,14 @@ func CreateService(labInstance *ltbv1alpha1.LabInstance, port int32) *corev1.Ser
 		Spec: corev1.ServiceSpec{
 			Ports: []corev1.ServicePort{
 				{
-					Port:       port,
-					TargetPort: intstr.IntOrString{IntVal: port},
-					Name:       "ssh",
+					Port:       9090,
+					TargetPort: intstr.FromInt(9090),
 				},
 			},
 			Selector: map[string]string{
 				"app": "remote-access",
 			},
-			Type: corev1.ServiceTypeNodePort,
+			Type: serviceType,
 		},
 	}
 	return service
