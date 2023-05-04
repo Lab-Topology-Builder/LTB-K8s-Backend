@@ -10,9 +10,9 @@ The amount of available network interfaces is dynamic and depends on how many co
 
 ## Decision Drivers
 
-* Certain operating systems images like XR, and XRD need a specific interface configuration which depends on how many interfaces a certain node will receive.
-* The chosen solution should support multiple version of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...)
-* For XRd images, interfaces need to have environment variables set for each interface they use, and the interface count needs to be dynamically set according to the lab template
+* Certain operating systems' images like XR, and XRD need a specific interface configuration which depends on how many interfaces a certain node will receive.
+* The chosen solution should support multiple version of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...).
+* For XRd images, interfaces need to have environment variables set for each interface they use, and the interface count needs to be dynamically set according to the lab template.
 * For XR VM images, the first interface is the management interface and then there are two empty interfaces need a special configuration.
 * For mount from config might be different
 * Cumulus VX images need a privileged container
@@ -35,7 +35,7 @@ Chosen option: "Custom Resources", because it will be possible to support all th
 
 ### Negative Consequences
 
-* Go Templates are not as powerful as Go, which could make it harder for
+* Go Templates are not as powerful as Go, which could make it harder.
 
 ## Links
 
