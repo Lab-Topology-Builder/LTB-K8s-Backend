@@ -105,4 +105,9 @@
          <lastmod>2023-05-04</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0010-extending-ltb-with-new-node-types/</loc>
+         <lastmod>2023-05-04</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
