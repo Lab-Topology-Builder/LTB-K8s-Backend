@@ -22,10 +22,12 @@ import (
 	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
+	networkingv1 "k8s.io/api/networking/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -59,6 +61,8 @@ type LabInstanceReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	v := &kubevirtv1.VirtualMachine{}
+	p := &corev1.Pod{}
 	var err error
 	// TODO: refactor not found error handling
 	labInstance := &ltbv1alpha1.LabInstance{}
@@ -78,6 +82,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 	r.ReconcileNetwork(ctx, labInstance)
 
+	node := &ltbv1alpha1.LabInstanceNodes{}
+
+	r.ReconcileTtydService(ctx, labInstance)
+	// Reconile ttyd pod
+	r.ReconcilePod(ctx, labInstance, node, "ttydPod")
+
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
 	vms := []*kubevirtv1.VirtualMachine{}
@@ -87,13 +97,15 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			if shouldReturn {
 				return result, err
 			}
+			r.ReconcilePodIngress(ctx, labInstance, p, vm, "vm")
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
+			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node, "pod")
 			if shouldReturn {
 				return result, err
 			}
+			r.ReconcilePodIngress(ctx, labInstance, pod, v, "pod")
 			pods = append(pods, pod)
 		}
 	}
@@ -179,13 +191,18 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, podType string) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
+	var pod *corev1.Pod
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
-		pod := MapTemplateToPod(labInstance, node)
+		if podType == "pod" {
+			pod = MapTemplateToPod(labInstance, node)
+		} else {
+			pod, _ = CreateTtydPodAndService(labInstance)
+		}
 		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
 		err = r.Create(ctx, pod)
@@ -223,6 +240,102 @@ func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *lt
 		return nil, true, ctrl.Result{}, err
 	}
 	return foundVM, false, ctrl.Result{}, nil
+}
+
+func (r *LabInstanceReconciler) ReconcileTtydService(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	foundService := &corev1.Service{}
+	serviceName := labInstance.Name + "-ttyd-service"
+	err := r.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: labInstance.Namespace}, foundService)
+	if err != nil && errors.IsNotFound(err) {
+		// Define a new Service
+		_, service := CreateTtydPodAndService(labInstance)
+		ctrl.SetControllerReference(labInstance, service, r.Scheme)
+		log.Info("Creating a new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
+		err = r.Create(ctx, service)
+		if err != nil {
+			log.Error(err, "Failed to create new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
+			return true, ctrl.Result{}, err
+		}
+		// Service created successfully - return and requeue
+		return true, ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get Service")
+		return true, ctrl.Result{}, err
+	}
+	return false, ctrl.Result{}, nil
+}
+
+func (r *LabInstanceReconciler) ReconcilePodIngress(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm *kubevirtv1.VirtualMachine, resourceType string) (bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	foundIngress := &networkingv1.Ingress{}
+	var name string
+	if resourceType == "pod" {
+		name = pod.Name
+	} else if resourceType == "vm" {
+		name = vm.Name
+	}
+	err := r.Get(ctx, types.NamespacedName{Name: name + "-ingress", Namespace: labInstance.Namespace}, foundIngress)
+	if err != nil && errors.IsNotFound(err) {
+		// Define a new Ingress
+		ingress := CreatePodIngress(labInstance, pod, vm, resourceType, name)
+		ctrl.SetControllerReference(labInstance, ingress, r.Scheme)
+		log.Info("Creating a new Ingress", "Ingress.Namespace", labInstance.Namespace, "Ingress.Name", ingress.Name)
+		err = r.Create(ctx, ingress)
+		if err != nil {
+			log.Error(err, "Failed to create new Ingress", "Ingress.Namespace", labInstance.Namespace, "Ingress.Name", ingress.Name)
+			return true, ctrl.Result{}, err
+		}
+		// Ingress created successfully - return and requeue
+		return true, ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get Ingress")
+		return true, ctrl.Result{}, err
+	}
+	return false, ctrl.Result{}, nil
+}
+
+func CreatePodIngress(labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm *kubevirtv1.VirtualMachine, resourceType string, name string) *networkingv1.Ingress {
+	metadata := metav1.ObjectMeta{
+		Name:      name + "-ingress",
+		Namespace: labInstance.Namespace,
+		Annotations: map[string]string{
+			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + resourceType + "&arg=" + name + "&arg=bash",
+		},
+	}
+	className := "nginx"
+	ingress := &networkingv1.Ingress{
+		ObjectMeta: metadata,
+		Spec: networkingv1.IngressSpec{
+			IngressClassName: &className,
+			Rules: []networkingv1.IngressRule{
+				{Host: name + ".sr-118142.network.garden",
+					IngressRuleValue: networkingv1.IngressRuleValue{
+						HTTP: &networkingv1.HTTPIngressRuleValue{
+							Paths: []networkingv1.HTTPIngressPath{
+								{
+									Path: "/",
+									PathType: func() *networkingv1.PathType {
+										pathType := networkingv1.PathTypePrefix
+										return &pathType
+									}(),
+									Backend: networkingv1.IngressBackend{
+										Service: &networkingv1.IngressServiceBackend{
+											Name: labInstance.Name + "-ttyd-service",
+											Port: networkingv1.ServiceBackendPort{
+												Name: "ttyd",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	return ingress
 }
 
 func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
@@ -337,6 +450,54 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 			labInstance.Status.Status = string(vmStatus)
 		}
 	}
+}
+
+func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
+	metadata := metav1.ObjectMeta{
+		Name:      labInstance.Name + "-ttyd",
+		Namespace: labInstance.Namespace,
+		Labels: map[string]string{
+			"app": "ttyd-app",
+		},
+	}
+	pod := &corev1.Pod{
+		ObjectMeta: metadata,
+
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  labInstance.Name + "-ttyd-container",
+					Image: "ghcr.io/insrapperswil/kube-ttyd:latest",
+					Args:  []string{"ttyd", "-a", "konnect"},
+					Ports: []corev1.ContainerPort{
+						{
+							ContainerPort: 7681,
+						},
+					},
+				},
+			},
+		},
+	}
+	service := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      labInstance.Name + "-ttyd-service",
+			Namespace: labInstance.Namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Ports: []corev1.ServicePort{
+				{
+					Port:       7681,
+					TargetPort: intstr.IntOrString{IntVal: 7681},
+					Name:       "ttyd",
+				},
+			},
+			Selector: map[string]string{
+				"app": "ttyd-app",
+			},
+			Type: corev1.ServiceTypeClusterIP,
+		},
+	}
+	return pod, service
 }
 
 // SetupWithManager sets up the controller with the Manager.
