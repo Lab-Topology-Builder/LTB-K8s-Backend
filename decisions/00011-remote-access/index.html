@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/architecture/kvm-docker-ltb-architecture/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/00011-remote-access/">
       
       
-        <link rel="prev" href="../k8s-ltb-architecture/">
+        <link rel="prev" href="../0001-operator-SDK/">
       
       
-        <link rel="next" href="../../contributor/coding-conventions/">
+        <link rel="next" href="../0002-operator-scope/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Current (KVM/Docker)-base LTB Architecture - LTB K8s Backend</title>
+        <title>Remote-Access - LTB K8s Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#current-kvmdocker-base-ltb-architecture" class="md-skip">
+        <a href="#remote-access" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Current (KVM/Docker)-base LTB Architecture
+              Remote-Access
             
           </span>
         </div>
@@ -298,16 +298,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
       
       
         
@@ -322,7 +320,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
           Architecture
@@ -335,7 +333,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../k8s-ltb-architecture/" class="md-nav__link">
+      <a href="../../architecture/k8s-ltb-architecture/" class="md-nav__link">
         Kubernetes Lab Topology Builder Architecture
       </a>
     </li>
@@ -347,100 +345,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Current (KVM/Docker)-base LTB Architecture
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
         Current (KVM/Docker)-base LTB Architecture
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    Backend
-  </a>
-  
-    <nav class="md-nav" aria-label="Backend">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reservations" class="md-nav__link">
-    Reservations
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-lab-store" class="md-nav__link">
-    Running lab store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#template-store" class="md-nav__link">
-    Template store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    Authentication
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    Deployment
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#frontend" class="md-nav__link">
-    Frontend
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -559,14 +468,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
       
       
         
@@ -599,7 +510,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Decisions
@@ -612,7 +523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
+      <a href="../0000-use-markdown-architectural-decision-records/" class="md-nav__link">
         Use Markdown Architectural Decision Records
       </a>
     </li>
@@ -626,7 +537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
+      <a href="../0001-operator-SDK/" class="md-nav__link">
         Operator SDK
       </a>
     </li>
@@ -638,11 +549,66 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../decisions/00011-remote-access/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Remote-Access
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Remote-Access
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context-and-problem-statement" class="md-nav__link">
+    Context and Problem Statement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    Considered Options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-outcome" class="md-nav__link">
+    Decision Outcome
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -654,7 +620,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-operator-scope/" class="md-nav__link">
+      <a href="../0002-operator-scope/" class="md-nav__link">
         Operator Scope
       </a>
     </li>
@@ -668,7 +634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-api-and-operator-run-in-one-container/" class="md-nav__link">
+      <a href="../0003-api-and-operator-run-in-one-container/" class="md-nav__link">
         API and Operator Run in One Container
       </a>
     </li>
@@ -682,7 +648,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-dev-container/" class="md-nav__link">
+      <a href="../0004-dev-container/" class="md-nav__link">
         DevContainer
       </a>
     </li>
@@ -696,7 +662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
+      <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
         Replace Current LTB Backend
       </a>
     </li>
@@ -710,7 +676,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-lab-instance-set/" class="md-nav__link">
+      <a href="../0006-lab-instance-set/" class="md-nav__link">
         Lab Instance Set
       </a>
     </li>
@@ -724,7 +690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-deployment-to-k8s/" class="md-nav__link">
+      <a href="../0007-deployment-to-k8s/" class="md-nav__link">
         Deployment to K8s
       </a>
     </li>
@@ -738,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
+      <a href="../0008-namespace-per-labinstance/" class="md-nav__link">
         Namespace Per LabInstance
       </a>
     </li>
@@ -752,7 +718,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
+      <a href="../0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
         K8s Aggreted API Over Standalone API
       </a>
     </li>
@@ -793,56 +759,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    Backend
-  </a>
-  
-    <nav class="md-nav" aria-label="Backend">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reservations" class="md-nav__link">
-    Reservations
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-lab-store" class="md-nav__link">
-    Running lab store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#template-store" class="md-nav__link">
-    Template store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    Authentication
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    Deployment
+  <a href="#context-and-problem-statement" class="md-nav__link">
+    Context and Problem Statement
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#frontend" class="md-nav__link">
-    Frontend
+  <a href="#considered-options" class="md-nav__link">
+    Considered Options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-outcome" class="md-nav__link">
+    Decision Outcome
   </a>
   
 </li>
@@ -862,7 +794,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/architecture/kvm-docker-ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/decisions/00011-remote-access.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -870,72 +802,21 @@
   
 
 
-<h1 id="current-kvmdocker-base-ltb-architecture">Current (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-base <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#current-kvmdocker-base-ltb-architecture" title="Permanent link">&para;</a></h1>
-<p>The following diagram shows the current <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
-<p><img alt="Current LTB Architecture" src="../../assets/drawings/ltb-stack-node.svg" /></p>
-<p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
+<h1 id="remote-access">Remote-Access<a class="headerlink" href="#remote-access" title="Permanent link">&para;</a></h1>
+<h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>For the labinstances to be usefull for the students, they need to be able to access the pods (containers) and VMs.
+The access should be restricted to the pods/VMs the user is allowed to access.
+It should be possible to access the pods/VMs console and or access it via multiple <abbr title="Out-of-Band">OOB</abbr> protocols (SSH, RDP, VNC, ...).</p>
+<h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="#frontend">Frontend</a> built with React</li>
-<li><a href="#backend">Backend</a> built with Django</li>
-<li><a href="#deployment">Deployment</a> built with docker-compose</li>
+<li>Kubernetes Service</li>
+<li>Gotty</li>
+<li>ttyd</li>
 </ul>
-<h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
-<p>The backend is accessible via API and a Admin Web UI.
-It is responsible for the following tasks:</p>
-<ul>
-<li>parsing the yaml topology files</li>
-<li>deploying/destroying the containers and vms</li>
-<li>exposes status of lab deployments</li>
-<li>exposes information on how to access the deployed containers and vms</li>
-<li>provides remote ssh capabilities</li>
-<li>provides remote Wireshark capture capabilities</li>
-<li>managing reservations (create, delete, etc.)</li>
-<li>exposes node resource usage</li>
-<li>user management</li>
-<li>exposes information about a device (version, groups, etc.)</li>
-</ul>
-<p>It is composed of the following components:</p>
-<ul>
-<li><a href="#reservations">Reservations</a></li>
-<li><a href="#running-lab-store">Running lab store</a></li>
-<li><a href="#template-store">Template store</a></li>
-<li><a href="#authentication">Authentication</a></li>
-</ul>
-<p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
-There are 4 different types of tasks:</p>
-<ul>
-<li>DeploymentTask</li>
-<li>Deploys containers in docker</li>
-<li>Deploys VMs using <abbr title="Kernel-based Virtual Machine">KVM</abbr></li>
-<li>Creates connections between containers and VMs using an <abbr title="Open vSwitch">OVS</abbr> bridge</li>
-<li>RemovalTask</li>
-<li>Removes a running lab</li>
-<li>MirrorInterfaceTask</li>
-<li>Creates a mirror interface on a connection</li>
-<li>SnapshotTask</li>
-<li>Takes a snapshot of a running lab</li>
-</ul>
-<h3 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h3>
-<p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
-<ul>
-<li>Create a reservation</li>
-<li>Delete a reservation</li>
-<li>Update a reservation</li>
-</ul>
-<h3 id="running-lab-store">Running lab store<a class="headerlink" href="#running-lab-store" title="Permanent link">&para;</a></h3>
-<p>This component is responsible for storing information about running labs, such as:</p>
-<ul>
-<li>The devices taking part in the running lab, inclusive of the interfaces</li>
-<li>Connection information</li>
-</ul>
-<h3 id="template-store">Template store<a class="headerlink" href="#template-store" title="Permanent link">&para;</a></h3>
-<p>This component is responsible for storing lab templates.</p>
-<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
-<p>This component is responsible for user authentication and management.</p>
-<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
-<p>The deployment component is responsible for deploying the <abbr title="Lab Topology Builder">LTB</abbr> backend and frontend components.</p>
-<h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
-<p>The frontend allows users to access their labs and their devices.</p>
+<h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "ttyd and Kubernetes Service", ttyd will be used as a jump host to access the pods/VMs console, and a Kubernetes service (LoadBalancer) will be used to access the pods/VMs via <abbr title="Out-of-Band">OOB</abbr> protocols.
+Security for the console access will likely be easy to implement.
+Secure access via <abbr title="Out-of-Band">OOB</abbr> protocols was considered, but will need to be reasearched further.</p>
 
 
 
