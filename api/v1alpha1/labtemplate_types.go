@@ -23,6 +23,7 @@ import (
 type LabTemplateSpec struct {
 	Nodes       []LabInstanceNodes `json:"nodes"`
 	Connections []Connection       `json:"connections"`
+	Port        int32              `json:"port,omitempty"`
 }
 
 type LabInstanceNodes struct {
@@ -30,7 +31,6 @@ type LabInstanceNodes struct {
 	// +kubebuilder:validation:MinLength=1
 	Name       string          `json:"name"`
 	Image      NodeImage       `json:"image"`
-	Port       int32           `json:"port,omitempty"`
 	Interfaces []NodeInterface `json:"interfaces,omitempty"`
 	Config     string          `json:"config,omitempty"`
 }
