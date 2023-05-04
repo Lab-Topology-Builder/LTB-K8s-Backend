@@ -84,9 +84,10 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	node := &ltbv1alpha1.LabInstanceNodes{}
 
-	r.ReconcileTtydService(ctx, labInstance)
+	r.ReconcileService(ctx, labInstance, labTemplate, "-ttyd-service")
+	r.ReconcileService(ctx, labInstance, labTemplate, "-remote-access")
 	// Reconile ttyd pod
-	r.ReconcilePod(ctx, labInstance, node, "ttydPod", "ttyd")
+	r.ReconcilePod(ctx, labInstance, labTemplate, node, "ttydPod", "ttyd")
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -101,7 +102,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node, "pod", node.Name)
+			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, labTemplate, &node, "pod", node.Name)
 			if shouldReturn {
 				return result, err
 			}
@@ -191,7 +192,7 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, podType string, name string) (*corev1.Pod, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate, node *ltbv1alpha1.LabInstanceNodes, podType string, name string) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
 	var pod *corev1.Pod
@@ -199,7 +200,7 @@ func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *l
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
 		if podType == "pod" {
-			pod = MapTemplateToPod(labInstance, node)
+			pod = MapTemplateToPod(labInstance, node, labTemplate)
 		} else {
 			pod, _ = CreateTtydPodAndService(labInstance)
 		}
@@ -242,14 +243,19 @@ func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *lt
 	return foundVM, false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcileTtydService(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcileService(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate, name string) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
+	var service *corev1.Service
 	foundService := &corev1.Service{}
-	serviceName := labInstance.Name + "-ttyd-service"
+	serviceName := labInstance.Name + name
 	err := r.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: labInstance.Namespace}, foundService)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Service
-		_, service := CreateTtydPodAndService(labInstance)
+		if name == "-ttyd-service" {
+			_, service = CreateTtydPodAndService(labInstance)
+		} else {
+			service = CreateService(labInstance, labTemplate.Spec.Port)
+		}
 		ctrl.SetControllerReference(labInstance, service, r.Scheme)
 		log.Info("Creating a new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
 		err = r.Create(ctx, service)
@@ -338,7 +344,7 @@ func CreatePodIngress(labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm 
 	return ingress
 }
 
-func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, labTemplate *ltbv1alpha1.LabTemplate) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -360,7 +366,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
 					Ports: []corev1.ContainerPort{
 						{
-							ContainerPort: node.Port,
+							ContainerPort: labTemplate.Spec.Port,
 						},
 					},
 				},
@@ -498,6 +504,29 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 		},
 	}
 	return pod, service
+}
+
+func CreateService(labInstance *ltbv1alpha1.LabInstance, port int32) *corev1.Service {
+	service := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      labInstance.Name + "-remote-access",
+			Namespace: labInstance.Namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Ports: []corev1.ServicePort{
+				{
+					Port:       port,
+					TargetPort: intstr.IntOrString{IntVal: port},
+					Name:       "ssh",
+				},
+			},
+			Selector: map[string]string{
+				"app": "remote-access",
+			},
+			Type: corev1.ServiceTypeNodePort,
+		},
+	}
+	return service
 }
 
 // SetupWithManager sets up the controller with the Manager.
