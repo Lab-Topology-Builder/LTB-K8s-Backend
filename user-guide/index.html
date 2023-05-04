@@ -294,9 +294,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         User Guide
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-lab-template" class="md-nav__link">
+    Example Lab Template
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-lab-instance" class="md-nav__link">
+    Example Lab Instance
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -705,6 +743,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-lab-template" class="md-nav__link">
+    Example Lab Template
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-lab-instance" class="md-nav__link">
+    Example Lab Instance
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -727,6 +787,52 @@
 
 
 <h1 id="user-guide">User Guide<a class="headerlink" href="#user-guide" title="Permanent link">&para;</a></h1>
+<h2 id="example-lab-template">Example Lab Template<a class="headerlink" href="#example-lab-template" title="Permanent link">&para;</a></h2>
+<p>This is an example of lab template, which you can use as a starting point for your own labs.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabTemplate</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate-sample</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nodes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-1&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;22.04&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vm&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">              </span><span class="no">#cloud-config</span>
+<span class="w">              </span><span class="no">password: ubuntu</span>
+<span class="w">              </span><span class="no">chpasswd: { expire: False }</span>
+<span class="w">              </span><span class="no">ssh_authorized_keys:</span>
+<span class="w">                </span><span class="no">- &lt;your-ssh-pub-key&gt;</span>
+<span class="w">              </span><span class="no">packages:</span>
+<span class="w">                </span><span class="no">- qemu-guest-agent</span>
+<span class="w">              </span><span class="no">runcmd:</span>
+<span class="w">                </span><span class="no">- [ systemctl, start, qemu-guest-agent ]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-2&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ghcr.io/insrapperswil/network-ninja&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-3&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pod&quot;</span>
+<span class="w">  </span><span class="nt">connections</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">neighbors</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TestHost1:1,TestHost2:1&quot;</span>
+</code></pre></div>
+<p>The above lab template will define three nodes and one connection between two of the nodes.</p>
+<h2 id="example-lab-instance">Example Lab Instance<a class="headerlink" href="#example-lab-instance" title="Permanent link">&para;</a></h2>
+<p>This is an example of lab instance, which you can use as a starting point for your own labs.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labTemplateReference</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;labtemplate-sample&quot;</span>
+</code></pre></div>
+<p>The above lab instance will create a lab instance called labinstance-sample using the data from the referenced resource labtemplate-sample, which is provided at the beginning as an example.</p>
 
 
 
