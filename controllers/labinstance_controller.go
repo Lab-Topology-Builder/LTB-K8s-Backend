@@ -404,7 +404,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
 					Ports: []corev1.ContainerPort{
 						{
-							ContainerPort: 9090,
+							ContainerPort: 22,
 						},
 					},
 				},
@@ -560,8 +560,8 @@ func CreateService(labInstance *ltbv1alpha1.LabInstance, expose bool) *corev1.Se
 		Spec: corev1.ServiceSpec{
 			Ports: []corev1.ServicePort{
 				{
-					Port:       9090,
-					TargetPort: intstr.FromInt(9090),
+					Port:       22,
+					TargetPort: intstr.FromInt(22),
 				},
 			},
 			Selector: map[string]string{
