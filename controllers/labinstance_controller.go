@@ -62,8 +62,6 @@ type LabInstanceReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	v := &kubevirtv1.VirtualMachine{}
-	p := &corev1.Pod{}
 	var err error
 	// TODO: refactor not found error handling
 	labInstance := &ltbv1alpha1.LabInstance{}
@@ -86,10 +84,9 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	node := &ltbv1alpha1.LabInstanceNodes{}
 	r.ReconcileSvcAccRoleRoleBind(ctx, labInstance)
 
-	r.ReconcileService(ctx, labInstance, labTemplate, "-ttyd-service")
-	r.ReconcileService(ctx, labInstance, labTemplate, "-remote-access")
+	r.ReconcileService(ctx, labInstance, labInstance.Name+"-ttyd-service", "pod")
 	// Reconile ttyd pod
-	r.ReconcilePod(ctx, labInstance, labTemplate, node, "ttydPod", "ttyd")
+	r.ReconcilePod(ctx, labInstance, node)
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -100,17 +97,22 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			if shouldReturn {
 				return result, err
 			}
-			r.ReconcilePodIngress(ctx, labInstance, p, vm, "vm")
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, labTemplate, &node, "pod", node.Name)
+			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
 			if shouldReturn {
 				return result, err
 			}
-			r.ReconcilePodIngress(ctx, labInstance, pod, v, "pod")
 			pods = append(pods, pod)
 		}
+		kind := node.Image.Kind
+		if kind == "" {
+			kind = "pod"
+		}
+		r.ReconcileService(ctx, labInstance, labInstance.Name+"-"+node.Name+"-remote-access", kind)
+		r.ReconcileIngress(ctx, labInstance, &node)
+
 	}
 
 	// Update LabInstance status according to the status of the pods and vms
@@ -194,17 +196,26 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate, node *ltbv1alpha1.LabInstanceNodes, podType string, name string) (*corev1.Pod, bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundPod := &corev1.Pod{}
 	var pod *corev1.Pod
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + name, Namespace: labInstance.Namespace}, foundPod)
+	var name string
+	var podType string
+	if node.Name != "" {
+		name = labInstance.Name + "-" + node.Name
+		podType = "pod"
+	} else {
+		name = labInstance.Name + "-ttyd"
+		podType = "ttyd"
+	}
+	err := r.Get(ctx, types.NamespacedName{Name: name, Namespace: labInstance.Namespace}, foundPod)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Pod
-		if podType == "pod" {
-			pod = MapTemplateToPod(labInstance, node, labTemplate)
-		} else {
+		if podType == "ttyd" {
 			pod, _ = CreateTtydPodAndService(labInstance)
+		} else {
+			pod = MapTemplateToPod(labInstance, node)
 		}
 		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
 		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
@@ -245,18 +256,17 @@ func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *lt
 	return foundVM, false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcileService(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate, name string) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcileService(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, serviceName string, kind string) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	var service *corev1.Service
 	foundService := &corev1.Service{}
-	serviceName := labInstance.Name + name
 	err := r.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: labInstance.Namespace}, foundService)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Service
-		if name == "-ttyd-service" {
+		if serviceName == labInstance.Name+"-ttyd-service" {
 			_, service = CreateTtydPodAndService(labInstance)
 		} else {
-			service = CreateService(labInstance, labTemplate.Spec.Port)
+			service = CreateService(labInstance, serviceName, kind)
 		}
 		ctrl.SetControllerReference(labInstance, service, r.Scheme)
 		log.Info("Creating a new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
@@ -274,19 +284,21 @@ func (r *LabInstanceReconciler) ReconcileService(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePodIngress(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm *kubevirtv1.VirtualMachine, resourceType string) (bool, ctrl.Result, error) {
+func (r *LabInstanceReconciler) ReconcileIngress(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundIngress := &networkingv1.Ingress{}
-	var name string
-	if resourceType == "pod" {
-		name = pod.Name
-	} else if resourceType == "vm" {
-		name = vm.Name
+	name := labInstance.Name + "-" + node.Name
+	var resourceType string
+	if node.Image.Kind != "" {
+		resourceType = node.Image.Kind
+	} else {
+		resourceType = "pod"
 	}
+
 	err := r.Get(ctx, types.NamespacedName{Name: name + "-ingress", Namespace: labInstance.Namespace}, foundIngress)
 	if err != nil && errors.IsNotFound(err) {
 		// Define a new Ingress
-		ingress := CreatePodIngress(labInstance, pod, vm, resourceType, name)
+		ingress := CreateIngress(labInstance, resourceType, name)
 		ctrl.SetControllerReference(labInstance, ingress, r.Scheme)
 		log.Info("Creating a new Ingress", "Ingress.Namespace", labInstance.Namespace, "Ingress.Name", ingress.Name)
 		err = r.Create(ctx, ingress)
@@ -339,50 +351,7 @@ func (r *LabInstanceReconciler) ReconcileSvcAccRoleRoleBind(ctx context.Context,
 	return false, ctrl.Result{}, nil
 }
 
-func CreatePodIngress(labInstance *ltbv1alpha1.LabInstance, pod *corev1.Pod, vm *kubevirtv1.VirtualMachine, resourceType string, name string) *networkingv1.Ingress {
-	metadata := metav1.ObjectMeta{
-		Name:      name + "-ingress",
-		Namespace: labInstance.Namespace,
-		Annotations: map[string]string{
-			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + resourceType + "&arg=" + name + "&arg=bash",
-		},
-	}
-	className := "nginx"
-	ingress := &networkingv1.Ingress{
-		ObjectMeta: metadata,
-		Spec: networkingv1.IngressSpec{
-			IngressClassName: &className,
-			Rules: []networkingv1.IngressRule{
-				{Host: name + ".sr-118142.network.garden",
-					IngressRuleValue: networkingv1.IngressRuleValue{
-						HTTP: &networkingv1.HTTPIngressRuleValue{
-							Paths: []networkingv1.HTTPIngressPath{
-								{
-									Path: "/",
-									PathType: func() *networkingv1.PathType {
-										pathType := networkingv1.PathTypePrefix
-										return &pathType
-									}(),
-									Backend: networkingv1.IngressBackend{
-										Service: &networkingv1.IngressServiceBackend{
-											Name: labInstance.Name + "-ttyd-service",
-											Port: networkingv1.ServiceBackendPort{
-												Name: "ttyd",
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-	return ingress
-}
-
-func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, labTemplate *ltbv1alpha1.LabTemplate) *corev1.Pod {
+func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -390,7 +359,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "pod",
 		},
 		Labels: map[string]string{
-			"app": "remote-access",
+			"app": labInstance.Name + "-" + node.Name + "-remote-access",
 		},
 	}
 	pod := &corev1.Pod{
@@ -404,7 +373,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
 					Ports: []corev1.ContainerPort{
 						{
-							ContainerPort: labTemplate.Spec.Port,
+							ContainerPort: labInstance.Spec.Port,
 						},
 					},
 				},
@@ -423,6 +392,9 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
+		Labels: map[string]string{
+			"special": labInstance.Name + "-" + node.Name + "-remote-access",
+		},
 	}
 	disks := []kubevirtv1.Disk{
 		{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
@@ -496,6 +468,50 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	}
 }
 
+func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, name string) *networkingv1.Ingress {
+	ingressName := name + "-ingress"
+	metadata := metav1.ObjectMeta{
+		Name:      ingressName,
+		Namespace: labInstance.Namespace,
+		Annotations: map[string]string{
+			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + resourceType + "&arg=" + name + "&arg=bash",
+		},
+	}
+	className := "nginx"
+	ingress := &networkingv1.Ingress{
+		ObjectMeta: metadata,
+		Spec: networkingv1.IngressSpec{
+			IngressClassName: &className,
+			Rules: []networkingv1.IngressRule{
+				{Host: ingressName + ".sr-118142.network.garden",
+					IngressRuleValue: networkingv1.IngressRuleValue{
+						HTTP: &networkingv1.HTTPIngressRuleValue{
+							Paths: []networkingv1.HTTPIngressPath{
+								{
+									Path: "/",
+									PathType: func() *networkingv1.PathType {
+										pathType := networkingv1.PathTypePrefix
+										return &pathType
+									}(),
+									Backend: networkingv1.IngressBackend{
+										Service: &networkingv1.IngressServiceBackend{
+											Name: labInstance.Name + "-ttyd-service",
+											Port: networkingv1.ServiceBackendPort{
+												Name: "ttyd",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	return ingress
+}
+
 func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-ttyd",
@@ -545,24 +561,32 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 	return pod, service
 }
 
-func CreateService(labInstance *ltbv1alpha1.LabInstance, port int32) *corev1.Service {
+func CreateService(labInstance *ltbv1alpha1.LabInstance, serviceName string, kind string) *corev1.Service {
+	selectors := map[string]string{}
+	if kind == "vm" {
+		selectors = map[string]string{
+			"special": serviceName,
+		}
+	} else {
+		selectors = map[string]string{
+			"app": serviceName,
+		}
+	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-remote-access",
+			Name:      serviceName,
 			Namespace: labInstance.Namespace,
 		},
 		Spec: corev1.ServiceSpec{
 			Ports: []corev1.ServicePort{
 				{
-					Port:       port,
-					TargetPort: intstr.IntOrString{IntVal: port},
+					Port:       labInstance.Spec.Port,
+					TargetPort: intstr.IntOrString{IntVal: labInstance.Spec.Port},
 					Name:       "ssh",
 				},
 			},
-			Selector: map[string]string{
-				"app": "remote-access",
-			},
-			Type: corev1.ServiceTypeNodePort,
+			Selector: selectors,
+			Type:     corev1.ServiceTypeNodePort,
 		},
 	}
 	return service

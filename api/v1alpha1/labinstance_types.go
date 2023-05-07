@@ -22,6 +22,7 @@ import (
 
 type LabInstanceSpec struct {
 	LabTemplateReference string `json:"labTemplateReference"`
+	Port                 int32  `json:"port,omitempty"`
 }
 
 type LabInstanceStatus struct {

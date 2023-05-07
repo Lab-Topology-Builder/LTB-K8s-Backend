@@ -45,6 +45,9 @@ spec:
             properties:
               labTemplateReference:
                 type: string
+              port:
+                format: int32
+                type: integer
             required:
             - labTemplateReference
             type: object

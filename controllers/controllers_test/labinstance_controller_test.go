@@ -145,7 +145,7 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 
 		It("should map labtemplate to pod", func() {
-			testPod = MapTemplateToPod(testLabInstance, podNode, testLabTemplate)
+			testPod = MapTemplateToPod(testLabInstance, podNode)
 			Expect(testPod.Name).To(Equal("test-labinstance-test-node-1"))
 			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
 			Expect(testPod.Spec.Containers[0].Image).To(Equal("ubuntu:20.04"))
@@ -166,7 +166,7 @@ var _ = Describe("LabInstance Controller", func() {
 
 		It("should reconcile a pod", func() {
 			By("By creating the pod")
-			testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, testLabTemplate, podNode, "pod", podNode.Name)
+			testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, podNode)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(requeue).To(BeTrue())
 			Expect(result).To(Equal(ctrl.Result{Requeue: true}))
