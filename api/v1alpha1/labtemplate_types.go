@@ -23,7 +23,6 @@ import (
 type LabTemplateSpec struct {
 	Nodes       []LabInstanceNodes `json:"nodes"`
 	Connections []Connection       `json:"connections"`
-	Port        int32              `json:"port,omitempty"`
 }
 
 type LabInstanceNodes struct {

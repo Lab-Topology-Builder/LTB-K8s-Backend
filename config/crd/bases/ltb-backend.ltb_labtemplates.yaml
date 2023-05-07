@@ -78,9 +78,6 @@ spec:
                   - name
                   type: object
                 type: array
-              port:
-                format: int32
-                type: integer
             required:
             - connections
             - nodes
