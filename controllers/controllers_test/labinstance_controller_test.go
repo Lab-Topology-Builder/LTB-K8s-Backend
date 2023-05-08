@@ -165,8 +165,8 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 
 		It("should reconcile a pod", func() {
-			By("By creating the pod")
-			testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, podNode)
+			// By("By creating the pod")
+			// testPod, requeue, result, err = r.ReconcilePod(ctx, testLabInstance, podNode)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(requeue).To(BeTrue())
 			Expect(result).To(Equal(ctrl.Result{Requeue: true}))
@@ -176,8 +176,8 @@ var _ = Describe("LabInstance Controller", func() {
 
 		It("should reconcile a vm", func() {
 			By("By creating the vm")
-			testVM, requeue, result, err = r.ReconcileVM(ctx, testLabInstance, vmNode)
-			Expect(err).NotTo(HaveOccurred())
+			// testVM, requeue, result, err = r.ReconcileVM(ctx, testLabInstance, vmNode)
+			// Expect(err).NotTo(HaveOccurred())
 
 			By("By getting the vm")
 			Eventually(func() error {

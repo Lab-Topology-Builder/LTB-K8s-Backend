@@ -92,16 +92,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.ReconcileNetwork(ctx, labInstance)
 
 	node := &ltbv1alpha1.LabInstanceNodes{}
-	//r.ReconcileSvcAccRoleRoleBind(ctx, labInstance)
 	ReconcileResource(r, ctx, labInstance, &corev1.ServiceAccount{}, node, labInstance.Name+"-ttyd-svcacc")
 	ReconcileResource(r, ctx, labInstance, &rbacv1.Role{}, node, labInstance.Name+"-ttyd-role")
 	ReconcileResource(r, ctx, labInstance, &rbacv1.RoleBinding{}, node, labInstance.Name+"-ttyd-rolebind")
 
-	//r.ReconcileService(ctx, labInstance, labInstance.Name+"-ttyd-service", "pod")
 	ReconcileResource(r, ctx, labInstance, &corev1.Service{}, node, labInstance.Name+"-ttyd-service")
 
-	// Reconile ttyd pod
-	//r.ReconcilePod(ctx, labInstance, node)
 	ReconcileResource(r, ctx, labInstance, &corev1.Pod{}, node, labInstance.Name+"-ttyd-pod")
 
 	nodes := labTemplate.Spec.Nodes
@@ -128,9 +124,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if kind == "" {
 			kind = "pod"
 		}
-		//r.ReconcileService(ctx, labInstance, labInstance.Name+"-"+node.Name+"-remote-access", kind)
 		ReconcileResource(r, ctx, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
-		//r.ReconcileIngress(ctx, labInstance, &node)
 		ReconcileResource(r, ctx, labInstance, &networkingv1.Ingress{}, &node, labInstance.Name+"-"+node.Name+"-ingress")
 
 	}
@@ -216,161 +210,6 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func (r *LabInstanceReconciler) ReconcilePod(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, bool, ctrl.Result, error) {
-	log := log.FromContext(ctx)
-	foundPod := &corev1.Pod{}
-	var pod *corev1.Pod
-	var name string
-	var podType string
-	if node.Name != "" {
-		name = labInstance.Name + "-" + node.Name
-		podType = "pod"
-	} else {
-		name = labInstance.Name + "-ttyd"
-		podType = "ttyd"
-	}
-	err := r.Get(ctx, types.NamespacedName{Name: name, Namespace: labInstance.Namespace}, foundPod)
-	if err != nil && errors.IsNotFound(err) {
-		// Define a new Pod
-		if podType == "ttyd" {
-			pod, _ = CreateTtydPodAndService(labInstance)
-		} else {
-			pod = MapTemplateToPod(labInstance, node)
-		}
-		ctrl.SetControllerReference(labInstance, pod, r.Scheme)
-		log.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
-		err = r.Create(ctx, pod)
-		if err != nil {
-			log.Error(err, "Failed to create new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
-			return pod, true, ctrl.Result{}, err
-		}
-		// Pod created successfully - return and requeue
-		return pod, true, ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Pod")
-		return foundPod, true, ctrl.Result{}, err
-	}
-	return foundPod, false, ctrl.Result{}, nil
-}
-
-func (r *LabInstanceReconciler) ReconcileVM(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, bool, ctrl.Result, error) {
-	log := log.FromContext(ctx)
-	foundVM := &kubevirtv1.VirtualMachine{}
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-" + node.Name, Namespace: labInstance.Namespace}, foundVM)
-	if err != nil && errors.IsNotFound(err) {
-
-		vm := MapTemplateToVM(labInstance, node)
-		ctrl.SetControllerReference(labInstance, vm, r.Scheme)
-		log.Info("Creating a new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
-		err = r.Create(ctx, vm)
-		if err != nil {
-			log.Error(err, "Failed to create new VM", "VM.Namespace", vm.Namespace, "VM.Name", vm.Name)
-			return nil, true, ctrl.Result{}, err
-		}
-
-		return nil, true, ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get VM")
-		return nil, true, ctrl.Result{}, err
-	}
-	return foundVM, false, ctrl.Result{}, nil
-}
-
-func (r *LabInstanceReconciler) ReconcileService(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, serviceName string, kind string) (bool, ctrl.Result, error) {
-	log := log.FromContext(ctx)
-	var service *corev1.Service
-	foundService := &corev1.Service{}
-	err := r.Get(ctx, types.NamespacedName{Name: serviceName, Namespace: labInstance.Namespace}, foundService)
-	if err != nil && errors.IsNotFound(err) {
-		// Define a new Service
-		if serviceName == labInstance.Name+"-ttyd-service" {
-			_, service = CreateTtydPodAndService(labInstance)
-		} else {
-			service = CreateService(labInstance, serviceName, kind)
-		}
-		ctrl.SetControllerReference(labInstance, service, r.Scheme)
-		log.Info("Creating a new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
-		err = r.Create(ctx, service)
-		if err != nil {
-			log.Error(err, "Failed to create new Service", "Service.Namespace", labInstance.Namespace, "Service.Name", service.Name)
-			return true, ctrl.Result{}, err
-		}
-		// Service created successfully - return and requeue
-		return true, ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Service")
-		return true, ctrl.Result{}, err
-	}
-	return false, ctrl.Result{}, nil
-}
-
-func (r *LabInstanceReconciler) ReconcileIngress(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (bool, ctrl.Result, error) {
-	log := log.FromContext(ctx)
-	foundIngress := &networkingv1.Ingress{}
-	name := labInstance.Name + "-" + node.Name
-	var resourceType string
-	if node.Image.Kind != "" {
-		resourceType = node.Image.Kind
-	} else {
-		resourceType = "pod"
-	}
-
-	err := r.Get(ctx, types.NamespacedName{Name: name + "-ingress", Namespace: labInstance.Namespace}, foundIngress)
-	if err != nil && errors.IsNotFound(err) {
-		// Define a new Ingress
-		ingress := CreateIngress(labInstance, resourceType, name)
-		ctrl.SetControllerReference(labInstance, ingress, r.Scheme)
-		log.Info("Creating a new Ingress", "Ingress.Namespace", labInstance.Namespace, "Ingress.Name", ingress.Name)
-		err = r.Create(ctx, ingress)
-		if err != nil {
-			log.Error(err, "Failed to create new Ingress", "Ingress.Namespace", labInstance.Namespace, "Ingress.Name", ingress.Name)
-			return true, ctrl.Result{}, err
-		}
-		// Ingress created successfully - return and requeue
-		return true, ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Ingress")
-		return true, ctrl.Result{}, err
-	}
-	return false, ctrl.Result{}, nil
-}
-
-func (r *LabInstanceReconciler) ReconcileSvcAccRoleRoleBind(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
-	log := log.FromContext(ctx)
-	foundRole := &rbacv1.Role{}
-	foundSvcAcc := &corev1.ServiceAccount{}
-	foundRoleBind := &rbacv1.RoleBinding{}
-	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-ttyd-role", Namespace: labInstance.Namespace}, foundRole)
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-ttyd-svcacc", Namespace: labInstance.Namespace}, foundSvcAcc)
-	err = r.Get(ctx, types.NamespacedName{Name: labInstance.Name + "-ttyd-rolebind", Namespace: labInstance.Namespace}, foundRoleBind)
-	if err != nil && errors.IsNotFound(err) {
-		svcAcc, role, roleBind := CreateSvcAccRoleRoleBind(labInstance)
-		ctrl.SetControllerReference(labInstance, svcAcc, r.Scheme)
-		ctrl.SetControllerReference(labInstance, role, r.Scheme)
-		ctrl.SetControllerReference(labInstance, roleBind, r.Scheme)
-		err = r.Create(ctx, svcAcc)
-		if err != nil {
-			log.Error(err, "Failed to create new ServiceAccount", "ServiceAccount.Namespace", labInstance.Namespace, "ServiceAccount.Name", svcAcc.Name)
-			return true, ctrl.Result{}, err
-		}
-		err = r.Create(ctx, role)
-		if err != nil {
-			log.Error(err, "Failed to create new Role", "Role.Namespace", labInstance.Namespace, "Role.Name", role.Name)
-			return true, ctrl.Result{}, err
-		}
-		err = r.Create(ctx, roleBind)
-		if err != nil {
-			log.Error(err, "Failed to create new RoleBinding", "RoleBinding.Namespace", labInstance.Namespace, "RoleBinding.Name", roleBind.Name)
-			return true, ctrl.Result{}, err
-		}
-		return true, ctrl.Result{Requeue: true}, nil
-	} else if err != nil {
-		log.Error(err, "Failed to get Role or ServiceAccount or RoleBinding")
-		return true, ctrl.Result{}, err
-	}
-	return false, ctrl.Result{}, nil
-}
-
 func ReconcileResource[R Resource](r *LabInstanceReconciler, ctx context.Context, labInstance *ltbv1alpha1.LabInstance, resource R, node *ltbv1alpha1.LabInstanceNodes, resourceName string) (R, bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	foundResource := reflect.New(reflect.TypeOf(resource).Elem()).Interface()
@@ -398,7 +237,7 @@ func ReconcileResource[R Resource](r *LabInstanceReconciler, ctx context.Context
 
 func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resourceName string, resource interface{}) interface{} {
 	var kind string
-	if node != nil {
+	if node != nil && node.Image.Kind != "" {
 		kind = node.Image.Kind
 	} else {
 		kind = "pod"
