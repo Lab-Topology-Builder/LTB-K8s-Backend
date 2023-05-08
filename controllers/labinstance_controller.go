@@ -20,6 +20,8 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -47,6 +49,14 @@ type LabInstanceReconciler struct {
 	Scheme *runtime.Scheme
 }
 
+type ResourceObj interface {
+	string | *ltbv1alpha1.LabInstanceNodes
+}
+
+type Resource interface {
+	*corev1.Pod | *kubevirtv1.VirtualMachine | *corev1.Service | *networkingv1.Ingress | *rbacv1.Role | *corev1.ServiceAccount | *rbacv1.RoleBinding
+}
+
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances/finalizers,verbs=update
@@ -63,7 +73,7 @@ type LabInstanceReconciler struct {
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	var err error
-	// TODO: refactor not found error handling
+	// TODO: refactor and implement error handling
 	labInstance := &ltbv1alpha1.LabInstance{}
 	err = r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
@@ -82,25 +92,33 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.ReconcileNetwork(ctx, labInstance)
 
 	node := &ltbv1alpha1.LabInstanceNodes{}
-	r.ReconcileSvcAccRoleRoleBind(ctx, labInstance)
+	//r.ReconcileSvcAccRoleRoleBind(ctx, labInstance)
+	ReconcileResource(r, ctx, labInstance, &corev1.ServiceAccount{}, node, labInstance.Name+"-ttyd-svcacc")
+	ReconcileResource(r, ctx, labInstance, &rbacv1.Role{}, node, labInstance.Name+"-ttyd-role")
+	ReconcileResource(r, ctx, labInstance, &rbacv1.RoleBinding{}, node, labInstance.Name+"-ttyd-rolebind")
 
-	r.ReconcileService(ctx, labInstance, labInstance.Name+"-ttyd-service", "pod")
+	//r.ReconcileService(ctx, labInstance, labInstance.Name+"-ttyd-service", "pod")
+	ReconcileResource(r, ctx, labInstance, &corev1.Service{}, node, labInstance.Name+"-ttyd-service")
+
 	// Reconile ttyd pod
-	r.ReconcilePod(ctx, labInstance, node)
+	//r.ReconcilePod(ctx, labInstance, node)
+	ReconcileResource(r, ctx, labInstance, &corev1.Pod{}, node, labInstance.Name+"-ttyd-pod")
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
 	vms := []*kubevirtv1.VirtualMachine{}
 	for _, node := range nodes {
 		if node.Image.Kind == "vm" {
-			vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
+			//vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
+			vm, shouldReturn, result, err := ReconcileResource(r, ctx, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
 			if shouldReturn {
 				return result, err
 			}
 			vms = append(vms, vm)
 		} else {
 			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
+			//pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
+			pod, shouldReturn, result, err := ReconcileResource(r, ctx, labInstance, &corev1.Pod{}, &node, labInstance.Name+"-"+node.Name)
 			if shouldReturn {
 				return result, err
 			}
@@ -110,8 +128,10 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if kind == "" {
 			kind = "pod"
 		}
-		r.ReconcileService(ctx, labInstance, labInstance.Name+"-"+node.Name+"-remote-access", kind)
-		r.ReconcileIngress(ctx, labInstance, &node)
+		//r.ReconcileService(ctx, labInstance, labInstance.Name+"-"+node.Name+"-remote-access", kind)
+		ReconcileResource(r, ctx, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
+		//r.ReconcileIngress(ctx, labInstance, &node)
+		ReconcileResource(r, ctx, labInstance, &networkingv1.Ingress{}, &node, labInstance.Name+"-"+node.Name+"-ingress")
 
 	}
 
@@ -143,8 +163,8 @@ func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance 
 
 func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) (bool, ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	podNetworkDefinitionName := labInstance.Name + "pod"
-	vmNetworkDefinitionName := labInstance.Name + "vm"
+	podNetworkDefinitionName := labInstance.Name + "-pod"
+	vmNetworkDefinitionName := labInstance.Name + "-vm"
 	networkdefinitionNames := []string{podNetworkDefinitionName, vmNetworkDefinitionName}
 	for _, networkDefinitionName := range networkdefinitionNames {
 		foundNetworkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
@@ -351,12 +371,78 @@ func (r *LabInstanceReconciler) ReconcileSvcAccRoleRoleBind(ctx context.Context,
 	return false, ctrl.Result{}, nil
 }
 
+func ReconcileResource[R Resource](r *LabInstanceReconciler, ctx context.Context, labInstance *ltbv1alpha1.LabInstance, resource R, node *ltbv1alpha1.LabInstanceNodes, resourceName string) (R, bool, ctrl.Result, error) {
+	log := log.FromContext(ctx)
+	foundResource := reflect.New(reflect.TypeOf(resource).Elem()).Interface()
+	var err error
+
+	// get resource
+	err = r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: labInstance.Namespace}, foundResource.(client.Object))
+	if err != nil && errors.IsNotFound(err) {
+		createdResource := CreateResource(labInstance, node, resourceName, resource)
+		ctrl.SetControllerReference(labInstance, createdResource.(client.Object), r.Scheme)
+		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
+		err = r.Create(ctx, createdResource.(client.Object))
+		if err != nil {
+			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
+			return nil, true, ctrl.Result{}, err
+		}
+		// resource created successfully - return and requeue
+		return resource, true, ctrl.Result{Requeue: true}, nil
+	} else if err != nil {
+		log.Error(err, "Failed to get resource")
+		return nil, true, ctrl.Result{}, err
+	}
+	return foundResource.(R), false, ctrl.Result{}, nil
+}
+
+func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resourceName string, resource interface{}) interface{} {
+	var kind string
+	if node != nil {
+		kind = node.Image.Kind
+	} else {
+		kind = "pod"
+	}
+	switch reflect.TypeOf(resource).Elem().Name() {
+	case "Pod":
+		if node.Name != "" {
+			return MapTemplateToPod(labInstance, node)
+		} else {
+			pod, _ := CreateTtydPodAndService(labInstance)
+			return pod
+		}
+	case "VirtualMachine":
+		return MapTemplateToVM(labInstance, node)
+	case "Service":
+		if strings.Contains(resourceName, "ttyd") {
+			_, service := CreateTtydPodAndService(labInstance)
+			return service
+		} else {
+			return CreateService(labInstance, resourceName, kind)
+		}
+	case "Ingress":
+		return CreateIngress(labInstance, kind, labInstance.Name+"-"+node.Name)
+	case "Role":
+		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
+		return role
+	case "ServiceAccount":
+		svcAcc, _, _ := CreateSvcAccRoleRoleBind(labInstance)
+		return svcAcc
+	case "RoleBinding":
+		_, _, roleBind := CreateSvcAccRoleRoleBind(labInstance)
+		return roleBind
+	default:
+		return nil
+	}
+
+}
+
 func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
 		Annotations: map[string]string{
-			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "pod",
+			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "-pod",
 		},
 		Labels: map[string]string{
 			"app": labInstance.Name + "-" + node.Name + "-remote-access",
@@ -406,7 +492,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	}
 	networks := []kubevirtv1.Network{
 		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
-		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "vm"}}},
+		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "-vm"}}},
 	}
 	interfaces := []kubevirtv1.Interface{
 		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
@@ -514,7 +600,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, na
 
 func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
 	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + "-ttyd",
+		Name:      labInstance.Name + "-ttyd-pod",
 		Namespace: labInstance.Namespace,
 		Labels: map[string]string{
 			"app": "ttyd-app",
