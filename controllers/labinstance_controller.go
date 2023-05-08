@@ -214,8 +214,6 @@ func ReconcileResource[R Resource](r *LabInstanceReconciler, ctx context.Context
 	log := log.FromContext(ctx)
 	foundResource := reflect.New(reflect.TypeOf(resource).Elem()).Interface()
 	var err error
-
-	// get resource
 	err = r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: labInstance.Namespace}, foundResource.(client.Object))
 	if err != nil && errors.IsNotFound(err) {
 		createdResource := CreateResource(labInstance, node, resourceName, resource)
@@ -226,7 +224,6 @@ func ReconcileResource[R Resource](r *LabInstanceReconciler, ctx context.Context
 			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
 			return nil, true, ctrl.Result{}, err
 		}
-		// resource created successfully - return and requeue
 		return resource, true, ctrl.Result{Requeue: true}, nil
 	} else if err != nil {
 		log.Error(err, "Failed to get resource")
