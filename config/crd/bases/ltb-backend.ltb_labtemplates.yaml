@@ -13,7 +13,7 @@ spec:
     listKind: LabTemplateList
     plural: labtemplates
     singular: labtemplate
-  scope: Namespaced
+  scope: Cluster
   versions:
   - name: v1alpha1
     schema:
@@ -49,17 +49,6 @@ spec:
                   properties:
                     config:
                       type: string
-                    image:
-                      properties:
-                        kind:
-                          type: string
-                        type:
-                          type: string
-                        version:
-                          type: string
-                      required:
-                      - type
-                      type: object
                     interfaces:
                       items:
                         properties:
@@ -73,9 +62,18 @@ spec:
                       maxLength: 32
                       minLength: 1
                       type: string
+                    type:
+                      properties:
+                        image:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - name
+                      type: object
                   required:
-                  - image
                   - name
+                  - type
                   type: object
                 type: array
             required:

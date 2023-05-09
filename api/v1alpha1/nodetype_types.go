@@ -20,26 +20,24 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // NodeTypeSpec defines the desired state of NodeType
 type NodeTypeSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of NodeType. Edit nodetype_types.go to remove/update
-	Kind     string `json:"kind,omitempty"`
+	// Kind can be used to specify if the nodes is either a pod or a vm
+	Kind string `json:"kind,omitempty"`
+	// NodeSpec is the PodSpec or VirtualMachineSpec for the node
 	NodeSpec string `json:"nodeSpec,omitempty"`
 }
 
 // NodeTypeStatus defines the observed state of NodeType
 type NodeTypeStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:resource:scope=Cluster
 //+kubebuilder:subresource:status
 
 // NodeType is the Schema for the nodetypes API

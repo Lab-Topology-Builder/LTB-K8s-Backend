@@ -9,48 +9,63 @@ metadata:
     app.kubernetes.io/created-by: operator
   name: nodetypeUbuntuVM
 spec:
-  kind: kubevirtvm
+  kind: vm
   nodespec: |
-    apiVersion: kubevirt.io/v1
-    kind: VirtualMachine
-    metadata:
-      name: {{ .Name }}
-    spec:
-      running: true
-      template:
-        spec:
-          domain:
-            resources:
-              requests:
-                memory: 4096M
-            cpu:
-              cores: 2
-            devices:
-              disks:
-                - name: containerdisk
-                  disk:
-                    bus: virtio
-                - name: cloudinitdisk
-                  disk:
-                    bus: virtio
-              interfaces:
-                - name: default
-                  bridge: {}
-              {{- range $index, $interface := .Interfaces}}
-                - name: labNetwork
-                  bridge: {}
-              {{- end }}
-          terminationGracePeriodSeconds: 0
-          volumes:
-            - name: containerdisk
-              containerDisk:
-                image: quay.io/containerdisks/ubuntu:22.04
-            - name: cloudinitdisk
-              cloudInitNoCloud:
-                userDataBase64: {{ .Config }}
-          networks:
-            - name: default
-              pod: {}
-            - name: labNetwork
-              multus:
-                networkName: {{ .labNetwork }}
+    running: true
+    template:
+      spec:
+        domain:
+          resources:
+            requests:
+              memory: 4096M
+          cpu:
+            cores: 2
+          devices:
+            disks:
+              - name: containerdisk
+                disk:
+                  bus: virtio
+              - name: cloudinitdisk
+                disk:
+                  bus: virtio
+            interfaces:
+              - name: default
+                bridge: {}
+            {{- range $index, $interface := .Interfaces}}
+              - name: labNetwork
+                bridge: {}
+            {{- end }}
+        terminationGracePeriodSeconds: 0
+        volumes:
+          - name: containerdisk
+            containerDisk:
+              image: quay.io/containerdisks/ubuntu:22.04
+          - name: cloudinitdisk
+            cloudInitNoCloud:
+              userDataBase64: {{ .Config }}
+        networks:
+          - name: default
+            pod: {}
+          - name: labNetwork
+            multus:
+              networkName: {{ .labNetwork }}
+
+---
+
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: NodeType
+metadata:
+  labels:
+    app.kubernetes.io/name: nodetype
+    app.kubernetes.io/instance: nodetype-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: genereicPod
+spec:
+  kind: pod
+  nodespec: |
+    Containers:
+      Name: {{ .Name }}
+      Image: {{ .Image }}
+      Command: "/bin/sleep" "infinity"

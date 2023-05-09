@@ -54,6 +54,7 @@ type LabTemplateStatus struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:resource:scope=Cluster
 //+kubebuilder:subresource:status
 
 type LabTemplate struct {

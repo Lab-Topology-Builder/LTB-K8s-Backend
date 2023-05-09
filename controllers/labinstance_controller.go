@@ -23,7 +23,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/api/resource"
+	// "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	kubevirtv1 "kubevirt.io/api/core/v1"
@@ -82,20 +82,22 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	pods := []*corev1.Pod{}
 	vms := []*kubevirtv1.VirtualMachine{}
 	for _, node := range nodes {
-		if node.Image.Kind == "vm" {
-			vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
-			if shouldReturn {
-				return result, err
-			}
-			vms = append(vms, vm)
-		} else {
-			// If not vm, assume it is a pod
-			pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
-			if shouldReturn {
-				return result, err
-			}
-			pods = append(pods, pod)
-		}
+		nodetype := &ltbv1alpha1.NodeType{}
+		r.Get(ctx, types.NamespacedName{Name: node.Type.Name, Namespace: labInstance.Namespace}, nodetype)
+		// 	if node.Image.Kind == "vm" {
+		// 		vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
+		// 		if shouldReturn {
+		// 			return result, err
+		// 		}
+		// 		vms = append(vms, vm)
+		// 	} else {
+		// 		// If not vm, assume it is a pod
+		// 		pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
+		// 		if shouldReturn {
+		// 			return result, err
+		// 		}
+		// 		pods = append(pods, pod)
+		// 	}
 	}
 
 	// Update LabInstance status according to the status of the pods and vms
@@ -235,64 +237,64 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	}
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
-		Spec: corev1.PodSpec{
-			Containers: []corev1.Container{
-				{
-					Name:    node.Name,
-					Image:   node.Image.Type + ":" + node.Image.Version,
-					Command: []string{"/bin/sleep", "365d"},
-				},
-			},
-		},
+		// Spec: corev1.PodSpec{
+		// 	Containers: []corev1.Container{
+		// 		{
+		// 			Name:    node.Name,
+		// 			Image:   node.Image.Type + ":" + node.Image.Version,
+		// 			Command: []string{"/bin/sleep", "365d"},
+		// 		},
+		// 	},
+		// },
 	}
 	return pod
 }
 
 func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
-	running := true
-	resources := kubevirtv1.ResourceRequirements{
-		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
-	}
-	cpu := &kubevirtv1.CPU{Cores: 1}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
 	}
-	disks := []kubevirtv1.Disk{
-		{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-		{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-	}
-	volumes := []kubevirtv1.Volume{
-		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
-		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
-	}
-	networks := []kubevirtv1.Network{
-		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
-		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "vm"}}},
-	}
-	interfaces := []kubevirtv1.Interface{
-		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
-		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
-	}
+	// running := true
+	// resources := kubevirtv1.ResourceRequirements{
+	// 	Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
+	// }
+	// cpu := &kubevirtv1.CPU{Cores: 1}
+	// disks := []kubevirtv1.Disk{
+	// 	{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+	// 	{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+	// }
+	// volumes := []kubevirtv1.Volume{
+	// 	{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
+	// 	{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
+	// }
+	// networks := []kubevirtv1.Network{
+	// 	{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
+	// 	{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "vm"}}},
+	// }
+	// interfaces := []kubevirtv1.Interface{
+	// 	{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+	// 	{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+	// }
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
-		Spec: kubevirtv1.VirtualMachineSpec{
-			Running: &running,
-			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-				Spec: kubevirtv1.VirtualMachineInstanceSpec{
-					Domain: kubevirtv1.DomainSpec{
-						Resources: resources,
-						CPU:       cpu,
-						Devices: kubevirtv1.Devices{
-							Disks:      disks,
-							Interfaces: interfaces,
-						},
-					},
-					Volumes:  volumes,
-					Networks: networks,
-				},
-			},
-		},
+		// Spec: kubevirtv1.VirtualMachineSpec{
+		// Running: &running,
+		// Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+		// 		Spec: kubevirtv1.VirtualMachineInstanceSpec{
+		// 			Domain: kubevirtv1.DomainSpec{
+		// 				Resources: resources,
+		// 				CPU:       cpu,
+		// 				Devices: kubevirtv1.Devices{
+		// 					Disks:      disks,
+		// 					Interfaces: interfaces,
+		// 				},
+		// 			},
+		// 			Volumes:  volumes,
+		// 			Networks: networks,
+		// 		},
+		// 	},
+		// },
 	}
 	return vm
 }
