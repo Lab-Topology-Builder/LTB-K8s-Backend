@@ -92,13 +92,13 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.ReconcileNetwork(ctx, labInstance)
 
 	node := &ltbv1alpha1.LabInstanceNodes{}
-	ReconcileResource(r, ctx, labInstance, &corev1.ServiceAccount{}, node, labInstance.Name+"-ttyd-svcacc")
-	ReconcileResource(r, ctx, labInstance, &rbacv1.Role{}, node, labInstance.Name+"-ttyd-role")
-	ReconcileResource(r, ctx, labInstance, &rbacv1.RoleBinding{}, node, labInstance.Name+"-ttyd-rolebind")
+	ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, node, labInstance.Name+"-ttyd-svcacc")
+	ReconcileResource(r, labInstance, &rbacv1.Role{}, node, labInstance.Name+"-ttyd-role")
+	ReconcileResource(r, labInstance, &rbacv1.RoleBinding{}, node, labInstance.Name+"-ttyd-rolebind")
 
-	ReconcileResource(r, ctx, labInstance, &corev1.Service{}, node, labInstance.Name+"-ttyd-service")
+	ReconcileResource(r, labInstance, &corev1.Service{}, node, labInstance.Name+"-ttyd-service")
 
-	ReconcileResource(r, ctx, labInstance, &corev1.Pod{}, node, labInstance.Name+"-ttyd-pod")
+	ReconcileResource(r, labInstance, &corev1.Pod{}, node, labInstance.Name+"-ttyd-pod")
 
 	nodes := labTemplate.Spec.Nodes
 	pods := []*corev1.Pod{}
@@ -106,7 +106,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	for _, node := range nodes {
 		if node.Image.Kind == "vm" {
 			//vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
-			vm, shouldReturn, result, err := ReconcileResource(r, ctx, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
+			vm, shouldReturn, result, err := ReconcileResource(r, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
 			if shouldReturn {
 				return result, err
 			}
@@ -114,7 +114,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		} else {
 			// If not vm, assume it is a pod
 			//pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
-			pod, shouldReturn, result, err := ReconcileResource(r, ctx, labInstance, &corev1.Pod{}, &node, labInstance.Name+"-"+node.Name)
+			pod, shouldReturn, result, err := ReconcileResource(r, labInstance, &corev1.Pod{}, &node, labInstance.Name+"-"+node.Name)
 			if shouldReturn {
 				return result, err
 			}
@@ -124,8 +124,8 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if kind == "" {
 			kind = "pod"
 		}
-		ReconcileResource(r, ctx, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
-		ReconcileResource(r, ctx, labInstance, &networkingv1.Ingress{}, &node, labInstance.Name+"-"+node.Name+"-ingress")
+		ReconcileResource(r, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
+		ReconcileResource(r, labInstance, &networkingv1.Ingress{}, &node, labInstance.Name+"-"+node.Name+"-ingress")
 
 	}
 
@@ -210,7 +210,8 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return false, ctrl.Result{}, nil
 }
 
-func ReconcileResource[R Resource](r *LabInstanceReconciler, ctx context.Context, labInstance *ltbv1alpha1.LabInstance, resource R, node *ltbv1alpha1.LabInstanceNodes, resourceName string) (R, bool, ctrl.Result, error) {
+func ReconcileResource[R Resource](r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabInstance, resource R, node *ltbv1alpha1.LabInstanceNodes, resourceName string) (R, bool, ctrl.Result, error) {
+	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
 	foundResource := reflect.New(reflect.TypeOf(resource).Elem()).Interface()
 	var err error
