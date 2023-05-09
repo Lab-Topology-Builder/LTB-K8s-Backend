@@ -234,25 +234,6 @@ func ReconcileResource[R Resource](r *LabInstanceReconciler, labInstance *ltbv1a
 	return foundResource.(R), false, ctrl.Result{}, nil
 }
 
-// 	err = r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: labInstance.Namespace}, foundResource.(client.Object))
-// 	if err != nil && errors.IsNotFound(err) {
-// 		createdResource := CreateResource(labInstance, node, resourceName, resource)
-// 		ctrl.SetControllerReference(labInstance, createdResource.(client.Object), r.Scheme)
-// 		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
-// 		err = r.Create(ctx, createdResource.(client.Object))
-// 		if err != nil {
-// 			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
-// 			return nil, true, ctrl.Result{}, err
-// 		}
-// 		return createdResource.(R), true, ctrl.Result{Requeue: true}, nil
-// 	} else if err != nil {
-// 		log.Error(err, "Failed to get resource")
-// 		return nil, true, ctrl.Result{}, err
-// 	}
-// 	return foundResource.(R), false, ctrl.Result{}, nil
-// }
-
-// Check if resource exists
 func ResourceExists(r *LabInstanceReconciler, resource interface{}, resourceName string, nameSpace string) (bool, error) {
 	ctx := context.Context(context.Background())
 	err := r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: nameSpace}, resource.(client.Object))
