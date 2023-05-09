@@ -59,14 +59,14 @@ var _ = Describe("LabInstance Controller", func() {
 				Nodes: []ltbv1alpha1.LabInstanceNodes{
 					{
 						Name: "test-node-1",
-						Image: ltbv1alpha1.NodeImage{
+						Image: ltbv1alpha1.NodeTypeRef{
 							Type:    "ubuntu",
 							Version: "20.04",
 						},
 					},
 					{
 						Name: "test-node-2",
-						Image: ltbv1alpha1.NodeImage{
+						Image: ltbv1alpha1.NodeTypeRef{
 							Type:    "ubuntu",
 							Version: "20.04",
 							Kind:    "vm",

@@ -28,27 +28,26 @@ type LabTemplateSpec struct {
 type LabInstanceNodes struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Name       string          `json:"name"`
-	Image      NodeImage       `json:"image"`
-	Interfaces []NodeInterface `json:"interfaces,omitempty"`
-	Config     string          `json:"config,omitempty"`
+	Name        string      `json:"name"`
+	NodeTypeRef NodeTypeRef `json:"nodetyperef"`
+	// Interfaces  []NodeInterface `json:"interfaces,omitempty"`
+	Config string `json:"config,omitempty"`
 }
 
-type NodeInterface struct {
-	Ipv4 string `json:"ipv4,omitempty"`
-	Ipv6 string `json:"ipv6,omitempty"`
-}
+// type NodeInterface struct {
+// 	Ipv4 string `json:"ipv4,omitempty"`
+// 	Ipv6 string `json:"ipv6,omitempty"`
+// }
 
-type NodeImage struct {
+type NodeTypeRef struct {
 	Type    string `json:"type"`
 	Version string `json:"version,omitempty"`
-	Kind    string `json:"kind,omitempty"`
 }
 
 type Connection struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Neighbors string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
+	Neighbors []string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
 }
 
 type LabTemplateStatus struct {
