@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"text/template"
@@ -89,35 +90,40 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	if nodetype.Spec.Kind == "vm" {
-		tmplt, err := template.New("vmTemplate").Parse(nodetype.Spec.NodeSpec)
-		if err != nil {
-			l.Error(err, "Failed to parse template")
-		}
-		var renderedVMTemplate strings.Builder
-		err = tmplt.Execute(&renderedVMTemplate, Data)
-		if err != nil {
+		var renderedVMSpec strings.Builder
+		if err = parseAndRenderTemplate(nodetype, &renderedVMSpec); err != nil {
 			l.Error(err, "Failed to render template")
+			return ctrl.Result{}, err
 		}
-		l.Info(fmt.Sprintf("Rendered VM Template: %s", renderedVMTemplate.String()))
 		// check if valid vm spec
 
 	} else if nodetype.Spec.Kind == "pod" {
-		tmplt, err := template.New("vmTemplate").Parse(nodetype.Spec.NodeSpec)
-		if err != nil {
-			l.Error(err, "Failed to parse template")
-		}
-		var renderedVMTemplate strings.Builder
-		err = tmplt.Execute(&renderedVMTemplate, Data)
-		if err != nil {
+		var renderedPodSpec strings.Builder
+		if err = parseAndRenderTemplate(nodetype, &renderedPodSpec); err != nil {
 			l.Error(err, "Failed to render template")
+			return ctrl.Result{}, err
 		}
-		l.Info(fmt.Sprintf("Rendered VM Template: %s", renderedVMTemplate.String()))
 		// check if valid pod spec
 	} else {
 		// invalid kind
+		return ctrl.Result{}, errors.New("invalid Kind")
 	}
 
 	return ctrl.Result{}, nil
+}
+
+// Move to utils
+func parseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder) error {
+	tmplt, err := template.New("vmTemplate").Parse(nodetype.Spec.NodeSpec)
+	if err != nil {
+		return errors.New("ParseAndRenderTemplate: Failed to parse template")
+	}
+	err = tmplt.Execute(renderedNodeSpec, Data)
+	if err != nil {
+		return errors.New("ParseAndRenderTemplate: Failed to render template")
+	}
+	log.Log.Info(fmt.Sprintf("Rendered VM Template: %s", renderedNodeSpec.String()))
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

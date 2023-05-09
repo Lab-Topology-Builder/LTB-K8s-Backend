@@ -23,6 +23,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+
 	// "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -83,7 +84,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	vms := []*kubevirtv1.VirtualMachine{}
 	for _, node := range nodes {
 		nodetype := &ltbv1alpha1.NodeType{}
-		r.Get(ctx, types.NamespacedName{Name: node.Type.Name, Namespace: labInstance.Namespace}, nodetype)
+		r.Get(ctx, types.NamespacedName{Name: node.NodeTypeRef.Type, Namespace: labInstance.Namespace}, nodetype)
 		// 	if node.Image.Kind == "vm" {
 		// 		vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
 		// 		if shouldReturn {
