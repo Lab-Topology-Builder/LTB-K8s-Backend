@@ -59,17 +59,16 @@ var _ = Describe("LabInstance Controller", func() {
 				Nodes: []ltbv1alpha1.LabInstanceNodes{
 					{
 						Name: "test-node-1",
-						Image: ltbv1alpha1.NodeTypeRef{
+						NodeTypeRef: ltbv1alpha1.NodeTypeRef{
 							Type:    "ubuntu",
 							Version: "20.04",
 						},
 					},
 					{
 						Name: "test-node-2",
-						Image: ltbv1alpha1.NodeTypeRef{
+						NodeTypeRef: ltbv1alpha1.NodeTypeRef{
 							Type:    "ubuntu",
 							Version: "20.04",
-							Kind:    "vm",
 						},
 					},
 				},
@@ -86,7 +85,7 @@ var _ = Describe("LabInstance Controller", func() {
 				Containers: []corev1.Container{
 					{
 						Name:    podNode.Name,
-						Image:   podNode.Image.Type + ":" + podNode.Image.Version,
+						Image:   podNode.NodeTypeRef.Type + ":" + podNode.NodeTypeRef.Version,
 						Command: []string{"/bin/sleep", "365d"},
 					},
 				},
@@ -108,7 +107,7 @@ var _ = Describe("LabInstance Controller", func() {
 			{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
 		}
 		volumes := []kubevirtv1.Volume{
-			{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + vmNode.Image.Type + ":" + vmNode.Image.Version}}},
+			{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + vmNode.NodeTypeRef.Type + ":" + vmNode.NodeTypeRef.Version}}},
 			{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: vmNode.Config}}}}
 
 		testVM = &kubevirtv1.VirtualMachine{
