@@ -25,10 +25,6 @@ spec:
                 - qemu-guest-agent
               runcmd:
                 - [ systemctl, start, qemu-guest-agent ]
-    ports:
-    - name: "ssh"
-      port: 22
-      protocol: "tcp"
   - name: "sample-node-2"
     image:
       type: "ghcr.io/insrapperswil/network-ninja"

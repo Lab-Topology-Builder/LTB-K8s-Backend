@@ -36,7 +36,7 @@ type LabInstanceNodes struct {
 }
 
 type Port struct {
-	Name     string `json:"name,omitempty"`
+	Name     string `json:"name"`
 	Protocol string `json:"protocol,omitempty"`
 	Port     int32  `json:"port"`
 }
