@@ -142,7 +142,6 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 		// Reconcile Remote Access Service
 		if len(node.Ports) > 0 {
-
 			_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
