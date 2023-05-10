@@ -360,7 +360,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
 		Labels: map[string]string{
-			"special": labInstance.Name + "-" + node.Name + "-remote-access",
+			"app": labInstance.Name + "-" + node.Name + "-remote-access",
 		},
 	}
 	disks := []kubevirtv1.Disk{
@@ -496,7 +496,6 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 }
 
 func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameSpace string) *corev1.Service {
-	selectors := map[string]string{}
 	ports := []corev1.ServicePort{}
 	for _, port := range node.Ports {
 		ports = append(ports, corev1.ServicePort{
@@ -505,24 +504,17 @@ func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameS
 			TargetPort: intstr.IntOrString{IntVal: port.Port},
 		})
 	}
-	if node.Image.Kind == "vm" {
-		selectors = map[string]string{
-			"special": serviceName,
-		}
-	} else {
-		selectors = map[string]string{
-			"app": serviceName,
-		}
-	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      serviceName,
 			Namespace: nameSpace,
 		},
 		Spec: corev1.ServiceSpec{
-			Ports:    ports,
-			Selector: selectors,
-			Type:     corev1.ServiceTypeNodePort,
+			Ports: ports,
+			Selector: map[string]string{
+				"app": serviceName,
+			},
+			Type: corev1.ServiceTypeNodePort,
 		},
 	}
 	return service
