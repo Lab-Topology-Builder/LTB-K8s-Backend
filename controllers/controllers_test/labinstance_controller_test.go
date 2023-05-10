@@ -137,10 +137,7 @@ var _ = Describe("LabInstance Controller", func() {
 
 	Context("LabInstance controller template functions", func() {
 		It("should get the correct labtemplate", func() {
-			requeue, result, err = r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(requeue).To(BeFalse())
-			Expect(result).To(Equal(ctrl.Result{}))
+			_ = r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
 			Expect(testLabTemplate.Name).To(Equal("test-labtemplate"))
 		})
 

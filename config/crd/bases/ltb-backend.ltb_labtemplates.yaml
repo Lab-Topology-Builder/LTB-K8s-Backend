@@ -73,6 +73,21 @@ spec:
                       maxLength: 32
                       minLength: 1
                       type: string
+                    ports:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          port:
+                            format: int32
+                            type: integer
+                          protocol:
+                            type: string
+                        required:
+                        - name
+                        - port
+                        type: object
+                      type: array
                   required:
                   - image
                   - name

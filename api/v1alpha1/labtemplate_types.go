@@ -32,6 +32,13 @@ type LabInstanceNodes struct {
 	Image      NodeImage       `json:"image"`
 	Interfaces []NodeInterface `json:"interfaces,omitempty"`
 	Config     string          `json:"config,omitempty"`
+	Ports      []Port          `json:"ports,omitempty"`
+}
+
+type Port struct {
+	Name     string `json:"name"`
+	Protocol string `json:"protocol,omitempty"`
+	Port     int32  `json:"port"`
 }
 
 type NodeInterface struct {
