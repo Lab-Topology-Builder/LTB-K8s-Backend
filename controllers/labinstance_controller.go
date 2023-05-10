@@ -141,9 +141,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		}
 
 		// Reconcile Remote Access Service
-		_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
-		if retValue.shouldReturn {
-			return retValue.result, retValue.err
+		if len(node.Ports) > 0 {
+
+			_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
+			if retValue.shouldReturn {
+				return retValue.result, retValue.err
+			}
 		}
 
 		// Reconcile Ingress
@@ -514,7 +517,7 @@ func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameS
 			Selector: map[string]string{
 				"app": serviceName,
 			},
-			Type: corev1.ServiceTypeNodePort,
+			Type: corev1.ServiceTypeLoadBalancer,
 		},
 	}
 	return service
