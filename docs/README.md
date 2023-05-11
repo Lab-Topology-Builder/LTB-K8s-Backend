@@ -7,9 +7,10 @@ The Lab Topology Builder (LTB) is an open source project that allows users to de
 - Deployment of networking labs on Kubernetes
 - Deletion of networking labs on Kubernetes
 - Status querying of lab deployments
+- Remote access to OOB management of lab nodes (ex. SSH)
 
 Upcoming features:
 
-- Remote access to OOB management of lab nodes
+- Node types extensibility
 - Secure remote access to OOB management of lab nodes (Access Control)
 - User management
