@@ -29,6 +29,7 @@ A [custom resource definition](https://kubernetes.io/docs/concepts/extend-kubern
 Defining a CRD object creates a new custom resource with a name and schema that you specify.
 The custom resource created from a CRD object can be either namespaced or cluster-scoped.
 CustomResourceDefinitions themselves are non-namespaced and are available to all namespaces.
+
 The following example shows a CRD for a LabInstance object, how they are defined in go and how the YAML output looks like.
 
 ```go
