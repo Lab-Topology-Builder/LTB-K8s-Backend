@@ -85,20 +85,20 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	for _, node := range nodes {
 		nodetype := &ltbv1alpha1.NodeType{}
 		r.Get(ctx, types.NamespacedName{Name: node.NodeTypeRef.Type, Namespace: labInstance.Namespace}, nodetype)
-		// 	if node.Image.Kind == "vm" {
-		// 		vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
-		// 		if shouldReturn {
-		// 			return result, err
-		// 		}
-		// 		vms = append(vms, vm)
-		// 	} else {
-		// 		// If not vm, assume it is a pod
-		// 		pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
-		// 		if shouldReturn {
-		// 			return result, err
-		// 		}
-		// 		pods = append(pods, pod)
-		// 	}
+		if nodetype.Spec.Kind == "vm" {
+			vm, shouldReturn, result, err := r.ReconcileVM(ctx, labInstance, &node)
+			if shouldReturn {
+				return result, err
+			}
+			vms = append(vms, vm)
+		} else {
+			// 		// If not vm, assume it is a pod
+			// 		pod, shouldReturn, result, err := r.ReconcilePod(ctx, labInstance, &node)
+			// 		if shouldReturn {
+			// 			return result, err
+			// 		}
+			// 		pods = append(pods, pod)
+		}
 	}
 
 	// Update LabInstance status according to the status of the pods and vms

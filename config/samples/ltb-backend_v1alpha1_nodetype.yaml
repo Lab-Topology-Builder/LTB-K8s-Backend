@@ -7,10 +7,10 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: nodetypeUbuntuVM
+  name: nodetypeubuntuvm
 spec:
   kind: vm
-  nodespec: |
+  nodeSpec: |
     running: true
     template:
       spec:
@@ -31,10 +31,8 @@ spec:
             interfaces:
               - name: default
                 bridge: {}
-            {{- range $index, $interface := .Interfaces}}
               - name: labNetwork
                 bridge: {}
-            {{- end }}
         terminationGracePeriodSeconds: 0
         volumes:
           - name: containerdisk
@@ -42,13 +40,15 @@ spec:
               image: quay.io/containerdisks/ubuntu:22.04
           - name: cloudinitdisk
             cloudInitNoCloud:
-              userDataBase64: {{ .Config }}
+              userData: |
+                #cloud-config
+                hostname: ltbtestvm
         networks:
           - name: default
             pod: {}
           - name: labNetwork
             multus:
-              networkName: {{ .labNetwork }}
+              networkName: labNetwork
 
 ---
 
@@ -61,11 +61,15 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: genereicPod
+  name: genereicpod
 spec:
   kind: pod
-  nodespec: |
-    Containers:
-      Name: {{ .Name }}
-      Image: {{ .Image }}
-      Command: "/bin/sleep" "infinity"
+  nodeSpec: |
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: testnodetypepod
+    spec:
+      containers:
+        - name: "testcontainer"
+          image: ubuntu:latest

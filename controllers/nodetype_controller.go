@@ -19,27 +19,25 @@ package controllers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
-	"text/template"
+
+	corev1 "k8s.io/api/core/v1"
 
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
+	util "github.com/Lab-Topology-Builder/LTB-K8s-Backend/util"
+	kubevirtv1 "kubevirt.io/api/core/v1"
 )
 
 // NodeTypeReconciler reconciles a NodeType object
 type NodeTypeReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
-}
-
-type TemplateData struct {
-	Node        ltbv1alpha1.LabInstanceNodes
-	Connections []ltbv1alpha1.Connection
 }
 
 var (
@@ -69,7 +67,7 @@ var (
 			},
 		},
 	}
-	Data = TemplateData{
+	Data = util.TemplateData{
 		Node:        TestNodeData,
 		Connections: TestConnections,
 	}
@@ -89,21 +87,30 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err != nil {
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
+	var renderedNodeSpec strings.Builder
+	if err = util.ParseAndRenderTemplate(nodetype, &renderedNodeSpec, Data); err != nil {
+		l.Error(err, "Failed to render template")
+		return ctrl.Result{}, err
+	}
+	nodeSpecBytes := []byte(renderedNodeSpec.String())
 	if nodetype.Spec.Kind == "vm" {
-		var renderedVMSpec strings.Builder
-		if err = parseAndRenderTemplate(nodetype, &renderedVMSpec); err != nil {
-			l.Error(err, "Failed to render template")
-			return ctrl.Result{}, err
-		}
 		// check if valid vm spec
-
-	} else if nodetype.Spec.Kind == "pod" {
-		var renderedPodSpec strings.Builder
-		if err = parseAndRenderTemplate(nodetype, &renderedPodSpec); err != nil {
-			l.Error(err, "Failed to render template")
+		vmSpec := kubevirtv1.VirtualMachineSpec{}
+		err := yaml.Unmarshal(nodeSpecBytes, &vmSpec)
+		if err != nil {
+			l.Error(err, "Failed to unmarshal NodeSpec to VMSpec")
 			return ctrl.Result{}, err
 		}
+		l.Info("Decoded VM Spec", "Spec", vmSpec)
+	} else if nodetype.Spec.Kind == "pod" {
 		// check if valid pod spec
+		podSpec := corev1.PodSpec{}
+		err := yaml.Unmarshal(nodeSpecBytes, &podSpec)
+		if err != nil {
+			l.Error(err, "Failed to unmarshal NodeSpec to PodSpec")
+			return ctrl.Result{}, err
+		}
+		l.Info("Decoded Pod Spec", "Spec", podSpec)
 	} else {
 		// invalid kind
 		return ctrl.Result{}, errors.New("invalid Kind")
@@ -113,18 +120,6 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 }
 
 // Move to utils
-func parseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder) error {
-	tmplt, err := template.New("vmTemplate").Parse(nodetype.Spec.NodeSpec)
-	if err != nil {
-		return errors.New("ParseAndRenderTemplate: Failed to parse template")
-	}
-	err = tmplt.Execute(renderedNodeSpec, Data)
-	if err != nil {
-		return errors.New("ParseAndRenderTemplate: Failed to render template")
-	}
-	log.Log.Info(fmt.Sprintf("Rendered VM Template: %s", renderedNodeSpec.String()))
-	return nil
-}
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *NodeTypeReconciler) SetupWithManager(mgr ctrl.Manager) error {

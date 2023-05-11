@@ -45,8 +45,6 @@ type NodeTypeRef struct {
 }
 
 type Connection struct {
-	// +kubebuilder:validation:MaxLength=32
-	// +kubebuilder:validation:MinLength=1
 	Neighbors []string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
 }
 
