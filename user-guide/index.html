@@ -319,6 +319,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installation-pre-requisites" class="md-nav__link">
+    Installation (Pre-requisites)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example-lab-template" class="md-nav__link">
     Example Lab Template
   </a>
@@ -766,6 +773,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installation-pre-requisites" class="md-nav__link">
+    Installation (Pre-requisites)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example-lab-template" class="md-nav__link">
     Example Lab Template
   </a>
@@ -803,6 +817,37 @@
 
 
 <h1 id="user-guide">User Guide<a class="headerlink" href="#user-guide" title="Permanent link">&para;</a></h1>
+<h2 id="installation-pre-requisites">Installation (Pre-requisites)<a class="headerlink" href="#installation-pre-requisites" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Version</th>
+<th>Installation</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://kubernetes.io/">Kubernetes</a></td>
+<td>^1.26.0</td>
+<td><a href="https://kubernetes.io/docs/setup/">Installation</a></td>
+<td>Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications.</td>
+</tr>
+<tr>
+<td><a href="https://kubevirt.io/">Kubevirt</a></td>
+<td>0.59.0</td>
+<td><a href="https://kubevirt.io/user-guide/#/installation/installation">Installation</a></td>
+<td>Kubevirt is a Kubernetes add-on to run virtual machines on Kubernetes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus-CNI</a></td>
+<td>3.9.0</td>
+<td><a href="https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/docs/quickstart.md">Installation</a></td>
+<td>Multus-CNI is a plugin for K8s to attach multiple network interfaces to pods.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="example-lab-template">Example Lab Template<a class="headerlink" href="#example-lab-template" title="Permanent link">&para;</a></h2>
 <p>This is an example of lab template, which you can use as a starting point for your own labs.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>

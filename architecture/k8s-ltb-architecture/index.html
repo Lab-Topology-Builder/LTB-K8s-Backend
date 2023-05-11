@@ -409,6 +409,19 @@
     Component Diagram
   </a>
   
+    <nav class="md-nav" aria-label="Component Diagram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legend" class="md-nav__link">
+    Legend
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -842,6 +855,19 @@
     Component Diagram
   </a>
   
+    <nav class="md-nav" aria-label="Component Diagram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legend" class="md-nav__link">
+    Legend
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -881,29 +907,30 @@ It is composed of a <a href="#frontend">Frontend</a> and a <a href="#backend">Ba
 <ul>
 <li>Providing a web UI for the user to interact with the labs.</li>
 <li>Providing a web UI for the admin to manage:</li>
-<li>users</li>
-<li>lab templates</li>
-<li>lab deployments</li>
-<li>reservations</li>
+<li>Users</li>
+<li>Lab templates</li>
+<li>Lab deployments</li>
+<li>Reservations</li>
 </ul>
 <h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
 <p>The backend is composed of the following components:</p>
 <ul>
-<li>API</li>
 <li>Operator</li>
+<li>Operator API</li>
 </ul>
 <p>The backend is responsible for the following tasks:</p>
 <ul>
-<li>parsing the yaml topology files</li>
-<li>deploying/destroying the containers and vms</li>
-<li>exposes status of lab deployments</li>
-<li>exposes information on how to access the deployed containers and vms</li>
-<li>provides remote ssh capabilities</li>
-<li>provides remote Wireshark capture capabilities</li>
-<li>managing reservations (create, delete, etc.)</li>
-<li>exposes node resource usage</li>
-<li>user management</li>
-<li>exposes information about a device (version, groups, etc.)</li>
+<li>Parsing the yaml topology files</li>
+<li>Deploying/destroying the containers and vms</li>
+<li>Exposes status of lab instances</li>
+<li>Enables you to access the deployed containers and vms via different protocols</li>
+<li>Provides remote ssh capabilities</li>
+<li>Exposes information about a node (version, groups, etc.)</li>
+<li>Exposes node resource usage</li>
+<li>Provides remote Wireshark capture capabilities</li>
+<li>Managing reservations (create, delete, etc.)</li>
+<li>User management</li>
+<li>etc.</li>
 </ul>
 <h2 id="c4-model">C4 Model<a class="headerlink" href="#c4-model" title="Permanent link">&para;</a></h2>
 <h3 id="system-context-diagram">System Context Diagram<a class="headerlink" href="#system-context-diagram" title="Permanent link">&para;</a></h3>
@@ -912,6 +939,13 @@ It is composed of a <a href="#frontend">Frontend</a> and a <a href="#backend">Ba
 <p><img alt="C4 Container" src="../../assets/drawings/C4-Container.drawio.svg" /></p>
 <h3 id="component-diagram">Component Diagram<a class="headerlink" href="#component-diagram" title="Permanent link">&para;</a></h3>
 <p><img alt="C4 Component" src="../../assets/drawings/C4-Component.drawio.svg" /></p>
+<h4 id="legend">Legend<a class="headerlink" href="#legend" title="Permanent link">&para;</a></h4>
+<ul>
+<li><span style="color: #083f75">Dark blue</span>: represents Personas (User, Admin)</li>
+<li><span style="color: #23a2d9">Blue</span>: represents Internal Components (Frontend Web UI, <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend)</li>
+<li><span style="color: #63bef2">Light blue</span>: represents Components which will be implemented in this project (<abbr title="Lab Topology Builder">LTB</abbr> Operator, <abbr title="Lab Topology Builder">LTB</abbr> Operator API)</li>
+<li><span style="color: #8c8496">Dark gray</span>: represents External Components (K8s, Keycloak)</li>
+</ul>
 
 
 
