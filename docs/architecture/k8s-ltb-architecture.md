@@ -20,8 +20,8 @@ The frontend is responsible for the following tasks:
 
 The backend is composed of the following components:
 
-- API
-- Kubernetes Operator
+- Operator
+- Operator API
 
 The backend is responsible for the following tasks:
 
