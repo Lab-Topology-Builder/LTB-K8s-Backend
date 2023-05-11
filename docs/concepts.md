@@ -225,4 +225,3 @@ Within LTB, a node can be either a KubeVirt virtual machine or a pod.
 ## Network Topology
 
 The arrangement or pattern in which all nodes on a network are connected together is referred to as the network’s topology. In this project, we have just implemented a simple L3 connectivity between nodes.
-
