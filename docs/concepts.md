@@ -6,7 +6,7 @@ The Lab Topology Builder (LTB) is a tool that allows you to build a topology of 
 
 ![LTB](../assets/images/LTB.jpg)
 
-## LTB Kubernetes (K8s) Backend
+## LTB Kubernetes Backend
 
 The LTB Kubernetes Backend consists of the LTB Operator and the LTB Operator API, which replaces the current (KVM/Docker) based backend of LTB. It is responsible for managing the lab instances in a Kubernetes cluster and provide a REST API for the frontend to interact with the kubernetes cluster.
 
