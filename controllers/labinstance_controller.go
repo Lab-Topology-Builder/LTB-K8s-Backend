@@ -254,6 +254,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	return resource, retValue
 }
 
+// TODO: Remove return value use pointers
 func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resourceName string, resource client.Object) client.Object {
 	var kind string
 	ctx := context.Context(context.Background())
