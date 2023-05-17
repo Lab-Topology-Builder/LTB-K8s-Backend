@@ -11,30 +11,31 @@ The frontend is responsible for the following tasks:
 
 - Providing a web UI for the user to interact with the labs.
 - Providing a web UI for the admin to manage:
-  - users
-  - lab templates
-  - lab deployments
-  - reservations
+  - Users
+  - Lab templates
+  - Lab deployments
+  - Reservations
 
 ## Backend
 
 The backend is composed of the following components:
 
-- API
 - Operator
+- Operator API
 
 The backend is responsible for the following tasks:
 
-- parsing the yaml topology files
-- deploying/destroying the containers and vms
-- exposes status of lab deployments
-- exposes information on how to access the deployed containers and vms
-- provides remote ssh capabilities
-- provides remote Wireshark capture capabilities
-- managing reservations (create, delete, etc.)
-- exposes node resource usage
-- user management
-- exposes information about a device (version, groups, etc.)
+- Parsing the yaml topology files
+- Deploying/destroying the containers and vms
+- Exposes status of lab instances
+- Enables you to access the deployed containers and vms via different protocols
+- Provides remote ssh capabilities
+- Exposes information about a node (version, groups, etc.)
+- Exposes node resource usage
+- Provides remote Wireshark capture capabilities
+- Managing reservations (create, delete, etc.)
+- User management
+- etc.
 
 ## C4 Model
 
@@ -49,3 +50,10 @@ The backend is responsible for the following tasks:
 ### Component Diagram
 
 ![C4 Component](../assets/drawings/C4-Component.drawio.svg)
+
+#### Legend
+
+- <span style="color: #083f75">Dark blue</span>: represents Personas (User, Admin)
+- <span style="color: #23a2d9">Blue</span>: represents Internal Components (Frontend Web UI, LTB K8s Backend)
+- <span style="color: #63bef2">Light blue</span>: represents Components which will be implemented in this project (LTB Operator, LTB Operator API)
+- <span style="color: #8c8496">Dark gray</span>: represents External Components (K8s, Keycloak)
