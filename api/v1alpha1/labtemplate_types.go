@@ -21,18 +21,19 @@ import (
 )
 
 type LabTemplateSpec struct {
-	Nodes       []LabInstanceNodes `json:"nodes"`
-	Connections []Connection       `json:"connections"`
+	Nodes     []LabInstanceNodes `json:"nodes"`
+	Neighbors []string           `json:"connections"`
 }
 
 type LabInstanceNodes struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Name        string          `json:"name"`
-	NodeTypeRef NodeTypeRef     `json:"nodetyperef"`
-	Interfaces  []NodeInterface `json:"interfaces,omitempty"`
-	Config      string          `json:"config,omitempty"`
-	Ports       []Port          `json:"ports,omitempty"`
+	Name             string          `json:"name"`
+	NodeTypeRef      NodeTypeRef     `json:"nodetyperef"`
+	Interfaces       []NodeInterface `json:"interfaces,omitempty"`
+	Config           string          `json:"config,omitempty"`
+	Ports            []Port          `json:"ports,omitempty"`
+	RenderedNodeSpec string          `json:"renderedNodeSpec,omitempty"` // this is the rendered node spec
 }
 
 type Port struct {
@@ -50,10 +51,6 @@ type NodeTypeRef struct {
 	Type    string `json:"type"`
 	Image   string `json:"image,omitempty"`
 	Version string `json:"version,omitempty"`
-}
-
-type Connection struct {
-	Neighbors []string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
 }
 
 type LabTemplateStatus struct {

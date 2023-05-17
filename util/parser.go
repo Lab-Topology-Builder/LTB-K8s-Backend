@@ -11,12 +11,13 @@ import (
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 )
 
-type TemplateData struct {
-	Node       ltbv1alpha1.LabInstanceNodes
-	Interfaces []ltbv1alpha1.NodeInterface
-}
+// TODO might use an interface like this later
+// type TemplateData struct {
+// 	Node       ltbv1alpha1.LabInstanceNodes
+// 	Interfaces []ltbv1alpha1.NodeInterface
+// }
 
-func ParseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder, data TemplateData) error {
+func ParseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder, data ltbv1alpha1.LabInstanceNodes) error {
 	tmplt, err := template.New("nodeTemplate").Parse(nodetype.Spec.NodeSpec)
 	if err != nil {
 		return err

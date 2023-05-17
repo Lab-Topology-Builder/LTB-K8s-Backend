@@ -49,31 +49,22 @@ var (
 			Image:   "ubuntu",
 			Version: "latest",
 		},
+		Interfaces: []ltbv1alpha1.NodeInterface{
+			{
+				IPv4: "192.168.0.1/24",
+			},
+			{
+				IPv4: "172.16.0.1/24",
+			},
+			{
+				IPv4: "10.0.0.1/24",
+			},
+		},
 		Config: `
-		#cloud-config
-		password: ubuntu
-		chpasswd: { expire: False }
-		ssh_authorized_keys:
-			- <your-ssh-pub-key>
-		packages:
-			- qemu-guest-agent
-		runcmd:
-			- [ systemctl, start, qemu-guest-agent ]`,
-	}
-	TestInterfaces = []ltbv1alpha1.NodeInterface{
-		{
-			IPv4: "192.168.0.1/24",
-		},
-		{
-			IPv4: "172.16.0.1/24",
-		},
-		{
-			IPv4: "10.0.0.1/24",
-		},
-	}
-	Data = util.TemplateData{
-		Node:       TestNodeData,
-		Interfaces: TestInterfaces,
+#cloud-config
+password: ubuntu
+chpasswd: { expire: False }
+`,
 	}
 )
 
@@ -92,7 +83,7 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	var renderedNodeSpec strings.Builder
-	if err = util.ParseAndRenderTemplate(nodetype, &renderedNodeSpec, Data); err != nil {
+	if err = util.ParseAndRenderTemplate(nodetype, &renderedNodeSpec, TestNodeData); err != nil {
 		l.Error(err, "Failed to render template")
 		return ctrl.Result{}, err
 	}
@@ -122,8 +113,6 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	return ctrl.Result{}, nil
 }
-
-// Move to utils
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *NodeTypeReconciler) SetupWithManager(mgr ctrl.Manager) error {

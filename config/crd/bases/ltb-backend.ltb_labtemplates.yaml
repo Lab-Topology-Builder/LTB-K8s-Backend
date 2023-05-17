@@ -35,14 +35,7 @@ spec:
             properties:
               connections:
                 items:
-                  properties:
-                    neighbors:
-                      items:
-                        type: string
-                      type: array
-                  required:
-                  - neighbors
-                  type: object
+                  type: string
                 type: array
               nodes:
                 items:
@@ -88,6 +81,8 @@ spec:
                         - port
                         type: object
                       type: array
+                    renderedNodeSpec:
+                      type: string
                   required:
                   - name
                   - nodetyperef

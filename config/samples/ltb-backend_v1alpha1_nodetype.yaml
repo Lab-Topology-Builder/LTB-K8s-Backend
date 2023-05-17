@@ -42,9 +42,7 @@ spec:
               image: quay.io/containerdisks/ubuntu:22.04
           - name: cloudinitdisk
             cloudInitNoCloud:
-              userData: |
-                #cloud-config
-                hostname: ltbtestvm
+              userData: "{{ .Config }}"
         networks:
           - name: default
             pod: {}
@@ -63,10 +61,11 @@ metadata:
     app.kubernetes.io/part-of: operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: operator
-  name: genereicpod
+  name: genericpod
 spec:
   kind: pod
   nodeSpec: |
     containers:
-      - name: {{ .Node.Name }}
-        image: {{ .Node.NodeTypeRef.Image}}:{{ .Node.NodeTypeRef.Version }}
+      - name: {{ .Name }}
+        image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+        command: ["/bin/bash", "-c", "sleep 356d"]
