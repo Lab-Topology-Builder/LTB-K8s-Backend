@@ -48,14 +48,24 @@ spec:
                 items:
                   properties:
                     config:
-                      description: Interfaces  []NodeInterface `json:"interfaces,omitempty"`
                       type: string
+                    interfaces:
+                      items:
+                        properties:
+                          ipv4:
+                            type: string
+                          ipv6:
+                            type: string
+                        type: object
+                      type: array
                     name:
                       maxLength: 32
                       minLength: 1
                       type: string
                     nodetyperef:
                       properties:
+                        image:
+                          type: string
                         type:
                           type: string
                         version:
@@ -63,6 +73,21 @@ spec:
                       required:
                       - type
                       type: object
+                    ports:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          port:
+                            format: int32
+                            type: integer
+                          protocol:
+                            type: string
+                        required:
+                        - name
+                        - port
+                        type: object
+                      type: array
                   required:
                   - name
                   - nodetyperef

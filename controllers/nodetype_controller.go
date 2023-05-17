@@ -46,7 +46,8 @@ var (
 		Name: "test",
 		NodeTypeRef: ltbv1alpha1.NodeTypeRef{
 			Type:    "testnodetype",
-			Version: "v1",
+			Image:   "ubuntu",
+			Version: "latest",
 		},
 		Config: `
 		#cloud-config
@@ -59,17 +60,20 @@ var (
 		runcmd:
 			- [ systemctl, start, qemu-guest-agent ]`,
 	}
-	TestConnections = []ltbv1alpha1.Connection{
+	TestInterfaces = []ltbv1alpha1.NodeInterface{
 		{
-			Neighbors: []string{
-				"test1",
-				"test2",
-			},
+			IPv4: "192.168.0.1/24",
+		},
+		{
+			IPv4: "172.16.0.1/24",
+		},
+		{
+			IPv4: "10.0.0.1/24",
 		},
 	}
 	Data = util.TemplateData{
-		Node:        TestNodeData,
-		Connections: TestConnections,
+		Node:       TestNodeData,
+		Interfaces: TestInterfaces,
 	}
 )
 

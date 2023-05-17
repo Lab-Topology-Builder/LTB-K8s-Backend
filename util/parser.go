@@ -12,8 +12,8 @@ import (
 )
 
 type TemplateData struct {
-	Node        ltbv1alpha1.LabInstanceNodes
-	Connections []ltbv1alpha1.Connection
+	Node       ltbv1alpha1.LabInstanceNodes
+	Interfaces []ltbv1alpha1.NodeInterface
 }
 
 func ParseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder, data TemplateData) error {

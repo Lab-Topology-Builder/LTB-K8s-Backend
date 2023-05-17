@@ -121,23 +121,19 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	pods := []*corev1.Pod{}
 	vms := []*kubevirtv1.VirtualMachine{}
 	for _, node := range nodes {
-		if node.Image.Kind == "vm" {
-			vm, retValue := ReconcileResource(r, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
-			if retValue.shouldReturn {
-				return retValue.result, retValue.err
-			}
-			vms = append(vms, vm.(*kubevirtv1.VirtualMachine))
-		} else {
-			pod, retValue := ReconcileResource(r, labInstance, &corev1.Pod{}, &node, labInstance.Name+"-"+node.Name)
-			if retValue.shouldReturn {
-				return retValue.result, retValue.err
-			}
-			pods = append(pods, pod.(*corev1.Pod))
-		}
-		kind := node.Image.Kind
-		if kind == "" {
-			kind = "pod"
-		}
+		// if node.Image.Kind == "vm" {
+		// 	vm, retValue := ReconcileResource(r, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
+		// 	if retValue.shouldReturn {
+		// 		return retValue.result, retValue.err
+		// 	}
+		// 	vms = append(vms, vm.(*kubevirtv1.VirtualMachine))
+		// } else {
+		// 	pod, retValue := ReconcileResource(r, labInstance, &corev1.Pod{}, &node, labInstance.Name+"-"+node.Name)
+		// 	if retValue.shouldReturn {
+		// 		return retValue.result, retValue.err
+		// 	}
+		// 	pods = append(pods, pod.(*corev1.Pod))
+		// }
 
 		// Reconcile Remote Access Service
 		if len(node.Ports) > 0 {
@@ -260,11 +256,11 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	var kind string
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
-	if node != nil && node.Image.Kind != "" {
-		kind = node.Image.Kind
-	} else {
-		kind = "pod"
-	}
+	// if node != nil && node.Image.Kind != "" {
+	// 	kind = node.Image.Kind
+	// } else {
+	// 	kind = "pod"
+	// }
 	switch reflect.TypeOf(resource).Elem().Name() {
 	case "Pod":
 		if node.Name != "" {
@@ -319,12 +315,12 @@ func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance 
 }
 
 func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
-	ports := []corev1.ContainerPort{}
-	for _, port := range node.Ports {
-		ports = append(ports, corev1.ContainerPort{
-			ContainerPort: port.Port,
-		})
-	}
+	// ports := []corev1.ContainerPort{}
+	// for _, port := range node.Ports {
+	// 	ports = append(ports, corev1.ContainerPort{
+	// 		ContainerPort: port.Port,
+	// 	})
+	// }
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -338,16 +334,16 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
 
-		Spec: corev1.PodSpec{
-			Containers: []corev1.Container{
-				{
-					Name:    node.Name,
-					Image:   node.Image.Type + ":" + node.Image.Version,
-					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
-					Ports:   ports,
-				},
-			},
-		},
+		// Spec: corev1.PodSpec{
+		// 	Containers: []corev1.Container{
+		// 		{
+		// 			Name:    node.Name,
+		// 			Image:   node.Image.Type + ":" + node.Image.Version,
+		// 			Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
+		// 			Ports:   ports,
+		// 		},
+		// 	},
+		// },
 	}
 	return pod
 }
@@ -360,215 +356,43 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 			"app": labInstance.Name + "-" + node.Name + "-remote-access",
 		},
 	}
-	disks := []kubevirtv1.Disk{
-		{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-		{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-	}
-	volumes := []kubevirtv1.Volume{
-		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
-		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
-	}
-	networks := []kubevirtv1.Network{
-		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
-		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "-vm"}}},
-	}
-	interfaces := []kubevirtv1.Interface{
-		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
-		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
-	}
+	// disks := []kubevirtv1.Disk{
+	// 	{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+	// 	{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
+	// }
+	// volumes := []kubevirtv1.Volume{
+	// 	{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
+	// 	{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
+	// }
+	// networks := []kubevirtv1.Network{
+	// 	{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
+	// 	{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "-vm"}}},
+	// }
+	// interfaces := []kubevirtv1.Interface{
+	// 	{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+	// 	{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+	// }
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
-		Spec: kubevirtv1.VirtualMachineSpec{
-			Running: &running,
-			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-				Spec: kubevirtv1.VirtualMachineInstanceSpec{
-					Domain: kubevirtv1.DomainSpec{
-						Resources: resources,
-						CPU:       cpu,
-						Devices: kubevirtv1.Devices{
-							Disks:      disks,
-							Interfaces: interfaces,
-						},
-					},
-					Volumes:  volumes,
-					Networks: networks,
-				},
-			},
-		},
+		// Spec: kubevirtv1.VirtualMachineSpec{
+		// 	Running: &running,
+		// 	Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+		// 		Spec: kubevirtv1.VirtualMachineInstanceSpec{
+		// 			Domain: kubevirtv1.DomainSpec{
+		// 				Resources: resources,
+		// 				CPU:       cpu,
+		// 				Devices: kubevirtv1.Devices{
+		// 					Disks:      disks,
+		// 					Interfaces: interfaces,
+		// 				},
+		// 			},
+		// 			Volumes:  volumes,
+		// 			Networks: networks,
+		// 		},
+		// 	},
+		// },
 	}
 	return vm
-}
-
-func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, name string) *networkingv1.Ingress {
-	ingressName := name + "-ingress"
-	metadata := metav1.ObjectMeta{
-		Name:      ingressName,
-		Namespace: labInstance.Namespace,
-		Annotations: map[string]string{
-			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + resourceType + "&arg=" + name + "&arg=bash",
-		},
-	}
-	className := "nginx"
-	ingress := &networkingv1.Ingress{
-		ObjectMeta: metadata,
-		Spec: networkingv1.IngressSpec{
-			IngressClassName: &className,
-			Rules: []networkingv1.IngressRule{
-				{Host: ingressName + ".sr-118142.network.garden",
-					IngressRuleValue: networkingv1.IngressRuleValue{
-						HTTP: &networkingv1.HTTPIngressRuleValue{
-							Paths: []networkingv1.HTTPIngressPath{
-								{
-									Path: "/",
-									PathType: func() *networkingv1.PathType {
-										pathType := networkingv1.PathTypePrefix
-										return &pathType
-									}(),
-									Backend: networkingv1.IngressBackend{
-										Service: &networkingv1.IngressServiceBackend{
-											Name: labInstance.Name + "-ttyd-service",
-											Port: networkingv1.ServiceBackendPort{
-												Name: "ttyd",
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-	return ingress
-}
-
-func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
-	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + "-ttyd-pod",
-		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": "ttyd-app",
-		},
-	}
-	pod := &corev1.Pod{
-		ObjectMeta: metadata,
-
-		Spec: corev1.PodSpec{
-			ServiceAccountName: labInstance.Name + "-ttyd-svcacc",
-			Containers: []corev1.Container{
-				{
-					Name:  labInstance.Name + "-ttyd-container",
-					Image: "ghcr.io/insrapperswil/kube-ttyd:latest",
-					Args:  []string{"ttyd", "-a", "konnect"},
-					Ports: []corev1.ContainerPort{
-						{
-							ContainerPort: 7681,
-						},
-					},
-				},
-			},
-		},
-	}
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-service",
-			Namespace: labInstance.Namespace,
-		},
-		Spec: corev1.ServiceSpec{
-			Ports: []corev1.ServicePort{
-				{
-					Port:       7681,
-					TargetPort: intstr.IntOrString{IntVal: 7681},
-					Name:       "ttyd",
-				},
-			},
-			Selector: map[string]string{
-				"app": "ttyd-app",
-			},
-			Type: corev1.ServiceTypeClusterIP,
-		},
-	}
-	return pod, service
-}
-
-func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameSpace string) *corev1.Service {
-	ports := []corev1.ServicePort{}
-	for _, port := range node.Ports {
-		ports = append(ports, corev1.ServicePort{
-			Name:       port.Name,
-			Port:       port.Port,
-			TargetPort: intstr.IntOrString{IntVal: port.Port},
-		})
-	}
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      serviceName,
-			Namespace: nameSpace,
-		},
-		Spec: corev1.ServiceSpec{
-			Ports: ports,
-			Selector: map[string]string{
-				"app": serviceName,
-			},
-			Type: corev1.ServiceTypeLoadBalancer,
-		},
-	}
-	return service
-}
-
-func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.ServiceAccount, *rbacv1.Role, *rbacv1.RoleBinding) {
-	serviceAccount := &corev1.ServiceAccount{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-svcacc",
-			Namespace: labInstance.Namespace,
-		},
-	}
-	role := &rbacv1.Role{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-role",
-			Namespace: labInstance.Namespace,
-		},
-		Rules: []rbacv1.PolicyRule{
-			{
-				APIGroups: []string{""},
-				Resources: []string{"pods", "pods/log"},
-				Verbs:     []string{"get", "list"},
-			},
-			{
-				APIGroups: []string{""},
-				Resources: []string{"pods/exec"},
-				Verbs:     []string{"create"},
-			},
-			{
-				APIGroups: []string{"subresources.kubevirt.io"},
-				Resources: []string{"virtualmachineinstances/console"},
-				Verbs:     []string{"get", "list", "create", "update", "delete"},
-			},
-		},
-	}
-
-	roleBinding := &rbacv1.RoleBinding{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-rolebind",
-			Namespace: labInstance.Namespace,
-		},
-		Subjects: []rbacv1.Subject{
-			{
-				Kind:      "ServiceAccount",
-				Name:      labInstance.Name + "-ttyd-svcacc",
-				Namespace: labInstance.Namespace,
-			},
-		},
-		RoleRef: rbacv1.RoleRef{
-			Kind:     "Role",
-			Name:     labInstance.Name + "-ttyd-role",
-			APIGroup: "rbac.authorization.k8s.io",
-		},
-	}
-
-	return serviceAccount, role, roleBinding
-
 }
 
 func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, name string) *networkingv1.Ingress {

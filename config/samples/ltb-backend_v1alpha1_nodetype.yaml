@@ -31,8 +31,10 @@ spec:
             interfaces:
               - name: default
                 bridge: {}
-              - name: labNetwork
-                bridge: {}
+              {{- range $i, $interface := .Interfaces }}
+              - name: int{{ $i }}
+                bridge: { {{ $interface.IPv4}} }
+              {{- end }}
         terminationGracePeriodSeconds: 0
         volumes:
           - name: containerdisk
@@ -65,11 +67,6 @@ metadata:
 spec:
   kind: pod
   nodeSpec: |
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: testnodetypepod
-    spec:
-      containers:
-        - name: "testcontainer"
-          image: ubuntu:latest
+    containers:
+      - name: {{ .Node.Name }}
+        image: {{ .Node.NodeTypeRef.Image}}:{{ .Node.NodeTypeRef.Version }}

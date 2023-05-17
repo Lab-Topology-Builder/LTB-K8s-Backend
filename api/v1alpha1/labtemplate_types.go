@@ -28,11 +28,11 @@ type LabTemplateSpec struct {
 type LabInstanceNodes struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Name        string      `json:"name"`
-	NodeTypeRef NodeTypeRef `json:"nodetyperef"`
-	// Interfaces  []NodeInterface `json:"interfaces,omitempty"`
-	Config string `json:"config,omitempty"`
-	Ports  []Port `json:"ports,omitempty"`
+	Name        string          `json:"name"`
+	NodeTypeRef NodeTypeRef     `json:"nodetyperef"`
+	Interfaces  []NodeInterface `json:"interfaces,omitempty"`
+	Config      string          `json:"config,omitempty"`
+	Ports       []Port          `json:"ports,omitempty"`
 }
 
 type Port struct {
@@ -41,13 +41,14 @@ type Port struct {
 	Port     int32  `json:"port"`
 }
 
-// type NodeInterface struct {
-// 	Ipv4 string `json:"ipv4,omitempty"`
-// 	Ipv6 string `json:"ipv6,omitempty"`
-// }
+type NodeInterface struct {
+	IPv4 string `json:"ipv4,omitempty"`
+	IPv6 string `json:"ipv6,omitempty"`
+}
 
 type NodeTypeRef struct {
 	Type    string `json:"type"`
+	Image   string `json:"image,omitempty"`
 	Version string `json:"version,omitempty"`
 }
 
