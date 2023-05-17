@@ -31,10 +31,10 @@ spec:
             interfaces:
               - name: default
                 bridge: {}
-              {{- range $i, $interface := .Interfaces }}
-              - name: int{{ $i }}
-                bridge: { {{ $interface.IPv4}} }
-              {{- end }}
+              # {{- range $i, $interface := .Interfaces }}
+              # - name: int{{ $i }}
+              #   bridge: { {{ $interface.IPv4}} }
+              # {{- end }}
         terminationGracePeriodSeconds: 0
         volumes:
           - name: containerdisk
@@ -46,9 +46,9 @@ spec:
         networks:
           - name: default
             pod: {}
-          - name: labNetwork
-            multus:
-              networkName: labNetwork
+          # - name: labNetwork
+          #   multus:
+          #     networkName: labNetwork
 
 ---
 
