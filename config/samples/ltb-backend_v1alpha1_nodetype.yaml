@@ -28,13 +28,6 @@ spec:
               - name: cloudinitdisk
                 disk:
                   bus: virtio
-            interfaces:
-              - name: default
-                bridge: {}
-              # {{- range $i, $interface := .Interfaces }}
-              # - name: int{{ $i }}
-              #   bridge: { {{ $interface.IPv4}} }
-              # {{- end }}
         terminationGracePeriodSeconds: 0
         volumes:
           - name: containerdisk
@@ -43,12 +36,6 @@ spec:
           - name: cloudinitdisk
             cloudInitNoCloud:
               userData: "{{ .Config }}"
-        networks:
-          - name: default
-            pod: {}
-          # - name: labNetwork
-          #   multus:
-          #     networkName: labNetwork
 
 ---
 
@@ -68,4 +55,4 @@ spec:
     containers:
       - name: {{ .Name }}
         image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
-        command: ["/bin/bash", "-c", "sleep 356d"]
+        command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]

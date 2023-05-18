@@ -320,12 +320,12 @@ func (r *LabInstanceReconciler) GetNodeType(ctx context.Context, nodeTypeRef *lt
 
 func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	log := log.FromContext(context.Background())
-	// ports := []corev1.ContainerPort{}
-	// for _, port := range node.Ports {
-	// 	ports = append(ports, corev1.ContainerPort{
-	// 		ContainerPort: port.Port,
-	// 	})
-	// }
+	ports := []corev1.ContainerPort{}
+	for _, port := range node.Ports {
+		ports = append(ports, corev1.ContainerPort{
+			ContainerPort: port.Port,
+		})
+	}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -341,6 +341,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	if err != nil {
 		log.Error(err, "Failed to unmarshal node spec")
 	}
+	podSpec.Containers[0].Ports = ports
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
 		Spec:       *podSpec,
@@ -381,14 +382,16 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	// 	{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
 	// 	{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
 	// }
-	// networks := []kubevirtv1.Network{
-	// 	{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
-	// 	{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "-vm"}}},
-	// }
-	// interfaces := []kubevirtv1.Interface{
-	// 	{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
-	// 	{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
-	// }
+	networks := []kubevirtv1.Network{
+		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
+		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "-vm"}}},
+	}
+	interfaces := []kubevirtv1.Interface{
+		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
+	}
+	vmSpec.Template.Spec.Domain.Devices.Interfaces = interfaces
+	vmSpec.Template.Spec.Networks = networks
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,
