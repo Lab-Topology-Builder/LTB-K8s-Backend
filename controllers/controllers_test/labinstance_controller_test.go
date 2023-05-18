@@ -142,7 +142,7 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 
 		It("should map labtemplate to pod", func() {
-			testPod = MapTemplateToPod(testLabInstance, podNode)
+			testPod = CreatePod(testLabInstance, podNode)
 			Expect(testPod.Name).To(Equal("test-labinstance-test-node-1"))
 			Expect(testPod.Spec.Containers[0].Name).To(Equal("test-node-1"))
 			Expect(testPod.Spec.Containers[0].Image).To(Equal("ubuntu:20.04"))

@@ -83,8 +83,6 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return retValue.result, retValue.err
 	}
 
-	//node := &ltbv1alpha1.LabInstanceNodes{}
-
 	// Reconcile TTYD Service Account
 	_, retValue = ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, nil, labInstance.Name+"-ttyd-svcacc")
 	if retValue.shouldReturn {
@@ -232,7 +230,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	retValue := ReturnToReconciler{shouldReturn: true, result: ctrl.Result{}, err: nil}
 	resourceExists, err := ResourceExists(r, resource, resourceName, labInstance.Namespace)
 	if err == nil && !resourceExists {
-		createdResource := CreateResource(labInstance, node, resourceName, resource)
+		createdResource := CreateResource(labInstance, node, resource)
 		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
 		ctrl.SetControllerReference(labInstance, createdResource, r.Scheme)
 
@@ -254,7 +252,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 }
 
 // TODO: Remove return value use pointers
-func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resourceName string, resource client.Object) client.Object {
+func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object) client.Object {
 	var kind string
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
@@ -265,22 +263,11 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	}
 	switch reflect.TypeOf(resource).Elem().Name() {
 	case "Pod":
-		if node != nil {
-			return MapTemplateToPod(labInstance, node)
-		} else {
-			pod, _ := CreateTtydPodAndService(labInstance)
-			resource = pod
-			return pod
-		}
+		return CreatePod(labInstance, node)
 	case "VirtualMachine":
 		return MapTemplateToVM(labInstance, node)
 	case "Service":
-		if node == nil {
-			_, service := CreateTtydPodAndService(labInstance)
-			return service
-		} else {
-			return CreateService(node, resourceName, labInstance.Namespace)
-		}
+		return CreateService(labInstance, node)
 	case "Ingress":
 		return CreateIngress(labInstance, kind, labInstance.Name+"-"+node.Name)
 	case "Role":
@@ -314,57 +301,6 @@ func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance 
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
 	returnValue := ErrorMsg(ctx, err, "LabTemplate")
 	return returnValue
-}
-
-func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
-	ports := []corev1.ContainerPort{}
-	for _, port := range node.Ports {
-		ports = append(ports, corev1.ContainerPort{
-			ContainerPort: port.Port,
-		})
-	}
-	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + "-" + node.Name,
-		Namespace: labInstance.Namespace,
-		Annotations: map[string]string{
-			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "-pod",
-		},
-		Labels: map[string]string{
-			"app": labInstance.Name + "-" + node.Name + "-remote-access",
-		},
-	}
-	pod := &corev1.Pod{
-		ObjectMeta: metadata,
-
-		Spec: corev1.PodSpec{
-			Containers: []corev1.Container{
-				{
-					Name:    node.Name,
-					Image:   node.Image.Type + ":" + node.Image.Version,
-					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
-					Ports:   ports,
-					// VolumeMounts: []corev1.VolumeMount{
-					// 	{
-					// 		Name:      "secret-volume",
-					// 		MountPath: "/etc/secret-volume",
-					// 		ReadOnly:  true,
-					// 	},
-					// },
-				},
-			},
-			// Volumes: []corev1.Volume{
-			// 	{
-			// 		Name: "secret-volume",
-			// 		VolumeSource: corev1.VolumeSource{
-			// 			Secret: &corev1.SecretVolumeSource{
-			// 				SecretName: "pod-secret",
-			// 			},
-			// 		},
-			// 	},
-			// },
-		},
-	}
-	return pod
 }
 
 func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
@@ -479,18 +415,15 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, na
 	return ingress
 }
 
-func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
-	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + "-ttyd-pod",
-		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": "ttyd-app",
-		},
-	}
-	pod := &corev1.Pod{
-		ObjectMeta: metadata,
+func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+	metadata := metav1.ObjectMeta{Namespace: labInstance.Namespace}
+	var spec corev1.PodSpec
+	ports := []corev1.ContainerPort{}
 
-		Spec: corev1.PodSpec{
+	if node == nil {
+		metadata.Name = labInstance.Name + "-ttyd-pod"
+		metadata.Labels = map[string]string{"app": labInstance.Name + "-ttyd-service"}
+		spec = corev1.PodSpec{
 			ServiceAccountName: labInstance.Name + "-ttyd-svcacc",
 			Containers: []corev1.Container{
 				{
@@ -504,51 +437,70 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 					},
 				},
 			},
-		},
-	}
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-service",
-			Namespace: labInstance.Namespace,
-		},
-		Spec: corev1.ServiceSpec{
-			Ports: []corev1.ServicePort{
+		}
+	} else {
+		for _, port := range node.Ports {
+			ports = append(ports, corev1.ContainerPort{
+				ContainerPort: port.Port,
+			})
+		}
+
+		metadata.Name = labInstance.Name + "-" + node.Name
+		metadata.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
+		metadata.Annotations = map[string]string{
+			"k8s.v1.cni.cncf.io/networks": labInstance.Name + "-pod",
+		}
+		spec = corev1.PodSpec{
+			Containers: []corev1.Container{
 				{
-					Port:       7681,
-					TargetPort: intstr.IntOrString{IntVal: 7681},
-					Name:       "ttyd",
+					Name:    node.Name,
+					Image:   node.Image.Type + ":" + node.Image.Version,
+					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
+					Ports:   ports,
 				},
 			},
-			Selector: map[string]string{
-				"app": "ttyd-app",
-			},
-			Type: corev1.ServiceTypeClusterIP,
-		},
+		}
 	}
-	return pod, service
+	pod := &corev1.Pod{
+		ObjectMeta: metadata,
+		Spec:       spec,
+	}
+	return pod
 }
 
-func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameSpace string) *corev1.Service {
+func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Service {
+	var serviceName string
 	ports := []corev1.ServicePort{}
-	for _, port := range node.Ports {
+	serviceType := corev1.ServiceTypeLoadBalancer
+
+	if node == nil {
+		serviceName = fmt.Sprintf("%s-%s", labInstance.Name, "ttyd-service")
 		ports = append(ports, corev1.ServicePort{
-			Name:       port.Name,
-			Port:       port.Port,
-			TargetPort: intstr.IntOrString{IntVal: port.Port},
-			Protocol:   port.Protocol,
+			Name:       "ttyd",
+			Port:       7681,
+			TargetPort: intstr.FromInt(7681),
 		})
+		serviceType = corev1.ServiceTypeClusterIP
+	} else {
+		serviceName = fmt.Sprintf("%s-%s-%s", labInstance.Name, node.Name, "remote-access")
+		for _, port := range node.Ports {
+			ports = append(ports, corev1.ServicePort{
+				Name:       port.Name,
+				Port:       port.Port,
+				TargetPort: intstr.IntOrString{IntVal: port.Port},
+				Protocol:   port.Protocol,
+			})
+		}
 	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      serviceName,
-			Namespace: nameSpace,
+			Namespace: labInstance.Namespace,
 		},
 		Spec: corev1.ServiceSpec{
-			Ports: ports,
-			Selector: map[string]string{
-				"app": serviceName,
-			},
-			Type: corev1.ServiceTypeLoadBalancer,
+			Selector: map[string]string{"app": serviceName},
+			Ports:    ports,
+			Type:     serviceType,
 		},
 	}
 	return service
