@@ -346,17 +346,6 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
 		Spec:       *podSpec,
-
-		// Spec: corev1.PodSpec{
-		// 	Containers: []corev1.Container{
-		// 		{
-		// 			Name:    node.Name,
-		// 			Image:   node.Image.Type + ":" + node.Image.Version,
-		// 			Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
-		// 			Ports:   ports,
-		// 		},
-		// 	},
-		// },
 	}
 	return pod
 }
@@ -375,14 +364,6 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	if err != nil {
 		log.Error(err, "Failed to unmarshal node spec")
 	}
-	// disks := []kubevirtv1.Disk{
-	// 	{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-	// 	{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-	// }
-	// volumes := []kubevirtv1.Volume{
-	// 	{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
-	// 	{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
-	// }
 	networks := []kubevirtv1.Network{
 		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
 		{Name: labInstance.Name, NetworkSource: kubevirtv1.NetworkSource{Multus: &kubevirtv1.MultusNetwork{NetworkName: labInstance.Name + "-vm"}}},
@@ -396,23 +377,6 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,
-		// Spec: kubevirtv1.VirtualMachineSpec{
-		// 	Running: &running,
-		// 	Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-		// 		Spec: kubevirtv1.VirtualMachineInstanceSpec{
-		// 			Domain: kubevirtv1.DomainSpec{
-		// 				Resources: resources,
-		// 				CPU:       cpu,
-		// 				Devices: kubevirtv1.Devices{
-		// 					Disks:      disks,
-		// 					Interfaces: interfaces,
-		// 				},
-		// 			},
-		// 			Volumes:  volumes,
-		// 			Networks: networks,
-		// 		},
-		// 	},
-		// },
 	}
 	return vm
 }
