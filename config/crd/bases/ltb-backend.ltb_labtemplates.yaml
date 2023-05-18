@@ -33,7 +33,7 @@ spec:
             type: object
           spec:
             properties:
-              connections:
+              neighbors:
                 items:
                   type: string
                 type: array
@@ -91,7 +91,7 @@ spec:
                   type: object
                 type: array
             required:
-            - connections
+            - neighbors
             - nodes
             type: object
           status:

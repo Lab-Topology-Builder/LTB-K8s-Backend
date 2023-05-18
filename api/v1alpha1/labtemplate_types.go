@@ -23,7 +23,7 @@ import (
 
 type LabTemplateSpec struct {
 	Nodes     []LabInstanceNodes `json:"nodes"`
-	Neighbors []string           `json:"connections"`
+	Neighbors []string           `json:"neighbors"`
 }
 
 type LabInstanceNodes struct {
@@ -34,7 +34,7 @@ type LabInstanceNodes struct {
 	Interfaces       []NodeInterface `json:"interfaces,omitempty"`
 	Config           string          `json:"config,omitempty"`
 	Ports            []Port          `json:"ports,omitempty"`
-	RenderedNodeSpec string          `json:"renderedNodeSpec,omitempty"` // this is the rendered node spec
+	RenderedNodeSpec string          `json:"renderedNodeSpec,omitempty"`
 }
 
 type Port struct {
