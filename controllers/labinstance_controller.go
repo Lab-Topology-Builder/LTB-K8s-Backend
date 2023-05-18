@@ -586,7 +586,7 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	}
 }
 
-// This function could be moved to utils
+// TODO: move this function to utils
 func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconciler {
 	log := log.FromContext(ctx)
 	returnValue := ReturnToReconciler{shouldReturn: false, result: ctrl.Result{}, err: nil}
