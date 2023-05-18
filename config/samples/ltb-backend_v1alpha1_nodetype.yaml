@@ -56,3 +56,9 @@ spec:
       - name: {{ .Name }}
         image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
         command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+        ports:
+          {{- range $index, $port := .Ports }}
+          - name: {{ $port.Name }}
+            containerPort: {{ $port.Port }}
+            protocol: {{ $port.Protocol }}
+          {{- end }}

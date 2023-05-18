@@ -267,7 +267,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	case "Service":
 		return CreateService(labInstance, node)
 	case "Ingress":
-		return CreateIngress(labInstance, node, labInstance.Name+"-"+node.Name)
+		return CreateIngress(labInstance, node)
 	case "Role":
 		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
 		return role
@@ -310,12 +310,6 @@ func (r *LabInstanceReconciler) GetNodeType(ctx context.Context, nodeTypeRef *lt
 
 func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
 	log := log.FromContext(context.Background())
-	ports := []corev1.ContainerPort{}
-	for _, port := range node.Ports {
-		ports = append(ports, corev1.ContainerPort{
-			ContainerPort: port.Port,
-		})
-	}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -331,7 +325,6 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	if err != nil {
 		log.Error(err, "Failed to unmarshal node spec")
 	}
-	podSpec.Containers[0].Ports = ports
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
 		Spec:       *podSpec,
@@ -368,7 +361,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	return vm
 }
 
-func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, name string) *networkingv1.Ingress {
+func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *networkingv1.Ingress {
 	// TODO: hack to determine if node is a vm or pod, need to improve
 	var resourceType string
 	if node != nil && strings.Contains(node.RenderedNodeSpec, "template:") {
@@ -376,6 +369,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 	} else {
 		resourceType = "pod"
 	}
+	name := labInstance.Name + "-" + node.Name
 	ingressName := name + "-ingress"
 	metadata := metav1.ObjectMeta{
 		Name:      ingressName,
@@ -391,7 +385,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: &className,
 			Rules: []networkingv1.IngressRule{
-				{Host: ingressName + ".sr-118145.network.garden",
+				{Host: ingressName + ".sr-118142.network.garden",
 					IngressRuleValue: networkingv1.IngressRuleValue{
 						HTTP: &networkingv1.HTTPIngressRuleValue{
 							Paths: []networkingv1.HTTPIngressPath{
