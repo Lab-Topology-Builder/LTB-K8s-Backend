@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -417,12 +418,13 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 }
 
 func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, name string) *networkingv1.Ingress {
+	// TODO: hack to determine if node is a vm or pod, need to improve
 	var resourceType string
-	// if node != nil && node.Image.Kind != "" {
-	// 	resourceType = node.Image.Kind
-	// } else {
-	resourceType = "pod"
-	// }
+	if node != nil && strings.Contains(node.RenderedNodeSpec, "template:") {
+		resourceType = "vm"
+	} else {
+		resourceType = "pod"
+	}
 	ingressName := name + "-ingress"
 	metadata := metav1.ObjectMeta{
 		Name:      ingressName,
@@ -432,12 +434,13 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 		},
 	}
 	className := "nginx"
+	// TODO: ingress dns address should be configurable
 	ingress := &networkingv1.Ingress{
 		ObjectMeta: metadata,
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: &className,
 			Rules: []networkingv1.IngressRule{
-				{Host: ingressName + ".sr-118142.network.garden",
+				{Host: ingressName + ".sr-118145.network.garden",
 					IngressRuleValue: networkingv1.IngressRuleValue{
 						HTTP: &networkingv1.HTTPIngressRuleValue{
 							Paths: []networkingv1.HTTPIngressPath{
