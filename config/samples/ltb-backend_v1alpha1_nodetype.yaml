@@ -25,17 +25,11 @@ spec:
               - name: containerdisk
                 disk:
                   bus: virtio
-              - name: cloudinitdisk
-                disk:
-                  bus: virtio
         terminationGracePeriodSeconds: 0
         volumes:
           - name: containerdisk
             containerDisk:
               image: quay.io/containerdisks/ubuntu:22.04
-          - name: cloudinitdisk
-            cloudInitNoCloud:
-              userData: "{{ .Config }}"
 
 ---
 

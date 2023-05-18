@@ -351,9 +351,28 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
 		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
 	}
+	// TODO: Hack for cloud init
+	disk := kubevirtv1.Disk{
+		Name: "cloudinitdisk",
+		DiskDevice: kubevirtv1.DiskDevice{
+			Disk: &kubevirtv1.DiskTarget{
+				Bus: "virtio",
+			},
+		},
+	}
+	volume := kubevirtv1.Volume{
+		Name: "cloudinitdisk",
+		VolumeSource: kubevirtv1.VolumeSource{
+			CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
+				UserData: node.Config,
+			},
+		},
+	}
 	vmSpec.Template.Spec.Domain.Devices.Interfaces = interfaces
 	vmSpec.Template.Spec.Networks = networks
 	vmSpec.Template.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
+	vmSpec.Template.Spec.Volumes = append(vmSpec.Template.Spec.Volumes, volume)
+	vmSpec.Template.Spec.Domain.Devices.Disks = append(vmSpec.Template.Spec.Domain.Devices.Disks, disk)
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,
@@ -385,7 +404,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: &className,
 			Rules: []networkingv1.IngressRule{
-				{Host: ingressName + ".sr-118142.network.garden",
+				{Host: ingressName + ".sr-118145.network.garden",
 					IngressRuleValue: networkingv1.IngressRuleValue{
 						HTTP: &networkingv1.HTTPIngressRuleValue{
 							Paths: []networkingv1.HTTPIngressPath{
