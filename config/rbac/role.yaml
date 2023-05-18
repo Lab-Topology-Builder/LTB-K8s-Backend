@@ -83,3 +83,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - nodetypes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - nodetypes/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ltb-backend.ltb
+  resources:
+  - nodetypes/status
+  verbs:
+  - get
+  - patch
+  - update

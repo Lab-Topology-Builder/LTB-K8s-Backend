@@ -17,51 +17,48 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type LabTemplateSpec struct {
-	Nodes       []LabInstanceNodes `json:"nodes"`
-	Connections []Connection       `json:"connections"`
+	Nodes     []LabInstanceNodes `json:"nodes"`
+	Neighbors []string           `json:"neighbors"`
 }
 
 type LabInstanceNodes struct {
 	// +kubebuilder:validation:MaxLength=32
 	// +kubebuilder:validation:MinLength=1
-	Name       string          `json:"name"`
-	Image      NodeImage       `json:"image"`
-	Interfaces []NodeInterface `json:"interfaces,omitempty"`
-	Config     string          `json:"config,omitempty"`
-	Ports      []Port          `json:"ports,omitempty"`
+	Name             string          `json:"name"`
+	NodeTypeRef      NodeTypeRef     `json:"nodetyperef"`
+	Interfaces       []NodeInterface `json:"interfaces,omitempty"`
+	Config           string          `json:"config,omitempty"`
+	Ports            []Port          `json:"ports,omitempty"`
+	RenderedNodeSpec string          `json:"renderedNodeSpec,omitempty"`
 }
 
 type Port struct {
-	Name     string `json:"name"`
-	Protocol string `json:"protocol,omitempty"`
-	Port     int32  `json:"port"`
+	Name     string          `json:"name"`
+	Protocol corev1.Protocol `json:"protocol"`
+	Port     int32           `json:"port"`
 }
 
 type NodeInterface struct {
-	Ipv4 string `json:"ipv4,omitempty"`
-	Ipv6 string `json:"ipv6,omitempty"`
+	IPv4 string `json:"ipv4,omitempty"`
+	IPv6 string `json:"ipv6,omitempty"`
 }
 
-type NodeImage struct {
+type NodeTypeRef struct {
 	Type    string `json:"type"`
+	Image   string `json:"image,omitempty"`
 	Version string `json:"version,omitempty"`
-	Kind    string `json:"kind,omitempty"`
-}
-
-type Connection struct {
-	// +kubebuilder:validation:MaxLength=32
-	// +kubebuilder:validation:MinLength=1
-	Neighbors string `json:"neighbors"` // comma separated list of neighbors, maybe call it endpoints?
 }
 
 type LabTemplateStatus struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:resource:scope=Cluster
 //+kubebuilder:subresource:status
 
 type LabTemplate struct {

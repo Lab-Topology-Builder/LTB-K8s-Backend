@@ -18,13 +18,15 @@ package controllers
 
 import (
 	"context"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	ltbbackendv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
+	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
+	util "github.com/Lab-Topology-Builder/LTB-K8s-Backend/util"
 )
 
 type LabTemplateReconciler struct {
@@ -46,14 +48,41 @@ type LabTemplateReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	l := log.FromContext(ctx)
+	labTemplate := &ltbv1alpha1.LabTemplate{}
+	l.Info("Reconciling LabTemplate")
+	err := r.Get(ctx, req.NamespacedName, labTemplate)
+	if err != nil {
+		l.Error(err, "Failed to get labtemplate")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+	nodes := &labTemplate.Spec.Nodes
+	for i := 0; i < len(*nodes); i++ {
+		nodetype := &ltbv1alpha1.NodeType{}
+		err := r.Get(ctx, client.ObjectKey{Namespace: labTemplate.Namespace, Name: (*nodes)[i].NodeTypeRef.Type}, nodetype)
+		if err != nil {
+			l.Error(err, "Failed to get nodetype")
+			return ctrl.Result{}, client.IgnoreNotFound(err)
+		}
+		var renderedNodeSpec strings.Builder
+		if err = util.ParseAndRenderTemplate(nodetype, &renderedNodeSpec, (*nodes)[i]); err != nil {
+			l.Error(err, "Failed to render template")
+			return ctrl.Result{}, err
+		}
+		(*nodes)[i].RenderedNodeSpec = renderedNodeSpec.String()
+	}
 
+	err = r.Update(ctx, labTemplate)
+	if err != nil {
+		l.Error(err, "Failed to update labtemplate")
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *LabTemplateReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&ltbbackendv1alpha1.LabTemplate{}).
+		For(&ltbv1alpha1.LabTemplate{}).
 		Complete(r)
 }

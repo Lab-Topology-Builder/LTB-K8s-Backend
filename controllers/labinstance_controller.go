@@ -27,10 +27,12 @@ import (
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/api/resource"
+
+	// "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -84,34 +86,32 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return retValue.result, retValue.err
 	}
 
-	node := &ltbv1alpha1.LabInstanceNodes{}
-
 	// Reconcile TTYD Service Account
-	_, retValue = ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, node, labInstance.Name+"-ttyd-svcacc")
+	_, retValue = ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, nil, labInstance.Name+"-ttyd-svcacc")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Role
-	_, retValue = ReconcileResource(r, labInstance, &rbacv1.Role{}, node, labInstance.Name+"-ttyd-role")
+	_, retValue = ReconcileResource(r, labInstance, &rbacv1.Role{}, nil, labInstance.Name+"-ttyd-role")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Role Binding
-	_, retValue = ReconcileResource(r, labInstance, &rbacv1.RoleBinding{}, node, labInstance.Name+"-ttyd-rolebind")
+	_, retValue = ReconcileResource(r, labInstance, &rbacv1.RoleBinding{}, nil, labInstance.Name+"-ttyd-rolebind")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Service
-	_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, node, labInstance.Name+"-ttyd-service")
+	_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, nil, labInstance.Name+"-ttyd-service")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Pod
-	_, retValue = ReconcileResource(r, labInstance, &corev1.Pod{}, node, labInstance.Name+"-ttyd-pod")
+	_, retValue = ReconcileResource(r, labInstance, &corev1.Pod{}, nil, labInstance.Name+"-ttyd-pod")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -120,7 +120,12 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	pods := []*corev1.Pod{}
 	vms := []*kubevirtv1.VirtualMachine{}
 	for _, node := range nodes {
-		if node.Image.Kind == "vm" {
+		nodeType := &ltbv1alpha1.NodeType{}
+		retValue = r.GetNodeType(ctx, &node.NodeTypeRef, nodeType)
+		if retValue.shouldReturn {
+			return retValue.result, retValue.err
+		}
+		if nodeType.Spec.Kind == "vm" {
 			vm, retValue := ReconcileResource(r, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
@@ -132,10 +137,6 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 				return retValue.result, retValue.err
 			}
 			pods = append(pods, pod.(*corev1.Pod))
-		}
-		kind := node.Image.Kind
-		if kind == "" {
-			kind = "pod"
 		}
 
 		// Reconcile Remote Access Service
@@ -233,7 +234,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	retValue := ReturnToReconciler{shouldReturn: true, result: ctrl.Result{}, err: nil}
 	resourceExists, err := ResourceExists(r, resource, resourceName, labInstance.Namespace)
 	if err == nil && !resourceExists {
-		createdResource := CreateResource(labInstance, node, resourceName, resource)
+		createdResource := CreateResource(labInstance, node, resource)
 		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
 		ctrl.SetControllerReference(labInstance, createdResource, r.Scheme)
 
@@ -254,36 +255,19 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	return resource, retValue
 }
 
-// TODO: Remove return value use pointers
-func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resourceName string, resource client.Object) client.Object {
-	var kind string
+// TODO: Remove return value use pointers, maybe remove resourceName and add flag for ttyd
+func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object) client.Object {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
-	if node != nil && node.Image.Kind != "" {
-		kind = node.Image.Kind
-	} else {
-		kind = "pod"
-	}
 	switch reflect.TypeOf(resource).Elem().Name() {
 	case "Pod":
-		if node.Name != "" {
-			return MapTemplateToPod(labInstance, node)
-		} else {
-			pod, _ := CreateTtydPodAndService(labInstance)
-			resource = pod
-			return pod
-		}
+		return CreatePod(labInstance, node)
 	case "VirtualMachine":
 		return MapTemplateToVM(labInstance, node)
 	case "Service":
-		if strings.Contains(resourceName, "ttyd") {
-			_, service := CreateTtydPodAndService(labInstance)
-			return service
-		} else {
-			return CreateService(node, resourceName, labInstance.Namespace)
-		}
+		return CreateService(labInstance, node)
 	case "Ingress":
-		return CreateIngress(labInstance, kind, labInstance.Name+"-"+node.Name)
+		return CreateIngress(labInstance, node)
 	case "Role":
 		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
 		return role
@@ -300,6 +284,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 
 }
 
+// TODO: Refactor could be method instead of function
 func ResourceExists(r *LabInstanceReconciler, resource client.Object, resourceName string, nameSpace string) (bool, error) {
 	ctx := context.Context(context.Background())
 	err := r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: nameSpace}, resource)
@@ -317,13 +302,14 @@ func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance 
 	return returnValue
 }
 
+func (r *LabInstanceReconciler) GetNodeType(ctx context.Context, nodeTypeRef *ltbv1alpha1.NodeTypeRef, nodeType *ltbv1alpha1.NodeType) ReturnToReconciler {
+	err := r.Get(ctx, types.NamespacedName{Name: nodeTypeRef.Type, Namespace: "default"}, nodeType)
+	returnValue := ErrorMsg(ctx, err, "NodeType")
+	return returnValue
+}
+
 func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
-	ports := []corev1.ContainerPort{}
-	for _, port := range node.Ports {
-		ports = append(ports, corev1.ContainerPort{
-			ContainerPort: port.Port,
-		})
-	}
+	log := log.FromContext(context.Background())
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -334,43 +320,28 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 			"app": labInstance.Name + "-" + node.Name + "-remote-access",
 		},
 	}
+	podSpec := &corev1.PodSpec{}
+	err := yaml.Unmarshal([]byte(node.RenderedNodeSpec), podSpec)
+	if err != nil {
+		log.Error(err, "Failed to unmarshal node spec")
+	}
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
-
-		Spec: corev1.PodSpec{
-			Containers: []corev1.Container{
-				{
-					Name:    node.Name,
-					Image:   node.Image.Type + ":" + node.Image.Version,
-					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
-					Ports:   ports,
-				},
-			},
-		},
+		Spec:       *podSpec,
 	}
 	return pod
 }
 
 func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
-	running := true
-	resources := kubevirtv1.ResourceRequirements{
-		Requests: corev1.ResourceList{"memory": resource.MustParse("2048M")},
-	}
-	cpu := &kubevirtv1.CPU{Cores: 1}
+	log := log.FromContext(context.Background())
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": labInstance.Name + "-" + node.Name + "-remote-access",
-		},
 	}
-	disks := []kubevirtv1.Disk{
-		{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-		{Name: "cloudinitdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
-	}
-	volumes := []kubevirtv1.Volume{
-		{Name: "containerdisk", VolumeSource: kubevirtv1.VolumeSource{ContainerDisk: &kubevirtv1.ContainerDiskSource{Image: "quay.io/containerdisks/" + node.Image.Type + ":" + node.Image.Version}}},
-		{Name: "cloudinitdisk", VolumeSource: kubevirtv1.VolumeSource{CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{UserData: node.Config}}},
+	vmSpec := &kubevirtv1.VirtualMachineSpec{}
+	err := yaml.Unmarshal([]byte(node.RenderedNodeSpec), vmSpec)
+	if err != nil {
+		log.Error(err, "Failed to unmarshal node spec")
 	}
 	networks := []kubevirtv1.Network{
 		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
@@ -380,30 +351,44 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
 		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
 	}
-	vm := &kubevirtv1.VirtualMachine{
-		ObjectMeta: metadata,
-		Spec: kubevirtv1.VirtualMachineSpec{
-			Running: &running,
-			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-				Spec: kubevirtv1.VirtualMachineInstanceSpec{
-					Domain: kubevirtv1.DomainSpec{
-						Resources: resources,
-						CPU:       cpu,
-						Devices: kubevirtv1.Devices{
-							Disks:      disks,
-							Interfaces: interfaces,
-						},
-					},
-					Volumes:  volumes,
-					Networks: networks,
-				},
+	// TODO: Hack for cloud init
+	disk := kubevirtv1.Disk{
+		Name: "cloudinitdisk",
+		DiskDevice: kubevirtv1.DiskDevice{
+			Disk: &kubevirtv1.DiskTarget{
+				Bus: "virtio",
 			},
 		},
+	}
+	volume := kubevirtv1.Volume{
+		Name: "cloudinitdisk",
+		VolumeSource: kubevirtv1.VolumeSource{
+			CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
+				UserData: node.Config,
+			},
+		},
+	}
+	vmSpec.Template.Spec.Domain.Devices.Interfaces = interfaces
+	vmSpec.Template.Spec.Networks = networks
+	vmSpec.Template.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
+	vmSpec.Template.Spec.Volumes = append(vmSpec.Template.Spec.Volumes, volume)
+	vmSpec.Template.Spec.Domain.Devices.Disks = append(vmSpec.Template.Spec.Domain.Devices.Disks, disk)
+	vm := &kubevirtv1.VirtualMachine{
+		ObjectMeta: metadata,
+		Spec:       *vmSpec,
 	}
 	return vm
 }
 
-func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, name string) *networkingv1.Ingress {
+func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *networkingv1.Ingress {
+	// TODO: hack to determine if node is a vm or pod, need to improve
+	var resourceType string
+	if node != nil && strings.Contains(node.RenderedNodeSpec, "template:") {
+		resourceType = "vm"
+	} else {
+		resourceType = "pod"
+	}
+	name := labInstance.Name + "-" + node.Name
 	ingressName := name + "-ingress"
 	metadata := metav1.ObjectMeta{
 		Name:      ingressName,
@@ -413,6 +398,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, na
 		},
 	}
 	className := "nginx"
+	// TODO: ingress dns address should be configurable
 	ingress := &networkingv1.Ingress{
 		ObjectMeta: metadata,
 		Spec: networkingv1.IngressSpec{
@@ -447,18 +433,14 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, resourceType string, na
 	return ingress
 }
 
-func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
-	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + "-ttyd-pod",
-		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": "ttyd-app",
-		},
-	}
-	pod := &corev1.Pod{
-		ObjectMeta: metadata,
+func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+	pod := &corev1.Pod{}
 
-		Spec: corev1.PodSpec{
+	if node == nil {
+		pod.ObjectMeta = metav1.ObjectMeta{Namespace: labInstance.Namespace}
+		pod.ObjectMeta.Name = labInstance.Name + "-ttyd-pod"
+		pod.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-ttyd-service"}
+		pod.Spec = corev1.PodSpec{
 			ServiceAccountName: labInstance.Name + "-ttyd-svcacc",
 			Containers: []corev1.Container{
 				{
@@ -472,50 +454,46 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 					},
 				},
 			},
-		},
+		}
+	} else {
+		pod = MapTemplateToPod(labInstance, node)
 	}
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-service",
-			Namespace: labInstance.Namespace,
-		},
-		Spec: corev1.ServiceSpec{
-			Ports: []corev1.ServicePort{
-				{
-					Port:       7681,
-					TargetPort: intstr.IntOrString{IntVal: 7681},
-					Name:       "ttyd",
-				},
-			},
-			Selector: map[string]string{
-				"app": "ttyd-app",
-			},
-			Type: corev1.ServiceTypeClusterIP,
-		},
-	}
-	return pod, service
+	return pod
 }
 
-func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameSpace string) *corev1.Service {
+func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Service {
+	var serviceName string
 	ports := []corev1.ServicePort{}
-	for _, port := range node.Ports {
+	serviceType := corev1.ServiceTypeLoadBalancer
+
+	if node == nil {
+		serviceName = fmt.Sprintf("%s-%s", labInstance.Name, "ttyd-service")
 		ports = append(ports, corev1.ServicePort{
-			Name:       port.Name,
-			Port:       port.Port,
-			TargetPort: intstr.IntOrString{IntVal: port.Port},
+			Name:       "ttyd",
+			Port:       7681,
+			TargetPort: intstr.FromInt(7681),
 		})
+		serviceType = corev1.ServiceTypeClusterIP
+	} else {
+		serviceName = fmt.Sprintf("%s-%s-%s", labInstance.Name, node.Name, "remote-access")
+		for _, port := range node.Ports {
+			ports = append(ports, corev1.ServicePort{
+				Name:       port.Name,
+				Port:       port.Port,
+				TargetPort: intstr.IntOrString{IntVal: port.Port},
+				Protocol:   port.Protocol,
+			})
+		}
 	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      serviceName,
-			Namespace: nameSpace,
+			Namespace: labInstance.Namespace,
 		},
 		Spec: corev1.ServiceSpec{
-			Ports: ports,
-			Selector: map[string]string{
-				"app": serviceName,
-			},
-			Type: corev1.ServiceTypeLoadBalancer,
+			Selector: map[string]string{"app": serviceName},
+			Ports:    ports,
+			Type:     serviceType,
 		},
 	}
 	return service
@@ -608,7 +586,7 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	}
 }
 
-// This function could be moved to utils
+// TODO: move this function to utils
 func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconciler {
 	log := log.FromContext(ctx)
 	returnValue := ReturnToReconciler{shouldReturn: false, result: ctrl.Result{}, err: nil}

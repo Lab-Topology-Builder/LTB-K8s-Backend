@@ -3,4 +3,5 @@ resources:
 - ltb-backend_v1alpha1_labinstanceset.yaml
 - ltb-backend_v1alpha1_labinstance.yaml
 - ltb-backend_v1alpha1_labtemplate.yaml
+- ltb-backend_v1alpha1_nodetype.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
