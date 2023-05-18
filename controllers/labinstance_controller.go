@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -84,34 +83,34 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return retValue.result, retValue.err
 	}
 
-	node := &ltbv1alpha1.LabInstanceNodes{}
+	//node := &ltbv1alpha1.LabInstanceNodes{}
 
 	// Reconcile TTYD Service Account
-	_, retValue = ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, node, labInstance.Name+"-ttyd-svcacc")
+	_, retValue = ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, nil, labInstance.Name+"-ttyd-svcacc")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Role
-	_, retValue = ReconcileResource(r, labInstance, &rbacv1.Role{}, node, labInstance.Name+"-ttyd-role")
+	_, retValue = ReconcileResource(r, labInstance, &rbacv1.Role{}, nil, labInstance.Name+"-ttyd-role")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Role Binding
-	_, retValue = ReconcileResource(r, labInstance, &rbacv1.RoleBinding{}, node, labInstance.Name+"-ttyd-rolebind")
+	_, retValue = ReconcileResource(r, labInstance, &rbacv1.RoleBinding{}, nil, labInstance.Name+"-ttyd-rolebind")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Service
-	_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, node, labInstance.Name+"-ttyd-service")
+	_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, nil, labInstance.Name+"-ttyd-service")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Pod
-	_, retValue = ReconcileResource(r, labInstance, &corev1.Pod{}, node, labInstance.Name+"-ttyd-pod")
+	_, retValue = ReconcileResource(r, labInstance, &corev1.Pod{}, nil, labInstance.Name+"-ttyd-pod")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -266,7 +265,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	}
 	switch reflect.TypeOf(resource).Elem().Name() {
 	case "Pod":
-		if node.Name != "" {
+		if node != nil {
 			return MapTemplateToPod(labInstance, node)
 		} else {
 			pod, _ := CreateTtydPodAndService(labInstance)
@@ -276,7 +275,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	case "VirtualMachine":
 		return MapTemplateToVM(labInstance, node)
 	case "Service":
-		if strings.Contains(resourceName, "ttyd") {
+		if node == nil {
 			_, service := CreateTtydPodAndService(labInstance)
 			return service
 		} else {
@@ -344,8 +343,25 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 					Image:   node.Image.Type + ":" + node.Image.Version,
 					Command: []string{"/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"},
 					Ports:   ports,
+					// VolumeMounts: []corev1.VolumeMount{
+					// 	{
+					// 		Name:      "secret-volume",
+					// 		MountPath: "/etc/secret-volume",
+					// 		ReadOnly:  true,
+					// 	},
+					// },
 				},
 			},
+			// Volumes: []corev1.Volume{
+			// 	{
+			// 		Name: "secret-volume",
+			// 		VolumeSource: corev1.VolumeSource{
+			// 			Secret: &corev1.SecretVolumeSource{
+			// 				SecretName: "pod-secret",
+			// 			},
+			// 		},
+			// 	},
+			// },
 		},
 	}
 	return pod
@@ -360,9 +376,6 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": labInstance.Name + "-" + node.Name + "-remote-access",
-		},
 	}
 	disks := []kubevirtv1.Disk{
 		{Name: "containerdisk", DiskDevice: kubevirtv1.DiskDevice{Disk: &kubevirtv1.DiskTarget{Bus: "virtio"}}},
@@ -385,6 +398,11 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 		Spec: kubevirtv1.VirtualMachineSpec{
 			Running: &running,
 			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"app": labInstance.Name + "-" + node.Name + "-remote-access",
+					},
+				},
 				Spec: kubevirtv1.VirtualMachineInstanceSpec{
 					Domain: kubevirtv1.DomainSpec{
 						Resources: resources,
@@ -396,6 +414,20 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 					},
 					Volumes:  volumes,
 					Networks: networks,
+					AccessCredentials: []kubevirtv1.AccessCredential{
+						{
+							UserPassword: &kubevirtv1.UserPasswordAccessCredential{
+								Source: kubevirtv1.UserPasswordAccessCredentialSource{
+									Secret: &kubevirtv1.AccessCredentialSecretSource{
+										SecretName: "vm-secret",
+									},
+								},
+								PropagationMethod: kubevirtv1.UserPasswordAccessCredentialPropagationMethod{
+									QemuGuestAgent: &kubevirtv1.QemuGuestAgentUserPasswordAccessCredentialPropagation{},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -503,6 +535,7 @@ func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameS
 			Name:       port.Name,
 			Port:       port.Port,
 			TargetPort: intstr.IntOrString{IntVal: port.Port},
+			Protocol:   port.Protocol,
 		})
 	}
 	service := &corev1.Service{

@@ -19,12 +19,15 @@ spec:
               #cloud-config
               password: ubuntu
               chpasswd: { expire: False }
-              ssh_authorized_keys:
-                - <your-ssh-pub-key>
+              ssh_pwauth: True
               packages:
                 - qemu-guest-agent
               runcmd:
                 - [ systemctl, start, qemu-guest-agent ]
+    ports:
+    - name: "ssh"
+      port: 22
+      protocol: "TCP"
   - name: "sample-node-2"
     image:
       type: "ghcr.io/insrapperswil/network-ninja"
@@ -32,7 +35,7 @@ spec:
     ports:
     - name: "ssh"
       port: 22
-      protocol: "tcp"
+      protocol: "TCP"
   - name: "sample-node-3"
     image:
       type: "ubuntu"
@@ -41,6 +44,6 @@ spec:
     ports:
     - name: "ssh"
       port: 22
-      protocol: "tcp"
+      protocol: "TCP"
   connections:
   - neighbors: "TestHost1:1,TestHost2:1"
