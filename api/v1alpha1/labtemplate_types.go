@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -37,9 +38,9 @@ type LabInstanceNodes struct {
 }
 
 type Port struct {
-	Name     string `json:"name"`
-	Protocol string `json:"protocol,omitempty"`
-	Port     int32  `json:"port"`
+	Name     string          `json:"name"`
+	Protocol corev1.Protocol `json:"protocol"`
+	Port     int32           `json:"port"`
 }
 
 type NodeInterface struct {

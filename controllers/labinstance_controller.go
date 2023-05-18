@@ -261,22 +261,11 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	log := log.FromContext(ctx)
 	switch reflect.TypeOf(resource).Elem().Name() {
 	case "Pod":
-		if node != nil {
-			return MapTemplateToPod(labInstance, node)
-		} else {
-			pod, _ := CreateTtydPodAndService(labInstance)
-			resource = pod
-			return pod
-		}
+		return CreatePod(labInstance, node)
 	case "VirtualMachine":
 		return MapTemplateToVM(labInstance, node)
 	case "Service":
-		if node == nil {
-			_, service := CreateTtydPodAndService(labInstance)
-			return service
-		} else {
-			return CreateService(node, labInstance.Name+"-"+node.Name+"-remote-access", labInstance.Namespace)
-		}
+		return CreateService(labInstance, node)
 	case "Ingress":
 		return CreateIngress(labInstance, node, labInstance.Name+"-"+node.Name)
 	case "Role":
@@ -355,9 +344,6 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": labInstance.Name + "-" + node.Name + "-remote-access",
-		},
 	}
 	vmSpec := &kubevirtv1.VirtualMachineSpec{}
 	err := yaml.Unmarshal([]byte(node.RenderedNodeSpec), vmSpec)
@@ -374,6 +360,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	}
 	vmSpec.Template.Spec.Domain.Devices.Interfaces = interfaces
 	vmSpec.Template.Spec.Networks = networks
+	vmSpec.Template.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,
@@ -433,18 +420,14 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 	return ingress
 }
 
-func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod, *corev1.Service) {
-	metadata := metav1.ObjectMeta{
-		Name:      labInstance.Name + "-ttyd-pod",
-		Namespace: labInstance.Namespace,
-		Labels: map[string]string{
-			"app": "ttyd-app",
-		},
-	}
-	pod := &corev1.Pod{
-		ObjectMeta: metadata,
+func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+	pod := &corev1.Pod{}
 
-		Spec: corev1.PodSpec{
+	if node == nil {
+		pod.ObjectMeta = metav1.ObjectMeta{Namespace: labInstance.Namespace}
+		pod.ObjectMeta.Name = labInstance.Name + "-ttyd-pod"
+		pod.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-ttyd-service"}
+		pod.Spec = corev1.PodSpec{
 			ServiceAccountName: labInstance.Name + "-ttyd-svcacc",
 			Containers: []corev1.Container{
 				{
@@ -458,50 +441,46 @@ func CreateTtydPodAndService(labInstance *ltbv1alpha1.LabInstance) (*corev1.Pod,
 					},
 				},
 			},
-		},
+		}
+	} else {
+		pod = MapTemplateToPod(labInstance, node)
 	}
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      labInstance.Name + "-ttyd-service",
-			Namespace: labInstance.Namespace,
-		},
-		Spec: corev1.ServiceSpec{
-			Ports: []corev1.ServicePort{
-				{
-					Port:       7681,
-					TargetPort: intstr.IntOrString{IntVal: 7681},
-					Name:       "ttyd",
-				},
-			},
-			Selector: map[string]string{
-				"app": "ttyd-app",
-			},
-			Type: corev1.ServiceTypeClusterIP,
-		},
-	}
-	return pod, service
+	return pod
 }
 
-func CreateService(node *ltbv1alpha1.LabInstanceNodes, serviceName string, nameSpace string) *corev1.Service {
+func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Service {
+	var serviceName string
 	ports := []corev1.ServicePort{}
-	for _, port := range node.Ports {
+	serviceType := corev1.ServiceTypeLoadBalancer
+
+	if node == nil {
+		serviceName = fmt.Sprintf("%s-%s", labInstance.Name, "ttyd-service")
 		ports = append(ports, corev1.ServicePort{
-			Name:       port.Name,
-			Port:       port.Port,
-			TargetPort: intstr.IntOrString{IntVal: port.Port},
+			Name:       "ttyd",
+			Port:       7681,
+			TargetPort: intstr.FromInt(7681),
 		})
+		serviceType = corev1.ServiceTypeClusterIP
+	} else {
+		serviceName = fmt.Sprintf("%s-%s-%s", labInstance.Name, node.Name, "remote-access")
+		for _, port := range node.Ports {
+			ports = append(ports, corev1.ServicePort{
+				Name:       port.Name,
+				Port:       port.Port,
+				TargetPort: intstr.IntOrString{IntVal: port.Port},
+				Protocol:   port.Protocol,
+			})
+		}
 	}
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      serviceName,
-			Namespace: nameSpace,
+			Namespace: labInstance.Namespace,
 		},
 		Spec: corev1.ServiceSpec{
-			Ports: ports,
-			Selector: map[string]string{
-				"app": serviceName,
-			},
-			Type: corev1.ServiceTypeLoadBalancer,
+			Selector: map[string]string{"app": serviceName},
+			Ports:    ports,
+			Type:     serviceType,
 		},
 	}
 	return service
