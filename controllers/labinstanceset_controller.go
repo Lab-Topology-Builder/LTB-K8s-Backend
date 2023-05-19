@@ -37,6 +37,13 @@ type LabInstanceSetReconciler struct {
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets/finalizers,verbs=update
+//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labtemplates,verbs=get;list;watch;update;patch;delete
+//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labtemplates/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/finalizers,verbs=update
+//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=pods/status,verbs=get;update;patch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
