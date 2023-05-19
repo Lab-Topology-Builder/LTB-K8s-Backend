@@ -61,43 +61,99 @@ metadata:
             "name": "labtemplate-sample"
           },
           "spec": {
-            "connections": [
-              {
-                "neighbors": "TestHost1:1,TestHost2:1"
-              }
+            "neighbors": [
+              "TestHost1:1,TestHost2:1",
+              "TestHost1:2,TestHost3:1"
             ],
             "nodes": [
               {
-                "config": "#cloud-config\npassword: ubuntu\nchpasswd: { expire: False }\nssh_authorized_keys:\n  - \u003cyour-ssh-pub-key\u003e\npackages:\n  - qemu-guest-agent\nruncmd:\n  - [ systemctl, start, qemu-guest-agent ]",
-                "image": {
-                  "kind": "vm",
-                  "type": "ubuntu",
+                "config": "#cloud-config\npassword: ubuntu\nchpasswd: { expire: False }\nssh_pwauth: True\npackages:\n  - qemu-guest-agent\nruncmd:\n  - [ systemctl, start, qemu-guest-agent ]",
+                "name": "sample-node-1",
+                "nodetyperef": {
+                  "image": "ubuntu",
+                  "type": "nodetypeubuntuvm",
                   "version": "22.04"
                 },
-                "name": "sample-node-1"
+                "ports": [
+                  {
+                    "name": "ssh",
+                    "port": 22,
+                    "protocol": "TCP"
+                  }
+                ]
               },
               {
-                "image": {
-                  "type": "ghcr.io/insrapperswil/network-ninja",
+                "name": "sample-node-2",
+                "nodetyperef": {
+                  "image": "ghcr.io/insrapperswil/network-ninja",
+                  "type": "genericpod",
                   "version": "latest"
                 },
-                "name": "sample-node-2"
+                "ports": [
+                  {
+                    "name": "ssh",
+                    "port": 22,
+                    "protocol": "TCP"
+                  }
+                ]
               },
               {
-                "image": {
-                  "kind": "pod",
-                  "type": "ubuntu",
-                  "version": "latest"
+                "name": "sample-node-3",
+                "nodetyperef": {
+                  "image": "ubuntu",
+                  "type": "genericpod",
+                  "version": "22.04"
                 },
-                "name": "sample-node-3"
+                "ports": [
+                  {
+                    "name": "ssh",
+                    "port": 22,
+                    "protocol": "TCP"
+                  }
+                ]
               }
-            ],
-            "port": 22
+            ]
+          }
+        },
+        {
+          "apiVersion": "ltb-backend.ltb/v1alpha1",
+          "kind": "NodeType",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/created-by": "operator",
+              "app.kubernetes.io/instance": "nodetype-sample",
+              "app.kubernetes.io/managed-by": "kustomize",
+              "app.kubernetes.io/name": "nodetype",
+              "app.kubernetes.io/part-of": "operator"
+            },
+            "name": "genericpod"
+          },
+          "spec": {
+            "kind": "pod",
+            "nodeSpec": "containers:\n  - name: {{ .Name }}\n    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}\n    command: [\"/bin/bash\", \"-c\", \"apt update \u0026\u0026 apt install -y openssh-server \u0026\u0026 service ssh start \u0026\u0026 sleep 365d\"]\n    ports:\n      {{- range $index, $port := .Ports }}\n      - name: {{ $port.Name }}\n        containerPort: {{ $port.Port }}\n        protocol: {{ $port.Protocol }}\n      {{- end }}\n"
+          }
+        },
+        {
+          "apiVersion": "ltb-backend.ltb/v1alpha1",
+          "kind": "NodeType",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/created-by": "operator",
+              "app.kubernetes.io/instance": "nodetype-sample",
+              "app.kubernetes.io/managed-by": "kustomize",
+              "app.kubernetes.io/name": "nodetype",
+              "app.kubernetes.io/part-of": "operator"
+            },
+            "name": "nodetypeubuntuvm"
+          },
+          "spec": {
+            "kind": "vm",
+            "nodeSpec": "running: true\ntemplate:\n  spec:\n    domain:\n      resources:\n        requests:\n          memory: 4096M\n      cpu:\n        cores: 2\n      devices:\n        disks:\n          - name: containerdisk\n            disk:\n              bus: virtio\n    terminationGracePeriodSeconds: 0\n    volumes:\n      - name: containerdisk\n        containerDisk:\n          image: quay.io/containerdisks/ubuntu:22.04\n"
           }
         }
       ]
     capabilities: Basic Install
-    createdAt: "2023-05-19T16:49:18Z"
+    createdAt: "2023-05-19T17:24:13Z"
     operators.operatorframework.io/builder: operator-sdk-v1.28.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
   name: operator.v0.0.1
@@ -117,6 +173,11 @@ spec:
     - displayName: Lab Template
       kind: LabTemplate
       name: labtemplates.ltb-backend.ltb
+      version: v1alpha1
+    - description: NodeType is the Schema for the nodetypes API
+      displayName: Node Type
+      kind: NodeType
+      name: nodetypes.ltb-backend.ltb
       version: v1alpha1
   description: LTB
   displayName: LTB-Backend
@@ -201,6 +262,32 @@ spec:
           - ltb-backend.ltb
           resources:
           - labtemplates/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - ltb-backend.ltb
+          resources:
+          - nodetypes
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ltb-backend.ltb
+          resources:
+          - nodetypes/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ltb-backend.ltb
+          resources:
+          - nodetypes/status
           verbs:
           - get
           - patch

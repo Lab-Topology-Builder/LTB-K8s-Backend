@@ -22,6 +22,11 @@ spec:
       kind: LabTemplate
       name: labtemplates.ltb-backend.ltb
       version: v1alpha1
+    - description: NodeType is the Schema for the nodetypes API
+      displayName: Node Type
+      kind: NodeType
+      name: nodetypes.ltb-backend.ltb
+      version: v1alpha1
   description: LTB
   displayName: LTB-Backend
   icon:
