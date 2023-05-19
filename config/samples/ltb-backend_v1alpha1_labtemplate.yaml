@@ -11,29 +11,41 @@ metadata:
 spec:
   nodes:
   - name: "sample-node-1"
-    image:
-      type: "ubuntu"
+    nodetyperef:
+      type: "nodetypeubuntuvm"
+      image: "ubuntu"
       version: "22.04"
-      kind: "vm"
     config: |-
               #cloud-config
               password: ubuntu
               chpasswd: { expire: False }
-              ssh_authorized_keys:
-                - <your-ssh-pub-key>
+              ssh_pwauth: True
               packages:
                 - qemu-guest-agent
               runcmd:
                 - [ systemctl, start, qemu-guest-agent ]
+    ports:
+    - name: "ssh"
+      port: 22
+      protocol: "TCP"
   - name: "sample-node-2"
-    image:
-      type: "ghcr.io/insrapperswil/network-ninja"
+    nodetyperef:
+      type: "genericpod"
+      image: "ghcr.io/insrapperswil/network-ninja"
       version: "latest"
+    ports:
+    - name: "ssh"
+      port: 22
+      protocol: "TCP"
   - name: "sample-node-3"
-    image:
-      type: "ubuntu"
-      version: "latest"
-      kind: "pod"
-  connections:
-  - neighbors: "TestHost1:1,TestHost2:1"
-  port: 22
+    nodetyperef:
+      type: "genericpod"
+      image: "ubuntu"
+      version: "22.04"
+    ports:
+    - name: "ssh"
+      port: 22
+      protocol: "TCP"
+  neighbors:
+  - "TestHost1:1,TestHost2:1"
+  - "TestHost1:2,TestHost3:1"

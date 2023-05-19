@@ -1,0 +1,58 @@
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: NodeType
+metadata:
+  labels:
+    app.kubernetes.io/name: nodetype
+    app.kubernetes.io/instance: nodetype-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: nodetypeubuntuvm
+spec:
+  kind: vm
+  nodeSpec: |
+    running: true
+    template:
+      spec:
+        domain:
+          resources:
+            requests:
+              memory: 4096M
+          cpu:
+            cores: 2
+          devices:
+            disks:
+              - name: containerdisk
+                disk:
+                  bus: virtio
+        terminationGracePeriodSeconds: 0
+        volumes:
+          - name: containerdisk
+            containerDisk:
+              image: quay.io/containerdisks/ubuntu:22.04
+
+---
+
+apiVersion: ltb-backend.ltb/v1alpha1
+kind: NodeType
+metadata:
+  labels:
+    app.kubernetes.io/name: nodetype
+    app.kubernetes.io/instance: nodetype-sample
+    app.kubernetes.io/part-of: operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: operator
+  name: genericpod
+spec:
+  kind: pod
+  nodeSpec: |
+    containers:
+      - name: {{ .Name }}
+        image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+        command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+        ports:
+          {{- range $index, $port := .Ports }}
+          - name: {{ $port.Name }}
+            containerPort: {{ $port.Port }}
+            protocol: {{ $port.Protocol }}
+          {{- end }}

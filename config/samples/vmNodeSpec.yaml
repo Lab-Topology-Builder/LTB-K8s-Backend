@@ -1,0 +1,36 @@
+running: true
+template:
+  spec:
+    domain:
+      resources:
+        requests:
+          memory: 4096M
+      cpu:
+        cores: 2
+      devices:
+        disks:
+          - name: containerdisk
+            disk:
+              bus: virtio
+          - name: cloudinitdisk
+            disk:
+              bus: virtio
+        interfaces:
+          - name: default
+            bridge: {}
+          - name: labNetwork
+            bridge: {}
+    terminationGracePeriodSeconds: 0
+    volumes:
+      - name: containerdisk
+        containerDisk:
+          image: quay.io/containerdisks/ubuntu:22.04
+      - name: cloudinitdisk
+        cloudInitNoCloud:
+          userDataBase64: Config
+    networks:
+      - name: default
+        pod: {}
+      - name: labNetwork
+        multus:
+          networkName: labNetwork

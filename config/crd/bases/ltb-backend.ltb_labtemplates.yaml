@@ -13,7 +13,7 @@ spec:
     listKind: LabTemplateList
     plural: labtemplates
     singular: labtemplate
-  scope: Namespaced
+  scope: Cluster
   versions:
   - name: v1alpha1
     schema:
@@ -33,33 +33,15 @@ spec:
             type: object
           spec:
             properties:
-              connections:
+              neighbors:
                 items:
-                  properties:
-                    neighbors:
-                      maxLength: 32
-                      minLength: 1
-                      type: string
-                  required:
-                  - neighbors
-                  type: object
+                  type: string
                 type: array
               nodes:
                 items:
                   properties:
                     config:
                       type: string
-                    image:
-                      properties:
-                        kind:
-                          type: string
-                        type:
-                          type: string
-                        version:
-                          type: string
-                      required:
-                      - type
-                      type: object
                     interfaces:
                       items:
                         properties:
@@ -73,16 +55,43 @@ spec:
                       maxLength: 32
                       minLength: 1
                       type: string
+                    nodetyperef:
+                      properties:
+                        image:
+                          type: string
+                        type:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - type
+                      type: object
+                    ports:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          port:
+                            format: int32
+                            type: integer
+                          protocol:
+                            default: TCP
+                            type: string
+                        required:
+                        - name
+                        - port
+                        - protocol
+                        type: object
+                      type: array
+                    renderedNodeSpec:
+                      type: string
                   required:
-                  - image
                   - name
+                  - nodetyperef
                   type: object
                 type: array
-              port:
-                format: int32
-                type: integer
             required:
-            - connections
+            - neighbors
             - nodes
             type: object
           status:
