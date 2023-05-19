@@ -1,0 +1,54 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: operator.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Lab Instance
+      kind: LabInstance
+      name: labinstances.ltb-backend.ltb
+      version: v1alpha1
+    - displayName: Lab Instance Set
+      kind: LabInstanceSet
+      name: labinstancesets.ltb-backend.ltb
+      version: v1alpha1
+    - displayName: Lab Template
+      kind: LabTemplate
+      name: labtemplates.ltb-backend.ltb
+      version: v1alpha1
+  description: LTB
+  displayName: LTB-Backend
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - LTB
+  links:
+  - name: Operator
+    url: https://operator.domain
+  maintainers:
+  - email: jan.untersander@ost.ch
+    name: Jan Untersander
+  maturity: alpha
+  provider:
+    name: LTB
+  version: 0.0.0
