@@ -18,27 +18,27 @@ patchesJson6902:
 - path: patches/basic.config.yaml
   target:
     group: scorecard.operatorframework.io
-	kind: Configuration
-	version: v1alpha3
-	name: config
+    kind: Configuration
+    version: v1alpha3
+    name: config
 
 - path: patches/basic.config.yaml
   target:
     group: scorecard.operatorframework.io
-	kind: Configuration
-	version: v1alpha3
-	name: config
+    kind: Configuration
+    version: v1alpha3
+    name: config
 
 - path: patches/basic.config.yaml
   target:
     group: scorecard.operatorframework.io
-	kind: Configuration
-	version: v1alpha3
-	name: config
+    kind: Configuration
+    version: v1alpha3
+    name: config
 
 - path: patches/basic.config.yaml
   target:
     group: scorecard.operatorframework.io
-	kind: Configuration
-	version: v1alpha3
-	name: config
+    kind: Configuration
+    version: v1alpha3
+    name: config
