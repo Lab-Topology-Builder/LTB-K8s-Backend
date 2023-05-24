@@ -37,23 +37,7 @@ type LabInstanceSetReconciler struct {
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstancesets/finalizers,verbs=update
-//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labtemplates,verbs=get;list;watch;update;patch;delete
-//+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labtemplates/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/finalizers,verbs=update
-//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups="",resources=pods/status,verbs=get;update;patch
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the LabInstanceSet object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *LabInstanceSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 	log := r.Log.WithValues("labinstanceset", req.NamespacedName)
