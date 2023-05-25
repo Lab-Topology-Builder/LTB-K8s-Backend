@@ -51,9 +51,9 @@ type LabInstanceReconciler struct {
 }
 
 type ReturnToReconciler struct {
-	shouldReturn bool
-	result       ctrl.Result
-	err          error
+	ShouldReturn bool
+	Result       ctrl.Result
+	Err          error
 }
 
 //+kubebuilder:rbac:groups=ltb-backend.ltb,resources=labinstances,verbs=get;list;watch;create;update;patch;delete
@@ -81,44 +81,44 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	labTemplate := &ltbv1alpha1.LabTemplate{}
 	retValue := r.GetLabTemplate(ctx, labInstance, labTemplate)
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	// Reconcile Network
 	retValue = r.ReconcileNetwork(ctx, labInstance)
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	// Reconcile TTYD Service Account
 	_, retValue = ReconcileResource(r, labInstance, &corev1.ServiceAccount{}, nil, labInstance.Name+"-ttyd-svcacc")
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	// Reconcile TTYD Role
 	_, retValue = ReconcileResource(r, labInstance, &rbacv1.Role{}, nil, labInstance.Name+"-ttyd-role")
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	// Reconcile TTYD Role Binding
 	_, retValue = ReconcileResource(r, labInstance, &rbacv1.RoleBinding{}, nil, labInstance.Name+"-ttyd-rolebind")
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	// Reconcile TTYD Service
 	_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, nil, labInstance.Name+"-ttyd-service")
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	// Reconcile TTYD Pod
 	_, retValue = ReconcileResource(r, labInstance, &corev1.Pod{}, nil, labInstance.Name+"-ttyd-pod")
-	if retValue.shouldReturn {
-		return retValue.result, retValue.err
+	if retValue.ShouldReturn {
+		return retValue.Result, retValue.Err
 	}
 
 	nodes := labTemplate.Spec.Nodes
@@ -127,19 +127,19 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	for _, node := range nodes {
 		nodeType := &ltbv1alpha1.NodeType{}
 		retValue = r.GetNodeType(ctx, &node.NodeTypeRef, nodeType)
-		if retValue.shouldReturn {
-			return retValue.result, retValue.err
+		if retValue.ShouldReturn {
+			return retValue.Result, retValue.Err
 		}
 		if nodeType.Spec.Kind == "vm" {
 			vm, retValue := ReconcileResource(r, labInstance, &kubevirtv1.VirtualMachine{}, &node, labInstance.Name+"-"+node.Name)
-			if retValue.shouldReturn {
-				return retValue.result, retValue.err
+			if retValue.ShouldReturn {
+				return retValue.Result, retValue.Err
 			}
 			vms = append(vms, vm.(*kubevirtv1.VirtualMachine))
 		} else {
 			pod, retValue := ReconcileResource(r, labInstance, &corev1.Pod{}, &node, labInstance.Name+"-"+node.Name)
-			if retValue.shouldReturn {
-				return retValue.result, retValue.err
+			if retValue.ShouldReturn {
+				return retValue.Result, retValue.Err
 			}
 			pods = append(pods, pod.(*corev1.Pod))
 		}
@@ -147,15 +147,15 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		// Reconcile Remote Access Service
 		if len(node.Ports) > 0 {
 			_, retValue = ReconcileResource(r, labInstance, &corev1.Service{}, &node, labInstance.Name+"-"+node.Name+"-remote-access")
-			if retValue.shouldReturn {
-				return retValue.result, retValue.err
+			if retValue.ShouldReturn {
+				return retValue.Result, retValue.Err
 			}
 		}
 
 		// Reconcile Ingress
 		_, retValue = ReconcileResource(r, labInstance, &networkingv1.Ingress{}, &node, labInstance.Name+"-"+node.Name+"-ingress")
-		if retValue.shouldReturn {
-			return retValue.result, retValue.err
+		if retValue.ShouldReturn {
+			return retValue.Result, retValue.Err
 		}
 
 	}
@@ -174,7 +174,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) ReturnToReconciler {
 	log := log.FromContext(ctx)
-	retValue := ReturnToReconciler{shouldReturn: true, result: ctrl.Result{}, err: nil}
+	retValue := ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil}
 	podNetworkDefinitionName := labInstance.Name + "-pod"
 	vmNetworkDefinitionName := labInstance.Name + "-vm"
 	networkdefinitionNames := []string{podNetworkDefinitionName, vmNetworkDefinitionName}
@@ -217,46 +217,46 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 
 			err = r.Create(ctx, networkAttachmentDefinition)
 			if err != nil {
-				retValue.err = err
+				retValue.Err = err
 				log.Error(err, "Failed to create NetworkAttachmentDefinition")
 				return retValue
 			}
-			retValue.result = ctrl.Result{Requeue: true}
+			retValue.Result = ctrl.Result{Requeue: true}
 			return retValue
 		} else if err != nil {
-			retValue.err = err
+			retValue.Err = err
 			log.Error(err, "Failed to get NetworkAttachmentDefinition")
 			return retValue
 		}
 	}
-	retValue.shouldReturn = false
+	retValue.ShouldReturn = false
 	return retValue
 }
 
 func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabInstance, resource client.Object, node *ltbv1alpha1.LabInstanceNodes, resourceName string) (client.Object, ReturnToReconciler) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
-	retValue := ReturnToReconciler{shouldReturn: true, result: ctrl.Result{}, err: nil}
+	retValue := ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil}
 	resourceExists, err := ResourceExists(r, resource, resourceName, labInstance.Namespace)
-	if err == nil && !resourceExists {
+	if err != nil && !resourceExists {
 		createdResource := CreateResource(labInstance, node, resource)
 		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
 		ctrl.SetControllerReference(labInstance, createdResource, r.Scheme)
 
 		err = r.Create(ctx, createdResource)
 		if err != nil {
-			retValue.err = err
+			retValue.Err = err
 			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
 			return nil, retValue
 		}
-		retValue.result = ctrl.Result{Requeue: true}
+		retValue.Result = ctrl.Result{Requeue: true}
 		return createdResource, retValue
 	} else if err != nil {
-		retValue.err = err
+		retValue.Err = err
 		log.Error(err, "Failed to get resource")
 		return resource, retValue
 	}
-	retValue.shouldReturn = false
+	retValue.ShouldReturn = false
 	return resource, retValue
 }
 
@@ -294,9 +294,9 @@ func ResourceExists(r *LabInstanceReconciler, resource client.Object, resourceNa
 	ctx := context.Context(context.Background())
 	err := r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: nameSpace}, resource)
 	if errors.IsNotFound(err) {
-		return false, nil
-	} else if err != nil {
 		return false, err
+	} else if err != nil {
+		return true, err
 	}
 	return true, nil
 }
@@ -308,7 +308,7 @@ func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance 
 }
 
 func (r *LabInstanceReconciler) GetNodeType(ctx context.Context, nodeTypeRef *ltbv1alpha1.NodeTypeRef, nodeType *ltbv1alpha1.NodeType) ReturnToReconciler {
-	err := r.Get(ctx, types.NamespacedName{Name: nodeTypeRef.Type, Namespace: "default"}, nodeType)
+	err := r.Get(ctx, types.NamespacedName{Name: nodeTypeRef.Type, Namespace: nodeType.Namespace}, nodeType)
 	returnValue := ErrorMsg(ctx, err, "NodeType")
 	return returnValue
 }
@@ -594,15 +594,11 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 // TODO: move this function to utils
 func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconciler {
 	log := log.FromContext(ctx)
-	returnValue := ReturnToReconciler{shouldReturn: false, result: ctrl.Result{}, err: nil}
-	if err != nil && errors.IsNotFound(err) {
-		log.Info(resource + " resource not found.")
-		returnValue.shouldReturn = true
-		return returnValue
-	} else if err != nil {
-		returnValue.shouldReturn = true
-		returnValue.err = err
-		log.Error(err, "Failed to get "+resource)
+	returnValue := ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}
+	if err != nil || errors.IsNotFound(err) {
+		returnValue.ShouldReturn = true
+		returnValue.Err = err
+		log.Error(err, "Resource: "+resource)
 		return returnValue
 	}
 	return returnValue
