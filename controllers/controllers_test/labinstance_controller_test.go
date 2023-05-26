@@ -8,6 +8,7 @@ import (
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 	. "github.com/Lab-Topology-Builder/LTB-K8s-Backend/controllers"
+	network "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -174,7 +175,7 @@ func initialize() {
 	podNode = &testLabTemplate.Spec.Nodes[1]
 	testNode = &testLabTemplate.Spec.Nodes[2]
 
-	// TODO: Need to check if this is the right way to add the scheme
+	// TODO: Need to check if this
 	err = ltbv1alpha1.AddToScheme(scheme.Scheme)
 	if err != nil {
 		panic(err)
@@ -184,11 +185,14 @@ func initialize() {
 		panic(err)
 	}
 
+	err = network.AddToScheme(scheme.Scheme)
+	if err != nil {
+		panic(err)
+	}
 	expectedReturnValue = ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}
 
 	client := fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
 	r = &LabInstanceReconciler{Client: client, Scheme: scheme.Scheme}
-
 }
 
 func TestGetTemplate(t *testing.T) {
@@ -295,7 +299,7 @@ func TestCreateResource(t *testing.T) {
 }
 
 func TestReconcileResource(t *testing.T) {
-	expectedReturnValue = ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil}
+	expectedReturnValue = ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}}
 	// Non-Existing resource
 	createdPod, returnValue := ReconcileResource(r, testLabInstance, &corev1.Pod{}, podNode, testLabInstance.Name+"-"+podNode.Name)
 	assert.Equal(t, expectedReturnValue, returnValue)
@@ -305,4 +309,11 @@ func TestReconcileResource(t *testing.T) {
 	// Existing resource
 	createdPod, returnValue = ReconcileResource(r, testLabInstance, &corev1.Pod{}, podNode, testLabInstance.Name+"-"+podNode.Name)
 	assert.Equal(t, ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}, returnValue)
+}
+
+func TestReconcileNetwork(t *testing.T) {
+	retrunValue := r.ReconcileNetwork(ctx, testLabInstance)
+	t.Log(retrunValue.Err)
+	// TODO: Need to check this.
+	assert.NotEqual(t, ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}}, retrunValue)
 }
