@@ -181,7 +181,7 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	for _, networkDefinitionName := range networkdefinitionNames {
 		foundNetworkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
 		err := r.Get(ctx, types.NamespacedName{Name: networkDefinitionName, Namespace: labInstance.Namespace}, foundNetworkAttachmentDefinition)
-		if err != nil && errors.IsNotFound(err) {
+		if errors.IsNotFound(err) {
 			networkAttachmentDefinition := &network.NetworkAttachmentDefinition{}
 			networkAttachmentDefinition.Name = networkDefinitionName
 			networkAttachmentDefinition.Namespace = labInstance.Namespace
