@@ -239,7 +239,12 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	retValue := ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil}
 	resourceExists, err := ResourceExists(r, resource, resourceName, labInstance.Namespace)
 	if err != nil && !resourceExists {
-		createdResource := CreateResource(labInstance, node, resource)
+		createdResource, err := CreateResource(labInstance, node, resource)
+		if err != nil {
+			retValue.Err = err
+			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
+			return nil, retValue
+		}
 		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
 		ctrl.SetControllerReference(labInstance, createdResource, r.Scheme)
 
@@ -261,7 +266,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 }
 
 // TODO: Remove return value use pointers, maybe remove resourceName and add flag for ttyd
-func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object) client.Object {
+func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object) (client.Object, error) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
 	switch reflect.TypeOf(resource).Elem().Name() {
@@ -270,21 +275,21 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	case "VirtualMachine":
 		return MapTemplateToVM(labInstance, node)
 	case "Service":
-		return CreateService(labInstance, node)
+		return CreateService(labInstance, node), nil
 	case "Ingress":
-		return CreateIngress(labInstance, node)
+		return CreateIngress(labInstance, node), nil
 	case "Role":
 		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
-		return role
+		return role, nil
 	case "ServiceAccount":
 		svcAcc, _, _ := CreateSvcAccRoleRoleBind(labInstance)
-		return svcAcc
+		return svcAcc, nil
 	case "RoleBinding":
 		_, _, roleBind := CreateSvcAccRoleRoleBind(labInstance)
-		return roleBind
+		return roleBind, nil
 	default:
-		log.Info("Resource type not supported", "ResourceKind", reflect.TypeOf(resource).Elem().Name())
-		return nil
+		log.Error(fmt.Errorf("resource type not supported"), "ResourceKind", reflect.TypeOf(resource).Elem().Name())
+		return nil, errors.NewBadRequest("Resource type not supported: " + reflect.TypeOf(resource).Elem().Name())
 	}
 
 }
@@ -313,8 +318,11 @@ func (r *LabInstanceReconciler) GetNodeType(ctx context.Context, nodeTypeRef *lt
 	return returnValue
 }
 
-func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, error) {
 	log := log.FromContext(context.Background())
+	if node == nil {
+		return nil, errors.NewBadRequest("Node is nil")
+	}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -329,16 +337,20 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	err := yaml.Unmarshal([]byte(node.RenderedNodeSpec), podSpec)
 	if err != nil {
 		log.Error(err, "Failed to unmarshal node spec")
+		return nil, err
 	}
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
 		Spec:       *podSpec,
 	}
-	return pod
+	return pod, nil
 }
 
-func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *kubevirtv1.VirtualMachine {
+func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, error) {
 	log := log.FromContext(context.Background())
+	if node == nil || labInstance == nil {
+		return &kubevirtv1.VirtualMachine{}, errors.NewBadRequest("Node is nil")
+	}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
 		Namespace: labInstance.Namespace,
@@ -347,6 +359,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	err := yaml.Unmarshal([]byte(node.RenderedNodeSpec), vmSpec)
 	if err != nil {
 		log.Error(err, "Failed to unmarshal node spec")
+		return &kubevirtv1.VirtualMachine{}, err
 	}
 	networks := []kubevirtv1.Network{
 		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
@@ -382,7 +395,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,
 	}
-	return vm
+	return vm, nil
 }
 
 func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *networkingv1.Ingress {
@@ -438,8 +451,9 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 	return ingress
 }
 
-func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Pod {
+func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, error) {
 	pod := &corev1.Pod{}
+	var err error
 
 	if node == nil {
 		pod.ObjectMeta = metav1.ObjectMeta{Namespace: labInstance.Namespace}
@@ -460,10 +474,11 @@ func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstan
 				},
 			},
 		}
+		err = nil
 	} else {
-		pod = MapTemplateToPod(labInstance, node)
+		pod, err = MapTemplateToPod(labInstance, node)
 	}
-	return pod
+	return pod, err
 }
 
 func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Service {

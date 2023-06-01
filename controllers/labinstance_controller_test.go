@@ -13,6 +13,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -91,28 +92,6 @@ func initialize() {
 		},
 	}
 
-	nodeSpecYAMLVM := `
-	running: true
-	template:
-	  spec:
-	    domain:
-	      resources:
-	        requests:
-	          memory: 4096M
-	      cpu:
-	        cores: 2
-	      devices:
-	        disks:
-	          - name: containerdisk
-	            disk:
-	              bus: virtio
-	    terminationGracePeriodSeconds: 0
-	    volumes:
-	      - name: containerdisk
-	        containerDisk:
-	          image: quay.io/containerdisks/ubuntu:22.04
-	`
-
 	// vmConfig := `
 	//   #cloud-config
 	//   password: ubuntu
@@ -124,27 +103,34 @@ func initialize() {
 	//     - [ systemctl, start, qemu-guest-agent ]
 	// `
 
-	nodeSpecYAMLPod := `
-	containers:
-	  - name: {{ .Name }}
-	    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
-	    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
-	    ports:
-	      {{- range $index, $port := .Ports }}
-	      - name: {{ $port.Name }}
-	        containerPort: {{ $port.Port }}
-	        protocol: {{ $port.Protocol }}
-	      {{- end }}
-	`
-
 	testNodeTypeVM = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "testNodeVM",
 			Namespace: namespace,
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
-			Kind:     "vm",
-			NodeSpec: nodeSpecYAMLVM,
+			Kind: "vm",
+			NodeSpec: `
+    running: true
+    template:
+      spec:
+        domain:
+          resources:
+            requests:
+              memory: 4096M
+          cpu:
+            cores: 2
+          devices:
+            disks:
+              - name: containerdisk
+                disk:
+                  bus: virtio
+        terminationGracePeriodSeconds: 0
+        volumes:
+          - name: containerdisk
+            containerDisk:
+              image: quay.io/containerdisks/ubuntu:22.04
+	`,
 		},
 	}
 
@@ -155,7 +141,18 @@ func initialize() {
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
 			Kind: "pod",
-			//			NodeSpec: nodeSpecYAMLPod,
+			NodeSpec: `
+	containers:
+	  - name: {{ .Name }}
+	    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+	    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+	    ports:
+	      {{- range $index, $port := .Ports }}
+	      - name: {{ $port.Name }}
+	        containerPort: {{ $port.Port }}
+	        protocol: {{ $port.Protocol }}
+	      {{- end }}
+`,
 		},
 	}
 
@@ -180,7 +177,27 @@ func initialize() {
 							Port:     22,
 						},
 					},
-					RenderedNodeSpec: nodeSpecYAMLVM,
+					RenderedNodeSpec: `
+running: true
+template:
+  spec:
+    domain:
+      resources:
+        requests:
+          memory: 4096M
+      cpu:
+        cores: 2
+      devices:
+        disks:
+          - name: containerdisk
+            disk:
+              bus: virtio
+    terminationGracePeriodSeconds: 0
+    volumes:
+      - name: containerdisk
+        containerDisk:
+          image: quay.io/containerdisks/ubuntu:22.04
+	`,
 				},
 				{
 					Name: "test-node-1",
@@ -189,7 +206,16 @@ func initialize() {
 						Image:   "ubuntu",
 						Version: "20.04",
 					},
-					RenderedNodeSpec: nodeSpecYAMLPod,
+					RenderedNodeSpec: `
+    containers:
+      - name: testnode
+        image: ubuntu:22.04
+        command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+        ports:
+          - name: testsshport
+            containerPort: 22
+            protocol: tcp
+`,
 				},
 				{
 					Name: "test-node-2",
@@ -546,7 +572,7 @@ func TestLabInstanceReconciler_GetNodeType(t *testing.T) {
 				nodeTypeRef: &testNode.NodeTypeRef,
 				nodeType:    testNodeTypePod,
 			},
-			want:    ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: errors.New("Node type doesn't exist")},
+			want:    ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil},
 			wantErr: true,
 		},
 	}
@@ -583,11 +609,12 @@ func TestMapTemplateToPod(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MapTemplateToPod(tt.args.labInstance, tt.args.node)
+			got, err := MapTemplateToPod(tt.args.labInstance, tt.args.node)
 			assert.Equal(t, tt.want.GetName(), got.GetName())
 			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
 			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
 			assert.Equal(t, tt.want.GetAnnotations(), got.GetAnnotations())
+			assert.Equal(t, nil, err)
 		})
 	}
 }
@@ -614,7 +641,8 @@ func TestMapTemplateToVM(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MapTemplateToVM(tt.args.labInstance, tt.args.node)
+			got, err := MapTemplateToVM(tt.args.labInstance, tt.args.node)
+			assert.Equal(t, nil, err)
 			assert.Equal(t, tt.want.GetName(), got.GetName())
 		})
 	}
@@ -824,9 +852,9 @@ func TestCreateResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateResource(tt.args.labInstance, tt.args.node, tt.args.resource); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateResource() = %v, want %v", got, tt.want)
-			}
+			got, err := CreateResource(tt.args.labInstance, tt.args.node, tt.args.resource)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, k8serrors.NewBadRequest("Resource type not supported: "+reflect.TypeOf(tt.args.resource).Elem().Name()), err)
 		})
 	}
 }
@@ -950,10 +978,11 @@ func TestCreatePod(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := CreatePod(tt.args.labInstance, tt.args.node)
+			got, err := CreatePod(tt.args.labInstance, tt.args.node)
 			assert.Equal(t, tt.want.GetName(), got.GetName())
 			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
 			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
+			assert.Equal(t, nil, err)
 		})
 	}
 }
