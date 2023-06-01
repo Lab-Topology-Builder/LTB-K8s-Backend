@@ -16,6 +16,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -40,10 +41,15 @@ var (
 	//running                         bool
 	// returnValue         ReturnToReconciler
 	// expectedReturnValue ReturnToReconciler
-	fakeClient client.Client
-	testPod    *corev1.Pod
-	field      fields
-	testVM     *kubevirtv1.VirtualMachine
+	fakeClient                        client.Client
+	testPod, testNodePod, testTtydPod *corev1.Pod
+	field                             fields
+	testVM                            *kubevirtv1.VirtualMachine
+	testPodIngress, testVMIngress     *networkingv1.Ingress
+	testService, testTtydService      *corev1.Service
+	testRole                          *rbacv1.Role
+	testRoleBinding                   *rbacv1.RoleBinding
+	testServiceAccount                *corev1.ServiceAccount
 )
 
 const namespace = "test-namespace"
@@ -217,6 +223,131 @@ func initialize() {
 		// 		},
 		// 	},
 		// },
+	}
+
+	testNodePod = &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + testNode.Name,
+			Namespace: namespace,
+			Annotations: map[string]string{
+				"k8s.v1.cni.cncf.io/networks": testLabInstance.Name + "-pod",
+			},
+			Labels: map[string]string{
+				"app": testLabInstance.Name + "-" + testNode.Name + "-remote-access",
+			},
+		},
+	}
+
+	testTtydPod = &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-ttyd-pod",
+			Namespace: namespace,
+			Labels: map[string]string{
+				"app": testLabInstance.Name + "-ttyd-service",
+			},
+		},
+		Spec: corev1.PodSpec{
+			ServiceAccountName: testLabInstance.Name + "-ttyd-svcacc",
+			Containers: []corev1.Container{
+				{
+					Name:  testLabInstance.Name + "-ttyd-container",
+					Image: "ghcr.io/insrapperswil/kube-ttyd:latest",
+					Args:  []string{"ttyd", "-a", "konnect"},
+					Ports: []corev1.ContainerPort{
+						{
+							ContainerPort: 7681,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	testTtydService = &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-ttyd-service",
+			Namespace: namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{
+				"app": testLabInstance.Name + "-ttyd-service",
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Name:       "ttyd",
+					Port:       7681,
+					TargetPort: intstr.FromInt(7681),
+				},
+			},
+			Type: corev1.ServiceTypeClusterIP,
+		},
+	}
+
+	testService = &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + testNode.Name + "-remote-access",
+			Namespace: namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{
+				"app": testLabInstance.Name + "-" + testNode.Name + "-remote-access",
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Name:     "test-ssh-port",
+					Port:     22,
+					Protocol: "TCP",
+				},
+			},
+			Type: corev1.ServiceTypeLoadBalancer,
+		},
+	}
+
+	testPodIngress = &networkingv1.Ingress{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + testNode.Name + "-ingress",
+			Namespace: namespace,
+		},
+	}
+
+	testVMIngress = &networkingv1.Ingress{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + vmNode.Name + "-ingress",
+			Namespace: namespace,
+		},
+	}
+
+	testServiceAccount = &corev1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-ttyd-svcacc",
+			Namespace: namespace,
+		},
+	}
+
+	testRole = &rbacv1.Role{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-ttyd-role",
+			Namespace: namespace,
+		},
+	}
+
+	testRoleBinding = &rbacv1.RoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-ttyd-rolebind",
+			Namespace: namespace,
+		},
+		Subjects: []rbacv1.Subject{
+			{
+				Kind:      "ServiceAccount",
+				Name:      testLabInstance.Name + "-ttyd-svcacc",
+				Namespace: namespace,
+			},
+		},
+		RoleRef: rbacv1.RoleRef{
+			Kind:     "Role",
+			Name:     testLabInstance.Name + "-ttyd-role",
+			APIGroup: "rbac.authorization.k8s.io",
+		},
 	}
 
 	// TODO: Need to check if this
@@ -426,7 +557,7 @@ func TestLabInstanceReconciler_ReconcileNetwork(t *testing.T) {
 			},
 			want: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
 		},
-		// TODO: See how the other test cases can be implemented
+		// TODO: See how the other test cases can be implemented, but we might have the issue to test the call to the client functions (eg. Get, Create, etc.)
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -542,6 +673,9 @@ func TestMapTemplateToPod(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := MapTemplateToPod(tt.args.labInstance, tt.args.node)
 			assert.Equal(t, tt.want.GetName(), got.GetName())
+			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
+			assert.Equal(t, tt.want.GetAnnotations(), got.GetAnnotations())
 		})
 	}
 }
@@ -644,7 +778,7 @@ func TestReconcileResource(t *testing.T) {
 		want1 ReturnToReconciler
 	}{
 		{
-			name: "Pod will be created",
+			name: "Pod already exists",
 			args: args{
 				r:            r,
 				labInstance:  testLabInstance,
@@ -653,20 +787,121 @@ func TestReconcileResource(t *testing.T) {
 				resourceName: testLabInstance.Name + "-" + podNode.Name,
 			},
 			want:  testPod,
-			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+			want1: ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil},
 		},
 		{
-			name: "Creation fails",
+			name: "Pod will be created",
 			args: args{
 				r:            r,
 				labInstance:  testLabInstance,
 				resource:     &corev1.Pod{},
-				node:         vmNode,
-				resourceName: testLabInstance.Name + "-" + vmNode.Name,
+				node:         testNode,
+				resourceName: testLabInstance.Name + "-" + testNode.Name,
 			},
-			want:  testPod,
-			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: errors.New("error")},
+			want:  testNodePod,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
 		},
+		{
+			name: "Ttyd pod will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &corev1.Pod{},
+				node:         nil,
+				resourceName: testLabInstance.Name + "-ttyd",
+			},
+			want:  testTtydPod,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Service will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &corev1.Service{},
+				node:         testNode,
+				resourceName: testLabInstance.Name + "-" + testNode.Name + "-remote-access",
+			},
+			want:  testService,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Ttyd Service will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &corev1.Service{},
+				node:         nil,
+				resourceName: testLabInstance.Name + "-ttyd-service",
+			},
+			want:  testTtydService,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Ingress will be created for a pod",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &networkingv1.Ingress{},
+				node:         testNode,
+				resourceName: testLabInstance.Name + "-" + testNode.Name + "-ingress",
+			},
+			want:  testPodIngress,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Ingress will be created for a vm",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &networkingv1.Ingress{},
+				node:         vmNode,
+				resourceName: testLabInstance.Name + "-" + vmNode.Name + "-ingress",
+			},
+			want:  testVMIngress,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Service Account will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &corev1.ServiceAccount{},
+				node:         nil,
+				resourceName: testLabInstance.Name + "-ttyd-svcacc",
+			},
+			want:  testServiceAccount,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Role will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &rbacv1.Role{},
+				node:         nil,
+				resourceName: testLabInstance.Name + "-role",
+			},
+			want:  testRole,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Rolebinding will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &rbacv1.RoleBinding{},
+				node:         nil,
+				resourceName: testLabInstance.Name + "-rolebind",
+			},
+			want:  testRoleBinding,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+
+		// TODO: There are other two cases to test:
+		// 1.resource already exists, but could not be retrieved
+		// 2.resource does not exist, but could not be created
+		// Those are the calls to the reconciler functions that return an error (e.g. r.Get(), r.Create())
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -690,7 +925,17 @@ func TestCreateResource(t *testing.T) {
 		args args
 		want client.Object
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Resource not supported",
+			args: args{
+				labInstance: testLabInstance,
+				node:        nil,
+				resource:    &corev1.Secret{},
+			},
+			want: nil,
+		},
+
+		// The other tests are covered by the ReconcileResource tests
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -714,7 +959,31 @@ func TestResourceExists(t *testing.T) {
 		want    bool
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Pod exists",
+			args: args{
+				r:            r,
+				resource:     &corev1.Pod{},
+				resourceName: testLabInstance.Name + "-" + testNode.Name,
+				nameSpace:    namespace,
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "Pod does not exist",
+			args: args{
+				r:            r,
+				resource:     &corev1.Pod{},
+				resourceName: testLabInstance.Name + "-" + testNode.Name + "-1",
+				nameSpace:    namespace,
+			},
+			want:    false,
+			wantErr: true,
+		},
+		// TODO: There is another case to test:
+		// resource already exists, but could not be retrieved
+		// test the call to r.Get()
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

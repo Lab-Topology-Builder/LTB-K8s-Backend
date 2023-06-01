@@ -283,7 +283,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 		_, _, roleBind := CreateSvcAccRoleRoleBind(labInstance)
 		return roleBind
 	default:
-		log.Info("Resource type not supported", "ResourceKind", resource.GetObjectKind().GroupVersionKind().Kind)
+		log.Info("Resource type not supported", "ResourceKind", reflect.TypeOf(resource).Elem().Name())
 		return nil
 	}
 
