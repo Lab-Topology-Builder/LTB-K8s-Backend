@@ -24,6 +24,11 @@ import (
 )
 
 // var _ = Describe("LabInstance Controller", func() {
+type fields struct {
+	Client client.Client
+	Scheme *runtime.Scheme
+}
+
 var (
 	ctx                             context.Context
 	r                               *LabInstanceReconciler
@@ -32,11 +37,13 @@ var (
 	testNodeTypeVM, testNodeTypePod *ltbv1alpha1.NodeType
 	err                             error
 	podNode, vmNode, testNode       *ltbv1alpha1.LabInstanceNodes
-	running                         bool
-	returnValue                     ReturnToReconciler
-	expectedReturnValue             ReturnToReconciler
-	fakeClient                      client.Client
-	testPod                         *corev1.Pod
+	//running                         bool
+	// returnValue         ReturnToReconciler
+	// expectedReturnValue ReturnToReconciler
+	fakeClient client.Client
+	testPod    *corev1.Pod
+	field      fields
+	testVM     *kubevirtv1.VirtualMachine
 )
 
 const namespace = "test-namespace"
@@ -150,6 +157,7 @@ func initialize() {
 							Port:     22,
 						},
 					},
+					RenderedNodeSpec: nodeSpecYAMLVM,
 				},
 				{
 					Name: "test-node-1",
@@ -195,6 +203,22 @@ func initialize() {
 		},
 	}
 
+	testVM = &kubevirtv1.VirtualMachine{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + vmNode.Name,
+			Namespace: testLabInstance.Namespace,
+		},
+		// Spec: kubevirtv1.VirtualMachineSpec{
+		// 	Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+		// 		ObjectMeta: metav1.ObjectMeta{
+		// 			Labels: map[string]string{
+		// 				"app": testLabInstance.Name + "-" + vmNode.Name + "-remote-access",
+		// 			},
+		// 		},
+		// 	},
+		// },
+	}
+
 	// TODO: Need to check if this
 	err = ltbv1alpha1.AddToScheme(scheme.Scheme)
 	if err != nil {
@@ -209,10 +233,11 @@ func initialize() {
 	if err != nil {
 		panic(err)
 	}
-	expectedReturnValue = ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}
+	//expectedReturnValue = ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}
 
-	fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
+	fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod).Build()
 	r = &LabInstanceReconciler{Client: fakeClient, Scheme: scheme.Scheme}
+	field = fields{fakeClient, scheme.Scheme}
 }
 
 // func TestGetTemplate(t *testing.T) {
@@ -341,27 +366,19 @@ func initialize() {
 // }
 
 func TestLabInstanceReconciler_Reconcile(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
 	type args struct {
 		ctx context.Context
 		req ctrl.Request
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		want    ctrl.Result
 		wantErr bool
 	}{
+
 		{
 			name: "Happy Case with empty request",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
 			args: args{
 				ctx: context.Background(),
 				req: ctrl.Request{},
@@ -371,10 +388,6 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 		},
 		{
 			name: "Happy case with namespaced request",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
 			args: args{
 				ctx: context.Background(),
 				req: ctrl.Request{NamespacedName: types.NamespacedName{Namespace: "test", Name: "test"}},
@@ -385,10 +398,6 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &LabInstanceReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
 			got, err := r.Reconcile(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LabInstanceReconciler.Reconcile() error = %v, wantErr %v", err, tt.wantErr)
@@ -400,39 +409,27 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 }
 
 func TestLabInstanceReconciler_ReconcileNetwork(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
 	type args struct {
 		ctx         context.Context
 		labInstance *ltbv1alpha1.LabInstance
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   ReturnToReconciler
+		name string
+		args args
+		want ReturnToReconciler
 	}{
 		{
-			name: "Happy Case",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
+			name: "Network will be created",
 			args: args{
 				ctx:         context.Background(),
 				labInstance: testLabInstance,
 			},
 			want: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
 		},
+		// TODO: See how the other test cases can be implemented
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &LabInstanceReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
 			got := r.ReconcileNetwork(tt.args.ctx, tt.args.labInstance)
 			assert.Equal(t, tt.want, got)
 		})
@@ -440,27 +437,18 @@ func TestLabInstanceReconciler_ReconcileNetwork(t *testing.T) {
 }
 
 func TestLabInstanceReconciler_GetLabTemplate(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
 	type args struct {
 		ctx         context.Context
 		labInstance *ltbv1alpha1.LabInstance
 		labTemplate *ltbv1alpha1.LabTemplate
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   ReturnToReconciler
+		name string
+		args args
+		want ReturnToReconciler
 	}{
 		{
-			name: "Happy Case",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
+			name: "LabTemplate exists",
 			args: args{
 				ctx:         context.Background(),
 				labInstance: testLabInstance,
@@ -469,11 +457,7 @@ func TestLabInstanceReconciler_GetLabTemplate(t *testing.T) {
 			want: ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil},
 		},
 		{
-			name: "Error Case",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
+			name: "LabTemplate can't be nil",
 			args: args{
 				ctx:         context.Background(),
 				labInstance: testLabInstance,
@@ -484,10 +468,6 @@ func TestLabInstanceReconciler_GetLabTemplate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &LabInstanceReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
 			got := r.GetLabTemplate(tt.args.ctx, tt.args.labInstance, tt.args.labTemplate)
 			assert.Equal(t, tt.want, got)
 		})
@@ -495,10 +475,6 @@ func TestLabInstanceReconciler_GetLabTemplate(t *testing.T) {
 }
 
 func TestLabInstanceReconciler_GetNodeType(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
 	type args struct {
 		ctx         context.Context
 		nodeTypeRef *ltbv1alpha1.NodeTypeRef
@@ -506,17 +482,12 @@ func TestLabInstanceReconciler_GetNodeType(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		want    ReturnToReconciler
 		wantErr bool
 	}{
 		{
-			name: "Happy Case",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
+			name: "Node type exists",
 			args: args{
 				ctx:         context.Background(),
 				nodeTypeRef: &podNode.NodeTypeRef,
@@ -526,11 +497,7 @@ func TestLabInstanceReconciler_GetNodeType(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Error Case",
-			fields: fields{
-				Client: fakeClient,
-				Scheme: scheme.Scheme,
-			},
+			name: "Node type couldn't be retrieved",
 			args: args{
 				ctx:         context.Background(),
 				nodeTypeRef: &testNode.NodeTypeRef,
@@ -542,10 +509,6 @@ func TestLabInstanceReconciler_GetNodeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &LabInstanceReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
 			got := r.GetNodeType(tt.args.ctx, tt.args.nodeTypeRef, tt.args.nodeType)
 			if tt.wantErr {
 				assert.Error(t, got.Err)
@@ -566,20 +529,19 @@ func TestMapTemplateToPod(t *testing.T) {
 		args args
 		want *corev1.Pod
 	}{
-		// {
-		// 	name: "Error Case",
-		// 	args: args{
-		// 		labInstance: testLabInstance,
-		// 		node:        podNode,
-		// 	},
-		// 	want: testPod,
-		// },
-		// {},
+		{
+			name: "Pod will be created",
+			args: args{
+				labInstance: testLabInstance,
+				node:        podNode,
+			},
+			want: testPod,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := MapTemplateToPod(tt.args.labInstance, tt.args.node)
-			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want.GetName(), got.GetName())
 		})
 	}
 }
@@ -594,13 +556,19 @@ func TestMapTemplateToVM(t *testing.T) {
 		args args
 		want *kubevirtv1.VirtualMachine
 	}{
-		// TODO: Add test cases.
+		// {
+		// 	name: "VM will be created",
+		// 	args: args{
+		// 		labInstance: testLabInstance,
+		// 		node:        vmNode,
+		// 	},
+		// 	want: testVM,
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapTemplateToVM(tt.args.labInstance, tt.args.node); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MapTemplateToVM() = %v, want %v", got, tt.want)
-			}
+			got := MapTemplateToVM(tt.args.labInstance, tt.args.node)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -616,37 +584,44 @@ func TestUpdateLabInstanceStatus(t *testing.T) {
 		name string
 		args args
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Status will be updated",
+			args: args{
+				ctx:         context.Background(),
+				pods:        []*corev1.Pod{testPod},
+				vms:         []*kubevirtv1.VirtualMachine{testVM},
+				labInstance: testLabInstance,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			UpdateLabInstanceStatus(tt.args.ctx, tt.args.pods, tt.args.vms, tt.args.labInstance)
+			assert.Equal(t, testLabInstance.Status.NumPodsRunning, "0/1")
+			assert.Equal(t, testLabInstance.Status.NumVMsRunning, "0/1")
+			// Test if the number of running pods and VMs is being incremented
+			assert.NotEqual(t, testLabInstance.Status.Status, "Running")
 		})
 	}
 }
 
 func TestLabInstanceReconciler_SetupWithManager(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
 	type args struct {
 		mgr ctrl.Manager
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:    "Error case",
+			args:    args{mgr: nil},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &LabInstanceReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
 			if err := r.SetupWithManager(tt.args.mgr); (err != nil) != tt.wantErr {
 				t.Errorf("LabInstanceReconciler.SetupWithManager() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -668,17 +643,38 @@ func TestReconcileResource(t *testing.T) {
 		want  client.Object
 		want1 ReturnToReconciler
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Pod will be created",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &corev1.Pod{},
+				node:         podNode,
+				resourceName: testLabInstance.Name + "-" + podNode.Name,
+			},
+			want:  testPod,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
+		},
+		{
+			name: "Creation fails",
+			args: args{
+				r:            r,
+				labInstance:  testLabInstance,
+				resource:     &corev1.Pod{},
+				node:         vmNode,
+				resourceName: testLabInstance.Name + "-" + vmNode.Name,
+			},
+			want:  testPod,
+			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: errors.New("error")},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := ReconcileResource(tt.args.r, tt.args.labInstance, tt.args.resource, tt.args.node, tt.args.resourceName)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReconcileResource() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("ReconcileResource() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want.GetName(), got.GetName())
+			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
