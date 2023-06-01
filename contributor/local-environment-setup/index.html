@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/architecture/kvm-docker-ltb-architecture/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/local-environment-setup/">
       
       
-        <link rel="prev" href="../k8s-ltb-architecture/">
+        <link rel="prev" href="../dev-cluster-setup/">
       
       
-        <link rel="next" href="../../contributor/coding-conventions/">
+        <link rel="next" href="../technologies-used/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Current (KVM/Docker)-base LTB Architecture - LTB K8s Backend</title>
+        <title>Test to run application locally using K3d - LTB K8s Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#current-kvmdocker-base-ltb-architecture" class="md-skip">
+        <a href="#test-to-run-application-locally-using-k3d" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Current (KVM/Docker)-base LTB Architecture
+              Test to run application locally using K3d
             
           </span>
         </div>
@@ -298,16 +298,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
       
       
         
@@ -322,7 +320,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
           Architecture
@@ -335,8 +333,99 @@
   
   
     <li class="md-nav__item">
-      <a href="../k8s-ltb-architecture/" class="md-nav__link">
+      <a href="../../architecture/k8s-ltb-architecture/" class="md-nav__link">
         Kubernetes Lab Topology Builder Architecture
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
+        Current (KVM/Docker)-base LTB Architecture
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Contributor
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Contributor
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coding-conventions/" class="md-nav__link">
+        Coding Conventions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev-cluster-setup/" class="md-nav__link">
+        Development cluster setup
       </a>
     </li>
   
@@ -358,178 +447,10 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Current (KVM/Docker)-base LTB Architecture
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
-        Current (KVM/Docker)-base LTB Architecture
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    Backend
-  </a>
-  
-    <nav class="md-nav" aria-label="Backend">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reservations" class="md-nav__link">
-    Reservations
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-lab-store" class="md-nav__link">
-    Running lab store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#template-store" class="md-nav__link">
-    Template store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    Authentication
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    Deployment
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#frontend" class="md-nav__link">
-    Frontend
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-      
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-          Contributor
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_6">
-          <span class="md-nav__icon md-icon"></span>
-          Contributor
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributor/coding-conventions/" class="md-nav__link">
-        Coding Conventions
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributor/dev-cluster-setup/" class="md-nav__link">
-        Development cluster setup
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributor/local-environment-setup/" class="md-nav__link">
         Test to run application locally using K3d
       </a>
+      
     </li>
   
 
@@ -541,7 +462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributor/technologies-used/" class="md-nav__link">
+      <a href="../technologies-used/" class="md-nav__link">
         Tools and Frameworks
       </a>
     </li>
@@ -555,7 +476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributor/test-concepts/" class="md-nav__link">
+      <a href="../test-concepts/" class="md-nav__link">
         Test Concept
       </a>
     </li>
@@ -818,69 +739,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    Backend
-  </a>
-  
-    <nav class="md-nav" aria-label="Backend">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reservations" class="md-nav__link">
-    Reservations
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-lab-store" class="md-nav__link">
-    Running lab store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#template-store" class="md-nav__link">
-    Template store
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    Authentication
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    Deployment
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#frontend" class="md-nav__link">
-    Frontend
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -894,7 +752,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/architecture/kvm-docker-ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/contributor/local-environment-setup.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -902,72 +760,9 @@
   
 
 
-<h1 id="current-kvmdocker-base-ltb-architecture">Current (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-base <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#current-kvmdocker-base-ltb-architecture" title="Permanent link">&para;</a></h1>
-<p>The following diagram shows the current <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
-<p><img alt="Current LTB Architecture" src="../../assets/drawings/ltb-stack-node.svg" /></p>
-<p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
-<ul>
-<li><a href="#frontend">Frontend</a> built with React</li>
-<li><a href="#backend">Backend</a> built with Django</li>
-<li><a href="#deployment">Deployment</a> built with docker-compose</li>
-</ul>
-<h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
-<p>The backend is accessible via API and a Admin Web UI.
-It is responsible for the following tasks:</p>
-<ul>
-<li>parsing the yaml topology files</li>
-<li>deploying/destroying the containers and vms</li>
-<li>exposes status of lab deployments</li>
-<li>exposes information on how to access the deployed containers and vms</li>
-<li>provides remote ssh capabilities</li>
-<li>provides remote Wireshark capture capabilities</li>
-<li>managing reservations (create, delete, etc.)</li>
-<li>exposes node resource usage</li>
-<li>user management</li>
-<li>exposes information about a device (version, groups, etc.)</li>
-</ul>
-<p>It is composed of the following components:</p>
-<ul>
-<li><a href="#reservations">Reservations</a></li>
-<li><a href="#running-lab-store">Running lab store</a></li>
-<li><a href="#template-store">Template store</a></li>
-<li><a href="#authentication">Authentication</a></li>
-</ul>
-<p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
-There are 4 different types of tasks:</p>
-<ul>
-<li>DeploymentTask</li>
-<li>Deploys containers in docker</li>
-<li>Deploys VMs using <abbr title="Kernel-based Virtual Machine">KVM</abbr></li>
-<li>Creates connections between containers and VMs using an <abbr title="Open vSwitch">OVS</abbr> bridge</li>
-<li>RemovalTask</li>
-<li>Removes a running lab</li>
-<li>MirrorInterfaceTask</li>
-<li>Creates a mirror interface on a connection</li>
-<li>SnapshotTask</li>
-<li>Takes a snapshot of a running lab</li>
-</ul>
-<h3 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h3>
-<p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
-<ul>
-<li>Create a reservation</li>
-<li>Delete a reservation</li>
-<li>Update a reservation</li>
-</ul>
-<h3 id="running-lab-store">Running lab store<a class="headerlink" href="#running-lab-store" title="Permanent link">&para;</a></h3>
-<p>This component is responsible for storing information about running labs, such as:</p>
-<ul>
-<li>The devices taking part in the running lab, inclusive of the interfaces</li>
-<li>Connection information</li>
-</ul>
-<h3 id="template-store">Template store<a class="headerlink" href="#template-store" title="Permanent link">&para;</a></h3>
-<p>This component is responsible for storing lab templates.</p>
-<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
-<p>This component is responsible for user authentication and management.</p>
-<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
-<p>The deployment component is responsible for deploying the <abbr title="Lab Topology Builder">LTB</abbr> backend and frontend components.</p>
-<h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
-<p>The frontend allows users to access their labs and their devices.</p>
+<h1 id="test-to-run-application-locally-using-k3d">Test to run application locally using K3d<a class="headerlink" href="#test-to-run-application-locally-using-k3d" title="Permanent link">&para;</a></h1>
+<p><a href="https://k3d.io/">K3d</a> was used  to run a local Kubernetes cluster to test the application if it works as expected. K3d was preferred because of its simplicity and ease of use. It is a lightweight wrapper to run Kubernetes in Docker. Other tools such as <a href="https://minikube.sigs.k8s.io/docs/">Minikube</a> could have been used as well, but K3d was chosen because of the reasons mentioned above.</p>
+<p>After installing all the dependencies listed in the <a href="../../user-guide/">User Guide</a> and <a href="../dev-cluster-setup/">Development cluster setup</a> sections, deploying lab instances was possible, and the pods were running as expected, but the virtual machines had a pending status. The reason for this was, Kubevirt was crashing. Because of the lack of time, we didn't investigate the issue further, which means we can't say for sure if the issue was Kubevirt's incompatible with K3d or something else.</p>
 
 
 
