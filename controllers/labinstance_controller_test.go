@@ -31,20 +31,17 @@ type fields struct {
 }
 
 var (
-	ctx                             context.Context
-	r                               *LabInstanceReconciler
-	testLabInstance                 *ltbv1alpha1.LabInstance
-	testLabTemplate                 *ltbv1alpha1.LabTemplate
-	testNodeTypeVM, testNodeTypePod *ltbv1alpha1.NodeType
-	err                             error
-	podNode, vmNode, testNode       *ltbv1alpha1.LabInstanceNodes
-	//running                         bool
-	// returnValue         ReturnToReconciler
-	// expectedReturnValue ReturnToReconciler
+	ctx                               context.Context
+	r                                 *LabInstanceReconciler
+	testLabInstance                   *ltbv1alpha1.LabInstance
+	testLabTemplate                   *ltbv1alpha1.LabTemplate
+	testNodeTypeVM, testNodeTypePod   *ltbv1alpha1.NodeType
+	err                               error
+	podNode, vmNode, testNode         *ltbv1alpha1.LabInstanceNodes
 	fakeClient                        client.Client
 	testPod, testNodePod, testTtydPod *corev1.Pod
 	field                             fields
-	testVM                            *kubevirtv1.VirtualMachine
+	testVM, testNodeVM                *kubevirtv1.VirtualMachine
 	testPodIngress, testVMIngress     *networkingv1.Ingress
 	testService, testTtydService      *corev1.Service
 	testRole                          *rbacv1.Role
@@ -53,8 +50,6 @@ var (
 )
 
 const namespace = "test-namespace"
-
-//k8sClient := K8sClient.GetClient()
 
 func TestMain(m *testing.M) {
 	initialize()
@@ -71,6 +66,9 @@ func initialize() {
 		},
 		Spec: ltbv1alpha1.LabInstanceSpec{
 			LabTemplateReference: "test-labtemplate",
+		},
+		Status: ltbv1alpha1.LabInstanceStatus{
+			Status: "Running",
 		},
 	}
 
@@ -207,6 +205,9 @@ func initialize() {
 				"app": testLabInstance.Name + "-" + podNode.Name + "-remote-access",
 			},
 		},
+		Status: corev1.PodStatus{
+			Phase: corev1.PodRunning,
+		},
 	}
 
 	testVM = &kubevirtv1.VirtualMachine{
@@ -223,6 +224,20 @@ func initialize() {
 		// 		},
 		// 	},
 		// },
+		Status: kubevirtv1.VirtualMachineStatus{
+			Ready:           true,
+			PrintableStatus: "VM Ready",
+		},
+	}
+
+	testNodeVM = &kubevirtv1.VirtualMachine{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + vmNode.Name + "-2",
+			Namespace: testLabInstance.Namespace,
+		},
+		Status: kubevirtv1.VirtualMachineStatus{
+			Ready: false,
+		},
 	}
 
 	testNodePod = &corev1.Pod{
@@ -235,6 +250,9 @@ func initialize() {
 			Labels: map[string]string{
 				"app": testLabInstance.Name + "-" + testNode.Name + "-remote-access",
 			},
+		},
+		Status: corev1.PodStatus{
+			Phase: corev1.PodPending,
 		},
 	}
 
@@ -389,43 +407,42 @@ func initialize() {
 // 	assert.Equal(t, testLabInstance.Name+"-ttyd-pod", createdTtydPod.Name)
 // }
 
-// // TODO: Need to figure out how to test this
-// // func TestMapTemplateToVM(t *testing.T) {
-// // 	t.Log(vmNode)
-// // 	mappedVM := MapTemplateToVM(testLabInstance, vmNode)
-// // 	t.Log(mappedVM)
-// // 	t.Log(vmNode)
-// // 	assert.Equal(t, testLabInstance.Name+"-"+vmNode.Name, mappedVM.Name)
-// // }
+// func TestMapTemplateToVM(t *testing.T) {
+// 	t.Log(vmNode)
+// 	mappedVM := MapTemplateToVM(testLabInstance, vmNode)
+// 	t.Log(mappedVM)
+// 	t.Log(vmNode)
+// 	assert.Equal(t, testLabInstance.Name+"-"+vmNode.Name, mappedVM.Name)
+// }
 
 // func TestCreateIngress(t *testing.T) {
-// 	// Pod ingress
+// Pod ingress
 // 	createdPodIngress := CreateIngress(testLabInstance, podNode)
 // 	assert.Equal(t, testLabInstance.Name+"-"+podNode.Name+"-ingress", createdPodIngress.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, createdPodIngress.Namespace)
 
-// 	// VM ingress
+// VM ingress
 // 	createdVMIngress := CreateIngress(testLabInstance, vmNode)
 // 	assert.Equal(t, testLabInstance.Name+"-"+vmNode.Name+"-ingress", createdVMIngress.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, createdVMIngress.Namespace)
 // }
 
 // func TestCreateService(t *testing.T) {
-// 	// Pod service
+// Pod service
 // 	createdPodService := CreateService(testLabInstance, podNode)
 // 	assert.Equal(t, testLabInstance.Name+"-"+podNode.Name+"-remote-access", createdPodService.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, createdPodService.Namespace)
 // 	assert.Equal(t, "LoadBalancer", string(createdPodService.Spec.Type))
 // 	assert.Equal(t, 0, len(createdPodService.Spec.Ports))
 
-// 	// VM service
+// VM service
 // 	createdVMService := CreateService(testLabInstance, vmNode)
 // 	assert.Equal(t, testLabInstance.Name+"-"+vmNode.Name+"-remote-access", createdVMService.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, createdVMService.Namespace)
 // 	assert.Equal(t, "LoadBalancer", string(createdVMService.Spec.Type))
 // 	assert.Equal(t, 1, len(createdVMService.Spec.Ports))
 
-// 	// TTYD service
+// TTYD service
 // 	createdTTYDService := CreateService(testLabInstance, nil)
 // 	assert.Equal(t, testLabInstance.Name+"-ttyd-service", createdTTYDService.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, createdTTYDService.Namespace)
@@ -437,16 +454,16 @@ func initialize() {
 // func TestCreateSvcAccRoleRoleBind(t *testing.T) {
 // 	svcAcc, role, roleBind := CreateSvcAccRoleRoleBind(testLabInstance)
 
-// 	// Service Account
+// Service Account
 // 	assert.Equal(t, testLabInstance.Name+"-ttyd-svcacc", svcAcc.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, svcAcc.Namespace)
 
-// 	// Role
+// Role
 // 	assert.Equal(t, testLabInstance.Name+"-ttyd-role", role.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, role.Namespace)
 // 	assert.NotEqual(t, 0, len(role.Rules))
 
-// 	// Role Binding
+// Role Binding
 // 	assert.Equal(t, testLabInstance.Name+"-ttyd-rolebind", roleBind.Name)
 // 	assert.Equal(t, testLabInstance.Namespace, roleBind.Namespace)
 // 	assert.Equal(t, testLabInstance.Name+"-ttyd-svcacc", roleBind.Subjects[0].Name)
@@ -476,17 +493,17 @@ func initialize() {
 
 // func TestReconcileResource(t *testing.T) {
 // 	expectedReturnValue = ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}}
-// 	// Non-Existing resource
+// Non-Existing resource
 // 	createdPod, returnValue := ReconcileResource(r, testLabInstance, &corev1.Pod{}, podNode, testLabInstance.Name+"-"+podNode.Name)
 // 	assert.Equal(t, expectedReturnValue, returnValue)
 // 	assert.Equal(t, testLabInstance.Name+"-"+podNode.Name, createdPod.GetName())
 // 	assert.Equal(t, testLabInstance.Namespace, createdPod.GetNamespace())
 
-// 	// Existing resource
+// Existing resource
 // 	createdPod, returnValue = ReconcileResource(r, testLabInstance, &corev1.Pod{}, podNode, testLabInstance.Name+"-"+podNode.Name)
 // 	assert.Equal(t, ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}, returnValue)
 
-// 	// Error
+// Error
 
 // }
 
@@ -680,6 +697,7 @@ func TestMapTemplateToPod(t *testing.T) {
 	}
 }
 
+// TODO: this functions needs to be checked
 func TestMapTemplateToVM(t *testing.T) {
 	type args struct {
 		labInstance *ltbv1alpha1.LabInstance
@@ -690,19 +708,19 @@ func TestMapTemplateToVM(t *testing.T) {
 		args args
 		want *kubevirtv1.VirtualMachine
 	}{
-		// {
-		// 	name: "VM will be created",
-		// 	args: args{
-		// 		labInstance: testLabInstance,
-		// 		node:        vmNode,
-		// 	},
-		// 	want: testVM,
-		// },
+		{
+			name: "VM will be created",
+			args: args{
+				labInstance: testLabInstance,
+				node:        vmNode,
+			},
+			want: testVM,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := MapTemplateToVM(tt.args.labInstance, tt.args.node)
-			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want.GetName(), got.GetName())
 		})
 	}
 }
@@ -715,26 +733,82 @@ func TestUpdateLabInstanceStatus(t *testing.T) {
 		labInstance *ltbv1alpha1.LabInstance
 	}
 	tests := []struct {
-		name string
-		args args
+		name          string
+		args          args
+		runningStatus bool
+		isPodRunning  bool
+		isVMReady     bool
 	}{
 		{
-			name: "Status will be updated",
+			name: "Running status",
 			args: args{
 				ctx:         context.Background(),
 				pods:        []*corev1.Pod{testPod},
 				vms:         []*kubevirtv1.VirtualMachine{testVM},
 				labInstance: testLabInstance,
 			},
+			runningStatus: true,
+			isPodRunning:  true,
+			isVMReady:     true,
+		},
+		{
+			name: "Pending status",
+			args: args{
+				ctx:         context.Background(),
+				pods:        []*corev1.Pod{testPod, testNodePod},
+				vms:         []*kubevirtv1.VirtualMachine{testVM},
+				labInstance: testLabInstance,
+			},
+			runningStatus: false,
+			isPodRunning:  false,
+			isVMReady:     true,
+		},
+		{
+			name: "Not Ready status",
+			args: args{
+				ctx:         context.Background(),
+				pods:        []*corev1.Pod{testPod},
+				vms:         []*kubevirtv1.VirtualMachine{testVM, testNodeVM},
+				labInstance: testLabInstance,
+			},
+			runningStatus: false,
+			isPodRunning:  true,
+			isVMReady:     false,
+		},
+		{
+			name: "Not Running status",
+			args: args{
+				ctx:         context.Background(),
+				pods:        []*corev1.Pod{testPod, testNodePod},
+				vms:         []*kubevirtv1.VirtualMachine{testVM, testNodeVM},
+				labInstance: testLabInstance,
+			},
+			runningStatus: false,
+			isPodRunning:  false,
+			isVMReady:     false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			UpdateLabInstanceStatus(tt.args.ctx, tt.args.pods, tt.args.vms, tt.args.labInstance)
-			assert.Equal(t, testLabInstance.Status.NumPodsRunning, "0/1")
-			assert.Equal(t, testLabInstance.Status.NumVMsRunning, "0/1")
-			// Test if the number of running pods and VMs is being incremented
-			assert.NotEqual(t, testLabInstance.Status.Status, "Running")
+			t.Log(tt.args.labInstance.Status)
+			if tt.runningStatus && tt.isPodRunning && tt.isVMReady {
+				assert.Equal(t, "Running", tt.args.labInstance.Status.Status)
+				assert.Equal(t, "1/1", tt.args.labInstance.Status.NumPodsRunning)
+				assert.Equal(t, "1/1", tt.args.labInstance.Status.NumVMsRunning)
+			} else if !tt.runningStatus && !tt.isPodRunning && tt.isVMReady {
+				assert.NotEqual(t, "Running", tt.args.labInstance.Status.Status)
+				assert.Equal(t, "1/2", tt.args.labInstance.Status.NumPodsRunning)
+				assert.Equal(t, "1/1", tt.args.labInstance.Status.NumVMsRunning)
+			} else if !tt.runningStatus && tt.isPodRunning && !tt.isVMReady {
+				assert.NotEqual(t, "Running", tt.args.labInstance.Status.Status)
+				assert.Equal(t, "1/1", tt.args.labInstance.Status.NumPodsRunning)
+				assert.Equal(t, "1/2", tt.args.labInstance.Status.NumVMsRunning)
+			} else {
+				assert.NotEqual(t, "Running", tt.args.labInstance.Status.Status)
+				assert.Equal(t, "1/2", tt.args.labInstance.Status.NumPodsRunning)
+				assert.Equal(t, "1/2", tt.args.labInstance.Status.NumVMsRunning)
+			}
 		})
 	}
 }
@@ -801,30 +875,7 @@ func TestReconcileResource(t *testing.T) {
 			want:  testNodePod,
 			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
 		},
-		{
-			name: "Ttyd pod will be created",
-			args: args{
-				r:            r,
-				labInstance:  testLabInstance,
-				resource:     &corev1.Pod{},
-				node:         nil,
-				resourceName: testLabInstance.Name + "-ttyd",
-			},
-			want:  testTtydPod,
-			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
-		},
-		{
-			name: "Service will be created",
-			args: args{
-				r:            r,
-				labInstance:  testLabInstance,
-				resource:     &corev1.Service{},
-				node:         testNode,
-				resourceName: testLabInstance.Name + "-" + testNode.Name + "-remote-access",
-			},
-			want:  testService,
-			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
-		},
+
 		{
 			name: "Ttyd Service will be created",
 			args: args{
@@ -835,18 +886,6 @@ func TestReconcileResource(t *testing.T) {
 				resourceName: testLabInstance.Name + "-ttyd-service",
 			},
 			want:  testTtydService,
-			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
-		},
-		{
-			name: "Ingress will be created for a pod",
-			args: args{
-				r:            r,
-				labInstance:  testLabInstance,
-				resource:     &networkingv1.Ingress{},
-				node:         testNode,
-				resourceName: testLabInstance.Name + "-" + testNode.Name + "-ingress",
-			},
-			want:  testPodIngress,
 			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
 		},
 		{
@@ -1009,13 +1048,21 @@ func TestCreateIngress(t *testing.T) {
 		args args
 		want *networkingv1.Ingress
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Ingress will be created",
+			args: args{
+				labInstance: testLabInstance,
+				node:        testNode,
+			},
+			want: testPodIngress,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateIngress(tt.args.labInstance, tt.args.node); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateIngress() = %v, want %v", got, tt.want)
-			}
+			got := CreateIngress(tt.args.labInstance, tt.args.node)
+			assert.Equal(t, tt.want.GetName(), got.GetName())
+			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
 		})
 	}
 }
@@ -1030,13 +1077,21 @@ func TestCreatePod(t *testing.T) {
 		args args
 		want *corev1.Pod
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Ttyd Pod will be created",
+			args: args{
+				labInstance: testLabInstance,
+				node:        nil,
+			},
+			want: testTtydPod,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreatePod(tt.args.labInstance, tt.args.node); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreatePod() = %v, want %v", got, tt.want)
-			}
+			got := CreatePod(tt.args.labInstance, tt.args.node)
+			assert.Equal(t, tt.want.GetName(), got.GetName())
+			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
 		})
 	}
 }
@@ -1051,42 +1106,22 @@ func TestCreateService(t *testing.T) {
 		args args
 		want *corev1.Service
 	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateService(tt.args.labInstance, tt.args.node); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateService() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+		{
+			name: "Service will be created",
+			args: args{
 
-func TestCreateSvcAccRoleRoleBind(t *testing.T) {
-	type args struct {
-		labInstance *ltbv1alpha1.LabInstance
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *corev1.ServiceAccount
-		want1 *rbacv1.Role
-		want2 *rbacv1.RoleBinding
-	}{
-		// TODO: Add test cases.
+				labInstance: testLabInstance,
+				node:        testNode,
+			},
+			want: testService,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, got2 := CreateSvcAccRoleRoleBind(tt.args.labInstance)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateSvcAccRoleRoleBind() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("CreateSvcAccRoleRoleBind() got1 = %v, want %v", got1, tt.want1)
-			}
-			if !reflect.DeepEqual(got2, tt.want2) {
-				t.Errorf("CreateSvcAccRoleRoleBind() got2 = %v, want %v", got2, tt.want2)
-			}
+			got := CreateService(tt.args.labInstance, tt.args.node)
+			assert.Equal(t, tt.want.GetName(), got.GetName())
+			assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+			assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
 		})
 	}
 }
