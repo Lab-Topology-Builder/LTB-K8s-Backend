@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"os"
-	"reflect"
 	"testing"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
@@ -13,7 +12,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
-	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -51,22 +49,22 @@ func (m *MockClient) Create(ctx context.Context, obj client.Object) error {
 }
 
 var (
-	ctx                               context.Context
-	r                                 *LabInstanceReconciler
-	testLabInstance                   *ltbv1alpha1.LabInstance
-	testLabTemplate                   *ltbv1alpha1.LabTemplate
-	testNodeTypeVM, testNodeTypePod   *ltbv1alpha1.NodeType
-	err                               error
-	podNode, vmNode, testNode         *ltbv1alpha1.LabInstanceNodes
-	fakeClient                        client.Client
-	testPod, testNodePod, testTtydPod *corev1.Pod
-	field                             fields
-	testVM, testNodeVM                *kubevirtv1.VirtualMachine
-	testPodIngress, testVMIngress     *networkingv1.Ingress
-	testService, testTtydService      *corev1.Service
-	testRole                          *rbacv1.Role
-	testRoleBinding                   *rbacv1.RoleBinding
-	testServiceAccount                *corev1.ServiceAccount
+	ctx                                context.Context
+	r                                  *LabInstanceReconciler
+	testLabInstance                    *ltbv1alpha1.LabInstance
+	testLabTemplate                    *ltbv1alpha1.LabTemplate
+	testNodeTypeVM, testNodeTypePod    *ltbv1alpha1.NodeType
+	err                                error
+	podNode, vmNode, testNode, vmNode2 *ltbv1alpha1.LabInstanceNodes
+	fakeClient                         client.Client
+	testPod, testNodePod, testTtydPod  *corev1.Pod
+	field                              fields
+	testVM, testNodeVM                 *kubevirtv1.VirtualMachine
+	testPodIngress, testVMIngress      *networkingv1.Ingress
+	testService, testTtydService       *corev1.Service
+	testRole                           *rbacv1.Role
+	testRoleBinding                    *rbacv1.RoleBinding
+	testServiceAccount                 *corev1.ServiceAccount
 )
 
 const namespace = "test-namespace"
@@ -91,17 +89,6 @@ func initialize() {
 			Status: "Running",
 		},
 	}
-
-	// vmConfig := `
-	//   #cloud-config
-	//   password: ubuntu
-	//   chpasswd: { expire: False }
-	//   ssh_pwauth: True
-	//   packages:
-	//     - qemu-guest-agent
-	//   runcmd:
-	//     - [ systemctl, start, qemu-guest-agent ]
-	// `
 
 	testNodeTypeVM = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
@@ -130,7 +117,7 @@ func initialize() {
           - name: containerdisk
             containerDisk:
               image: quay.io/containerdisks/ubuntu:22.04
-	`,
+`,
 		},
 	}
 
@@ -197,7 +184,7 @@ template:
       - name: containerdisk
         containerDisk:
           image: quay.io/containerdisks/ubuntu:22.04
-	`,
+`,
 				},
 				{
 					Name: "test-node-1",
@@ -232,10 +219,40 @@ template:
 						},
 					},
 				},
+				{
+					Name: "test-node-3",
+					NodeTypeRef: ltbv1alpha1.NodeTypeRef{
+						Type:    testNodeTypeVM.Name,
+						Image:   "ubuntu",
+						Version: "22.04",
+					},
+					RenderedNodeSpec: `
+running: true
+template:
+  spec:
+    domain:
+      resources:
+        requests:
+          memory: 4096M
+      cpu:
+        cores: 2
+      devices:
+        disks:
+          - name: containerdisk
+            disk:
+              bus: virtio
+    terminationGracePeriodSeconds: 0
+    volumes:
+      - name: containerdisk
+        containerDisk:
+          image: quay.io/containerdisks/ubuntu:22.04
+	`,
+				},
 			},
 		},
 	}
 	vmNode = &testLabTemplate.Spec.Nodes[0]
+	vmNode2 = &testLabTemplate.Spec.Nodes[3]
 	podNode = &testLabTemplate.Spec.Nodes[1]
 	testNode = &testLabTemplate.Spec.Nodes[2]
 
@@ -260,15 +277,27 @@ template:
 			Name:      testLabInstance.Name + "-" + vmNode.Name,
 			Namespace: testLabInstance.Namespace,
 		},
-		// Spec: kubevirtv1.VirtualMachineSpec{
-		// 	Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-		// 		ObjectMeta: metav1.ObjectMeta{
-		// 			Labels: map[string]string{
-		// 				"app": testLabInstance.Name + "-" + vmNode.Name + "-remote-access",
-		// 			},
-		// 		},
-		// 	},
-		// },
+		Spec: kubevirtv1.VirtualMachineSpec{
+			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"app": testLabInstance.Name + "-" + vmNode.Name + "-remote-access",
+					},
+				},
+				Spec: kubevirtv1.VirtualMachineInstanceSpec{
+					Volumes: []kubevirtv1.Volume{
+						{
+							Name: "cloudinitdisk",
+							VolumeSource: kubevirtv1.VolumeSource{
+								CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
+									UserData: vmNode.Config,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		Status: kubevirtv1.VirtualMachineStatus{
 			Ready:           true,
 			PrintableStatus: "VM Ready",
@@ -626,24 +655,60 @@ func TestMapTemplateToVM(t *testing.T) {
 		node        *ltbv1alpha1.LabInstanceNodes
 	}
 	tests := []struct {
-		name string
-		args args
-		want *kubevirtv1.VirtualMachine
+		name    string
+		args    args
+		want    *kubevirtv1.VirtualMachine
+		wantErr bool
 	}{
-		// {
-		// 	name: "VM will be created",
-		// 	args: args{
-		// 		labInstance: testLabInstance,
-		// 		node:        vmNode,
-		// 	},
-		// 	want: testVM,
-		// },
+		{
+			name: "VM mapping successful",
+			args: args{
+				labInstance: testLabInstance,
+				node:        vmNode,
+			},
+			want:    testVM,
+			wantErr: false,
+		},
+		{
+			name: "Failure - Unmarshal error",
+			args: args{
+				labInstance: testLabInstance,
+				node:        vmNode2,
+			},
+			want:    testVM,
+			wantErr: true,
+		},
+		{
+			name: "Failure - Empty LabInstance",
+			args: args{
+				labInstance: nil,
+				node:        vmNode,
+			},
+			want:    testVM,
+			wantErr: true,
+		},
+		{
+			name: "Failure - Empty node",
+			args: args{
+				labInstance: testLabInstance,
+				node:        nil,
+			},
+			want:    testVM,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := MapTemplateToVM(tt.args.labInstance, tt.args.node)
-			assert.Equal(t, nil, err)
-			assert.Equal(t, tt.want.GetName(), got.GetName())
+			if tt.wantErr {
+				assert.Error(t, err)
+				return
+			} else {
+				assert.Equal(t, nil, err)
+				assert.Equal(t, tt.want.GetName(), got.GetName())
+				assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+				assert.Equal(t, tt.want.GetLabels(), got.GetLabels())
+			}
 		})
 	}
 }
@@ -787,17 +852,29 @@ func TestReconcileResource(t *testing.T) {
 			want1: ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil},
 		},
 		{
-			name: "Resource doesn't exist and creation is successful",
+			name: "Resource created successfully",
 			args: args{
 				r:            r,
 				labInstance:  testLabInstance,
-				resource:     &corev1.Pod{},
+				resource:     &corev1.Service{},
 				node:         testNode,
-				resourceName: testLabInstance.Name + "-" + testNode.Name,
+				resourceName: testLabInstance.Name + "-" + testNode.Name + "-remote-access",
 			},
-			want:  testNodePod,
+			want:  testService,
 			want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{Requeue: true}, Err: nil},
 		},
+		// {
+		// 	name: "Resource could not be created",
+		// 	args: args{
+		// 		r:            r,
+		// 		labInstance:  testLabInstance,
+		// 		resource:     &networkingv1.Ingress{},
+		// 		node:         testNode,
+		// 		resourceName: testLabInstance.Name + "-" + testNode.Name,
+		// 	},
+		// 	want:  nil,
+		// 	want1: ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: errors.New("failed to create resource")},
+		// },
 
 		// TODO: There are other two cases to test:
 		// 1.resource already exists, but could not be retrieved
@@ -834,9 +911,10 @@ func TestCreateResource(t *testing.T) {
 		resource    client.Object
 	}
 	tests := []struct {
-		name string
-		args args
-		want client.Object
+		name    string
+		args    args
+		want    client.Object
+		wantErr bool
 	}{
 		{
 			name: "Resource not supported",
@@ -845,7 +923,29 @@ func TestCreateResource(t *testing.T) {
 				node:        nil,
 				resource:    &corev1.Secret{},
 			},
-			want: nil,
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "Resource supported, and created successfully",
+			args: args{
+				labInstance: testLabInstance,
+				node:        vmNode,
+				resource:    &kubevirtv1.VirtualMachine{},
+			},
+			want:    testVM,
+			wantErr: false,
+		},
+
+		{
+			name: "Resource creation successful",
+			args: args{
+				labInstance: testLabInstance,
+				node:        testNode,
+				resource:    &corev1.Pod{},
+			},
+			want:    testNodePod,
+			wantErr: false,
 		},
 
 		// The other tests are covered by the ReconcileResource tests
@@ -853,8 +953,14 @@ func TestCreateResource(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := CreateResource(tt.args.labInstance, tt.args.node, tt.args.resource)
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, k8serrors.NewBadRequest("Resource type not supported: "+reflect.TypeOf(tt.args.resource).Elem().Name()), err)
+			if (err != nil) && tt.wantErr {
+				assert.Error(t, err)
+			} else if err == nil && !tt.wantErr {
+				assert.Equal(t, tt.want.GetName(), got.GetName())
+				assert.Equal(t, tt.want.GetNamespace(), got.GetNamespace())
+			} else {
+				t.Errorf("CreateResource() error = %v, wantErr %v", err, tt.wantErr)
+			}
 		})
 	}
 }
@@ -877,7 +983,7 @@ func TestResourceExists(t *testing.T) {
 			args: args{
 				r:            r,
 				resource:     &corev1.Pod{},
-				resourceName: testLabInstance.Name + "-" + testNode.Name,
+				resourceName: testLabInstance.Name + "-" + podNode.Name,
 				nameSpace:    namespace,
 			},
 			want:    true,
