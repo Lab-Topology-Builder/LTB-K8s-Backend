@@ -30,8 +30,7 @@ jobs:
                   go mod download
                   go mod verify
             - name: Run tests
-              run: |
-                  make test
+              run: "make test"
 
     build:
         runs-on: ubuntu-latest
