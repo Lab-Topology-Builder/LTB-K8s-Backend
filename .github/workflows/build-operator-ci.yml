@@ -16,6 +16,8 @@ env:
 jobs:
     test:
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         container: ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.5
         steps:
             - name: Checkout repository
