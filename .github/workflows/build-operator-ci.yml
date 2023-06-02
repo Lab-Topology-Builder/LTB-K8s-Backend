@@ -4,8 +4,12 @@ on:
         branches: [ "main" ]
         # Publish semver tags as releases
         tags: [ 'v*.*.*' ]
+        paths-ignore:
+            - 'docs/**'
     pull_request:
         branches: [ "main" ]
+        paths-ignore:
+            - 'docs/**'
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
