@@ -18,7 +18,9 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
             contents: read
-        container: ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.5
+        container:
+          image: ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.5
+          options: --user root
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
