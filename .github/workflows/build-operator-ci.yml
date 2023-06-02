@@ -14,6 +14,20 @@ env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
 jobs:
+    test:
+        runs-on: ubuntu-latest
+        container: ghcr.io/lab-topology-builder/k8s-operator-devcontainer:v0.1.5
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            - name: Install dependencies
+              run: |
+                  go mod download
+                  go mod verify
+            - name: Run tests
+              run: |
+                  make test
+
     build:
         runs-on: ubuntu-latest
         permissions:
