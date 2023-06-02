@@ -37,7 +37,7 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 	}{
 
 		{
-			name: "Happy Case with empty request",
+			name: "Empty request",
 			args: args{
 				ctx: context.Background(),
 				req: ctrl.Request{},
@@ -47,7 +47,7 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Happy case with namespaced request",
+			name: "Namespaced request",
 			args: args{
 				ctx: context.Background(),
 				req: ctrl.Request{NamespacedName: types.NamespacedName{Namespace: "test", Name: "test"}},
