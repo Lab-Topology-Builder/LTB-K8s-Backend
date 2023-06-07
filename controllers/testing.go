@@ -14,7 +14,6 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 type fields struct {
@@ -41,6 +40,7 @@ var (
 	testRole                                                                                  *rbacv1.Role
 	testRoleBinding                                                                           *rbacv1.RoleBinding
 	testServiceAccount                                                                        *corev1.ServiceAccount
+	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                     *network.NetworkAttachmentDefinition
 )
 
 func initialize() {
@@ -61,7 +61,7 @@ func initialize() {
 	testNodeTypeVM = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "testNodeVM",
-			Namespace: namespace,
+			Namespace: "",
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
 			Kind: "vm",
@@ -92,7 +92,7 @@ func initialize() {
 	testNodeTypePod = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "testNodePod",
-			Namespace: namespace,
+			Namespace: "",
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
 			Kind: "pod",
@@ -108,32 +108,6 @@ func initialize() {
 	        protocol: {{ $port.Protocol }}
 	      {{- end }}
 `,
-		},
-	}
-
-	testLabTemplate = &ltbv1alpha1.LabTemplate{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-labtemplate",
-			Namespace: namespace,
-		},
-		Spec: ltbv1alpha1.LabTemplateSpec{
-			Nodes: []ltbv1alpha1.LabInstanceNodes{
-				{
-					Name: "test-node",
-					NodeTypeRef: ltbv1alpha1.NodeTypeRef{
-						Type:    "test",
-						Image:   "ubuntu",
-						Version: "20.04",
-					},
-					Ports: []ltbv1alpha1.Port{
-						{
-							Name:     "test-ssh-port",
-							Protocol: "TCP",
-							Port:     22,
-						},
-					},
-				},
-			},
 		},
 	}
 
@@ -252,6 +226,19 @@ template:
 						  containerPort: 22
 						  protocol: tcp
 			  	`,
+	}
+
+	testLabTemplate = &ltbv1alpha1.LabTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-labtemplate",
+			Namespace: namespace,
+		},
+		Spec: ltbv1alpha1.LabTemplateSpec{
+			Nodes: []ltbv1alpha1.LabInstanceNodes{
+				*normalVMNode,
+				*normalPodNode,
+			},
+		},
 	}
 
 	testPod = &corev1.Pod{
@@ -375,12 +362,12 @@ template:
 
 	testService = &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      testLabInstance.Name + "-" + nodeUndefinedNodeType.Name + "-remote-access",
+			Name:      testLabInstance.Name + "-" + normalVMNode.Name + "-remote-access",
 			Namespace: namespace,
 		},
 		Spec: corev1.ServiceSpec{
 			Selector: map[string]string{
-				"app": testLabInstance.Name + "-" + nodeUndefinedNodeType.Name + "-remote-access",
+				"app": testLabInstance.Name + "-" + normalVMNode.Name + "-remote-access",
 			},
 			Ports: []corev1.ServicePort{
 				{
@@ -395,7 +382,7 @@ template:
 
 	testPodIngress = &networkingv1.Ingress{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      testLabInstance.Name + "-" + nodeUndefinedNodeType.Name + "-ingress",
+			Name:      testLabInstance.Name + "-" + normalPodNode.Name + "-ingress",
 			Namespace: namespace,
 		},
 	}
@@ -440,6 +427,36 @@ template:
 		},
 	}
 
+	testPodNetworkAttachmentDefinition = &network.NetworkAttachmentDefinition{}
+	testPodNetworkAttachmentDefinition.Name = testLabInstance.Name + "-pod"
+	testPodNetworkAttachmentDefinition.Namespace = testLabInstance.Namespace
+	testPodNetworkAttachmentDefinition.Spec.Config = `{
+				"cniVersion": "0.3.1",
+				"name": "mynet",
+				"type": "bridge",
+				"bridge": "mynet0",
+				"ipam": {
+					"type": "host-local",
+					"ranges": [
+						[ {
+							"subnet": "10.10.0.0/24",
+							"rangeStart": "10.10.0.10",
+							"rangeEnd": "10.10.0.250"
+						} ]
+					]
+				}
+			}`
+	testVMNetworkAttachmentDefinition = &network.NetworkAttachmentDefinition{}
+	testVMNetworkAttachmentDefinition.Name = testLabInstance.Name + "-vm"
+	testVMNetworkAttachmentDefinition.Namespace = testLabInstance.Namespace
+	testVMNetworkAttachmentDefinition.Spec.Config = `{
+					"cniVersion": "0.3.1",
+					"name": "mynet",
+					"type": "bridge",
+					"bridge": "mynet0",
+					"ipam": {}
+				}`
+
 	err = ltbv1alpha1.AddToScheme(scheme.Scheme)
 	if err != nil {
 		panic(err)
@@ -454,7 +471,7 @@ template:
 		panic(err)
 	}
 
-	fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod).Build()
-	r = &LabInstanceReconciler{Client: fakeClient, Scheme: scheme.Scheme}
+	// fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod).Build()
+	// r = &LabInstanceReconciler{Client: fakeClient, Scheme: scheme.Scheme}
 	field = fields{fakeClient, scheme.Scheme}
 }

@@ -75,6 +75,7 @@ var _ = BeforeSuite(func() {
 	err = network.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
+	initialize()
 	//K8sClient, err = ctrl.NewManager(cfg, ctrl.Options{Scheme: scheme.Scheme})
 	//Expect(err).NotTo(HaveOccurred())
 
