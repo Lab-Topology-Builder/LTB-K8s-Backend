@@ -6,6 +6,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	corev1 "k8s.io/api/core/v1"
 	apiErrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -22,12 +23,11 @@ const (
 
 var _ = Describe("LabInstance Reconcile", func() {
 
-	// Define utility constants for object names and testing timeouts/durations and intervals
-
 	var (
 		ctx context.Context
 		req ctrl.Request
 	)
+
 	Describe("Reconcile", func() {
 		BeforeEach(func() {
 			req = ctrl.Request{}
@@ -207,5 +207,35 @@ var _ = Describe("LabInstance Reconcile", func() {
 			})
 		})
 
+		AfterEach(func() {
+			r.Client = nil
+		})
+
+	})
+	Describe("ReconcileNetwork", func() {
+		var (
+			ctx context.Context
+		)
+		Context("Network Attachment couldn't be created, labInstance nil", func() {
+			It("should return error", func() {
+				returnValue := r.ReconcileNetwork(ctx, nil)
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(returnValue.Err).To(Equal(apiErrors.NewBadRequest("labInstance is nil")))
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
+		})
+		// TODO: See how the rest of the tests for this function can be written
+	})
+
+	Describe("ReconcileResource", func() {
+		Context("Resource couldn't be created, labInstance nil", func() {
+			It("should return error", func() {
+				resource, returnValue := ReconcileResource(r, nil, &corev1.Pod{}, nil, "test-pod")
+				Expect(resource).To(BeNil())
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(returnValue.Err).To(Equal(apiErrors.NewBadRequest("labInstance is nil")))
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
+		})
 	})
 })

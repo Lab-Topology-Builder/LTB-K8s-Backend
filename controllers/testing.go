@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"context"
-
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 	network "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -13,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -24,7 +23,6 @@ type fields struct {
 const namespace = "test-namespace"
 
 var (
-	ctx                                                                                       context.Context
 	r                                                                                         *LabInstanceReconciler
 	testLabInstance                                                                           *ltbv1alpha1.LabInstance
 	testLabTemplate                                                                           *ltbv1alpha1.LabTemplate
@@ -41,10 +39,10 @@ var (
 	testRoleBinding                                                                           *rbacv1.RoleBinding
 	testServiceAccount                                                                        *corev1.ServiceAccount
 	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                     *network.NetworkAttachmentDefinition
+	req                                                                                       ctrl.Request
 )
 
 func initialize() {
-	ctx = context.Background()
 	testLabInstance = &ltbv1alpha1.LabInstance{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test-labinstance",

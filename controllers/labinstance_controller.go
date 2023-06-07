@@ -175,6 +175,10 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) ReturnToReconciler {
 	log := log.FromContext(ctx)
 	retValue := ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil}
+	if labInstance == nil {
+		retValue.Err = errors.NewBadRequest("labInstance is nil")
+		return retValue
+	}
 	podNetworkDefinitionName := labInstance.Name + "-pod"
 	vmNetworkDefinitionName := labInstance.Name + "-vm"
 	networkdefinitionNames := []string{podNetworkDefinitionName, vmNetworkDefinitionName}
@@ -237,6 +241,10 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
 	retValue := ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil}
+	if labInstance == nil {
+		retValue.Err = errors.NewBadRequest("labInstance is nil")
+		return nil, retValue
+	}
 	resourceExists, err := ResourceExists(r, resource, resourceName, labInstance.Namespace)
 	if err != nil && !resourceExists {
 		createdResource, err := CreateResource(labInstance, node, resource)
