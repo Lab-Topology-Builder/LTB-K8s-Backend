@@ -11,6 +11,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	apiErrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -43,14 +44,24 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 				req: ctrl.Request{},
 			},
 			want:    ctrl.Result{},
-			want1:   nil,
-			wantErr: false,
+			want1:   apiErrors.NewNotFound(ltbv1alpha1.GroupVersion.WithResource("labinstances").GroupResource(), ""),
+			wantErr: true,
 		},
 		{
 			name: "Namespaced request",
 			args: args{
 				ctx: context.Background(),
-				req: ctrl.Request{NamespacedName: types.NamespacedName{Namespace: "test", Name: "test"}},
+				req: ctrl.Request{NamespacedName: types.NamespacedName{Namespace: namespace, Name: "test"}},
+			},
+			want:    ctrl.Result{},
+			want1:   apiErrors.NewNotFound(ltbv1alpha1.GroupVersion.WithResource("labinstances").GroupResource(), "test"),
+			wantErr: true,
+		},
+		{
+			name: "Happy case",
+			args: args{
+				ctx: context.Background(),
+				req: ctrl.Request{NamespacedName: types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}},
 			},
 			want:    ctrl.Result{},
 			want1:   nil,
@@ -60,6 +71,7 @@ func TestLabInstanceReconciler_Reconcile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := r.Reconcile(tt.args.ctx, tt.args.req)
+			got, err = r.Reconcile(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LabInstanceReconciler.Reconcile() error = %v, wantErr %v", err, tt.wantErr)
 				return

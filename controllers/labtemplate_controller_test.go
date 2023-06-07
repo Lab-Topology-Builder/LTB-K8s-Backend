@@ -18,9 +18,9 @@ package controllers
 
 import (
 	"context"
-	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
@@ -50,18 +50,17 @@ func TestLabTemplateReconciler_Reconcile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &LabTemplateReconciler{
+			tr := &LabTemplateReconciler{
 				Client: tt.fields.Client,
 				Scheme: tt.fields.Scheme,
 			}
-			got, err := r.Reconcile(tt.args.ctx, tt.args.req)
+			got, err := tr.Reconcile(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LabTemplateReconciler.Reconcile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("LabTemplateReconciler.Reconcile() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, err)
 		})
 	}
 }

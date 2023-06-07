@@ -73,7 +73,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Info("LabInstance resource not found. Ignoring since object must be deleted")
-			return ctrl.Result{}, nil
+			return ctrl.Result{}, err
 		}
 		log.Error(err, "Failed to get LabInstance")
 		return ctrl.Result{}, err
