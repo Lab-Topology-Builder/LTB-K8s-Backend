@@ -7,9 +7,12 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
+	networkingv1 "k8s.io/api/networking/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
 	apiErrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
+	kubevirtv1 "kubevirt.io/api/core/v1"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -284,6 +287,89 @@ var _ = Describe("LabInstance Reconcile", func() {
 		})
 	})
 
+	Describe("CreateResource", func() {
+		Context("Unsupport resource type", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return error", func() {
+				resource, err := CreateResource(testLabInstance, nil, &corev1.Secret{})
+				Expect(resource).To(BeNil())
+				Expect(err).To(HaveOccurred())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Resource creation succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should create a VM successfully", func() {
+				resource, err := CreateResource(testLabInstance, normalVMNode, &kubevirtv1.VirtualMachine{})
+				Expect(resource.GetName()).To(Equal(testVM.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should create a Pod successfully", func() {
+				resource, err := CreateResource(testLabInstance, normalPodNode, &corev1.Pod{})
+				Expect(resource.GetName()).To(Equal(testPod.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should create a Service successfully", func() {
+				resource, err := CreateResource(testLabInstance, normalVMNode, &corev1.Service{})
+				Expect(resource.GetName()).To(Equal(testService.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should create an Ingress successfully", func() {
+				resource, err := CreateResource(testLabInstance, normalVMNode, &networkingv1.Ingress{})
+				Expect(resource.GetName()).To(Equal(testVMIngress.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should create a service account successfully", func() {
+				resource, err := CreateResource(testLabInstance, nil, &corev1.ServiceAccount{})
+				Expect(resource.GetName()).To(Equal(testServiceAccount.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should create a role successfully", func() {
+				resource, err := CreateResource(testLabInstance, nil, &rbacv1.Role{})
+				Expect(resource.GetName()).To(Equal(testRole.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should create a role binding successfully", func() {
+				resource, err := CreateResource(testLabInstance, nil, &rbacv1.RoleBinding{})
+				Expect(resource.GetName()).To(Equal(testRoleBinding.Name))
+				Expect(err).NotTo(HaveOccurred())
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("ResourceExists", func() {
+		Context("Resource exists", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testVM).Build()
+			})
+			It("should return true", func() {
+				exists, err := ResourceExists(r, &kubevirtv1.VirtualMachine{}, testLabInstance.Name+"-"+normalVMNode.Name, testLabInstance.Namespace)
+				Expect(exists).To(BeTrue())
+				Expect(err).NotTo(HaveOccurred())
+			})
+		})
+		Context("Resource doesn't exist", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return false", func() {
+				exists, err := ResourceExists(r, &corev1.Pod{}, testLabInstance.Name+"-"+normalPodNode.Name, testLabInstance.Namespace)
+				Expect(exists).To(BeFalse())
+				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
 	Describe("GetLabTemplate", func() {
 		var (
 			ctx context.Context
@@ -309,6 +395,9 @@ var _ = Describe("LabInstance Reconcile", func() {
 				Expect(returnValue.Err).To(BeNil())
 				Expect(returnValue.ShouldReturn).To(BeFalse())
 			})
+		})
+		AfterEach(func() {
+			r.Client = nil
 		})
 	})
 
