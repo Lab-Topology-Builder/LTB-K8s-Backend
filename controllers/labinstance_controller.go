@@ -285,7 +285,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	case "Service":
 		return CreateService(labInstance, node), nil
 	case "Ingress":
-		return CreateIngress(labInstance, node), nil
+		return CreateIngress(labInstance, node)
 	case "Role":
 		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
 		return role, nil
@@ -356,8 +356,10 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 
 func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*kubevirtv1.VirtualMachine, error) {
 	log := log.FromContext(context.Background())
-	if node == nil || labInstance == nil {
-		return &kubevirtv1.VirtualMachine{}, errors.NewBadRequest("Node is nil")
+	if node == nil {
+		return nil, errors.NewBadRequest("Node is nil")
+	} else if labInstance == nil {
+		return nil, errors.NewBadRequest("LabInstance is nil")
 	}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
@@ -367,7 +369,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	err := yaml.Unmarshal([]byte(node.RenderedNodeSpec), vmSpec)
 	if err != nil {
 		log.Error(err, "Failed to unmarshal node spec")
-		return &kubevirtv1.VirtualMachine{}, err
+		return nil, err
 	}
 	networks := []kubevirtv1.Network{
 		{Name: "default", NetworkSource: kubevirtv1.NetworkSource{Pod: &kubevirtv1.PodNetwork{}}},
@@ -406,9 +408,14 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	return vm, nil
 }
 
-func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *networkingv1.Ingress {
+func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*networkingv1.Ingress, error) {
 	// TODO: hack to determine if node is a vm or pod, need to improve
 	var resourceType string
+	if labInstance == nil {
+		return nil, errors.NewBadRequest("LabInstance is nil")
+	} else if node == nil {
+		return nil, errors.NewBadRequest("Node is nil")
+	}
 	if node != nil && strings.Contains(node.RenderedNodeSpec, "template:") {
 		resourceType = "vm"
 	} else {
@@ -456,12 +463,15 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 			},
 		},
 	}
-	return ingress
+	return ingress, nil
 }
 
 func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Pod, error) {
 	pod := &corev1.Pod{}
 	var err error
+	if labInstance == nil {
+		return nil, errors.NewBadRequest("LabInstance is nil")
+	}
 
 	if node == nil {
 		pod.ObjectMeta = metav1.ObjectMeta{Namespace: labInstance.Namespace}

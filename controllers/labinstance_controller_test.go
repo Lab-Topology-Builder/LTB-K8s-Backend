@@ -401,4 +401,190 @@ var _ = Describe("LabInstance Reconcile", func() {
 		})
 	})
 
+	Describe("GetNodeType", func() {
+		var (
+			ctx context.Context
+		)
+		Context("NodeType doesn't exist", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
+			})
+			It("should return error", func() {
+				returnValue := r.GetNodeType(ctx, &normalPodNode.NodeTypeRef, testNodeTypePod)
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(apiErrors.IsNotFound(returnValue.Err)).To(BeTrue())
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
+		})
+		Context("NodeType exists", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod).Build()
+			})
+			It("should return nil error", func() {
+				returnValue := r.GetNodeType(ctx, &normalPodNode.NodeTypeRef, testNodeTypePod)
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(returnValue.Err).To(BeNil())
+				Expect(returnValue.ShouldReturn).To(BeFalse())
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("MapTemplateToPod", func() {
+		Context("Node nil", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return error", func() {
+				pod, err := MapTemplateToPod(testLabInstance, nil)
+				Expect(pod).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Mapping fails", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should fail unmarshal problem", func() {
+				pod, err := MapTemplateToPod(testLabInstance, podYAMLProblemNode)
+				Expect(pod).To(BeNil())
+				Expect(err).To(HaveOccurred())
+			})
+		})
+		Context("Mapping succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should succeed", func() {
+				pod, err := MapTemplateToPod(testLabInstance, normalPodNode)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pod.Name).To(Equal(testPod.Name))
+				Expect(pod.Namespace).To(Equal(testPod.Namespace))
+				Expect(pod.Labels).To(Equal(testPod.Labels))
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("MapTemplateToVM", func() {
+		Context("LabInstance nil", func() {
+			It("should return error", func() {
+				vm, err := MapTemplateToVM(nil, normalVMNode)
+				Expect(vm).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Node nil", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return error", func() {
+				vm, err := MapTemplateToVM(testLabInstance, nil)
+				Expect(vm).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Mapping fails", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should fail unmarshal problem", func() {
+				vm, err := MapTemplateToVM(testLabInstance, vmYAMLProblemNode)
+				Expect(vm).To(BeNil())
+				Expect(err).To(HaveOccurred())
+			})
+		})
+		Context("Mapping succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should succeed", func() {
+				vm, err := MapTemplateToVM(testLabInstance, normalVMNode)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(vm.Name).To(Equal(testVM.Name))
+				Expect(vm.Namespace).To(Equal(testVM.Namespace))
+				Expect(vm.Labels).To(Equal(testVM.Labels))
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("CreatePod", func() {
+		Context("LabInstance nil", func() {
+			It("should return error", func() {
+				pod, err := CreatePod(nil, normalPodNode)
+				Expect(pod).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Node nil, ttyd pod creation successful", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should create ttyd pod", func() {
+				pod, err := CreatePod(testLabInstance, nil)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pod.Name).To(Equal(testTtydPod.Name))
+				Expect(pod.Namespace).To(Equal(testTtydPod.Namespace))
+				Expect(pod.Labels).To(Equal(testTtydPod.Labels))
+			})
+		})
+		Context("Node not nil, a pod creation successful", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should succeed", func() {
+				pod, err := CreatePod(testLabInstance, normalPodNode)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pod.Name).To(Equal(testPod.Name))
+				Expect(pod.Namespace).To(Equal(testPod.Namespace))
+				Expect(pod.Labels).To(Equal(testPod.Labels))
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("CreateIngress", func() {
+		Context("LabInstance nil", func() {
+			It("should return error", func() {
+				ingress, err := CreateIngress(nil, normalPodNode)
+				Expect(ingress).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Node nil", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return error", func() {
+				ingress, err := CreateIngress(testLabInstance, nil)
+				Expect(ingress).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Ingress creation succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should succeed", func() {
+				ingress, err := CreateIngress(testLabInstance, normalPodNode)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(ingress.Name).To(Equal(testPodIngress.Name))
+				Expect(ingress.Namespace).To(Equal(testPodIngress.Namespace))
+				Expect(ingress.Annotations).To(Equal(testPodIngress.Annotations))
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
 })

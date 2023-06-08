@@ -382,6 +382,9 @@ template:
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testLabInstance.Name + "-" + normalPodNode.Name + "-ingress",
 			Namespace: namespace,
+			Annotations: map[string]string{
+				"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=pod&arg=" + testLabInstance.Name + "-" + normalPodNode.Name + "&arg=bash",
+			},
 		},
 	}
 
