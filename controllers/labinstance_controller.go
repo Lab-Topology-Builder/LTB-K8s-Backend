@@ -283,18 +283,18 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	case "VirtualMachine":
 		return MapTemplateToVM(labInstance, node)
 	case "Service":
-		return CreateService(labInstance, node), nil
+		return CreateService(labInstance, node)
 	case "Ingress":
 		return CreateIngress(labInstance, node)
 	case "Role":
-		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
-		return role, nil
+		_, role, _, err := CreateSvcAccRoleRoleBind(labInstance)
+		return role, err
 	case "ServiceAccount":
-		svcAcc, _, _ := CreateSvcAccRoleRoleBind(labInstance)
-		return svcAcc, nil
+		svcAcc, _, _, err := CreateSvcAccRoleRoleBind(labInstance)
+		return svcAcc, err
 	case "RoleBinding":
-		_, _, roleBind := CreateSvcAccRoleRoleBind(labInstance)
-		return roleBind, nil
+		_, _, roleBind, err := CreateSvcAccRoleRoleBind(labInstance)
+		return roleBind, err
 	default:
 		log.Error(fmt.Errorf("resource type not supported"), "Unsupported", "ResourceKind", reflect.TypeOf(resource).Elem().Name())
 		return nil, errors.NewBadRequest(fmt.Sprintf("Resource type not supported: %s", reflect.TypeOf(resource).Elem().Name()))
@@ -499,10 +499,13 @@ func CreatePod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstan
 	return pod, err
 }
 
-func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *corev1.Service {
+func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) (*corev1.Service, error) {
 	var serviceName string
 	ports := []corev1.ServicePort{}
 	serviceType := corev1.ServiceTypeLoadBalancer
+	if labInstance == nil {
+		return nil, errors.NewBadRequest("LabInstance is nil")
+	}
 
 	if node == nil {
 		serviceName = fmt.Sprintf("%s-%s", labInstance.Name, "ttyd-service")
@@ -534,10 +537,13 @@ func CreateService(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 			Type:     serviceType,
 		},
 	}
-	return service
+	return service, nil
 }
 
-func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.ServiceAccount, *rbacv1.Role, *rbacv1.RoleBinding) {
+func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.ServiceAccount, *rbacv1.Role, *rbacv1.RoleBinding, error) {
+	if labInstance == nil {
+		return nil, nil, nil, errors.NewBadRequest("LabInstance is nil")
+	}
 	serviceAccount := &corev1.ServiceAccount{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      labInstance.Name + "-ttyd-svcacc",
@@ -587,14 +593,20 @@ func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.Ser
 		},
 	}
 
-	return serviceAccount, role, roleBinding
+	return serviceAccount, role, roleBinding, nil
 
 }
 
-func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) {
+func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) error {
 	var podStatus corev1.PodPhase
 	var vmStatus kubevirtv1.VirtualMachinePrintableStatus
 	var numVMsRunning, numPodsRunning int
+	if pods == nil && vms == nil {
+		return errors.NewBadRequest("No resources found")
+	}
+	if labInstance == nil {
+		return errors.NewBadRequest("LabInstance is nil")
+	}
 	for _, pod := range pods {
 		podStatus = pod.Status.Phase
 		if podStatus != corev1.PodRunning {
@@ -622,6 +634,7 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 			labInstance.Status.Status = string(vmStatus)
 		}
 	}
+	return nil
 }
 
 // TODO: move this function to utils

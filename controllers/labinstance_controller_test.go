@@ -10,6 +10,7 @@ import (
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	apiErrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
@@ -584,6 +585,161 @@ var _ = Describe("LabInstance Reconcile", func() {
 		})
 		AfterEach(func() {
 			r.Client = nil
+		})
+	})
+
+	Describe("CreateService", func() {
+		Context("LabInstance nil", func() {
+			It("should return error", func() {
+				service, err := CreateService(nil, normalPodNode)
+				Expect(service).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("Node nil, ttyd service creation succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should create a ttyd service", func() {
+				service, err := CreateService(testLabInstance, nil)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(service.Name).To(Equal(testTtydService.Name))
+				Expect(service.Namespace).To(Equal(testTtydService.Namespace))
+				Expect(service.Spec.Ports).To(Equal(testTtydService.Spec.Ports))
+				Expect(service.Spec.Selector).To(Equal(testTtydService.Spec.Selector))
+				Expect(service.Spec.Type).To(Equal(testTtydService.Spec.Type))
+			})
+		})
+		Context("Node not nil, service creation succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should create a service for remote access", func() {
+				service, err := CreateService(testLabInstance, normalVMNode)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(service.Name).To(Equal(testService.Name))
+				Expect(service.Namespace).To(Equal(testService.Namespace))
+				Expect(service.Spec.Type).To(Equal(testService.Spec.Type))
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("CreateSvcAccRoleRoleBind", func() {
+		Context("LabInstance nil", func() {
+			It("should return error", func() {
+				svcAcc, role, roleBind, err := CreateSvcAccRoleRoleBind(nil)
+				Expect(svcAcc).To(BeNil())
+				Expect(role).To(BeNil())
+				Expect(roleBind).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("SvcAcc, role, rolebinding creation succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should succeed", func() {
+				svcAcc, role, roleBind, err := CreateSvcAccRoleRoleBind(testLabInstance)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(svcAcc.Name).To(Equal(testServiceAccount.Name))
+				Expect(role.Name).To(Equal(testRole.Name))
+				Expect(roleBind.Name).To(Equal(testRoleBinding.Name))
+
+			})
+		})
+
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("UpdateLabInstanceStatus", func() {
+		var (
+			ctx context.Context
+		)
+		Context("No VMs and Pods are provided", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should fail", func() {
+				err := UpdateLabInstanceStatus(ctx, nil, nil, testLabInstance)
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("LabInstance nil", func() {
+			pods := []*corev1.Pod{testPod}
+			vms := []*kubevirtv1.VirtualMachine{testVM}
+			It("should fail", func() {
+				err := UpdateLabInstanceStatus(ctx, pods, vms, nil)
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+
+		Context("LabInstanceStatus update succeeds", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should have a running status", func() {
+				pods := []*corev1.Pod{testPod}
+				vms := []*kubevirtv1.VirtualMachine{testVM}
+				err := UpdateLabInstanceStatus(ctx, pods, vms, testLabInstance)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(testLabInstance.Status.Status).To(Equal("Running"))
+				Expect(testLabInstance.Status.NumPodsRunning).To(Equal("1/1"))
+				Expect(testLabInstance.Status.NumVMsRunning).To(Equal("1/1"))
+			})
+			It("should have a pending status", func() {
+				pods := []*corev1.Pod{testPod, testNodePod}
+				vms := []*kubevirtv1.VirtualMachine{testVM}
+				err := UpdateLabInstanceStatus(ctx, pods, vms, testLabInstance)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(testLabInstance.Status.Status).To(Equal("Pending"))
+				Expect(testLabInstance.Status.NumPodsRunning).To(Equal("1/2"))
+				Expect(testLabInstance.Status.NumVMsRunning).To(Equal("1/1"))
+			})
+			It("should have a not ready status", func() {
+				pods := []*corev1.Pod{testPod}
+				vms := []*kubevirtv1.VirtualMachine{testVM, testNodeVM}
+				err := UpdateLabInstanceStatus(ctx, pods, vms, testLabInstance)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(testLabInstance.Status.Status).To(Equal("Not Ready"))
+				Expect(testLabInstance.Status.NumPodsRunning).To(Equal("1/1"))
+				Expect(testLabInstance.Status.NumVMsRunning).To(Equal("1/2"))
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
+	})
+
+	Describe("ErrorMsg", func() {
+		var (
+			ctx context.Context
+		)
+		Context("No error", func() {
+			It("should nil error", func() {
+				returnValue := ErrorMsg(ctx, nil, "Test-resource")
+				Expect(returnValue.Err).To(BeNil())
+				Expect(returnValue.ShouldReturn).To(BeFalse())
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+			})
+		})
+		Context("Error", func() {
+			It("should return an error", func() {
+				returnValue := ErrorMsg(ctx, apiErrors.NewNotFound(schema.GroupResource{}, "test"), "Test-resource")
+				Expect(returnValue.Err).To(Equal(apiErrors.NewNotFound(schema.GroupResource{}, "test")))
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+			})
+		})
+	})
+
+	Describe("SetupWithManager", func() {
+		It("should fail", func() {
+			Expect(r.SetupWithManager(nil)).ToNot(Succeed())
 		})
 	})
 

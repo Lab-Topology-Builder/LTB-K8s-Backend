@@ -32,7 +32,7 @@ var (
 	fakeClient                                                                                client.Client
 	testPod, testNodePod, testTtydPod                                                         *corev1.Pod
 	field                                                                                     fields
-	testVM, testNodeVM                                                                        *kubevirtv1.VirtualMachine
+	testVM, testNodeVM, vmWithoutStatus                                                       *kubevirtv1.VirtualMachine
 	testPodIngress, testVMIngress                                                             *networkingv1.Ingress
 	testService, testTtydService                                                              *corev1.Service
 	testRole                                                                                  *rbacv1.Role
@@ -255,6 +255,34 @@ template:
 		},
 	}
 
+	vmWithoutStatus = &kubevirtv1.VirtualMachine{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + normalVMNode.Name,
+			Namespace: testLabInstance.Namespace,
+		},
+		Spec: kubevirtv1.VirtualMachineSpec{
+			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"app": testLabInstance.Name + "-" + normalVMNode.Name + "-remote-access",
+					},
+				},
+				Spec: kubevirtv1.VirtualMachineInstanceSpec{
+					Volumes: []kubevirtv1.Volume{
+						{
+							Name: "cloudinitdisk",
+							VolumeSource: kubevirtv1.VolumeSource{
+								CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
+									UserData: normalVMNode.Config,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
 	testVM = &kubevirtv1.VirtualMachine{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testLabInstance.Name + "-" + normalVMNode.Name,
@@ -293,7 +321,8 @@ template:
 			Namespace: testLabInstance.Namespace,
 		},
 		Status: kubevirtv1.VirtualMachineStatus{
-			Ready: false,
+			Ready:           false,
+			PrintableStatus: "Not Ready",
 		},
 	}
 
