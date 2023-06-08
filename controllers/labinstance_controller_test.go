@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -19,17 +18,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-// TODO: Test the status of the pods and VMs
-const (
-	Timeout  = time.Second * 10
-	Interval = time.Millisecond * 250
-)
-
-var _ = Describe("LabInstance Reconcile", func() {
+var _ = Describe("LabInstance Controller", func() {
 
 	var (
 		ctx context.Context
 		req ctrl.Request
+		r   *LabInstanceReconciler
 	)
 
 	Describe("Reconcile", func() {
@@ -41,18 +35,20 @@ var _ = Describe("LabInstance Reconcile", func() {
 		})
 		Context("Empty request", func() {
 			It("should return NotFound error", func() {
-				_, err := r.Reconcile(ctx, req)
+				result, err := r.Reconcile(ctx, req)
 				Expect(err).To(HaveOccurred())
 				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
+				Expect(result).To(Equal(ctrl.Result{}))
 			})
 		})
 
 		Context("Namespaced request", func() {
 			It("should return NotFound error", func() {
 				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
-				_, err := r.Reconcile(ctx, req)
+				result, err := r.Reconcile(ctx, req)
 				Expect(err).To(HaveOccurred())
 				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
+				Expect(result).To(Equal(ctrl.Result{}))
 			})
 		})
 

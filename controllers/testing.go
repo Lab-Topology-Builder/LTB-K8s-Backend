@@ -23,10 +23,9 @@ type fields struct {
 const namespace = "test-namespace"
 
 var (
-	r                                                                                         *LabInstanceReconciler
 	testLabInstance                                                                           *ltbv1alpha1.LabInstance
 	testLabTemplate                                                                           *ltbv1alpha1.LabTemplate
-	testNodeTypeVM, testNodeTypePod                                                           *ltbv1alpha1.NodeType
+	testNodeTypeVM, testNodeTypePod, failingNodeType                                          *ltbv1alpha1.NodeType
 	err                                                                                       error
 	normalPodNode, normalVMNode, nodeUndefinedNodeType, vmYAMLProblemNode, podYAMLProblemNode *ltbv1alpha1.LabInstanceNodes
 	fakeClient                                                                                client.Client
@@ -106,6 +105,28 @@ func initialize() {
 	        protocol: {{ $port.Protocol }}
 	      {{- end }}
 `,
+		},
+	}
+
+	failingNodeType = &ltbv1alpha1.NodeType{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "failingNodeType",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.NodeTypeSpec{
+			Kind: "vm",
+			NodeSpec: `
+	containers:
+	  - name: {{ .Name }}
+	    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+	    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+	    ports:
+	      {{- range $index, $port := .Ports }}
+	      - name: {{ $port.Name }}
+	        containerPort: {{ $port.Port }}
+	        protocol: {{ $port.Protocol }}
+	      {{- end }}
+	`,
 		},
 	}
 

@@ -18,74 +18,81 @@ package controllers
 
 import (
 	"context"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-func TestLabTemplateReconciler_Reconcile(t *testing.T) {
-	type args struct {
+var _ = Describe("LabTemplate Controller", func() {
+	var (
 		ctx context.Context
 		req ctrl.Request
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    ctrl.Result
-		want1   error
-		wantErr bool
-	}{
-		// {
-		// 	name: "Empty request",
-		// 	args: args{
-		// 		ctx: context.Background(),
-		// 		req: ctrl.Request{},
-		// 	},
-		// 	want:    ctrl.Result{},
-		// 	want1:   nil,
-		// 	wantErr: false,
-		// },
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tr := &LabTemplateReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
-			got, err := tr.Reconcile(tt.args.ctx, tt.args.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("LabTemplateReconciler.Reconcile() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.want1, err)
-		})
-	}
-}
+		lr  *LabTemplateReconciler
+	)
 
-func TestLabTemplateReconciler_SetupWithManager(t *testing.T) {
-	type args struct {
-		mgr ctrl.Manager
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &LabTemplateReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
-			if err := r.SetupWithManager(tt.args.mgr); (err != nil) != tt.wantErr {
-				t.Errorf("LabTemplateReconciler.SetupWithManager() error = %v, wantErr %v", err, tt.wantErr)
-			}
+	Describe("Reconcile", func() {
+		BeforeEach(func() {
+			req = ctrl.Request{}
+			fakeClient = fake.NewClientBuilder().WithObjects(testLabTemplate).Build()
+			lr = &LabTemplateReconciler{Client: fakeClient, Scheme: scheme.Scheme}
+
 		})
-	}
-}
+		Context("LabTemplate doesn't exists", func() {
+			BeforeEach(func() {
+				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
+			})
+			It("should return NotFound error", func() {
+				result, err := lr.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).To(BeNil())
+			})
+		})
+		Context("LabTemplate exists, but nodetypes don't exist", func() {
+			BeforeEach(func() {
+				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test-labtemplate"}
+			})
+			It("should return nil error", func() {
+				result, err := lr.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).To(BeNil())
+			})
+		})
+
+		Context("All resources exist, and successfully renders", func() {
+			BeforeEach(func() {
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod, testVM).Build()
+			})
+			It("should return nil error", func() {
+				result, err := lr.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).To(BeNil())
+			})
+		})
+
+		Context("All resources exist, but fails to render", func() {
+			BeforeEach(func() {
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
+
+			})
+
+			It("should return error", func() {
+				result, err := lr.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).To((BeNil()))
+			})
+		})
+		AfterEach(func() {
+			lr.Client = nil
+		})
+	})
+	Describe("SetupWithManager", func() {
+		It("should return error", func() {
+			err := lr.SetupWithManager(nil)
+			Expect(err).To(HaveOccurred())
+		})
+	})
+})

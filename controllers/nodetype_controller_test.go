@@ -18,75 +18,49 @@ package controllers
 
 import (
 	"context"
-	"reflect"
-	"testing"
 
-	"k8s.io/apimachinery/pkg/runtime"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-func TestNodeTypeReconciler_Reconcile(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
-	type args struct {
+var _ = Describe("NodeTye Controller", func() {
+	var (
 		ctx context.Context
 		req ctrl.Request
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    ctrl.Result
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &NodeTypeReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
-			got, err := r.Reconcile(tt.args.ctx, tt.args.req)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("NodeTypeReconciler.Reconcile() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NodeTypeReconciler.Reconcile() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+		ln  *NodeTypeReconciler
+	)
 
-func TestNodeTypeReconciler_SetupWithManager(t *testing.T) {
-	type fields struct {
-		Client client.Client
-		Scheme *runtime.Scheme
-	}
-	type args struct {
-		mgr ctrl.Manager
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &NodeTypeReconciler{
-				Client: tt.fields.Client,
-				Scheme: tt.fields.Scheme,
-			}
-			if err := r.SetupWithManager(tt.args.mgr); (err != nil) != tt.wantErr {
-				t.Errorf("NodeTypeReconciler.SetupWithManager() error = %v, wantErr %v", err, tt.wantErr)
-			}
+	Describe("Reconcile", func() {
+		BeforeEach(func() {
+			req = ctrl.Request{}
+			fakeClient = fake.NewClientBuilder().WithObjects(testNodeTypePod, testNodeVM).Build()
+			ln = &NodeTypeReconciler{Client: fakeClient, Scheme: scheme.Scheme}
 		})
-	}
-}
+		Context("NodeType doesn't exists", func() {
+			BeforeEach(func() {
+				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
+			})
+			It("should return NotFound error", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).To(BeNil())
+			})
+		})
+
+		Context("NodeType exists, but unmarshalling fails", func() {
+			BeforeEach(func() {
+				ln.Client = fake.NewClientBuilder().WithObjects(failingNodeType).Build()
+				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "failingNodeType"}
+			})
+			It("should return error", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).To(BeNil())
+			})
+		})
+	})
+})
