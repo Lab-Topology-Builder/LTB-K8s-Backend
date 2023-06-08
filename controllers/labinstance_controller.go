@@ -250,7 +250,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 		createdResource, err := CreateResource(labInstance, node, resource)
 		if err != nil {
 			retValue.Err = err
-			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
+			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", resourceName)
 			return nil, retValue
 		}
 		log.Info("Creating a new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(createdResource).Elem().FieldByName("Name"))
@@ -296,8 +296,8 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 		_, _, roleBind := CreateSvcAccRoleRoleBind(labInstance)
 		return roleBind, nil
 	default:
-		log.Error(fmt.Errorf("resource type not supported"), "ResourceKind", reflect.TypeOf(resource).Elem().Name())
-		return nil, errors.NewBadRequest("Resource type not supported: " + reflect.TypeOf(resource).Elem().Name())
+		log.Error(fmt.Errorf("resource type not supported"), "Unsupported", "ResourceKind", reflect.TypeOf(resource).Elem().Name())
+		return nil, errors.NewBadRequest(fmt.Sprintf("Resource type not supported: %s", reflect.TypeOf(resource).Elem().Name()))
 	}
 
 }

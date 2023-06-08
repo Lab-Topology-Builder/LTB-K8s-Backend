@@ -225,6 +225,20 @@ var _ = Describe("LabInstance Reconcile", func() {
 			})
 		})
 		// TODO: See how the rest of the tests for this function can be written
+		Context("Network Attachment gets created", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should create a network attachment", func() {
+				returnValue := r.ReconcileNetwork(ctx, testLabInstance)
+				Expect(returnValue.Result).To(Equal(ctrl.Result{Requeue: true}))
+				Expect(returnValue.Err).To(BeNil())
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
+		})
+		AfterEach(func() {
+			r.Client = nil
+		})
 	})
 
 	Describe("ReconcileResource", func() {
@@ -237,5 +251,65 @@ var _ = Describe("LabInstance Reconcile", func() {
 				Expect(returnValue.ShouldReturn).To(BeTrue())
 			})
 		})
+		Context("Resource already exists", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testPod).Build()
+			})
+
+			It("should not create a resource, but retrieve it", func() {
+				resource, returnValue := ReconcileResource(r, testLabInstance, &corev1.Pod{}, nil, testLabInstance.Name+"-"+normalPodNode.Name)
+				Expect(resource.GetName()).To(Equal(testPod.Name))
+				Expect(resource.GetNamespace()).To(Equal(testPod.Namespace))
+				Expect(resource.GetAnnotations()).To(Equal(testPod.Annotations))
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(returnValue.Err).To(BeNil())
+				Expect(returnValue.ShouldReturn).To(BeFalse())
+			})
+		})
+		Context("Resource doesn't exist, but couldn't created", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return error", func() {
+				resource, returnValue := ReconcileResource(r, testLabInstance, &corev1.Secret{}, nil, "test-secret")
+				Expect(resource).To(BeNil())
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(returnValue.Err).To(HaveOccurred())
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
+		})
+
+		AfterEach(func() {
+			r.Client = nil
+		})
 	})
+
+	Describe("GetLabTemplate", func() {
+		var (
+			ctx context.Context
+		)
+		Context("LabTemplate doesn't exist", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+			})
+			It("should return error", func() {
+				returnValue := r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(apiErrors.IsNotFound(returnValue.Err)).To(BeTrue())
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
+		})
+		Context("LabTemplate exists", func() {
+			BeforeEach(func() {
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
+			})
+			It("should return nil error", func() {
+				returnValue := r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
+				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
+				Expect(returnValue.Err).To(BeNil())
+				Expect(returnValue.ShouldReturn).To(BeFalse())
+			})
+		})
+	})
+
 })
