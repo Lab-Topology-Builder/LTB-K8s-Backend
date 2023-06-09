@@ -21,6 +21,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	apiErrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -42,24 +43,48 @@ var _ = Describe("NodeTye Controller", func() {
 		})
 		Context("NodeType doesn't exists", func() {
 			BeforeEach(func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
+				req.NamespacedName = types.NamespacedName{Name: "test"}
 			})
 			It("should return NotFound error", func() {
 				result, err := ln.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
-				Expect(err).To(BeNil())
+				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
 			})
 		})
 
 		Context("NodeType exists, but unmarshalling fails", func() {
 			BeforeEach(func() {
 				ln.Client = fake.NewClientBuilder().WithObjects(failingNodeType).Build()
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "failingNodeType"}
 			})
 			It("should return error", func() {
 				result, err := ln.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
-				Expect(err).To(BeNil())
+				Expect(err).ToNot(BeNil())
+			})
+		})
+
+		Context("Rendering NodeSpec for VM works", func() {
+			BeforeEach(func() {
+				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypeVM).Build()
+				req.NamespacedName = types.NamespacedName{Name: testNodeTypeVM.Name}
+			})
+			It("should render the VMSpec successfully", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot(HaveOccurred())
+			})
+		})
+
+		Context("Rendering NodeSpec for pod works", func() {
+			BeforeEach(func() {
+				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypePod).Build()
+				req.NamespacedName = types.NamespacedName{Name: testNodeTypePod.Name}
+			})
+			// Todo: reached here, and fix this first
+			It("should render the PodSpec successfully", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot(HaveOccurred())
 			})
 		})
 	})

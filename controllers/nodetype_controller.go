@@ -18,11 +18,12 @@ package controllers
 
 import (
 	"context"
-	"errors"
+
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -80,7 +81,12 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	nodetype := &ltbv1alpha1.NodeType{}
 	err := r.Get(ctx, req.NamespacedName, nodetype)
 	if err != nil {
-		return ctrl.Result{}, client.IgnoreNotFound(err)
+		if errors.IsNotFound(err) {
+			l.Info("NodeType resource not found. Ignoring since object must be deleted")
+			return ctrl.Result{}, err
+		}
+		l.Error(err, "Failed to get NodeType")
+		return ctrl.Result{}, err
 	}
 	var renderedNodeSpec strings.Builder
 	if err = util.ParseAndRenderTemplate(nodetype, &renderedNodeSpec, TestNodeData); err != nil {
@@ -108,7 +114,7 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		l.Info("Decoded Pod Spec", "Spec", podSpec)
 	} else {
 		// invalid kind
-		return ctrl.Result{}, errors.New("invalid Kind")
+		return ctrl.Result{}, errors.NewBadRequest("Invalid Kind")
 	}
 
 	return ctrl.Result{}, nil
