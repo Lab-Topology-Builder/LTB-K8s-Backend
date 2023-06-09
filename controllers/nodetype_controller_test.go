@@ -88,7 +88,6 @@ var _ = Describe("NodeTye Controller", func() {
 				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypePod).Build()
 				req.NamespacedName = types.NamespacedName{Name: testNodeTypePod.Name}
 			})
-			// Todo: reached here, and fix this first
 			It("should render the PodSpec successfully", func() {
 				result, err := ln.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))

@@ -34,6 +34,8 @@ var _ = Describe("LabTemplate Controller", func() {
 		lr  *LabTemplateReconciler
 	)
 
+	// TODO: I couldn't test the rendering labtemplate because of the dependency on nodetype
+
 	Describe("Reconcile", func() {
 		BeforeEach(func() {
 			req = ctrl.Request{}
@@ -64,7 +66,7 @@ var _ = Describe("LabTemplate Controller", func() {
 
 		Context("All resources exist, and successfully renders", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod, testVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testPod, testVM).Build()
 			})
 			It("should return nil error", func() {
 				result, err := lr.Reconcile(ctx, req)
@@ -75,7 +77,7 @@ var _ = Describe("LabTemplate Controller", func() {
 
 		Context("All resources exist, but fails to render", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, failingPodNodeType, testNodeTypeVM).Build()
 
 			})
 
