@@ -48,15 +48,23 @@ var _ = Describe("NodeTye Controller", func() {
 			It("should return NotFound error", func() {
 				result, err := ln.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
-				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
+				Expect(apiErrors.IsNotFound(err)).To(BeFalse())
 			})
 		})
 
 		Context("NodeType exists, but unmarshalling fails", func() {
 			BeforeEach(func() {
-				ln.Client = fake.NewClientBuilder().WithObjects(failingNodeType).Build()
+				ln.Client = fake.NewClientBuilder().WithObjects(failingVMNodeType, failingPodNodeType).Build()
+				req.NamespacedName = types.NamespacedName{Name: failingVMNodeType.Name}
 			})
-			It("should return error", func() {
+			It("should return error while unmarshaling VMSpec", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot(BeNil())
+			})
+
+			It("should return error while unmarshaling PodSpec", func() {
+				req.NamespacedName = types.NamespacedName{Name: failingPodNodeType.Name}
 				result, err := ln.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
 				Expect(err).ToNot(BeNil())
@@ -86,6 +94,25 @@ var _ = Describe("NodeTye Controller", func() {
 				Expect(result).To(Equal(ctrl.Result{}))
 				Expect(err).ToNot(HaveOccurred())
 			})
+		})
+
+		Context("Invalid nodetype kind", func() {
+			BeforeEach(func() {
+				ln.Client = fake.NewClientBuilder().WithObjects(invalidNodeType).Build()
+				req.NamespacedName = types.NamespacedName{Name: invalidNodeType.Name}
+			})
+			It("should return error", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot(BeNil())
+			})
+		})
+	})
+
+	Describe("SetupWithManager", func() {
+		It("should return error", func() {
+			err := ln.SetupWithManager(nil)
+			Expect(err).ToNot(BeNil())
 		})
 	})
 })

@@ -83,7 +83,7 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if err != nil {
 		if errors.IsNotFound(err) {
 			l.Info("NodeType resource not found. Ignoring since object must be deleted")
-			return ctrl.Result{}, err
+			return ctrl.Result{}, client.IgnoreNotFound(err)
 		}
 		l.Error(err, "Failed to get NodeType")
 		return ctrl.Result{}, err

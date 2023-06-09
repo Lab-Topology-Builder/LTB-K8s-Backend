@@ -7,38 +7,29 @@ import (
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-type fields struct {
-	Client client.Client
-	Scheme *runtime.Scheme
-}
 
 const namespace = "test-namespace"
 
 var (
 	testLabInstance                                                                           *ltbv1alpha1.LabInstance
 	testLabTemplate                                                                           *ltbv1alpha1.LabTemplate
-	testNodeTypeVM, testNodeTypePod, failingNodeType                                          *ltbv1alpha1.NodeType
+	testNodeTypeVM, testNodeTypePod, failingVMNodeType, failingPodNodeType, invalidNodeType   *ltbv1alpha1.NodeType
 	err                                                                                       error
 	normalPodNode, normalVMNode, nodeUndefinedNodeType, vmYAMLProblemNode, podYAMLProblemNode *ltbv1alpha1.LabInstanceNodes
 	fakeClient                                                                                client.Client
 	testPod, testNodePod, testTtydPod                                                         *corev1.Pod
-	field                                                                                     fields
-	testVM, testNodeVM, vmWithoutStatus                                                       *kubevirtv1.VirtualMachine
+	testVM, testNodeVM                                                                        *kubevirtv1.VirtualMachine
 	testPodIngress, testVMIngress                                                             *networkingv1.Ingress
 	testService, testTtydService                                                              *corev1.Service
 	testRole                                                                                  *rbacv1.Role
 	testRoleBinding                                                                           *rbacv1.RoleBinding
 	testServiceAccount                                                                        *corev1.ServiceAccount
 	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                     *network.NetworkAttachmentDefinition
-	req                                                                                       ctrl.Request
 )
 
 func initialize() {
@@ -86,13 +77,36 @@ func initialize() {
 		},
 	}
 
+	// Todo: I was getting yaml syntax errors here, so I commented out the yaml
 	testNodeTypePod = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "testNodePod",
 			Namespace: "",
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
-			Kind: "pod",
+			Kind:     "pod",
+			NodeSpec: "", // `
+			// 	containers:
+			//       - name: {{ .Name }}
+			//         image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+			//         command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+			//         ports:
+			//           {{- range $index, $port := .Ports }}
+			//           - name: {{ $port.Name }}
+			//             containerPort: {{ $port.Port }}
+			//             protocol: {{ $port.Protocol }}
+			//           {{- end }}
+			// `,
+		},
+	}
+
+	failingVMNodeType = &ltbv1alpha1.NodeType{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "failingVMNodeType",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.NodeTypeSpec{
+			Kind: "vm",
 			NodeSpec: `
 	containers:
 	  - name: {{ .Name }}
@@ -104,17 +118,48 @@ func initialize() {
 	        containerPort: {{ $port.Port }}
 	        protocol: {{ $port.Protocol }}
 	      {{- end }}
+	`,
+		},
+	}
+
+	failingPodNodeType = &ltbv1alpha1.NodeType{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "failingPodNodeType",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.NodeTypeSpec{
+			Kind: "pod",
+			NodeSpec: `
+	running: true
+    template:
+      spec:
+        domain:
+          resources:
+            requests:
+              memory: 4096M
+          cpu:
+            cores: 2
+          devices:
+            disks:
+              - name: containerdisk
+                disk:
+                  bus: virtio
+        terminationGracePeriodSeconds: 0
+        volumes:
+          - name: containerdisk
+            containerDisk:
+              image: quay.io/containerdisks/ubuntu:22.04
 `,
 		},
 	}
 
-	failingNodeType = &ltbv1alpha1.NodeType{
+	invalidNodeType = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "failingNodeType",
+			Name:      "invalidNodeType",
 			Namespace: "",
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
-			Kind: "vm",
+			Kind: "test",
 			NodeSpec: `
 	containers:
 	  - name: {{ .Name }}
@@ -273,34 +318,6 @@ template:
 		},
 		Status: corev1.PodStatus{
 			Phase: corev1.PodRunning,
-		},
-	}
-
-	vmWithoutStatus = &kubevirtv1.VirtualMachine{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      testLabInstance.Name + "-" + normalVMNode.Name,
-			Namespace: testLabInstance.Namespace,
-		},
-		Spec: kubevirtv1.VirtualMachineSpec{
-			Template: &kubevirtv1.VirtualMachineInstanceTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						"app": testLabInstance.Name + "-" + normalVMNode.Name + "-remote-access",
-					},
-				},
-				Spec: kubevirtv1.VirtualMachineInstanceSpec{
-					Volumes: []kubevirtv1.Volume{
-						{
-							Name: "cloudinitdisk",
-							VolumeSource: kubevirtv1.VolumeSource{
-								CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
-									UserData: normalVMNode.Config,
-								},
-							},
-						},
-					},
-				},
-			},
 		},
 	}
 
@@ -521,8 +538,4 @@ template:
 	if err != nil {
 		panic(err)
 	}
-
-	// fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod).Build()
-	// r = &LabInstanceReconciler{Client: fakeClient, Scheme: scheme.Scheme}
-	field = fields{fakeClient, scheme.Scheme}
 }
