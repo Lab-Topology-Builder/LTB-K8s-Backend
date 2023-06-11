@@ -51,9 +51,13 @@ The backend is responsible for the following tasks:
 
 ![C4 Component](../assets/drawings/C4-Component.drawio.svg)
 
-#### Legend
+### Legend
 
 - <span style="color: #083f75">Dark blue</span>: represents Personas (User, Admin)
 - <span style="color: #23a2d9">Blue</span>: represents Internal Components (Frontend Web UI, LTB K8s Backend)
 - <span style="color: #63bef2">Light blue</span>: represents Components which will be implemented in this project (LTB Operator, LTB Operator API)
 - <span style="color: #8c8496">Dark gray</span>: represents External Components (K8s, Keycloak)
+
+## State Diagram
+
+![State Diagram](./../assets/drawings/State-diagram.drawio.svg)
