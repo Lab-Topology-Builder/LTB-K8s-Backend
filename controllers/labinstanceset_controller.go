@@ -16,6 +16,8 @@ limitations under the License.
 
 package controllers
 
+// TODO: Dead code, remove labinstanceset
+
 import (
 	"context"
 
