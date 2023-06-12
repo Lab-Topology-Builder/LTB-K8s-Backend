@@ -646,7 +646,7 @@ func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconcile
 	if errors.IsNotFound(err) {
 		log.Info("Resource not found. Ignoring since object must be deleted")
 		returnValue.ShouldReturn = true
-		returnValue.Err = nil
+		returnValue.Err = err
 		return returnValue
 	}
 	if err != nil {
