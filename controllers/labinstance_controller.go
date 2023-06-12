@@ -50,6 +50,7 @@ type LabInstanceReconciler struct {
 	Scheme *runtime.Scheme
 }
 
+// TODO move to util
 type ReturnToReconciler struct {
 	ShouldReturn bool
 	Result       ctrl.Result
@@ -227,7 +228,8 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 			}
 			retValue.Result = ctrl.Result{Requeue: true}
 			return retValue
-		} else if err != nil {
+		}
+		if err != nil {
 			retValue.Err = err
 			log.Error(err, "Failed to get NetworkAttachmentDefinition")
 			return retValue
@@ -637,7 +639,7 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 	return nil
 }
 
-// TODO: move this function to utils
+// TODO: move this function to utils or remove it
 func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconciler {
 	log := log.FromContext(ctx)
 	returnValue := ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}

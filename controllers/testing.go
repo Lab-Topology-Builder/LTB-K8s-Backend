@@ -84,19 +84,18 @@ func initialize() {
 			Namespace: "",
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
-			Kind:     "pod",
-			NodeSpec: "", // `
-			// 	containers:
-			//       - name: {{ .Name }}
-			//         image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
-			//         command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
-			//         ports:
-			//           {{- range $index, $port := .Ports }}
-			//           - name: {{ $port.Name }}
-			//             containerPort: {{ $port.Port }}
-			//             protocol: {{ $port.Protocol }}
-			//           {{- end }}
-			// `,
+			Kind: "pod",
+			NodeSpec: `
+containers:
+    - name: {{ .Name }}
+      image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+      command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+      ports:
+        {{- range $index, $port := .Ports }}
+        - name: {{ $port.Name }}
+          containerPort: {{ $port.Port }}
+          protocol: {{ $port.Protocol }}
+        {{- end }}`,
 		},
 	}
 
@@ -108,17 +107,16 @@ func initialize() {
 		Spec: ltbv1alpha1.NodeTypeSpec{
 			Kind: "vm",
 			NodeSpec: `
-	containers:
-	  - name: {{ .Name }}
-	    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
-	    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
-	    ports:
-	      {{- range $index, $port := .Ports }}
-	      - name: {{ $port.Name }}
-	        containerPort: {{ $port.Port }}
-	        protocol: {{ $port.Protocol }}
-	      {{- end }}
-	`,
+containers:
+  - name: {{ .Name }}
+    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+    ports:
+        {{- range $index, $port := .Ports }}
+      - name: {{ $port.Name }}
+        containerPort: {{ $port.Port }}
+        protocol: {{ $port.Protocol }}
+        {{- end }}`,
 		},
 	}
 
@@ -130,25 +128,25 @@ func initialize() {
 		Spec: ltbv1alpha1.NodeTypeSpec{
 			Kind: "pod",
 			NodeSpec: `
-	running: true
-    template:
-      spec:
-        domain:
-          resources:
-            requests:
-              memory: 4096M
-          cpu:
-            cores: 2
-          devices:
-            disks:
-              - name: containerdisk
-                disk:
-                  bus: virtio
-        terminationGracePeriodSeconds: 0
-        volumes:
+running: true
+template:
+  spec:
+    domain:
+      resources:
+        requests:
+          memory: 4096M
+      cpu:
+        cores: 2
+      devices:
+        disks:
           - name: containerdisk
-            containerDisk:
-              image: quay.io/containerdisks/ubuntu:22.04
+            disk:
+              bus: virtio
+    terminationGracePeriodSeconds: 0
+    volumes:
+      - name: containerdisk
+        containerDisk:
+          image: quay.io/containerdisks/ubuntu:22.04
 `,
 		},
 	}
@@ -161,17 +159,16 @@ func initialize() {
 		Spec: ltbv1alpha1.NodeTypeSpec{
 			Kind: "test",
 			NodeSpec: `
-	containers:
-	  - name: {{ .Name }}
-	    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
-	    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
-	    ports:
-	      {{- range $index, $port := .Ports }}
-	      - name: {{ $port.Name }}
-	        containerPort: {{ $port.Port }}
-	        protocol: {{ $port.Protocol }}
-	      {{- end }}
-	`,
+containers:
+    - name: {{ .Name }}
+    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+    ports:
+        {{- range $index, $port := .Ports }}
+        - name: {{ $port.Name }}
+        containerPort: {{ $port.Port }}
+        protocol: {{ $port.Protocol }}
+        {{- end }}`,
 		},
 	}
 
@@ -219,7 +216,7 @@ template:
 			Version: "22.04",
 		},
 		RenderedNodeSpec: `
-running: true
+running true // yaml syntax error
 template:
   spec:
     domain:
@@ -237,8 +234,7 @@ template:
     volumes:
       - name: containerdisk
         containerDisk:
-          image: quay.io/containerdisks/ubuntu:22.04
-	`,
+          image: quay.io/containerdisks/ubuntu:22.04`,
 	}
 	normalPodNode = &ltbv1alpha1.LabInstanceNodes{
 		Name: "test-node-1",
@@ -248,14 +244,14 @@ template:
 			Version: "20.04",
 		},
 		RenderedNodeSpec: `
-    containers:
-      - name: testnode
-        image: ubuntu:22.04
-        command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
-        ports:
-          - name: testsshport
-            containerPort: 22
-            protocol: tcp
+containers:
+  - name: testnode
+    image: ubuntu:22.04
+    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+    ports:
+      - name: testsshport
+        containerPort: 22
+        protocol: tcp
 `,
 	}
 	nodeUndefinedNodeType = &ltbv1alpha1.LabInstanceNodes{
@@ -288,8 +284,7 @@ template:
 					  ports:
 						- name: testsshport
 						  containerPort: 22
-						  protocol: tcp
-			  	`,
+						  protocol: tcp`,
 	}
 
 	testLabTemplate = &ltbv1alpha1.LabTemplate{

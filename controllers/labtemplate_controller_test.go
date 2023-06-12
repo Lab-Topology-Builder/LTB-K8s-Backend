@@ -29,7 +29,7 @@ import (
 
 var _ = Describe("LabTemplate Controller", func() {
 	var (
-		ctx context.Context
+		ctx context.Context // TODO we only use empty context, change?
 		req ctrl.Request
 		lr  *LabTemplateReconciler
 	)
@@ -66,19 +66,19 @@ var _ = Describe("LabTemplate Controller", func() {
 
 		Context("All resources exist, and successfully renders", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testPod, testVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
 			})
 			It("should return nil error", func() {
 				result, err := lr.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
 				Expect(err).To(BeNil())
 			})
+			// TODO check more, like labtemplate content of rendered nodespec
 		})
 
 		Context("All resources exist, but fails to render", func() {
 			BeforeEach(func() {
 				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, failingPodNodeType, testNodeTypeVM).Build()
-
 			})
 
 			It("should return error", func() {
