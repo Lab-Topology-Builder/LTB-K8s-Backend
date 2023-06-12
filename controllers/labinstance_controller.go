@@ -251,6 +251,7 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return retValue
 }
 
+// TODO: can we use a pointer here also?
 func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabInstance, resource client.Object, node *ltbv1alpha1.LabInstanceNodes) (client.Object, ReturnToReconciler) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
