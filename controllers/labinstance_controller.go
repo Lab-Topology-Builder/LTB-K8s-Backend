@@ -644,9 +644,8 @@ func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconcile
 	log := log.FromContext(ctx)
 	returnValue := ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}
 	if errors.IsNotFound(err) {
-		log.Info("Resource not found. Requeueing")
+		log.Info("Resource not found.")
 		returnValue.ShouldReturn = true
-		returnValue.Result.Requeue = true
 		returnValue.Err = err
 		return returnValue
 	}
