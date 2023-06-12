@@ -20,13 +20,13 @@ import (
 
 var _ = Describe("LabInstance Controller", func() {
 
-	var (
-		ctx context.Context
-		req ctrl.Request
-		r   *LabInstanceReconciler
-	)
+	var r *LabInstanceReconciler
 
 	Describe("Reconcile", func() {
+		var (
+			ctx context.Context
+			req ctrl.Request
+		)
 		BeforeEach(func() {
 			req = ctrl.Request{}
 			ctx = context.Background()
@@ -42,7 +42,7 @@ var _ = Describe("LabInstance Controller", func() {
 			})
 		})
 
-		Context("Namespaced request", func() {
+		Context("Namespaced request with wrong name", func() {
 			It("should return NotFound error", func() {
 				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
 				result, err := r.Reconcile(ctx, req)
@@ -52,171 +52,172 @@ var _ = Describe("LabInstance Controller", func() {
 			})
 		})
 
-		Context("Network attachment doesn't exist", func() {
-			It("should return nil error", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+		Describe("Namespace request with correct name of available lab instance", func() {
+			Context("Network attachment doesn't exist", func() {
+				It("should return nil error", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Lab template doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testNodeTypePod, testNodeTypeVM).Build()
+				})
+				It("should return not found error", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).To(HaveOccurred())
+					Expect(apiErrors.IsNotFound(err)).To(BeTrue())
+					Expect(result).To(Equal(ctrl.Result{}))
+				})
+			})
+
+			Context("Ttyd service account doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create ttyd service account", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Ttyd role doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a ttyd role", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Ttyd role binding doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a ttyd rolebinding", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Ttyd pod doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a ttyd pod", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Ttyd service doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a ttyd service", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Node type not found", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should return not found error", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).To(HaveOccurred())
+					Expect(apiErrors.IsNotFound(err)).To(BeTrue())
+					Expect(result).To(Equal(ctrl.Result{}))
+				})
+			})
+
+			Context("VM doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a VM", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Pod doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a Pod", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Service for remote access doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testVMIngress, testPodIngress).Build()
+				})
+				It("should create a Service for remote access", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("Ingress for remote access doesn't exist", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService).Build()
+				})
+				It("should create an Ingress for remote access", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
+				})
+			})
+
+			Context("All resources exists", func() {
+				BeforeEach(func() {
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod, testVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+				})
+				It("should return nil error", func() {
+					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
+					result, err := r.Reconcile(ctx, req)
+					Expect(err).NotTo(HaveOccurred())
+					Expect(result).To(Equal(ctrl.Result{}))
+				})
 			})
 		})
-
-		Context("Lab template doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testNodeTypePod, testNodeTypeVM).Build()
-			})
-			It("should return not found error", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).To(HaveOccurred())
-				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
-				Expect(result).To(Equal(ctrl.Result{}))
-			})
-		})
-
-		Context("Ttyd service account doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create ttyd service account", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Ttyd role doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a ttyd role", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Ttyd role binding doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a ttyd rolebinding", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Ttyd pod doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a ttyd pod", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Ttyd service doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a ttyd service", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Node type not found", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should return not found error", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).To(HaveOccurred())
-				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
-				Expect(result).To(Equal(ctrl.Result{}))
-			})
-		})
-
-		Context("VM doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a VM", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Pod doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a Pod", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Service for remote access doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testVMIngress, testPodIngress).Build()
-			})
-			It("should create a Service for remote access", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("Ingress for remote access doesn't exist", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService).Build()
-			})
-			It("should create an Ingress for remote access", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{Requeue: true}))
-			})
-		})
-
-		Context("All resources exists", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod, testVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
-			})
-			It("should return nil error", func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
-				result, err := r.Reconcile(ctx, req)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(result).To(Equal(ctrl.Result{}))
-			})
-		})
-
-		AfterEach(func() {
-			r.Client = nil
-		})
-
 	})
 	Describe("ReconcileNetwork", func() {
 		var (
 			ctx context.Context
 		)
-		Context("Network Attachment couldn't be created, labInstance nil", func() {
+		// TODO: need to be refactored as function also needs refactoring
+		BeforeEach(func() {
+			ctx = context.Background()
+		})
+		Context("labInstance nil", func() {
 			It("should return error", func() {
 				returnValue := r.ReconcileNetwork(ctx, nil)
 				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
@@ -224,26 +225,23 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(returnValue.ShouldReturn).To(BeTrue())
 			})
 		})
-		// TODO: See how the rest of the tests for this function can be written
-		Context("Network Attachment gets created", func() {
+		Context("Valid lab instance provided", func() {
 			BeforeEach(func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
 			})
-			It("should create a network attachment", func() {
+			It("should create a network attachment definition", func() {
 				returnValue := r.ReconcileNetwork(ctx, testLabInstance)
 				Expect(returnValue.Result).To(Equal(ctrl.Result{Requeue: true}))
 				Expect(returnValue.Err).To(BeNil())
 				Expect(returnValue.ShouldReturn).To(BeTrue())
+
 			})
-		})
-		AfterEach(func() {
-			r.Client = nil
 		})
 	})
 
 	Describe("ReconcileResource", func() {
-		Context("Resource couldn't be created, labInstance nil", func() {
-			It("should return error", func() {
+		Context("LabInstance nil", func() {
+			It("Should not try to create a resource", func() {
 				resource, returnValue := ReconcileResource(r, nil, &corev1.Pod{}, nil, "test-pod")
 				Expect(resource).To(BeNil())
 				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
@@ -255,7 +253,6 @@ var _ = Describe("LabInstance Controller", func() {
 			BeforeEach(func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testPod).Build()
 			})
-
 			It("should not create a resource, but retrieve it", func() {
 				resource, returnValue := ReconcileResource(r, testLabInstance, &corev1.Pod{}, nil, testLabInstance.Name+"-"+normalPodNode.Name)
 				Expect(resource.GetName()).To(Equal(testPod.Name))
@@ -266,21 +263,24 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(returnValue.ShouldReturn).To(BeFalse())
 			})
 		})
-		Context("Resource doesn't exist, but couldn't created", func() {
+		Context("Resource doesn't exist", func() {
 			BeforeEach(func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
 			})
-			It("should return error", func() {
+			It("Resource can't be created, because it's the wrong type", func() {
 				resource, returnValue := ReconcileResource(r, testLabInstance, &corev1.Secret{}, nil, "test-secret")
 				Expect(resource).To(BeNil())
 				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
 				Expect(returnValue.Err).To(HaveOccurred())
 				Expect(returnValue.ShouldReturn).To(BeTrue())
 			})
-		})
-
-		AfterEach(func() {
-			r.Client = nil
+			It("Resource can be created", func() {
+				resource, returnValue := ReconcileResource(r, testLabInstance, &corev1.Pod{}, nil, "test-pod")
+				Expect(resource).NotTo(BeNil())
+				Expect(returnValue.Result).To(Equal(ctrl.Result{Requeue: true}))
+				Expect(returnValue.Err).To(BeNil())
+				Expect(returnValue.ShouldReturn).To(BeTrue())
+			})
 		})
 	})
 
@@ -336,9 +336,6 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(err).NotTo(HaveOccurred())
 			})
 		})
-		AfterEach(func() {
-			r.Client = nil
-		})
 	})
 
 	Describe("ResourceExists", func() {
@@ -347,7 +344,7 @@ var _ = Describe("LabInstance Controller", func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testVM).Build()
 			})
 			It("should return true", func() {
-				exists, err := ResourceExists(r, &kubevirtv1.VirtualMachine{}, testLabInstance.Name+"-"+normalVMNode.Name, testLabInstance.Namespace)
+				exists, err := r.ResourceExists(&kubevirtv1.VirtualMachine{}, testLabInstance.Name+"-"+normalVMNode.Name, testLabInstance.Namespace)
 				Expect(exists).To(BeTrue())
 				Expect(err).NotTo(HaveOccurred())
 			})
@@ -357,13 +354,10 @@ var _ = Describe("LabInstance Controller", func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
 			})
 			It("should return false", func() {
-				exists, err := ResourceExists(r, &corev1.Pod{}, testLabInstance.Name+"-"+normalPodNode.Name, testLabInstance.Namespace)
+				exists, err := r.ResourceExists(&corev1.Pod{}, testLabInstance.Name+"-"+normalPodNode.Name, testLabInstance.Namespace)
 				Expect(exists).To(BeFalse())
 				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
 			})
-		})
-		AfterEach(func() {
-			r.Client = nil
 		})
 	})
 
@@ -371,6 +365,9 @@ var _ = Describe("LabInstance Controller", func() {
 		var (
 			ctx context.Context
 		)
+		BeforeEach(func() {
+			ctx = context.Background()
+		})
 		Context("LabTemplate doesn't exist", func() {
 			BeforeEach(func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
@@ -393,15 +390,15 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(returnValue.ShouldReturn).To(BeFalse())
 			})
 		})
-		AfterEach(func() {
-			r.Client = nil
-		})
 	})
 
 	Describe("GetNodeType", func() {
 		var (
 			ctx context.Context
 		)
+		BeforeEach(func() {
+			ctx = context.Background()
+		})
 		Context("NodeType doesn't exist", func() {
 			BeforeEach(func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
@@ -424,46 +421,34 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(returnValue.ShouldReturn).To(BeFalse())
 			})
 		})
-		AfterEach(func() {
-			r.Client = nil
-		})
 	})
 
 	Describe("MapTemplateToPod", func() {
-		Context("Node nil", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should return error", func() {
-				pod, err := MapTemplateToPod(testLabInstance, nil)
+		Context("Invalid lab instance", func() {
+			It("Lab instance nil should return error", func() {
+				pod, err := MapTemplateToPod(nil, normalPodNode)
 				Expect(pod).To(BeNil())
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
-		Context("Mapping fails", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
+		Context("Valid lab instance", func() {
+			It("Node nil should return error", func() {
+				pod, err := MapTemplateToPod(testLabInstance, nil)
+				Expect(pod).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
-			It("should fail unmarshal problem", func() {
+			It("Error in YAML definition, should fail to unmarshal YAML", func() {
 				pod, err := MapTemplateToPod(testLabInstance, podYAMLProblemNode)
 				Expect(pod).To(BeNil())
 				Expect(err).To(HaveOccurred())
 			})
-		})
-		Context("Mapping succeeds", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should succeed", func() {
+			It("Valid PodYaml, mapping should succeed", func() {
 				pod, err := MapTemplateToPod(testLabInstance, normalPodNode)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(pod.Name).To(Equal(testPod.Name))
 				Expect(pod.Namespace).To(Equal(testPod.Namespace))
 				Expect(pod.Labels).To(Equal(testPod.Labels))
 			})
-		})
-		AfterEach(func() {
-			r.Client = nil
 		})
 	})
 
@@ -475,77 +460,24 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
-		Context("Node nil", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should return error", func() {
+		Context("Valid lab instance", func() {
+			It("Node nil should return error", func() {
 				vm, err := MapTemplateToVM(testLabInstance, nil)
 				Expect(vm).To(BeNil())
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
-		})
-		Context("Mapping fails", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should fail unmarshal problem", func() {
+			It("Error in YAML definition, should fail to unmarshal YAML", func() {
 				vm, err := MapTemplateToVM(testLabInstance, vmYAMLProblemNode)
 				Expect(vm).To(BeNil())
 				Expect(err).To(HaveOccurred())
 			})
-		})
-		Context("Mapping succeeds", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should succeed", func() {
+			It("Valid PodYaml, mapping should succeed", func() {
 				vm, err := MapTemplateToVM(testLabInstance, normalVMNode)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(vm.Name).To(Equal(testVM.Name))
 				Expect(vm.Namespace).To(Equal(testVM.Namespace))
 				Expect(vm.Labels).To(Equal(testVM.Labels))
 			})
-		})
-		AfterEach(func() {
-			r.Client = nil
-		})
-	})
-
-	Describe("CreatePod", func() {
-		Context("LabInstance nil", func() {
-			It("should return error", func() {
-				pod, err := CreatePod(nil, normalPodNode)
-				Expect(pod).To(BeNil())
-				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
-			})
-		})
-		Context("Node nil, ttyd pod creation successful", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should create ttyd pod", func() {
-				pod, err := CreatePod(testLabInstance, nil)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(pod.Name).To(Equal(testTtydPod.Name))
-				Expect(pod.Namespace).To(Equal(testTtydPod.Namespace))
-				Expect(pod.Labels).To(Equal(testTtydPod.Labels))
-			})
-		})
-		Context("Node not nil, a pod creation successful", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should succeed", func() {
-				pod, err := CreatePod(testLabInstance, normalPodNode)
-				Expect(err).NotTo(HaveOccurred())
-				Expect(pod.Name).To(Equal(testPod.Name))
-				Expect(pod.Namespace).To(Equal(testPod.Namespace))
-				Expect(pod.Labels).To(Equal(testPod.Labels))
-			})
-		})
-		AfterEach(func() {
-			r.Client = nil
 		})
 	})
 
@@ -579,23 +511,45 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(ingress.Annotations).To(Equal(testPodIngress.Annotations))
 			})
 		})
-		AfterEach(func() {
-			r.Client = nil
+	})
+
+	Describe("CreatePod", func() {
+		Context("LabInstance nil", func() {
+			It("should return error", func() {
+				pod, err := CreatePod(nil, normalPodNode)
+				Expect(pod).To(BeNil())
+				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
+			})
+		})
+		Context("LabInstance valid, Node nil", func() {
+			It("should create ttyd pod successfully", func() {
+				pod, err := CreatePod(testLabInstance, nil)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pod.Name).To(Equal(testTtydPod.Name))
+				Expect(pod.Namespace).To(Equal(testTtydPod.Namespace))
+				Expect(pod.Labels).To(Equal(testTtydPod.Labels))
+			})
+		})
+		Context("LabInstance and Node valid", func() {
+			It("should create a pod according to the node information", func() {
+				pod, err := CreatePod(testLabInstance, normalPodNode)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pod.Name).To(Equal(testPod.Name))
+				Expect(pod.Namespace).To(Equal(testPod.Namespace))
+				Expect(pod.Labels).To(Equal(testPod.Labels))
+			})
 		})
 	})
 
 	Describe("CreateService", func() {
 		Context("LabInstance nil", func() {
-			It("should return error", func() {
+			It("should not create service and return BadRequest error", func() {
 				service, err := CreateService(nil, normalPodNode)
 				Expect(service).To(BeNil())
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
-		Context("Node nil, ttyd service creation succeeds", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
+		Context("Node nil, ttyd case", func() {
 			It("should create a ttyd service", func() {
 				service, err := CreateService(testLabInstance, nil)
 				Expect(err).NotTo(HaveOccurred())
@@ -606,10 +560,7 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(service.Spec.Type).To(Equal(testTtydService.Spec.Type))
 			})
 		})
-		Context("Node not nil, service creation succeeds", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
+		Context("Node not nil", func() {
 			It("should create a service for remote access", func() {
 				service, err := CreateService(testLabInstance, normalVMNode)
 				Expect(err).NotTo(HaveOccurred())
@@ -617,9 +568,6 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(service.Namespace).To(Equal(testService.Namespace))
 				Expect(service.Spec.Type).To(Equal(testService.Spec.Type))
 			})
-		})
-		AfterEach(func() {
-			r.Client = nil
 		})
 	})
 
@@ -633,11 +581,8 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
-		Context("SvcAcc, role, rolebinding creation succeeds", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
-			It("should succeed", func() {
+		Context("LabInstance valid", func() {
+			It("should create SvcAcc, role, rolebinding", func() {
 				svcAcc, role, roleBind, err := CreateSvcAccRoleRoleBind(testLabInstance)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(svcAcc.Name).To(Equal(testServiceAccount.Name))
@@ -646,22 +591,15 @@ var _ = Describe("LabInstance Controller", func() {
 
 			})
 		})
-
-		AfterEach(func() {
-			r.Client = nil
-		})
 	})
 
 	Describe("UpdateLabInstanceStatus", func() {
-		var (
-			ctx context.Context
-		)
 		Context("No VMs and Pods are provided", func() {
 			BeforeEach(func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
 			})
 			It("should fail", func() {
-				err := UpdateLabInstanceStatus(ctx, nil, nil, testLabInstance)
+				err := UpdateLabInstanceStatus(nil, nil, testLabInstance)
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
@@ -669,19 +607,16 @@ var _ = Describe("LabInstance Controller", func() {
 			pods := []*corev1.Pod{testPod}
 			vms := []*kubevirtv1.VirtualMachine{testVM}
 			It("should fail", func() {
-				err := UpdateLabInstanceStatus(ctx, pods, vms, nil)
+				err := UpdateLabInstanceStatus(pods, vms, nil)
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
 
 		Context("LabInstanceStatus update succeeds", func() {
-			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
-			})
 			It("should have a running status", func() {
 				pods := []*corev1.Pod{testPod}
 				vms := []*kubevirtv1.VirtualMachine{testVM}
-				err := UpdateLabInstanceStatus(ctx, pods, vms, testLabInstance)
+				err := UpdateLabInstanceStatus(pods, vms, testLabInstance)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(testLabInstance.Status.Status).To(Equal("Running"))
 				Expect(testLabInstance.Status.NumPodsRunning).To(Equal("1/1"))
@@ -690,7 +625,7 @@ var _ = Describe("LabInstance Controller", func() {
 			It("should have a pending status", func() {
 				pods := []*corev1.Pod{testPod, testNodePod}
 				vms := []*kubevirtv1.VirtualMachine{testVM}
-				err := UpdateLabInstanceStatus(ctx, pods, vms, testLabInstance)
+				err := UpdateLabInstanceStatus(pods, vms, testLabInstance)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(testLabInstance.Status.Status).To(Equal("Pending"))
 				Expect(testLabInstance.Status.NumPodsRunning).To(Equal("1/2"))
@@ -699,15 +634,12 @@ var _ = Describe("LabInstance Controller", func() {
 			It("should have a not ready status", func() {
 				pods := []*corev1.Pod{testPod}
 				vms := []*kubevirtv1.VirtualMachine{testVM, testNodeVM}
-				err := UpdateLabInstanceStatus(ctx, pods, vms, testLabInstance)
+				err := UpdateLabInstanceStatus(pods, vms, testLabInstance)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(testLabInstance.Status.Status).To(Equal("Not Ready"))
 				Expect(testLabInstance.Status.NumPodsRunning).To(Equal("1/1"))
 				Expect(testLabInstance.Status.NumVMsRunning).To(Equal("1/2"))
 			})
-		})
-		AfterEach(func() {
-			r.Client = nil
 		})
 	})
 
@@ -715,6 +647,9 @@ var _ = Describe("LabInstance Controller", func() {
 		var (
 			ctx context.Context
 		)
+		BeforeEach(func() {
+			ctx = context.Background()
+		})
 		Context("No error", func() {
 			It("should nil error", func() {
 				returnValue := ErrorMsg(ctx, nil, "Test-resource")

@@ -162,8 +162,9 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	// Update LabInstance status according to the status of the pods and vms
-	UpdateLabInstanceStatus(ctx, pods, vms, labInstance)
+	UpdateLabInstanceStatus(pods, vms, labInstance)
 
+	// TODO: Maybe add tests for content of status?
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
 		log.Error(err, "Failed to update LabInstance status")
@@ -173,6 +174,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	return ctrl.Result{}, nil
 }
 
+// TODO: Refactor to use ReconcileResource or at least to use the same pattern/splitting
 func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstance *ltbv1alpha1.LabInstance) ReturnToReconciler {
 	log := log.FromContext(ctx)
 	retValue := ReturnToReconciler{ShouldReturn: true, Result: ctrl.Result{}, Err: nil}
@@ -247,7 +249,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 		retValue.Err = errors.NewBadRequest("labInstance is nil")
 		return nil, retValue
 	}
-	resourceExists, err := ResourceExists(r, resource, resourceName, labInstance.Namespace)
+	resourceExists, err := r.ResourceExists(resource, resourceName, labInstance.Namespace)
 	if err != nil && !resourceExists {
 		createdResource, err := CreateResource(labInstance, node, resource)
 		if err != nil {
@@ -304,8 +306,8 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 
 }
 
-// TODO: Refactor could be method instead of function
-func ResourceExists(r *LabInstanceReconciler, resource client.Object, resourceName string, nameSpace string) (bool, error) {
+// TODO: Refactor probably does not need to be a function as it is only called once
+func (r *LabInstanceReconciler) ResourceExists(resource client.Object, resourceName string, nameSpace string) (bool, error) {
 	ctx := context.Context(context.Background())
 	err := r.Get(ctx, types.NamespacedName{Name: resourceName, Namespace: nameSpace}, resource)
 	if errors.IsNotFound(err) {
@@ -332,6 +334,9 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 	log := log.FromContext(context.Background())
 	if node == nil {
 		return nil, errors.NewBadRequest("Node is nil")
+	}
+	if labInstance == nil {
+		return nil, errors.NewBadRequest("LabInstance is nil")
 	}
 	metadata := metav1.ObjectMeta{
 		Name:      labInstance.Name + "-" + node.Name,
@@ -360,7 +365,8 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	log := log.FromContext(context.Background())
 	if node == nil {
 		return nil, errors.NewBadRequest("Node is nil")
-	} else if labInstance == nil {
+	}
+	if labInstance == nil {
 		return nil, errors.NewBadRequest("LabInstance is nil")
 	}
 	metadata := metav1.ObjectMeta{
@@ -599,7 +605,7 @@ func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.Ser
 
 }
 
-func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) error {
+func UpdateLabInstanceStatus(pods []*corev1.Pod, vms []*kubevirtv1.VirtualMachine, labInstance *ltbv1alpha1.LabInstance) error {
 	var podStatus corev1.PodPhase
 	var vmStatus kubevirtv1.VirtualMachinePrintableStatus
 	var numVMsRunning, numPodsRunning int
