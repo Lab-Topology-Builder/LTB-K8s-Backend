@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -643,7 +644,13 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconciler {
 	log := log.FromContext(ctx)
 	returnValue := ReturnToReconciler{ShouldReturn: false, Result: ctrl.Result{}, Err: nil}
-	if err != nil || errors.IsNotFound(err) {
+	if errors.IsNotFound(err) {
+		log.Info("Resource not found. Ignoring since object must be deleted")
+		returnValue.ShouldReturn = true
+		returnValue.Err = nil
+		return returnValue
+	}
+	if err != nil {
 		returnValue.ShouldReturn = true
 		returnValue.Err = err
 		log.Error(err, "Resource: "+resource)
