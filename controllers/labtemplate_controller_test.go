@@ -19,6 +19,7 @@ package controllers
 import (
 	"context"
 
+	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"k8s.io/apimachinery/pkg/types"
@@ -28,18 +29,17 @@ import (
 )
 
 var _ = Describe("LabTemplate Controller", func() {
-	var (
-		ctx context.Context // TODO we only use empty context, change?
-		req ctrl.Request
-		lr  *LabTemplateReconciler
-	)
-
-	// TODO: I couldn't test the rendering labtemplate because of the dependency on nodetype
+	var lr *LabTemplateReconciler
 
 	Describe("Reconcile", func() {
+		var (
+			ctx context.Context
+			req ctrl.Request
+		)
 		BeforeEach(func() {
+			ctx = context.Background()
 			req = ctrl.Request{}
-			fakeClient = fake.NewClientBuilder().WithObjects(testLabTemplate).Build()
+			fakeClient = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec).Build()
 			lr = &LabTemplateReconciler{Client: fakeClient, Scheme: scheme.Scheme}
 
 		})
@@ -55,7 +55,7 @@ var _ = Describe("LabTemplate Controller", func() {
 		})
 		Context("LabTemplate exists, but nodetypes don't exist", func() {
 			BeforeEach(func() {
-				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test-labtemplate"}
+				req.NamespacedName = types.NamespacedName{Name: testLabTemplateWithoutRenderedNodeSpec.Name, Namespace: testLabTemplateWithoutRenderedNodeSpec.Namespace}
 			})
 			It("should return nil error", func() {
 				result, err := lr.Reconcile(ctx, req)
@@ -63,24 +63,27 @@ var _ = Describe("LabTemplate Controller", func() {
 				Expect(err).To(BeNil())
 			})
 		})
-
 		Context("All resources exist, and successfully renders", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec, testNodeTypePod, testNodeTypeVM).Build()
+				req.NamespacedName = types.NamespacedName{Name: testLabTemplateWithoutRenderedNodeSpec.Name, Namespace: testLabTemplateWithoutRenderedNodeSpec.Namespace}
 			})
-			It("should return nil error", func() {
+			It("should return nil error and render nodespec", func() {
 				result, err := lr.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
 				Expect(err).To(BeNil())
+				labtemplate := &ltbv1alpha1.LabTemplate{}
+				err = lr.Get(ctx, req.NamespacedName, labtemplate)
+				Expect(err).To(BeNil())
+				Expect(labtemplate.Spec.Nodes).To(HaveLen(2))
+				Expect(labtemplate.Spec.Nodes[0].RenderedNodeSpec).To(MatchYAML(testLabTemplateWithRenderedNodeSpec.Spec.Nodes[0].RenderedNodeSpec))
+				Expect(labtemplate.Spec.Nodes[1].RenderedNodeSpec).ToNot(MatchYAML(testLabTemplateWithRenderedNodeSpec.Spec.Nodes[1].RenderedNodeSpec))
 			})
-			// TODO check more, like labtemplate content of rendered nodespec
 		})
-
 		Context("All resources exist, but fails to render", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplate, failingPodNodeType, testNodeTypeVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithRenderedNodeSpec, failingPodNodeType, testNodeTypeVM).Build()
 			})
-
 			It("should return error", func() {
 				result, err := lr.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
@@ -91,6 +94,7 @@ var _ = Describe("LabTemplate Controller", func() {
 			lr.Client = nil
 		})
 	})
+
 	Describe("SetupWithManager", func() {
 		It("should return error", func() {
 			err := lr.SetupWithManager(nil)

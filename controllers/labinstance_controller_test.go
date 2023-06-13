@@ -30,7 +30,7 @@ var _ = Describe("LabInstance Controller", func() {
 		BeforeEach(func() {
 			req = ctrl.Request{}
 			ctx = context.Background()
-			fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM).Build()
+			fakeClient = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM).Build()
 			r = &LabInstanceReconciler{Client: fakeClient, Scheme: scheme.Scheme}
 		})
 		Context("Empty request", func() {
@@ -41,7 +41,6 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(result).To(Equal(ctrl.Result{}))
 			})
 		})
-
 		Context("Namespaced request with wrong name", func() {
 			It("should return NotFound error", func() {
 				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
@@ -61,7 +60,6 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Lab template doesn't exist", func() {
 				BeforeEach(func() {
 					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testNodeTypePod, testNodeTypeVM).Build()
@@ -74,10 +72,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{}))
 				})
 			})
-
 			Context("Ttyd service account doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create ttyd service account", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -86,10 +83,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Ttyd role doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a ttyd role", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -98,10 +94,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Ttyd role binding doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a ttyd rolebinding", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -110,10 +105,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Ttyd pod doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a ttyd pod", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -122,10 +116,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Ttyd service doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a ttyd service", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -134,10 +127,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Node type not found", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should return not found error", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -147,10 +139,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{}))
 				})
 			})
-
 			Context("VM doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a VM", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -159,10 +150,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Pod doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a Pod", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -171,10 +161,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Service for remote access doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testVMIngress, testPodIngress).Build()
 				})
 				It("should create a Service for remote access", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -183,10 +172,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("Ingress for remote access doesn't exist", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPodNetworkAttachmentDefinition, testVM, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService).Build()
 				})
 				It("should create an Ingress for remote access", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -195,10 +183,9 @@ var _ = Describe("LabInstance Controller", func() {
 					Expect(result).To(Equal(ctrl.Result{Requeue: true}))
 				})
 			})
-
 			Context("All resources exists", func() {
 				BeforeEach(func() {
-					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod, testNodeTypeVM, testPod, testVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
+					r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod, testNodeTypeVM, testPod, testVM, testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition, testServiceAccount, testRoleBinding, testRole, testTtydPod, testTtydService, testService, testVMIngress, testPodIngress).Build()
 				})
 				It("should return nil error", func() {
 					req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: testLabInstance.Name}
@@ -209,6 +196,7 @@ var _ = Describe("LabInstance Controller", func() {
 			})
 		})
 	})
+
 	Describe("ReconcileNetwork", func() {
 		var (
 			ctx context.Context
@@ -373,7 +361,7 @@ var _ = Describe("LabInstance Controller", func() {
 				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance).Build()
 			})
 			It("should return error", func() {
-				returnValue := r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
+				returnValue := r.GetLabTemplate(ctx, testLabInstance, testLabTemplateWithRenderedNodeSpec)
 				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
 				Expect(apiErrors.IsNotFound(returnValue.Err)).To(BeTrue())
 				Expect(returnValue.ShouldReturn).To(BeTrue())
@@ -381,10 +369,10 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 		Context("LabTemplate exists", func() {
 			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec).Build()
 			})
 			It("should return nil error", func() {
-				returnValue := r.GetLabTemplate(ctx, testLabInstance, testLabTemplate)
+				returnValue := r.GetLabTemplate(ctx, testLabInstance, testLabTemplateWithRenderedNodeSpec)
 				Expect(returnValue.Result).To(Equal(ctrl.Result{}))
 				Expect(returnValue.Err).To(BeNil())
 				Expect(returnValue.ShouldReturn).To(BeFalse())
@@ -401,7 +389,7 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 		Context("NodeType doesn't exist", func() {
 			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate).Build()
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec).Build()
 			})
 			It("should return error", func() {
 				returnValue := r.GetNodeType(ctx, &normalPodNode.NodeTypeRef, testNodeTypePod)
@@ -412,7 +400,7 @@ var _ = Describe("LabInstance Controller", func() {
 		})
 		Context("NodeType exists", func() {
 			BeforeEach(func() {
-				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplate, testNodeTypePod).Build()
+				r.Client = fake.NewClientBuilder().WithObjects(testLabInstance, testLabTemplateWithRenderedNodeSpec, testNodeTypePod).Build()
 			})
 			It("should return nil error", func() {
 				returnValue := r.GetNodeType(ctx, &normalPodNode.NodeTypeRef, testNodeTypePod)
@@ -611,7 +599,6 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(apiErrors.IsBadRequest(err)).To(BeTrue())
 			})
 		})
-
 		Context("LabInstanceStatus update succeeds", func() {
 			It("should have a running status", func() {
 				pods := []*corev1.Pod{testPod}

@@ -17,7 +17,7 @@ const namespace = "test-namespace"
 
 var (
 	testLabInstance                                                                           *ltbv1alpha1.LabInstance
-	testLabTemplate                                                                           *ltbv1alpha1.LabTemplate
+	testLabTemplateWithoutRenderedNodeSpec, testLabTemplateWithRenderedNodeSpec               *ltbv1alpha1.LabTemplate
 	testNodeTypeVM, testNodeTypePod, failingVMNodeType, failingPodNodeType, invalidNodeType   *ltbv1alpha1.NodeType
 	err                                                                                       error
 	normalPodNode, normalVMNode, nodeUndefinedNodeType, vmYAMLProblemNode, podYAMLProblemNode *ltbv1alpha1.LabInstanceNodes
@@ -287,7 +287,29 @@ containers:
 						  protocol: tcp`,
 	}
 
-	testLabTemplate = &ltbv1alpha1.LabTemplate{
+	testLabTemplateWithoutRenderedNodeSpec = &ltbv1alpha1.LabTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-labtemplate",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.LabTemplateSpec{
+			Nodes: []ltbv1alpha1.LabInstanceNodes{
+				{
+					Name:             normalVMNode.Name,
+					NodeTypeRef:      normalVMNode.NodeTypeRef,
+					Ports:            normalPodNode.Ports,
+					RenderedNodeSpec: "",
+				},
+				{
+					Name:             normalPodNode.Name,
+					NodeTypeRef:      normalPodNode.NodeTypeRef,
+					Ports:            normalPodNode.Ports,
+					RenderedNodeSpec: "",
+				},
+			},
+		},
+	}
+	testLabTemplateWithRenderedNodeSpec = &ltbv1alpha1.LabTemplate{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test-labtemplate",
 			Namespace: namespace,
