@@ -1,3 +1,4 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/kubernetes/kubernetes)](https://goreportcard.com/report/https://github.com/Lab-Topology-Builder/LTB-K8s-Backend) [![codecov](https://codecov.io/gh/Lab-Topology-Builder/LTB-K8s-Backend/branch/main/graph/badge.svg?token=7WFVHK77UP)](https://codecov.io/gh/Lab-Topology-Builder/LTB-K8s-Backend) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/LICENSE)
 # operator
 // TODO(user): Add simple overview of use/purpose
 
@@ -16,11 +17,11 @@ kubectl apply -f config/samples/
 ```
 
 2. Build and push your image to the location specified by `IMG`:
-	
+
 ```sh
 make docker-build docker-push IMG=<some-registry>/operator:tag
 ```
-	
+
 3. Deploy the controller to the cluster with the image specified by `IMG`:
 
 ```sh
@@ -47,8 +48,8 @@ make undeploy
 ### How it works
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
+It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/)
+which provides a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster
 
 ### Test It Out
 1. Install the CRDs into the cluster:
@@ -91,4 +92,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-

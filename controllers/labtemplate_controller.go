@@ -47,7 +47,7 @@ func (r *LabTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	l.Info("Reconciling LabTemplate")
 	err := r.Get(ctx, req.NamespacedName, labTemplate)
 	if err != nil {
-		l.Error(err, "Failed to get labtemplate")
+		l.Error(err, "Failed to get labtemplate, ignoring must have been deleted")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	nodes := &labTemplate.Spec.Nodes

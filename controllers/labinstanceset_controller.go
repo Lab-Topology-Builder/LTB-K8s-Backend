@@ -16,6 +16,8 @@ limitations under the License.
 
 package controllers
 
+// TODO: Dead code, remove labinstanceset
+
 import (
 	"context"
 
@@ -42,8 +44,6 @@ func (r *LabInstanceSetReconciler) Reconcile(ctx context.Context, req ctrl.Reque
 	_ = log.FromContext(ctx)
 	log := r.Log.WithValues("labinstanceset", req.NamespacedName)
 	log.Info("Managing resources.")
-	// TODO(user): your logic here
-
 	return ctrl.Result{}, nil
 }
 
