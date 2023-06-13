@@ -43,9 +43,12 @@ spec:
             type: object
           spec:
             properties:
+              dnsAddress:
+                type: string
               labTemplateReference:
                 type: string
             required:
+            - dnsAddress
             - labTemplateReference
             type: object
           status:

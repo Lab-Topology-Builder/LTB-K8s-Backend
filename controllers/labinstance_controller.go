@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -94,7 +93,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// Reconcile TTYD Service Account
 	sa := corev1.ServiceAccount{}
 	sa.Name = labInstance.Name + "-ttyd-svcacc"
-	_, retValue = ReconcileResource(r, labInstance, &sa, nil)
+	_, retValue = ReconcileResource(r, labInstance, &sa, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -102,7 +101,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// Reconcile TTYD Role
 	role := rbacv1.Role{}
 	role.Name = labInstance.Name + "-ttyd-role"
-	_, retValue = ReconcileResource(r, labInstance, &role, nil)
+	_, retValue = ReconcileResource(r, labInstance, &role, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -110,7 +109,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// Reconcile TTYD Role Binding
 	roleBinding := rbacv1.RoleBinding{}
 	roleBinding.Name = labInstance.Name + "-ttyd-rolebind"
-	_, retValue = ReconcileResource(r, labInstance, &roleBinding, nil)
+	_, retValue = ReconcileResource(r, labInstance, &roleBinding, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -118,7 +117,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// Reconcile TTYD Service
 	ttydService := corev1.Service{}
 	ttydService.Name = labInstance.Name + "-ttyd-service"
-	_, retValue = ReconcileResource(r, labInstance, &ttydService, nil)
+	_, retValue = ReconcileResource(r, labInstance, &ttydService, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -126,7 +125,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// Reconcile TTYD Pod
 	ttydPod := corev1.Pod{}
 	ttydPod.Name = labInstance.Name + "-ttyd-pod"
-	_, retValue = ReconcileResource(r, labInstance, &ttydPod, nil)
+	_, retValue = ReconcileResource(r, labInstance, &ttydPod, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -143,7 +142,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if nodeType.Spec.Kind == "vm" {
 			virtualMachine := kubevirtv1.VirtualMachine{}
 			virtualMachine.Name = labInstance.Name + "-" + node.Name
-			vm, retValue := ReconcileResource(r, labInstance, &virtualMachine, &node)
+			vm, retValue := ReconcileResource(r, labInstance, &virtualMachine, &node, "")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
 			}
@@ -151,7 +150,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		} else {
 			p := corev1.Pod{}
 			p.Name = labInstance.Name + "-" + node.Name
-			pod, retValue := ReconcileResource(r, labInstance, &p, &node)
+			pod, retValue := ReconcileResource(r, labInstance, &p, &node, "")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
 			}
@@ -162,7 +161,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if len(node.Ports) > 0 {
 			s := corev1.Service{}
 			s.Name = labInstance.Name + "-" + node.Name + "-remote-access"
-			_, retValue = ReconcileResource(r, labInstance, &s, &node)
+			_, retValue = ReconcileResource(r, labInstance, &s, &node, "")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
 			}
@@ -171,7 +170,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		// Reconcile Ingress
 		ingress := networkingv1.Ingress{}
 		ingress.Name = labInstance.Name + "-" + node.Name + "-ingress"
-		_, retValue = ReconcileResource(r, labInstance, &ingress, &node)
+		_, retValue = ReconcileResource(r, labInstance, &ingress, &node, nodeType.Spec.Kind)
 		if retValue.shouldReturn {
 			return retValue.result, retValue.err
 		}
@@ -251,8 +250,7 @@ func (r *LabInstanceReconciler) ReconcileNetwork(ctx context.Context, labInstanc
 	return retValue
 }
 
-// TODO: can we use a pointer here also?
-func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabInstance, resource client.Object, node *ltbv1alpha1.LabInstanceNodes) (client.Object, ReturnToReconciler) {
+func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabInstance, resource client.Object, node *ltbv1alpha1.LabInstanceNodes, kind string) (client.Object, ReturnToReconciler) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
 	retValue := ReturnToReconciler{shouldReturn: true, result: ctrl.Result{}, err: nil}
@@ -260,7 +258,7 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 
 	resourceExists, err := r.ResourceExists(resource)
 	if err == nil && !resourceExists {
-		createdResource, err := CreateResource(labInstance, node, resource)
+		createdResource, err := CreateResource(labInstance, node, resource, kind)
 		if err != nil {
 			retValue.err = err
 			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(*createdResource).Elem().FieldByName("Name"))
@@ -286,10 +284,9 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	return resource, retValue
 }
 
-// TODO: Remove return value use pointers => Done
-// TODO: Maybe remove resourceName => Done
-// TODO: Add flag for ttyd => Not sure why we need to use a flag for this
-func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object) (*client.Object, error) {
+// TODO: Done: Remove return value use pointers
+// TODO: Done: Maybe remove resourceName
+func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object, kind string) (*client.Object, error) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
 	switch reflect.TypeOf(resource).Elem().Name() {
@@ -300,7 +297,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 	case "Service":
 		resource = CreateService(labInstance, node)
 	case "Ingress":
-		resource = CreateIngress(labInstance, node)
+		resource = CreateIngress(labInstance, node, kind)
 	case "Role":
 		_, role, _ := CreateSvcAccRoleRoleBind(labInstance)
 		resource = role
@@ -318,7 +315,7 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 
 }
 
-// TODO: Refactor could be method instead of function => Done
+// TODO: Done: Refactor could be method instead of function
 func (r *LabInstanceReconciler) ResourceExists(resource client.Object) (bool, error) {
 	ctx := context.Context(context.Background())
 	resourceName := reflect.ValueOf(resource).Elem().FieldByName("Name").String()
@@ -333,14 +330,36 @@ func (r *LabInstanceReconciler) ResourceExists(resource client.Object) (bool, er
 }
 
 func (r *LabInstanceReconciler) GetLabTemplate(ctx context.Context, labInstance *ltbv1alpha1.LabInstance, labTemplate *ltbv1alpha1.LabTemplate) ReturnToReconciler {
+	log := log.FromContext(ctx)
+	returnValue := ReturnToReconciler{shouldReturn: false, result: ctrl.Result{}, err: nil}
 	err := r.Get(ctx, types.NamespacedName{Name: labInstance.Spec.LabTemplateReference, Namespace: labInstance.Namespace}, labTemplate)
-	returnValue := ErrorMsg(ctx, err, "LabTemplate")
+	if err != nil && errors.IsNotFound(err) {
+		log.Info("LabTemplate not found", "LabTemplate", labInstance.Spec.LabTemplateReference)
+		returnValue.shouldReturn = true
+		return returnValue
+	} else if err != nil {
+		returnValue.shouldReturn = true
+		returnValue.err = err
+		log.Error(err, "Failed to get LabTemplate")
+		return returnValue
+	}
 	return returnValue
 }
 
 func (r *LabInstanceReconciler) GetNodeType(ctx context.Context, nodeTypeRef *ltbv1alpha1.NodeTypeRef, nodeType *ltbv1alpha1.NodeType) ReturnToReconciler {
-	err := r.Get(ctx, types.NamespacedName{Name: nodeTypeRef.Type, Namespace: "default"}, nodeType)
-	returnValue := ErrorMsg(ctx, err, "NodeType")
+	log := log.FromContext(ctx)
+	returnValue := ReturnToReconciler{shouldReturn: false, result: ctrl.Result{}, err: nil}
+	err := r.Get(ctx, types.NamespacedName{Name: nodeTypeRef.Type}, nodeType)
+	if err != nil && errors.IsNotFound(err) {
+		log.Info("NodeType not found", "NodeType", nodeTypeRef.Type)
+		returnValue.shouldReturn = true
+		return returnValue
+	} else if err != nil {
+		returnValue.shouldReturn = true
+		returnValue.err = err
+		log.Error(err, "Failed to get NodeType")
+		return returnValue
+	}
 	return returnValue
 }
 
@@ -409,6 +428,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	vmSpec.Template.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
 	vmSpec.Template.Spec.Volumes = append(vmSpec.Template.Spec.Volumes, volume)
 	vmSpec.Template.Spec.Domain.Devices.Disks = append(vmSpec.Template.Spec.Domain.Devices.Disks, disk)
+	log.Info("VM Spec", "Spec", vmSpec)
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,
@@ -416,31 +436,23 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	return vm
 }
 
-func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes) *networkingv1.Ingress {
-	// TODO: hack to determine if node is a vm or pod, need to improve
-	var resourceType string
-	if node != nil && strings.Contains(node.RenderedNodeSpec, "template:") {
-		resourceType = "vm"
-	} else {
-		resourceType = "pod"
-	}
+func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, kind string) *networkingv1.Ingress {
 	name := labInstance.Name + "-" + node.Name
 	ingressName := name + "-ingress"
 	metadata := metav1.ObjectMeta{
 		Name:      ingressName,
 		Namespace: labInstance.Namespace,
 		Annotations: map[string]string{
-			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + resourceType + "&arg=" + name + "&arg=bash",
+			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + kind + "&arg=" + name + "&arg=bash",
 		},
 	}
 	className := "nginx"
-	// TODO: ingress dns address should be configurable
 	ingress := &networkingv1.Ingress{
 		ObjectMeta: metadata,
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: &className,
 			Rules: []networkingv1.IngressRule{
-				{Host: ingressName + ".sr-118142.network.garden",
+				{Host: ingressName + "." + labInstance.Spec.DNSAddress,
 					IngressRuleValue: networkingv1.IngressRuleValue{
 						HTTP: &networkingv1.HTTPIngressRuleValue{
 							Paths: []networkingv1.HTTPIngressPath{
@@ -620,23 +632,6 @@ func UpdateLabInstanceStatus(ctx context.Context, pods []*corev1.Pod, vms []*kub
 			labInstance.Status.Status = string(vmStatus)
 		}
 	}
-}
-
-// TODO: move this function to utils
-func ErrorMsg(ctx context.Context, err error, resource string) ReturnToReconciler {
-	log := log.FromContext(ctx)
-	returnValue := ReturnToReconciler{shouldReturn: false, result: ctrl.Result{}, err: nil}
-	if err != nil && errors.IsNotFound(err) {
-		log.Info(resource + " resource not found.")
-		returnValue.shouldReturn = true
-		return returnValue
-	} else if err != nil {
-		returnValue.shouldReturn = true
-		returnValue.err = err
-		log.Error(err, "Failed to get "+resource)
-		return returnValue
-	}
-	return returnValue
 }
 
 func (r *LabInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
