@@ -51,26 +51,23 @@ var _ = Describe("NodeTye Controller", func() {
 				Expect(apiErrors.IsNotFound(err)).To(BeFalse())
 			})
 		})
-
-		// TODO: Unmarshal into wrong struct works unexpectedly, it should not work
 		Context("NodeType exists, but unmarshalling fails", func() {
 			BeforeEach(func() {
 				ln.Client = fake.NewClientBuilder().WithObjects(failingVMNodeType, failingPodNodeType).Build()
 				req.NamespacedName = types.NamespacedName{Name: failingVMNodeType.Name}
 			})
-			// It("should return error while unmarshaling VMSpec", func() {
-			// 	result, err := ln.Reconcile(ctx, req)
-			// 	Expect(result).To(Equal(ctrl.Result{}))
-			// 	Expect(err).ToNot(BeNil())
-			// })
-			// It("should return error while unmarshaling PodSpec", func() {
-			// 	req.NamespacedName = types.NamespacedName{Name: failingPodNodeType.Name}
-			// 	result, err := ln.Reconcile(ctx, req)
-			// 	Expect(result).To(Equal(ctrl.Result{}))
-			// 	Expect(err).ToNot(BeNil())
-			// })
+			It("should return error while unmarshaling VMSpec", func() {
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot(BeNil())
+			})
+			It("should return error while unmarshaling PodSpec", func() {
+				req.NamespacedName = types.NamespacedName{Name: failingPodNodeType.Name}
+				result, err := ln.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot(BeNil())
+			})
 		})
-
 		Context("Rendering NodeSpec for VM works", func() {
 			BeforeEach(func() {
 				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypeVM).Build()
@@ -82,7 +79,6 @@ var _ = Describe("NodeTye Controller", func() {
 				Expect(err).ToNot(HaveOccurred())
 			})
 		})
-
 		Context("Rendering NodeSpec for pod works", func() {
 			BeforeEach(func() {
 				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypePod).Build()
@@ -94,7 +90,6 @@ var _ = Describe("NodeTye Controller", func() {
 				Expect(err).ToNot(HaveOccurred())
 			})
 		})
-
 		Context("Invalid nodetype kind", func() {
 			BeforeEach(func() {
 				ln.Client = fake.NewClientBuilder().WithObjects(invalidNodeType).Build()

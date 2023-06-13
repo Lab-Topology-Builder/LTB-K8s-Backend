@@ -102,6 +102,11 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			l.Error(err, "Failed to unmarshal NodeSpec to VMSpec")
 			return ctrl.Result{}, err
 		}
+		if vmSpec.Template == nil {
+			err := errors.NewBadRequest("Invalid VM Spec")
+			l.Error(err, "Template field is missing")
+			return ctrl.Result{}, err
+		}
 		l.Info("Decoded VM Spec", "Spec", vmSpec)
 	} else if nodetype.Spec.Kind == "pod" {
 		// check if valid pod spec
@@ -109,6 +114,11 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		err := yaml.Unmarshal(nodeSpecBytes, &podSpec)
 		if err != nil {
 			l.Error(err, "Failed to unmarshal NodeSpec to PodSpec")
+			return ctrl.Result{}, err
+		}
+		if podSpec.Containers == nil {
+			err := errors.NewBadRequest("Invalid Pod Spec")
+			l.Error(err, "Containers field is missing")
 			return ctrl.Result{}, err
 		}
 		l.Info("Decoded Pod Spec", "Spec", podSpec)
