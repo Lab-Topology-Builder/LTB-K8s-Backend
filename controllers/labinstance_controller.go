@@ -284,8 +284,6 @@ func ReconcileResource(r *LabInstanceReconciler, labInstance *ltbv1alpha1.LabIns
 	return resource, retValue
 }
 
-// TODO: Done: Remove return value use pointers
-// TODO: Done: Maybe remove resourceName
 func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object, kind string) (*client.Object, error) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
@@ -315,7 +313,6 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 
 }
 
-// TODO: Done: Refactor could be method instead of function
 func (r *LabInstanceReconciler) ResourceExists(resource client.Object) (bool, error) {
 	ctx := context.Context(context.Background())
 	resourceName := reflect.ValueOf(resource).Elem().FieldByName("Name").String()
