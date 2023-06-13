@@ -16,20 +16,20 @@ import (
 const namespace = "test-namespace"
 
 var (
-	testLabInstance                                                                           *ltbv1alpha1.LabInstance
-	testLabTemplateWithoutRenderedNodeSpec, testLabTemplateWithRenderedNodeSpec               *ltbv1alpha1.LabTemplate
-	testNodeTypeVM, testNodeTypePod, failingVMNodeType, failingPodNodeType, invalidNodeType   *ltbv1alpha1.NodeType
-	err                                                                                       error
-	normalPodNode, normalVMNode, nodeUndefinedNodeType, vmYAMLProblemNode, podYAMLProblemNode *ltbv1alpha1.LabInstanceNodes
-	fakeClient                                                                                client.Client
-	testPod, testNodePod, testTtydPod                                                         *corev1.Pod
-	testVM, testNodeVM                                                                        *kubevirtv1.VirtualMachine
-	testPodIngress, testVMIngress                                                             *networkingv1.Ingress
-	testService, testTtydService                                                              *corev1.Service
-	testRole                                                                                  *rbacv1.Role
-	testRoleBinding                                                                           *rbacv1.RoleBinding
-	testServiceAccount                                                                        *corev1.ServiceAccount
-	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                     *network.NetworkAttachmentDefinition
+	testLabInstance                                                                                                                            *ltbv1alpha1.LabInstance
+	testLabTemplateWithoutRenderedNodeSpec, testLabTemplateWithRenderedNodeSpec                                                                *ltbv1alpha1.LabTemplate
+	testNodeTypeVM, testNodeTypePod, failingVMNodeType, failingPodNodeType, invalidKindNodeType, invalidYAMLVMNodeType, invalidYAMLPodNodeType *ltbv1alpha1.NodeType
+	err                                                                                                                                        error
+	normalPodNode, normalVMNode, nodeUndefinedNodeType, vmYAMLProblemNode, podYAMLProblemNode                                                  *ltbv1alpha1.LabInstanceNodes
+	fakeClient                                                                                                                                 client.Client
+	testPod, testNodePod, testTtydPod                                                                                                          *corev1.Pod
+	testVM, testNodeVM                                                                                                                         *kubevirtv1.VirtualMachine
+	testPodIngress, testVMIngress                                                                                                              *networkingv1.Ingress
+	testService, testTtydService                                                                                                               *corev1.Service
+	testRole                                                                                                                                   *rbacv1.Role
+	testRoleBinding                                                                                                                            *rbacv1.RoleBinding
+	testServiceAccount                                                                                                                         *corev1.ServiceAccount
+	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                                                                      *network.NetworkAttachmentDefinition
 )
 
 func initialize() {
@@ -151,27 +151,58 @@ template:
 		},
 	}
 
-	invalidNodeType = &ltbv1alpha1.NodeType{
+	invalidKindNodeType = &ltbv1alpha1.NodeType{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "invalidNodeType",
 			Namespace: "",
 		},
 		Spec: ltbv1alpha1.NodeTypeSpec{
-			Kind: "test",
+			Kind:     "test",
+			NodeSpec: ``,
+		},
+	}
+
+	invalidYAMLVMNodeType = &ltbv1alpha1.NodeType{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "invalidNodeType",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.NodeTypeSpec{
+			Kind: "vm",
 			NodeSpec: `
-containers:
+	containers:
     - name: {{ .Name }}
     image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
     command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
     ports:
-        {{- range $index, $port := .Ports }}
-        - name: {{ $port.Name }}
-        containerPort: {{ $port.Port }}
-        protocol: {{ $port.Protocol }}
-        {{- end }}`,
+    {{- range $index, $port := .Ports }}
+    - name: {{ $port.Name }}
+    containerPort: {{ $port.Port }}
+    protocol: {{ $port.Protocol }}
+    {{- end }}`,
 		},
 	}
 
+	invalidYAMLPodNodeType = &ltbv1alpha1.NodeType{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "invalidNodeType",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.NodeTypeSpec{
+			Kind: "pod",
+			NodeSpec: `
+	containers:
+    - name: {{ .Name }}
+    image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
+    command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+    ports:
+    {{- range $index, $port := .Ports }}
+    - name: {{ $port.Name }}
+    containerPort: {{ $port.Port }}
+    protocol: {{ $port.Protocol }}
+    {{- end }}`,
+		},
+	}
 	normalVMNode = &ltbv1alpha1.LabInstanceNodes{
 		Name: "test-node-0",
 		NodeTypeRef: ltbv1alpha1.NodeTypeRef{

@@ -99,7 +99,7 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		vmSpec := kubevirtv1.VirtualMachineSpec{}
 		err := yaml.Unmarshal(nodeSpecBytes, &vmSpec)
 		if err != nil {
-			l.Error(err, "Failed to unmarshal NodeSpec to VMSpec")
+			l.Error(err, "Failed to unmarshal NodeSpec YAML")
 			return ctrl.Result{}, err
 		}
 		if vmSpec.Template == nil {
@@ -113,7 +113,7 @@ func (r *NodeTypeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		podSpec := corev1.PodSpec{}
 		err := yaml.Unmarshal(nodeSpecBytes, &podSpec)
 		if err != nil {
-			l.Error(err, "Failed to unmarshal NodeSpec to PodSpec")
+			l.Error(err, "Failed to unmarshal NodeSpec YAML")
 			return ctrl.Result{}, err
 		}
 		if podSpec.Containers == nil {
