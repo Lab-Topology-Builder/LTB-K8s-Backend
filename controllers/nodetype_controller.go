@@ -60,11 +60,6 @@ var (
 				IPv4: "10.0.0.1/24",
 			},
 		},
-		Config: `
-#cloud-config
-password: ubuntu
-chpasswd: { expire: False }
-`,
 	}
 )
 

@@ -91,41 +91,41 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	// Reconcile TTYD Service Account
-	sa := corev1.ServiceAccount{}
+	sa := &corev1.ServiceAccount{}
 	sa.Name = labInstance.Name + "-ttyd-svcacc"
-	retValue = r.ReconcileResource(labInstance, &sa, nil, "")
+	retValue = r.ReconcileResource(labInstance, sa, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Role
-	role := rbacv1.Role{}
+	role := &rbacv1.Role{}
 	role.Name = labInstance.Name + "-ttyd-role"
-	retValue = r.ReconcileResource(labInstance, &role, nil, "")
+	retValue = r.ReconcileResource(labInstance, role, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Role Binding
-	roleBinding := rbacv1.RoleBinding{}
+	roleBinding := &rbacv1.RoleBinding{}
 	roleBinding.Name = labInstance.Name + "-ttyd-rolebind"
-	retValue = r.ReconcileResource(labInstance, &roleBinding, nil, "")
+	retValue = r.ReconcileResource(labInstance, roleBinding, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Service
-	ttydService := corev1.Service{}
+	ttydService := &corev1.Service{}
 	ttydService.Name = labInstance.Name + "-ttyd-service"
-	retValue = r.ReconcileResource(labInstance, &ttydService, nil, "")
+	retValue = r.ReconcileResource(labInstance, ttydService, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
 
 	// Reconcile TTYD Pod
-	ttydPod := corev1.Pod{}
+	ttydPod := &corev1.Pod{}
 	ttydPod.Name = labInstance.Name + "-ttyd-pod"
-	retValue = r.ReconcileResource(labInstance, &ttydPod, nil, "")
+	retValue = r.ReconcileResource(labInstance, ttydPod, nil, "")
 	if retValue.shouldReturn {
 		return retValue.result, retValue.err
 	}
@@ -140,37 +140,37 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			return retValue.result, retValue.err
 		}
 		if nodeType.Spec.Kind == "vm" {
-			virtualMachine := kubevirtv1.VirtualMachine{}
+			virtualMachine := &kubevirtv1.VirtualMachine{}
 			virtualMachine.Name = labInstance.Name + "-" + node.Name
-			retValue := r.ReconcileResource(labInstance, &virtualMachine, &node, "")
+			retValue := r.ReconcileResource(labInstance, virtualMachine, &node, "")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
 			}
-			vms = append(vms, &virtualMachine)
+			vms = append(vms, virtualMachine)
 		} else {
-			pod := corev1.Pod{}
+			pod := &corev1.Pod{}
 			pod.Name = labInstance.Name + "-" + node.Name
-			retValue := r.ReconcileResource(labInstance, &pod, &node, "")
+			retValue := r.ReconcileResource(labInstance, pod, &node, "")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
 			}
-			pods = append(pods, &pod)
+			pods = append(pods, pod)
 		}
 
 		// Reconcile Remote Access Service
 		if len(node.Ports) > 0 {
-			service := corev1.Service{}
+			service := &corev1.Service{}
 			service.Name = labInstance.Name + "-" + node.Name + "-remote-access"
-			retValue = r.ReconcileResource(labInstance, &service, &node, "")
+			retValue = r.ReconcileResource(labInstance, service, &node, "")
 			if retValue.shouldReturn {
 				return retValue.result, retValue.err
 			}
 		}
 
 		// Reconcile Ingress
-		ingress := networkingv1.Ingress{}
+		ingress := &networkingv1.Ingress{}
 		ingress.Name = labInstance.Name + "-" + node.Name + "-ingress"
-		retValue = r.ReconcileResource(labInstance, &ingress, &node, nodeType.Spec.Kind)
+		retValue = r.ReconcileResource(labInstance, ingress, &node, nodeType.Spec.Kind)
 		if retValue.shouldReturn {
 			return retValue.result, retValue.err
 		}
@@ -258,7 +258,7 @@ func (r *LabInstanceReconciler) ReconcileResource(labInstance *ltbv1alpha1.LabIn
 
 	resourceExists, err := r.ResourceExists(resource)
 	if err == nil && !resourceExists {
-		err := CreateResource(labInstance, node, resource, nodeKind)
+		resource, err := CreateResource(labInstance, node, resource, nodeKind)
 		if err != nil {
 			retValue.err = err
 			log.Error(err, "Failed to create new resource", "resource.Namespace", labInstance.Namespace, "resource.Name", reflect.ValueOf(resource).Elem().FieldByName("Name"))
@@ -284,7 +284,7 @@ func (r *LabInstanceReconciler) ReconcileResource(labInstance *ltbv1alpha1.LabIn
 	return retValue
 }
 
-func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object, kind string) error {
+func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabInstanceNodes, resource client.Object, kind string) (client.Object, error) {
 	ctx := context.Context(context.Background())
 	log := log.FromContext(ctx)
 	switch reflect.TypeOf(resource).Elem().Name() {
@@ -306,10 +306,10 @@ func CreateResource(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabI
 		_, _, roleBind := CreateSvcAccRoleRoleBind(labInstance)
 		resource = roleBind
 	default:
-		log.Info("Resource type not supported", "ResourceKind", resource.GetObjectKind().GroupVersionKind().Kind)
-		return errors.NewBadRequest(fmt.Sprintf("Resource type not supported: %s", reflect.TypeOf(resource).Elem().Name()))
+		log.Info("Resource type not supported", "ResourceKind", (resource).GetObjectKind().GroupVersionKind().Kind)
+		return resource, errors.NewBadRequest(fmt.Sprintf("Resource type not supported: %s", reflect.TypeOf(resource).Elem().Name()))
 	}
-	return nil
+	return resource, nil
 
 }
 
@@ -403,28 +403,9 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 		{Name: "default", InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
 		{Name: labInstance.Name, InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{Bridge: &kubevirtv1.InterfaceBridge{}}},
 	}
-	// TODO: Hack for cloud init
-	disk := kubevirtv1.Disk{
-		Name: "cloudinitdisk",
-		DiskDevice: kubevirtv1.DiskDevice{
-			Disk: &kubevirtv1.DiskTarget{
-				Bus: "virtio",
-			},
-		},
-	}
-	volume := kubevirtv1.Volume{
-		Name: "cloudinitdisk",
-		VolumeSource: kubevirtv1.VolumeSource{
-			CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
-				UserData: node.Config,
-			},
-		},
-	}
 	vmSpec.Template.Spec.Domain.Devices.Interfaces = interfaces
 	vmSpec.Template.Spec.Networks = networks
 	vmSpec.Template.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
-	vmSpec.Template.Spec.Volumes = append(vmSpec.Template.Spec.Volumes, volume)
-	vmSpec.Template.Spec.Domain.Devices.Disks = append(vmSpec.Template.Spec.Domain.Devices.Disks, disk)
 	log.Info("VM Spec", "Spec", vmSpec)
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
