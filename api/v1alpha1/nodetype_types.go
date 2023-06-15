@@ -4,18 +4,25 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// NodeTypeSpec defines the desired state of NodeType
 type NodeTypeSpec struct {
-	Kind     string `json:"kind,omitempty"`
+
+	// Kind can be used to specify if the nodes is either a pod or a vm
+	Kind string `json:"kind,omitempty"`
+	// NodeSpec is the PodSpec or VirtualMachineSpec for the node
 	NodeSpec string `json:"nodeSpec,omitempty"`
 }
 
+// NodeTypeStatus defines the observed state of NodeType
 type NodeTypeStatus struct {
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:resource:scope=Cluster
 //+kubebuilder:subresource:status
 
+// NodeType is the Schema for the nodetypes API
 type NodeType struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

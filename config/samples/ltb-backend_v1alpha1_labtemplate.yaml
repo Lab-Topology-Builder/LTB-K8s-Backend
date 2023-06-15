@@ -15,15 +15,7 @@ spec:
       type: "nodetypeubuntuvm"
       image: "ubuntu"
       version: "22.04"
-    config: |-
-              #cloud-config
-              password: ubuntu
-              chpasswd: { expire: False }
-              ssh_pwauth: True
-              packages:
-                - qemu-guest-agent
-              runcmd:
-                - [ systemctl, start, qemu-guest-agent ]
+    config: "I2Nsb3VkLWNvbmZpZwpwYXNzd29yZDogdWJ1bnR1CmNocGFzc3dkOiB7IGV4cGlyZTogRmFsc2UgfQpzc2hfcHdhdXRoOiBUcnVlCnBhY2thZ2VzOgogLSBxZW11LWd1ZXN0LWFnZW50CiAtIGNtYXRyaXgKcnVuY21kOgogLSBbIHN5c3RlbWN0bCwgc3RhcnQsIHFlbXUtZ3Vlc3QtYWdlbnQgXQo="
     ports:
     - name: "ssh"
       port: 22
@@ -37,6 +29,7 @@ spec:
     - name: "ssh"
       port: 22
       protocol: "TCP"
+    config: '["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]'
   - name: "sample-node-3"
     nodetyperef:
       type: "genericpod"
@@ -46,6 +39,7 @@ spec:
     - name: "ssh"
       port: 22
       protocol: "TCP"
+    config: '["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]'
   neighbors:
   - "TestHost1:1,TestHost2:1"
   - "TestHost1:2,TestHost3:1"

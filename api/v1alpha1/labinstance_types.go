@@ -6,6 +6,7 @@ import (
 
 type LabInstanceSpec struct {
 	LabTemplateReference string `json:"labTemplateReference"`
+	DNSAddress           string `json:"dnsAddress"`
 }
 
 type LabInstanceStatus struct {

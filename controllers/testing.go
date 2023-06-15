@@ -18,7 +18,6 @@ var (
 	testLabInstance                                                                                                                                                           *ltbv1alpha1.LabInstance
 	testLabTemplateWithoutRenderedNodeSpec, testLabTemplateWithRenderedNodeSpec, testLabTemplateWithoutRenderedNodeSpec2                                                      *ltbv1alpha1.LabTemplate
 	testNodeVMType, testPodNodeType, failingVMNodeType, failingPodNodeType, invalidKindNodeType, invalidNodeSpecVMNodeType, invalidNodeSpecPodNodeType, renderInvalidNodeType *ltbv1alpha1.NodeType
-	err                                                                                                                                                                       error
 	testPodNode, testVMNode, nodeWithUndefinedNodeType, vmNodeYAMLProblem, podNodeYAMLProblem, podRenderSpecProblem                                                           *ltbv1alpha1.LabInstanceNodes
 	fakeClient                                                                                                                                                                client.Client
 	testPod, testPodUndefinedNode, testTtydPod, testPodRenderSpecProblem                                                                                                      *corev1.Pod

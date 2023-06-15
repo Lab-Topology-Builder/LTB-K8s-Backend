@@ -14,10 +14,6 @@ spec:
       kind: LabInstance
       name: labinstances.ltb-backend.ltb
       version: v1alpha1
-    - displayName: Lab Instance Set
-      kind: LabInstanceSet
-      name: labinstancesets.ltb-backend.ltb
-      version: v1alpha1
     - displayName: Lab Template
       kind: LabTemplate
       name: labtemplates.ltb-backend.ltb
