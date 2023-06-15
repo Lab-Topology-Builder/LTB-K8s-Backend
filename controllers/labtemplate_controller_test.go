@@ -77,6 +77,18 @@ var _ = Describe("LabTemplate Controller", func() {
 		AfterEach(func() {
 			lr.Client = nil
 		})
+
+		Context("Rendering template fails", func() {
+			BeforeEach(func() {
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec2, renderInvalidNodeType, testPodRenderSpecProblem).Build()
+				req.NamespacedName = types.NamespacedName{Name: testLabTemplateWithoutRenderedNodeSpec2.Name}
+			})
+			It("should return error", func() {
+				result, err := lr.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot((BeNil()))
+			})
+		})
 	})
 
 	Describe("SetupWithManager", func() {

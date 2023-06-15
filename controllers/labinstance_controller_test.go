@@ -610,7 +610,7 @@ var _ = Describe("LabInstance Controller", func() {
 				Expect(testLabInstance.Status.NumVMsRunning).To(Equal("1/1"))
 			})
 			It("should have a pending status", func() {
-				pods := []*corev1.Pod{testPod, testNodePod}
+				pods := []*corev1.Pod{testPod, testPodUndefinedNode}
 				vms := []*kubevirtv1.VirtualMachine{testVM}
 				err := UpdateLabInstanceStatus(pods, vms, testLabInstance)
 				Expect(err).NotTo(HaveOccurred())
@@ -620,7 +620,7 @@ var _ = Describe("LabInstance Controller", func() {
 			})
 			It("should have a not ready status", func() {
 				pods := []*corev1.Pod{testPod}
-				vms := []*kubevirtv1.VirtualMachine{testVM, testNodeVM}
+				vms := []*kubevirtv1.VirtualMachine{testVM, testVM2}
 				err := UpdateLabInstanceStatus(pods, vms, testLabInstance)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(testLabInstance.Status.Status).To(Equal("Not Ready"))
