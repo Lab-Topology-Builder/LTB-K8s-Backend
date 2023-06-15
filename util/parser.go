@@ -1,7 +1,6 @@
 package util
 
 import (
-	// "errors"
 	"fmt"
 	"strings"
 	"text/template"
@@ -13,12 +12,13 @@ import (
 
 func ParseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder, data ltbv1alpha1.LabInstanceNodes) error {
 	tmplt, err := template.New("nodeTemplate").Parse(nodetype.Spec.NodeSpec)
+
 	if err != nil {
-		return err
+		return fmt.Errorf("ParseAndRenderTemplate: Failed to parse template\nErr:%s", err)
 	}
 	err = tmplt.Execute(renderedNodeSpec, data)
 	if err != nil {
-		return err
+		return fmt.Errorf("ParseAndRenderTemplate: Failed to render template\nErr:%s", err)
 	}
 	log.Log.Info(fmt.Sprintf("Rendered Template: %s", renderedNodeSpec.String()))
 	return nil

@@ -4,12 +4,36 @@ on:
         branches: [ "main" ]
         # Publish semver tags as releases
         tags: [ 'v*.*.*' ]
+        paths-ignore:
+            - 'docs/**'
     pull_request:
         branches: [ "main" ]
+        paths-ignore:
+            - 'docs/**'
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
 jobs:
+    test:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            - name: Setup Go environment
+              uses: actions/setup-go@v4
+              with:
+                go-version: '1.20'
+            - name: Install dependencies
+              run: |
+                  go mod download
+                  go mod verify
+            - name: Run tests
+              run: "make test"
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
+
     build:
         runs-on: ubuntu-latest
         permissions:
