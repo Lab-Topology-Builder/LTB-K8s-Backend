@@ -145,10 +145,8 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	}
 
-	// Update LabInstance status according to the status of the pods and vms
 	UpdateLabInstanceStatus(pods, vms, labInstance)
 
-	// TODO: Maybe add tests for content of status?
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
 		log.Error(err, "Failed to update LabInstance status")
