@@ -100,3 +100,21 @@ jobs:
             #     # This step uses the identity token to provision an ephemeral certificate
             #     # against the sigstore community Fulcio instance.
             #   run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
+
+            # Bundle
+            - name: Generate operator bundle
+              run: make bundle
+
+            - name: Build the bundle image
+              run: make bundle-build
+
+            - name: Push the bundle image
+              run: make bundle-push
+
+            - name: Intall operator-sdk and olm
+              run: |
+                export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+                export OS=$(uname | awk '{print tolower($0)}')
+                operator-sdk olm install
+
+            # Validate bundle
