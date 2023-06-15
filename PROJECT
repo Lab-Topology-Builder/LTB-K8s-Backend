@@ -17,15 +17,6 @@ resources:
   controller: true
   domain: ltb
   group: ltb-backend
-  kind: LabInstanceSet
-  path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1
-  version: v1alpha1
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: ltb
-  group: ltb-backend
   kind: LabInstance
   path: github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1
   version: v1alpha1
