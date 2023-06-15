@@ -22,7 +22,7 @@ var _ = Describe("NodeTye Controller", func() {
 	Describe("Reconcile", func() {
 		BeforeEach(func() {
 			req = ctrl.Request{}
-			fakeClient = fake.NewClientBuilder().WithObjects(testPodNodeType, testNodeVM).Build()
+			fakeClient = fake.NewClientBuilder().WithObjects(testPodNodeType, testVM2).Build()
 			ln = &NodeTypeReconciler{Client: fakeClient, Scheme: scheme.Scheme}
 		})
 		Context("NodeType doesn't exists", func() {

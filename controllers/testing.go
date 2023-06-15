@@ -8,7 +8,6 @@ import (
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -16,20 +15,20 @@ import (
 const namespace = "test-namespace"
 
 var (
-	testLabInstance                                                                                                                                    *ltbv1alpha1.LabInstance
-	testLabTemplateWithoutRenderedNodeSpec, testLabTemplateWithRenderedNodeSpec                                                                        *ltbv1alpha1.LabTemplate
-	testNodeVMType, testPodNodeType, failingVMNodeType, failingPodNodeType, invalidKindNodeType, invalidNodeSpecVMNodeType, invalidNodeSpecPodNodeType *ltbv1alpha1.NodeType
-	err                                                                                                                                                error
-	testPodNode, testVMNode, nodeWithUndefinedNodeType, vmNodeYAMLProblem, podNodeYAMLProblem                                                          *ltbv1alpha1.LabInstanceNodes
-	fakeClient                                                                                                                                         client.Client
-	testPod, testNodePod, testTtydPod                                                                                                                  *corev1.Pod
-	testVM, testNodeVM                                                                                                                                 *kubevirtv1.VirtualMachine
-	testPodIngress, testVMIngress                                                                                                                      *networkingv1.Ingress
-	testService, testTtydService                                                                                                                       *corev1.Service
-	testRole                                                                                                                                           *rbacv1.Role
-	testRoleBinding                                                                                                                                    *rbacv1.RoleBinding
-	testServiceAccount                                                                                                                                 *corev1.ServiceAccount
-	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                                                                              *network.NetworkAttachmentDefinition
+	testLabInstance                                                                                                                                                           *ltbv1alpha1.LabInstance
+	testLabTemplateWithoutRenderedNodeSpec, testLabTemplateWithRenderedNodeSpec, testLabTemplateWithoutRenderedNodeSpec2                                                      *ltbv1alpha1.LabTemplate
+	testNodeVMType, testPodNodeType, failingVMNodeType, failingPodNodeType, invalidKindNodeType, invalidNodeSpecVMNodeType, invalidNodeSpecPodNodeType, renderInvalidNodeType *ltbv1alpha1.NodeType
+	err                                                                                                                                                                       error
+	testPodNode, testVMNode, nodeWithUndefinedNodeType, vmNodeYAMLProblem, podNodeYAMLProblem, podRenderSpecProblem                                                           *ltbv1alpha1.LabInstanceNodes
+	fakeClient                                                                                                                                                                client.Client
+	testPod, testPodUndefinedNode, testTtydPod, testPodRenderSpecProblem                                                                                                      *corev1.Pod
+	testVM, testVM2                                                                                                                                                           *kubevirtv1.VirtualMachine
+	testPodIngress, testVMIngress                                                                                                                                             *networkingv1.Ingress
+	testService, testTtydService                                                                                                                                              *corev1.Service
+	testRole                                                                                                                                                                  *rbacv1.Role
+	testRoleBinding                                                                                                                                                           *rbacv1.RoleBinding
+	testServiceAccount                                                                                                                                                        *corev1.ServiceAccount
+	testPodNetworkAttachmentDefinition, testVMNetworkAttachmentDefinition                                                                                                     *network.NetworkAttachmentDefinition
 )
 
 func initialize() {
@@ -134,6 +133,19 @@ containers:
     containerPort: {{ $port.Port }}
     protocol: {{ $port.Protocol }}
     {{- end }}`,
+		},
+	}
+
+	renderInvalidNodeType = &ltbv1alpha1.NodeType{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "GenericPodType",
+		},
+		Spec: ltbv1alpha1.NodeTypeSpec{
+			Kind: "pod",
+			NodeSpec: `
+containers:
+- name: {{}{{}} .Name }}
+`,
 		},
 	}
 
@@ -318,6 +330,15 @@ template:
 						  protocol: tcp`,
 	}
 
+	podRenderSpecProblem = &ltbv1alpha1.LabInstanceNodes{
+		Name: "test-node-5",
+		NodeTypeRef: ltbv1alpha1.NodeTypeRef{
+			Type:    renderInvalidNodeType.Name,
+			Image:   "ubuntu",
+			Version: "20.04",
+		},
+	}
+
 	// ========================= 2.2.3 Undefined Node  =========================
 
 	nodeWithUndefinedNodeType = &ltbv1alpha1.LabInstanceNodes{
@@ -354,6 +375,21 @@ template:
 					Name:             testPodNode.Name,
 					NodeTypeRef:      testPodNode.NodeTypeRef,
 					Ports:            testPodNode.Ports,
+					RenderedNodeSpec: "",
+				},
+			},
+		},
+	}
+	testLabTemplateWithoutRenderedNodeSpec2 = &ltbv1alpha1.LabTemplate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-labtemplate",
+			Namespace: "",
+		},
+		Spec: ltbv1alpha1.LabTemplateSpec{
+			Nodes: []ltbv1alpha1.LabInstanceNodes{
+				{
+					Name:             podRenderSpecProblem.Name,
+					NodeTypeRef:      podRenderSpecProblem.NodeTypeRef,
 					RenderedNodeSpec: "",
 				},
 			},
@@ -404,7 +440,7 @@ template:
 		},
 	}
 
-	testNodePod = &corev1.Pod{
+	testPodUndefinedNode = &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testLabInstance.Name + "-" + nodeWithUndefinedNodeType.Name,
 			Namespace: namespace,
@@ -417,6 +453,22 @@ template:
 		},
 		Status: corev1.PodStatus{
 			Phase: corev1.PodPending,
+		},
+	}
+
+	testPodRenderSpecProblem = &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testLabInstance.Name + "-" + testPodNode.Name,
+			Namespace: namespace,
+			Annotations: map[string]string{
+				"k8s.v1.cni.cncf.io/networks": testLabInstance.Name + "-pod",
+			},
+			Labels: map[string]string{
+				"app": testLabInstance.Name + "-" + testPodNode.Name + "-remote-access",
+			},
+		},
+		Status: corev1.PodStatus{
+			Phase: corev1.PodRunning,
 		},
 	}
 
@@ -454,7 +506,7 @@ template:
 		},
 	}
 
-	testNodeVM = &kubevirtv1.VirtualMachine{
+	testVM2 = &kubevirtv1.VirtualMachine{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testLabInstance.Name + "-" + testVMNode.Name + "-2",
 			Namespace: testLabInstance.Namespace,
@@ -625,19 +677,5 @@ template:
 			Name:     testLabInstance.Name + "-ttyd-role",
 			APIGroup: "rbac.authorization.k8s.io",
 		},
-	}
-
-	err = ltbv1alpha1.AddToScheme(scheme.Scheme)
-	if err != nil {
-		panic(err)
-	}
-	err = kubevirtv1.AddToScheme(scheme.Scheme)
-	if err != nil {
-		panic(err)
-	}
-
-	err = network.AddToScheme(scheme.Scheme)
-	if err != nil {
-		panic(err)
 	}
 }

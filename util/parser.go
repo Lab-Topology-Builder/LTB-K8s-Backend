@@ -12,6 +12,7 @@ import (
 
 func ParseAndRenderTemplate(nodetype *ltbv1alpha1.NodeType, renderedNodeSpec *strings.Builder, data ltbv1alpha1.LabInstanceNodes) error {
 	tmplt, err := template.New("nodeTemplate").Parse(nodetype.Spec.NodeSpec)
+
 	if err != nil {
 		return fmt.Errorf("ParseAndRenderTemplate: Failed to parse template\nErr:%s", err)
 	}

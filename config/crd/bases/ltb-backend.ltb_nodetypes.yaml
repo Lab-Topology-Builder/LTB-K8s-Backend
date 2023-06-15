@@ -18,7 +18,6 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: NodeType is the Schema for the nodetypes API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,19 +32,13 @@ spec:
           metadata:
             type: object
           spec:
-            description: NodeTypeSpec defines the desired state of NodeType
             properties:
               kind:
-                description: Kind can be used to specify if the nodes is either a
-                  pod or a vm
                 type: string
               nodeSpec:
-                description: NodeSpec is the PodSpec or VirtualMachineSpec for the
-                  node
                 type: string
             type: object
           status:
-            description: NodeTypeStatus defines the observed state of NodeType
             type: object
         type: object
     served: true
