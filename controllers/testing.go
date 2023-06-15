@@ -8,7 +8,6 @@ import (
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/client-go/kubernetes/scheme"
 	kubevirtv1 "kubevirt.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -678,19 +677,5 @@ template:
 			Name:     testLabInstance.Name + "-ttyd-role",
 			APIGroup: "rbac.authorization.k8s.io",
 		},
-	}
-
-	err = ltbv1alpha1.AddToScheme(scheme.Scheme)
-	if err != nil {
-		panic(err)
-	}
-	err = kubevirtv1.AddToScheme(scheme.Scheme)
-	if err != nil {
-		panic(err)
-	}
-
-	err = network.AddToScheme(scheme.Scheme)
-	if err != nil {
-		panic(err)
 	}
 }
