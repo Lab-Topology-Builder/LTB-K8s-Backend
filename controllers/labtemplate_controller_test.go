@@ -89,6 +89,9 @@ var _ = Describe("LabTemplate Controller", func() {
 				Expect(err).ToNot((BeNil()))
 			})
 		})
+		AfterEach(func() {
+			lr.Client = nil
+		})
 	})
 
 	Describe("SetupWithManager", func() {
