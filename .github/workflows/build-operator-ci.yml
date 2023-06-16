@@ -101,20 +101,7 @@ jobs:
             #     # against the sigstore community Fulcio instance.
             #   run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
 
-            # Bundle
-            - name: Generate operator bundle
-              run: make bundle
+            # Set up Kubectl and Kubeconfig
 
-            - name: Build the bundle image
-              run: make bundle-build
-
-            - name: Push the bundle image
-              run: make bundle-push
-
-            - name: Intall operator-sdk and olm
-              run: |
-                export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
-                export OS=$(uname | awk '{print tolower($0)}')
-                operator-sdk olm install
-
-            # Validate bundle
+            # Install OLM on the cluster
+            # Deploy the Operator using OLM, may be run the make commands
