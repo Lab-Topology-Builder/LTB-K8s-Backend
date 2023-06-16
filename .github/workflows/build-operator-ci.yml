@@ -101,7 +101,34 @@ jobs:
             #     # against the sigstore community Fulcio instance.
             #   run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
 
-            # Set up Kubectl and Kubeconfig
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+            id-token: write
+        needs: build
+        # Set up Kubectl and Kubeconfig
+            # - name: Set up Kubectl
+            #   uses: azure/k8s-set-context@v1
+            #   with:
+            #     kubeconfig: ${{ env.KUBECONFIG }}
+            #     version: latest
 
-            # Install OLM on the cluster
+            # # Install OLM on the cluster and check if it is installed
+            # - name: Install OLM
+            #   run: |
+            #       kubectl apply -f https://github.com/operator-framework/operator-lifecycle-manager/releases/latest/download/crds.yaml
+            #       kubectl apply -f https://github.com/operator-framework/operator-lifecycle-manager/releases/latest/download/olm.yaml
+            # - name: Check if OLM is installed
+            #   run: |
+            #       kubectl get csv -n olm
+            #       kubectl get pods -n olm
             # Deploy the Operator using OLM, may be run the make commands
+        steps:
+        - name: Bundle build and push
+          run: |
+              make bundle-build bundle-push BUNDLE_IMG=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bundle:latest
+        - name: Catalog build and push
+          run: |
+              make catalog-build catalog-push IMG=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-catalog:latest
