@@ -43,50 +43,70 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
+            # Test build docker image
 
-            # Install the cosign tool except on PR
-            # https://github.com/sigstore/cosign-installer
-            - name: Install cosign
-              if: github.event_name != 'pull_request'
-              uses: sigstore/cosign-installer@main
-              with:
-                cosign-release: main
 
-            # Workaround: https://github.com/docker/build-push-action/issues/461
-            - name: Setup Docker buildx
-              uses: docker/setup-buildx-action@v2
 
-            # Login to registry except on PR
-            # https://github.com/docker/login-action
-            - name: Log into registry ${{ env.REGISTRY }}
-              if: github.event_name != 'pull_request'
-              uses: docker/login-action@v2
-              with:
-                registry: ${{ env.REGISTRY }}
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
+    publish:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+            id-token: write
+        needs: build
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
 
-            # Extract metadata (tags, labels) for Docker
-            # https://github.com/docker/metadata-action
-            - name: Extract Docker metadata
-              id: meta
-              uses: docker/metadata-action@v4
-              with:
-                images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        # Install the cosign tool except on PR
+        # https://github.com/sigstore/cosign-installer
+        - name: Install cosign
+          if: github.event_name != 'pull_request'
+          uses: sigstore/cosign-installer@main
+          with:
+            cosign-release: main
 
-            # Build and push Docker image with Buildx (don't push on PR)
-            # https://github.com/docker/build-push-action
-            - name: Build and push Docker image
-              id: build-and-push
-              uses: docker/build-push-action@v4
-              with:
-                context: .
-                push: ${{ github.event_name != 'pull_request' }}
-                tags: ${{ steps.meta.outputs.tags }}
-                labels: ${{ steps.meta.outputs.labels }}
-                cache-from: type=gha
-                cache-to: type=gha,mode=max
+        # Workaround: https://github.com/docker/build-push-action/issues/461
+        - name: Setup Docker buildx
+          uses: docker/setup-buildx-action@v2
 
+        # Login to registry except on PR
+        # https://github.com/docker/login-action
+        - name: Log into registry ${{ env.REGISTRY }}
+          # if: github.event_name != 'pull_request'
+          uses: docker/login-action@v2
+          with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        # Extract metadata (tags, labels) for Docker
+        # https://github.com/docker/metadata-action
+        - name: Extract Docker metadata
+          id: meta
+          uses: docker/metadata-action@v4
+          with:
+            images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+        # Build and push Docker image with Buildx (don't push on PR)
+        # https://github.com/docker/build-push-action
+        - name: Build and push Docker image
+          id: build-and-push
+          uses: docker/build-push-action@v4
+          with:
+            context: .
+            # push: ${{ github.event_name != 'pull_request' }}
+            push: true
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
+
+        - name: Create Bundle and Catalog and push to registry
+          run: |
+              make bundle
+              make bundle-build bundle-push
+              make catalog-build catalog-push
 
             # Sign the resulting Docker image digest except on PRs.
             # This will only write to the public Rekor transparency log when the Docker
@@ -100,35 +120,3 @@ jobs:
             #     # This step uses the identity token to provision an ephemeral certificate
             #     # against the sigstore community Fulcio instance.
             #   run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
-
-    deploy:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
-            id-token: write
-        needs: build
-        # Set up Kubectl and Kubeconfig
-            # - name: Set up Kubectl
-            #   uses: azure/k8s-set-context@v1
-            #   with:
-            #     kubeconfig: ${{ env.KUBECONFIG }}
-            #     version: latest
-
-            # # Install OLM on the cluster and check if it is installed
-            # - name: Install OLM
-            #   run: |
-            #       kubectl apply -f https://github.com/operator-framework/operator-lifecycle-manager/releases/latest/download/crds.yaml
-            #       kubectl apply -f https://github.com/operator-framework/operator-lifecycle-manager/releases/latest/download/olm.yaml
-            # - name: Check if OLM is installed
-            #   run: |
-            #       kubectl get csv -n olm
-            #       kubectl get pods -n olm
-            # Deploy the Operator using OLM, may be run the make commands
-        steps:
-        - name: Bundle build and push
-          run: |
-              make bundle-build bundle-push BUNDLE_IMG=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bundle:latest
-        - name: Catalog build and push
-          run: |
-              make catalog-build catalog-push IMG=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-catalog:latest
