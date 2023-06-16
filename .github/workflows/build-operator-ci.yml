@@ -13,6 +13,9 @@ on:
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
+    OPERATOR_SDK_VERSION: v1.28.0
+    OS: linux
+    TARGETARCH: amd64
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -102,6 +105,12 @@ jobs:
             cache-from: type=gha
             cache-to: type=gha,mode=max
 
+        - name: Install operator-sdk
+          run: |
+              curl -LO https://github.com/operator-framework/operator-sdk/releases/download/${OPERATOR_SDK_VERSION}/operator-sdk_${OS}_${TARGETARCH} \
+              && chmod +x operator-sdk_${OS}_${TARGETARCH} \
+              && mv operator-sdk_${OS}_${TARGETARCH} /usr/local/bin/operator-sdk \
+              && echo $(operator-sdk version)
         - name: Create Bundle and Catalog and push to registry
           run: |
               make bundle
