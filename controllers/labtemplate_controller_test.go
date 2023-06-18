@@ -1,19 +1,3 @@
-/*
-Copyright 2023 Jan Untersander, Tsigereda Nebai Kidane.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package controllers
 
 import (
@@ -65,7 +49,7 @@ var _ = Describe("LabTemplate Controller", func() {
 		})
 		Context("All resources exist, and successfully renders", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec, testNodeTypePod, testNodeTypeVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec, testPodNodeType, testNodeVMType).Build()
 				req.NamespacedName = types.NamespacedName{Name: testLabTemplateWithoutRenderedNodeSpec.Name, Namespace: testLabTemplateWithoutRenderedNodeSpec.Namespace}
 			})
 			It("should return nil error and render nodespec", func() {
@@ -82,12 +66,27 @@ var _ = Describe("LabTemplate Controller", func() {
 		})
 		Context("All resources exist, but fails to render", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithRenderedNodeSpec, failingPodNodeType, testNodeTypeVM).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithRenderedNodeSpec, failingPodNodeType, testNodeVMType).Build()
 			})
 			It("should return error", func() {
 				result, err := lr.Reconcile(ctx, req)
 				Expect(result).To(Equal(ctrl.Result{}))
 				Expect(err).To((BeNil()))
+			})
+		})
+		AfterEach(func() {
+			lr.Client = nil
+		})
+
+		Context("Rendering template fails", func() {
+			BeforeEach(func() {
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec2, renderInvalidNodeType, testPodRenderSpecProblem).Build()
+				req.NamespacedName = types.NamespacedName{Name: testLabTemplateWithoutRenderedNodeSpec2.Name}
+			})
+			It("should return error", func() {
+				result, err := lr.Reconcile(ctx, req)
+				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(err).ToNot((BeNil()))
 			})
 		})
 		AfterEach(func() {

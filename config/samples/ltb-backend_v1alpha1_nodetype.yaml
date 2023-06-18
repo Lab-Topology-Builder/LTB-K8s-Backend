@@ -25,11 +25,17 @@ spec:
               - name: containerdisk
                 disk:
                   bus: virtio
+              - name: cloudinitdisk
+                disk:
+                  bus: virtio
         terminationGracePeriodSeconds: 0
         volumes:
           - name: containerdisk
             containerDisk:
               image: quay.io/containerdisks/ubuntu:22.04
+          - name: cloudinitdisk
+            cloudInitNoCloud:
+              userDataBase64: {{ .Config }}
 
 ---
 
@@ -49,7 +55,7 @@ spec:
     containers:
       - name: {{ .Name }}
         image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}
-        command: ["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]
+        command: {{ .Config }}
         ports:
           {{- range $index, $port := .Ports }}
           - name: {{ $port.Name }}

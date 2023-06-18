@@ -1,19 +1,3 @@
-/*
-Copyright 2023 Jan Untersander, Tsigereda Nebai Kidane.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package controllers
 
 import (
@@ -38,7 +22,7 @@ var _ = Describe("NodeTye Controller", func() {
 	Describe("Reconcile", func() {
 		BeforeEach(func() {
 			req = ctrl.Request{}
-			fakeClient = fake.NewClientBuilder().WithObjects(testNodeTypePod, testNodeVM).Build()
+			fakeClient = fake.NewClientBuilder().WithObjects(testPodNodeType, testVM2).Build()
 			ln = &NodeTypeReconciler{Client: fakeClient, Scheme: scheme.Scheme}
 		})
 		Context("NodeType doesn't exists", func() {
@@ -53,8 +37,8 @@ var _ = Describe("NodeTye Controller", func() {
 		})
 		Context("NodeType exists, but VM YAML is invalid", func() {
 			BeforeEach(func() {
-				ln.Client = fake.NewClientBuilder().WithObjects(invalidYAMLVMNodeType).Build()
-				req.NamespacedName = types.NamespacedName{Name: invalidYAMLVMNodeType.Name}
+				ln.Client = fake.NewClientBuilder().WithObjects(invalidNodeSpecVMNodeType).Build()
+				req.NamespacedName = types.NamespacedName{Name: invalidNodeSpecVMNodeType.Name}
 			})
 			It("should return error while unmarshaling, YAML is invalid", func() {
 				result, err := ln.Reconcile(ctx, req)
@@ -65,8 +49,8 @@ var _ = Describe("NodeTye Controller", func() {
 		})
 		Context("NodeType exists, but Pod YAML is invalid", func() {
 			BeforeEach(func() {
-				ln.Client = fake.NewClientBuilder().WithObjects(invalidYAMLPodNodeType).Build()
-				req.NamespacedName = types.NamespacedName{Name: invalidYAMLPodNodeType.Name}
+				ln.Client = fake.NewClientBuilder().WithObjects(invalidNodeSpecPodNodeType).Build()
+				req.NamespacedName = types.NamespacedName{Name: invalidNodeSpecPodNodeType.Name}
 			})
 			It("should return error while unmarshaling, YAML is invalid", func() {
 				result, err := ln.Reconcile(ctx, req)
@@ -94,8 +78,8 @@ var _ = Describe("NodeTye Controller", func() {
 		})
 		Context("Rendering NodeSpec for VM works", func() {
 			BeforeEach(func() {
-				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypeVM).Build()
-				req.NamespacedName = types.NamespacedName{Name: testNodeTypeVM.Name}
+				ln.Client = fake.NewClientBuilder().WithObjects(testNodeVMType).Build()
+				req.NamespacedName = types.NamespacedName{Name: testNodeVMType.Name}
 			})
 			It("should render the VMSpec successfully", func() {
 				result, err := ln.Reconcile(ctx, req)
@@ -105,8 +89,8 @@ var _ = Describe("NodeTye Controller", func() {
 		})
 		Context("Rendering NodeSpec for pod works", func() {
 			BeforeEach(func() {
-				ln.Client = fake.NewClientBuilder().WithObjects(testNodeTypePod).Build()
-				req.NamespacedName = types.NamespacedName{Name: testNodeTypePod.Name}
+				ln.Client = fake.NewClientBuilder().WithObjects(testPodNodeType).Build()
+				req.NamespacedName = types.NamespacedName{Name: testPodNodeType.Name}
 			})
 			It("should render the PodSpec successfully", func() {
 				result, err := ln.Reconcile(ctx, req)
