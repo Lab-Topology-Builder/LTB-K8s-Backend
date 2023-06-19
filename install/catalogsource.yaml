@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: lab-topology-builder-operator
+  namespace: default
+spec:
+  displayName: LTB Operator
+  image: ghcr.io/lab-topology-builder/ltb-k8s-backend-catalog:v0.0.1
+  sourceType: grpc
