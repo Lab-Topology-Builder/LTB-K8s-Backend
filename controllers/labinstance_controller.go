@@ -47,6 +47,14 @@ type ReturnToReconciler struct {
 //+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="",resources=pods/status,verbs=get;update;patch
+//+kube-builder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+//+kube-builder:rbac:groups="",resources=services/status,verbs=get;update;patch
+//+kube-builder:rbac:groups="",resources=roles,verbs=get;list;watch;create;update;patch;delete
+//+kube-builder:rbac:groups="",resources=roles/status,verbs=get;update;patch
+//+kube-builder:rbac:groups="",resources=rolebindings,verbs=get;list;watch;create;update;patch;delete
+//+kube-builder:rbac:groups="",resources=rolebindings/status,verbs=get;update;patch
+//+kube-builder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
+//+kube-builder:rbac:groups="",resources=serviceaccounts/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=k8s.cni.cncf.io,resources=network-attachment-definitions,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=k8s.cni.cncf.io,resources=network-attachment-definitions/status,verbs=get;update;patch
 
