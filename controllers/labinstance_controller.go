@@ -47,6 +47,8 @@ type ReturnToReconciler struct {
 //+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/finalizers,verbs=update
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="",resources=pods/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=k8s.cni.cncf.io,resources=network-attachment-definitions,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=k8s.cni.cncf.io,resources=network-attachment-definitions/status,verbs=get;update;patch
 
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)

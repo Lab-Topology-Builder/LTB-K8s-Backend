@@ -26,6 +26,26 @@ rules:
   - patch
   - update
 - apiGroups:
+  - k8s.cni.cncf.io
+  resources:
+  - network-attachment-definitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - k8s.cni.cncf.io
+  resources:
+  - network-attachment-definitions/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - kubevirt.io
   resources:
   - virtualmachines

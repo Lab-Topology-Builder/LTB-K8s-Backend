@@ -6,6 +6,6 @@ metadata:
 spec:
   channel: "alpha"
   name: ltb-operator
-  source: lab-topology-builder-operator
-  sourceNamespace: olm
+  source: lab-topology-builder-catalog
+  sourceNamespace: operators
   startingCSV: ltb-operator.v0.0.1
