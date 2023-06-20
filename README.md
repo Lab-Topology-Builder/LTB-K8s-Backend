@@ -6,6 +6,7 @@ This Kubernetes Operator is part of the [Lab Topology Builder Backend](https://l
 
 ## Description
 
+<!-- TODO: Something is missing in this sentence, but I don't know how to formulate it right now, need to check it with the docu update later. -->
 The LTB K8s Operator is a Kubernetes Operator that manages the lifecycle of Lab Topology Builder Lab Instances, Lab Templates and Node Types.
 
 ## Installation
