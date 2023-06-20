@@ -9,7 +9,7 @@ Contributions are welcome and appreciated.
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 
 It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/)
-which provides a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster
+which provides a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.
 
 ### Test It Out
 
