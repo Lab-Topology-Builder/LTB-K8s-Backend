@@ -43,7 +43,7 @@ jobs:
             contents: read
             packages: write
             id-token: write
-        needs: build
+        needs: test
         steps:
         - name: Checkout repository
           uses: actions/checkout@v3
