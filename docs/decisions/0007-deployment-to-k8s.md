@@ -13,4 +13,4 @@ Files could be stored in git and deployed to a K8s cluster from there or we coul
 
 Chosen option: "Store files in Git", because it makes automation of the deployment easier and reduces the possibility of human errors.
 
-<!--TODO: need to be updated -->
+<!--TODO: need to be updated, where is this from and what were our thoughts about this? -->

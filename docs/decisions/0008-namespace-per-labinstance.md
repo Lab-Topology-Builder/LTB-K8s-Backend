@@ -11,6 +11,4 @@ LabInstance could be created in separate namespaces or one namespace for all Lab
 
 ## Decision Outcome
 
-Chosen option: "Namespace per LabInstance", because not decided yet.
-
-<!-- TODO: need to be updated -->
+Chosen option: "Namespace per LabInstance", because it will be easier in the future to manage the resources and permissions.
