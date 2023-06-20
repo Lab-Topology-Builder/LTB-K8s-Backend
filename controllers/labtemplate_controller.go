@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"strings"
+	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -32,7 +33,7 @@ func (r *LabTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	err := r.Get(ctx, req.NamespacedName, labTemplate)
 	if err != nil {
 		l.Error(err, "Failed to get labtemplate, ignoring must have been deleted")
-		return ctrl.Result{}, client.IgnoreNotFound(err)
+		return ctrl.Result{Requeue: true, RequeueAfter: 2 * time.Second}, client.IgnoreNotFound(err)
 	}
 	nodes := &labTemplate.Spec.Nodes
 	for i := 0; i < len(*nodes); i++ {

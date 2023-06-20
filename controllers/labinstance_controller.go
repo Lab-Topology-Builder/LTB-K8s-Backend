@@ -51,15 +51,11 @@ type ReturnToReconciler struct {
 //+kubebuilder:rbac:groups="",resources=pods/exec,verbs=create;update;delete
 //+kubebuilder:rbac:groups="",resources=pods/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups="",resources=services/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups="",resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups="",resources=serviceaccounts/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=roles,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=roles/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=rolebindings,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups="rbac.authorization.k8s.io",resources=rolebindings/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=k8s.cni.cncf.io,resources=network-attachment-definitions,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=k8s.cni.cncf.io,resources=network-attachment-definitions/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses,verbs=get;list;watch;create;update;patch;delete
 
 func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
@@ -68,8 +64,8 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	err = r.Get(ctx, req.NamespacedName, labInstance)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("LabInstance resource not found. Ignoring since object must be deleted")
-			return ctrl.Result{}, err
+			log.Info("LabInstance resource not found. Ignoring since object must be deleted", "IsNotFound", err)
+			return ctrl.Result{Requeue: false}, client.IgnoreNotFound(err)
 		}
 		log.Error(err, "Failed to get LabInstance")
 		return ctrl.Result{}, err
@@ -174,7 +170,11 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	}
 
-	UpdateLabInstanceStatus(pods, vms, labInstance)
+	err = UpdateLabInstanceStatus(pods, vms, labInstance)
+	if err != nil {
+		log.Error(err, "Failed set new status for LabInstance")
+		return ctrl.Result{}, err
+	}
 
 	err = r.Status().Update(ctx, labInstance)
 	if err != nil {
@@ -407,6 +407,7 @@ func MapTemplateToPod(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.La
 		log.Error(err, "Failed to unmarshal node spec")
 		return nil, err
 	}
+	log.Info("PodSpec", "Spec applied to Pod", podSpec)
 	pod := &corev1.Pod{
 		ObjectMeta: metadata,
 		Spec:       *podSpec,
@@ -443,7 +444,7 @@ func MapTemplateToVM(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.Lab
 	vmSpec.Template.Spec.Domain.Devices.Interfaces = interfaces
 	vmSpec.Template.Spec.Networks = networks
 	vmSpec.Template.ObjectMeta.Labels = map[string]string{"app": labInstance.Name + "-" + node.Name + "-remote-access"}
-	log.Info("VM Spec", "Spec", vmSpec)
+	log.Info("VM Spec", "Spec applied to VM", vmSpec)
 	vm := &kubevirtv1.VirtualMachine{
 		ObjectMeta: metadata,
 		Spec:       *vmSpec,

@@ -55,14 +55,6 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - serviceaccounts/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - ""
-  resources:
   - services
   verbs:
   - create
@@ -72,14 +64,6 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - ""
-  resources:
-  - services/status
-  verbs:
-  - get
-  - patch
-  - update
 - apiGroups:
   - k8s.cni.cncf.io
   resources:
@@ -92,14 +76,6 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - k8s.cni.cncf.io
-  resources:
-  - network-attachment-definitions/status
-  verbs:
-  - get
-  - patch
-  - update
 - apiGroups:
   - kubevirt.io
   resources:
@@ -205,6 +181,18 @@ rules:
   - patch
   - update
 - apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
   - rbac.authorization.k8s.io
   resources:
   - rolebindings
@@ -219,14 +207,6 @@ rules:
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
-  - rolebindings/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
   - roles
   verbs:
   - create
@@ -236,14 +216,6 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
-  - roles/status
-  verbs:
-  - get
-  - patch
-  - update
 - apiGroups:
   - subresources.kubevirt.io
   resources:
