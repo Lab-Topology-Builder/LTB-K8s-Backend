@@ -1,4 +1,4 @@
-name: Build Operator
+name: Operator CI
 on:
     push:
         branches: [ "main" ]
@@ -36,20 +36,6 @@ jobs:
               run: "make test"
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v3
-
-    build:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
-            id-token: write
-        needs: test
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
-            # Test build docker image
-
-
 
     publish:
         runs-on: ubuntu-latest
