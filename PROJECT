@@ -8,7 +8,7 @@ layout:
 plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
-projectName: operator
+projectName: ltb-operator
 repo: github.com/Lab-Topology-Builder/LTB-K8s-Backend
 resources:
 - api:
