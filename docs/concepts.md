@@ -4,7 +4,7 @@
 
 The Lab Topology Builder (LTB) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
 
-![LTB](../assets/images/LTB.jpg)
+![LTB](./assets/images/LTB.jpg)
 
 ## LTB Kubernetes Backend
 
