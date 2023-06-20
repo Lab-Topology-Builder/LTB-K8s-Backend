@@ -20,6 +20,21 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - pods/exec
+  verbs:
+  - create
+  - delete
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
   - pods/status
   verbs:
   - get
@@ -228,4 +243,12 @@ rules:
   verbs:
   - get
   - patch
+  - update
+- apiGroups:
+  - subresources.kubevirt.io
+  resources:
+  - virtualmachineinstances/console
+  verbs:
+  - create
+  - delete
   - update
