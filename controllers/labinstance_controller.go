@@ -45,7 +45,7 @@ type ReturnToReconciler struct {
 //+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=kubevirt.io,resources=virtualmachines/finalizers,verbs=update
-//+kubebuilder:rbac:groups=subresources.kubevirt.io,resources=virtualmachineinstances/console,verbs=create;update;delete
+//+kubebuilder:rbac:groups=subresources.kubevirt.io,resources=virtualmachineinstances/console,verbs=get;list;create;update;delete
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="",resources=pods/log,verbs=get;list
 //+kubebuilder:rbac:groups="",resources=pods/exec,verbs=create;update;delete
@@ -603,7 +603,7 @@ func CreateSvcAccRoleRoleBind(labInstance *ltbv1alpha1.LabInstance) (*corev1.Ser
 			{
 				APIGroups: []string{"subresources.kubevirt.io"},
 				Resources: []string{"virtualmachineinstances/console"},
-				Verbs:     []string{"create", "update", "delete"},
+				Verbs:     []string{"get", "list", "create", "update", "delete"},
 			},
 		},
 	}

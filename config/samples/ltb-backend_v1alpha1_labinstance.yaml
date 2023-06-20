@@ -10,4 +10,4 @@ metadata:
   name: labinstance-sample
 spec:
   labTemplateReference: "labtemplate-sample"
-  dnsAddress: "labinstance-sample.example.com"
+  dnsAddress: "sr-118145.network.garden"
