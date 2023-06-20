@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"time"
 
 	ltbv1alpha1 "github.com/Lab-Topology-Builder/LTB-K8s-Backend/api/v1alpha1"
 	. "github.com/onsi/ginkgo/v2"
@@ -31,9 +32,9 @@ var _ = Describe("LabTemplate Controller", func() {
 			BeforeEach(func() {
 				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
 			})
-			It("should return NotFound error", func() {
+			It("should return and requeue", func() {
 				result, err := lr.Reconcile(ctx, req)
-				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(result).To(Equal(ctrl.Result{Requeue: true, RequeueAfter: 2 * time.Second}))
 				Expect(err).To(BeNil())
 			})
 		})
@@ -66,7 +67,8 @@ var _ = Describe("LabTemplate Controller", func() {
 		})
 		Context("All resources exist, but fails to render", func() {
 			BeforeEach(func() {
-				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithRenderedNodeSpec, failingPodNodeType, testNodeVMType).Build()
+				lr.Client = fake.NewClientBuilder().WithObjects(testLabTemplateWithoutRenderedNodeSpec, failingPodNodeType, testNodeVMType).Build()
+				req.NamespacedName = types.NamespacedName{Name: testLabTemplateWithoutRenderedNodeSpec.Name, Namespace: testLabTemplateWithoutRenderedNodeSpec.Namespace}
 			})
 			It("should return error", func() {
 				result, err := lr.Reconcile(ctx, req)

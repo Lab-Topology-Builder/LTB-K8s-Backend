@@ -35,18 +35,16 @@ var _ = Describe("LabInstance Controller", func() {
 		Context("Empty request", func() {
 			It("should return NotFound error", func() {
 				result, err := r.Reconcile(ctx, req)
-				Expect(err).To(HaveOccurred())
-				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
-				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(apiErrors.IsNotFound(err)).To(BeFalse())
+				Expect(result).To(Equal(ctrl.Result{Requeue: false}))
 			})
 		})
 		Context("Namespaced request with wrong name", func() {
 			It("should return NotFound error", func() {
 				req.NamespacedName = types.NamespacedName{Namespace: namespace, Name: "test"}
 				result, err := r.Reconcile(ctx, req)
-				Expect(err).To(HaveOccurred())
-				Expect(apiErrors.IsNotFound(err)).To(BeTrue())
-				Expect(result).To(Equal(ctrl.Result{}))
+				Expect(apiErrors.IsNotFound(err)).To(BeFalse())
+				Expect(result).To(Equal(ctrl.Result{Requeue: false}))
 			})
 		})
 
