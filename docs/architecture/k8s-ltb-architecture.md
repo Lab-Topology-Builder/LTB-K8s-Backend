@@ -21,7 +21,7 @@ The frontend is responsible for the following tasks:
 The backend is composed of the following components:
 
 - Operator
-- Operator API
+- API
 
 The backend is responsible for the following tasks:
 
