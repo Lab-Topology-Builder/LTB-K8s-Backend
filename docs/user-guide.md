@@ -20,13 +20,11 @@ Change the version to the desired one.
 ## Installation of the LTB K8s operator
 
 1. Install the operator by creating a catalog source and subscription.
-
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
 ```
 
 2. Wait for the operator to be installed
-
 ```sh
 kubectl get csv -n operators -w
 ```
@@ -34,31 +32,26 @@ kubectl get csv -n operators -w
 ## Uninstall
 
 1. Delete the subscription
-
 ```sh
 kubectl delete subscriptions.operators.coreos.com -n operators ltb-subscription
 ```
 
 2. Delete the CSV
-
 ```sh
 kubectl delete csv -n operators ltb-operator.<version>
 ```
 
 3. Delete the CRDs
-
 ```sh
 kubectl delete crd labinstances.ltb-backend.ltb labtemplates.ltb-backend.ltb nodetypes.ltb-backend.ltb
 ```
 
 4. Delete operator
-
 ```sh
 kubectl delete operator ltb-operator.operators
 ```
 
 5. Delete the CatalogSource
-
 ```sh
 kubectl delete catalogsource.operators.coreos.com -n operators ltb-catalog
 ```
