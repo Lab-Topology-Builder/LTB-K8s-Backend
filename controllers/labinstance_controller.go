@@ -162,7 +162,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 		// Reconcile Ingress
 		ingress := &networkingv1.Ingress{}
-		ingress.Name = labInstance.Name + "-" + node.Name + "-ingress"
+		ingress.Name = labInstance.Name + "-" + node.Name
 		retValue = r.ReconcileResource(labInstance, ingress, &node, nodeType.Spec.Kind)
 		if retValue.shouldReturn {
 			return retValue.result, retValue.err
@@ -460,9 +460,8 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 		return nil, errors.NewBadRequest("Kind must be either vm or pod")
 	}
 	name := labInstance.Name + "-" + node.Name
-	ingressName := name + "-ingress"
 	metadata := metav1.ObjectMeta{
-		Name:      ingressName,
+		Name:      name,
 		Namespace: labInstance.Namespace,
 		Annotations: map[string]string{
 			"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=" + kind + "&arg=" + name + "&arg=bash",
@@ -474,7 +473,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: &className,
 			Rules: []networkingv1.IngressRule{
-				{Host: ingressName + "." + labInstance.Spec.DNSAddress,
+				{Host: name + "." + labInstance.Spec.DNSAddress,
 					IngressRuleValue: networkingv1.IngressRuleValue{
 						HTTP: &networkingv1.HTTPIngressRuleValue{
 							Paths: []networkingv1.HTTPIngressPath{

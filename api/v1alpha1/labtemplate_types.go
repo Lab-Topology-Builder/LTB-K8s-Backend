@@ -11,10 +11,8 @@ type LabTemplateSpec struct {
 }
 
 type LabInstanceNodes struct {
-	// +kubebuilder:validation:MaxLength=32
-	// +kubebuilder:validation:MinLength=1
 	Name             string          `json:"name"`
-	NodeTypeRef      NodeTypeRef     `json:"nodetyperef"`
+	NodeTypeRef      NodeTypeRef     `json:"nodeTypeRef"`
 	Interfaces       []NodeInterface `json:"interfaces,omitempty"`
 	Config           string          `json:"config,omitempty"`
 	Ports            []Port          `json:"ports,omitempty"`

@@ -11,15 +11,15 @@ type LabInstanceSpec struct {
 
 type LabInstanceStatus struct {
 	Status         string `json:"status,omitempty"`
-	NumPodsRunning string `json:"numpodsrunning,omitempty"`
-	NumVMsRunning  string `json:"numvmsrunning,omitempty"`
+	NumPodsRunning string `json:"numPodsRunning,omitempty"`
+	NumVMsRunning  string `json:"numVMsRunning,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="STATUS",type=string,JSONPath=`.status.status`
-//+kubebuilder:printcolumn:name="PODS_RUNNING",type=string,JSONPath=`.status.numpodsrunning`
-//+kubebuilder:printcolumn:name="VMS_RUNNING",type=string,JSONPath=`.status.numvmsrunning`
+//+kubebuilder:printcolumn:name="PODS_RUNNING",type=string,JSONPath=`.status.numPodsRunning`
+//+kubebuilder:printcolumn:name="VMS_RUNNING",type=string,JSONPath=`.status.numVMsRunning`
 
 type LabInstance struct {
 	metav1.TypeMeta   `json:",inline"`
