@@ -3,8 +3,8 @@
 ## Context and Problem Statement
 
 For the lab instances to be useful for the students, they need to be able to access the pods (containers) and VMs.
-The access should be restricted to the pods/VMs the user is allowed to access.
-It should be possible to access the pods/VMs console and or access it via multiple OOB protocols (SSH, RDP, VNC, ...).
+Access to pods/VMs should only be granted to user with the appropriate access rights.
+It should be possible to access the pods/VMs console and or access it via multiple OOB protocols (SSH, RDP, VNC, etc.).
 
 ## Considered Options
 
