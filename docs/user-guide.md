@@ -1,6 +1,6 @@
 # User Guide
 
-## Installation (Pre-requisites)
+## Installation Pre-requisites
 
 | Tool | Version | Installation | Description |
 | ---- | ------- | ------------ | ----------- |

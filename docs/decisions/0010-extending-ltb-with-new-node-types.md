@@ -1,7 +1,5 @@
 # Extending LTB with New Node Types
 
-* Status: Proposed
-
 ## Context and Problem Statement
 
 It should be possible to create, update and delete node types (e.g. Ubuntu, XRD, XR, IOS, Cumulus etc.)
@@ -35,8 +33,9 @@ Chosen option: "Custom Resources", because it will be possible to support all th
 
 ### Negative Consequences
 
-* Go Templates are not as powerful as Go, which could make it harder.
+* Go Templates are not as powerful as Go, which could make it harder to implement certain node types.
+* A Custom Resource is also a little bit less flexible than a Go type, but this should not be a problem for the use cases we have.
 
 ## Links
 
-* <https://github.com/vrnetlab/vrnetlab>
+* [Example of similar solution using Go node types](https://github.com/vrnetlab/vrnetlab)

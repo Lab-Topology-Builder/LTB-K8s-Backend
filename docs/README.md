@@ -10,9 +10,10 @@ To get started, please refer to the [User Guide](user-guide.md).
 - Deletion of networking labs on Kubernetes
 - Status querying of lab deployments
 - Remote access to OOB management of lab nodes (e.g. SSH)
+- Managing custom node types via our Kubernetes Resource
 
 Upcoming features:
 
-- Managing custom node types via our Kubernetes Resource
+- Layer 2 connectivity between lab nodes
 - Secure remote access to OOB management of lab nodes (Access Control)
 - User management

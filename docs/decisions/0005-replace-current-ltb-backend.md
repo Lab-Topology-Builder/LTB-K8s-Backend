@@ -11,4 +11,4 @@ The LTB K8s Backend could replace the current LTB Backend fully or partially by 
 
 ## Decision Outcome
 
-Chosen option: "Replace current LTB Backend fully", because huge parts of the current LTB Backend would need to be rewritten to be compatible with the new LTB K8s operator.
+Chosen option: "Replace current LTB Backend fully", because huge parts of the current LTB Backend would need to be rewritten to be compatible with the new LTB K8s operator and it would be easier to rewrite the whole backend. Additionally, the same programming language can be used throughout the whole Backend.

@@ -10,6 +10,13 @@ nav:
   - Home: README.md
   - User Guide: user-guide.md
   - Concepts: concepts.md
+  - Contributions:
+    - Contributor Guide: contributions/contributor-guide.md
+    - Coding Conventions: contributions/coding-conventions.md
+    - Development Cluster Setup: contributions/dev-cluster-setup.md
+    - Local Development: contributions/local-dev-setup.md
+    - Tools and Frameworks: contributions/technologies-used.md
+    - Testing: contributions/test-concepts.md
   - ...
   - About: about.md
 plugins:
@@ -24,7 +31,7 @@ plugins:
   #     fallback_to_build_date: true
   # - git-committers:
   #     repository: Lab-Topology-Builder/LTB-Kubernetes-Operator
-  #     branch: mainñ
+  #     branch: main
   # - social
 markdown_extensions:
   - abbr
@@ -50,7 +57,7 @@ theme:
     - navigation.tracking
     - navigation.top
     # - navigation.footer
-    # - navigation.tabs
+    - navigation.tabs
     # - navigation.tabs.sticky
     # - search.highlight
     - search.suggest
