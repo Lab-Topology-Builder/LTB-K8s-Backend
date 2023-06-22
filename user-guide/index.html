@@ -412,29 +412,42 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uninstall" class="md-nav__link">
-    Uninstall
+  <a href="#usage" class="md-nav__link">
+    Usage
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#example-node-type" class="md-nav__link">
     Example Node Type
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#example-lab-template" class="md-nav__link">
     Example Lab Template
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#example-lab-instance" class="md-nav__link">
     Example Lab Instance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstall" class="md-nav__link">
+    Uninstall
   </a>
   
 </li>
@@ -965,29 +978,42 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uninstall" class="md-nav__link">
-    Uninstall
+  <a href="#usage" class="md-nav__link">
+    Usage
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#example-node-type" class="md-nav__link">
     Example Node Type
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#example-lab-template" class="md-nav__link">
     Example Lab Template
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#example-lab-instance" class="md-nav__link">
     Example Lab Instance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstall" class="md-nav__link">
+    Uninstall
   </a>
   
 </li>
@@ -1059,43 +1085,27 @@
 <p>Change the version to the desired one.</p>
 <h2 id="installation-of-the-ltb-k8s-operator">Installation of the <abbr title="Lab Topology Builder">LTB</abbr> K8s operator<a class="headerlink" href="#installation-of-the-ltb-k8s-operator" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Install the operator by creating a catalog source and subscription.</li>
-</ol>
+<li>
+<p>Install the operator by creating a catalog source and subscription.
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
-</code></pre></div>
-<ol>
-<li>Wait for the operator to be installed</li>
-</ol>
+</code></pre></div></p>
+</li>
+<li>
+<p>Wait for the operator to be installed
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>-w
-</code></pre></div>
-<h2 id="uninstall">Uninstall<a class="headerlink" href="#uninstall" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Delete the subscription</li>
+</code></pre></div></p>
+</li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>subscriptions.operators.coreos.com<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-subscription
-</code></pre></div>
-<ol>
-<li>Delete the CSV</li>
-</ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-operator.&lt;version&gt;
-</code></pre></div>
-<ol>
-<li>Delete the CRDs</li>
-</ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>crd<span class="w"> </span>labinstances.ltb-backend.ltb<span class="w"> </span>labtemplates.ltb-backend.ltb<span class="w"> </span>nodetypes.ltb-backend.ltb
-</code></pre></div>
-<ol>
-<li>Delete operator</li>
-</ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>operator<span class="w"> </span>ltb-operator.operators
-</code></pre></div>
-<ol>
-<li>Delete the CatalogSource</li>
-</ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>catalogsource.operators.coreos.com<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-catalog
-</code></pre></div>
-<h2 id="example-node-type">Example Node Type<a class="headerlink" href="#example-node-type" title="Permanent link">&para;</a></h2>
-<p>This is an example of a <abbr title="Virtual Machine">VM</abbr> node type, which you can use as a starting point for your own node types.</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>To create a lab you'll need to create at least one node type and one lab template.
+Node types define the basic properties of a node. For VMs this includes everything that can be defined in a <a href="https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachinespec">Kubevirt VirtualMachineSpec</a> and for pods everything that can be defined in a <a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#podspec-v1-core">Kubernetes PodSpec</a>.</p>
+<p>In order to provide better reusability of node types, you can use <a href="https://golang.org/pkg/text/template/">Go templating Syntax</a> to include information from the lab template (like configuration or node name) in the node type.
+The following example node types show how this can be done. You can use them as a starting point for your own node types.</p>
+<h3 id="example-node-type">Example Node Type<a class="headerlink" href="#example-node-type" title="Permanent link">&para;</a></h3>
+<p>This is an example of a <abbr title="Virtual Machine">VM</abbr> node type. It creates a <abbr title="Virtual Machine">VM</abbr> with 2 vCPUs and 4GB of RAM, using the Ubuntu 22.04 container disk image from <a href="https://quay.io/repository/containerdisks/ubuntu?tab=tags">quay.io/containerdisks/ubuntu</a> and the <code>cloudInitNoCloud</code> volume source to provide a cloud-init configuration to the <abbr title="Virtual Machine">VM</abbr>.</p>
+<p>Everything that is defined in the <code>node</code> field of the lab template is available to the node type via the <code>.</code> variable.
+Example: <code>{{ .Name }}</code> will be replaced with the name of the node from the lab template.</p>
+<p>Currently, you cannot provide the cloud-init configuration as a YAML string via the .Config field of the lab template. Instead, you have to encode it as base64 string and therefore use the <code>userDataBase64</code> field of the volume source, because of indentation issues while rendering configuration.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NodeType</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -1129,7 +1139,7 @@
 <span class="w">            </span><span class="no">cloudInitNoCloud:</span>
 <span class="w">              </span><span class="no">userDataBase64: {{ .Config }}</span>
 </code></pre></div>
-<p>This is an example of a pod node type, which you can use as a starting point for your own node types.</p>
+<p>This is an example of a generic pod node type. It creates a pod with a single container. The container name, container image, command and ports to expose are taken from the lab template.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NodeType</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -1148,8 +1158,13 @@
 <span class="w">            </span><span class="no">protocol: {{ $port.Protocol }}</span>
 <span class="w">          </span><span class="no">{{- end }}</span>
 </code></pre></div>
-<h2 id="example-lab-template">Example Lab Template<a class="headerlink" href="#example-lab-template" title="Permanent link">&para;</a></h2>
-<p>This is an example of lab template, which you can use as a starting point for your own labs.</p>
+<p>After you have defined some node types, you can create a lab template.
+A lab template defines the nodes that should be created for a lab, how they should be configured and how they should be connected.</p>
+<h3 id="example-lab-template">Example Lab Template<a class="headerlink" href="#example-lab-template" title="Permanent link">&para;</a></h3>
+<p>This is an example of a lab template, which you can use as a starting point for your own labs.
+It uses the previously defined node types to create a <abbr title="Virtual Machine">VM</abbr> and two pods. They are referenced via the <code>nodeTypeRef</code> field.
+The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running <code>kubectl get node -o wide</code> and the port number by running <code>kubectl get svc</code>.</p>
+<p>Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabTemplate</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -1157,17 +1172,15 @@
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">nodes</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-1&quot;</span>
-<span class="w">    </span><span class="nt">nodetyperef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nodeTypeRef</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nodetypeubuntuvm&quot;</span>
-<span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;22.04&quot;</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;I2Nsb3VkLWNvbmZpZwpwYXNzd29yZDogdWJ1bnR1CmNocGFzc3dkOiB7IGV4cGlyZTogRmFsc2UgfQpzc2hfcHdhdXRoOiBUcnVlCnBhY2thZ2VzOgogLSBxZW11LWd1ZXN0LWFnZW50CiAtIGNtYXRyaXgKcnVuY21kOgogLSBbIHN5c3RlbWN0bCwgc3RhcnQsIHFlbXUtZ3Vlc3QtYWdlbnQgXQo=&quot;</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ssh&quot;</span>
 <span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
 <span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TCP&quot;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-2&quot;</span>
-<span class="w">    </span><span class="nt">nodetyperef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nodeTypeRef</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;genericpod&quot;</span>
 <span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ghcr.io/insrapperswil/network-ninja&quot;</span>
 <span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
@@ -1177,7 +1190,7 @@
 <span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TCP&quot;</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[&quot;/bin/bash&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;apt</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">-y</span><span class="nv"> </span><span class="s">openssh-server</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">ssh</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">365d&quot;]&#39;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-3&quot;</span>
-<span class="w">    </span><span class="nt">nodetyperef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nodeTypeRef</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;genericpod&quot;</span>
 <span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
 <span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;22.04&quot;</span>
@@ -1186,22 +1199,49 @@
 <span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
 <span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TCP&quot;</span>
 <span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[&quot;/bin/bash&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;apt</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">-y</span><span class="nv"> </span><span class="s">openssh-server</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">ssh</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">365d&quot;]&#39;</span>
-<span class="w">  </span><span class="nt">neighbors</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;TestHost1:1,TestHost2:1&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;TestHost1:2,TestHost3:1&quot;</span>
 </code></pre></div>
-<p>The above lab template will define three nodes and one connection between two of the nodes.</p>
+<p>With the lab template defined, you can create a lab instance.</p>
 <h2 id="example-lab-instance">Example Lab Instance<a class="headerlink" href="#example-lab-instance" title="Permanent link">&para;</a></h2>
-<p>This is an example of lab instance, which you can use as a starting point for your own labs.</p>
+<p>This is an example of lab instance, which you can use as a starting point for your own labs.
+The lab instance references the previously defined lab template with the <code>labTemplateReference</code> field.
+You also need to provide a DNS address via the <code>dnsAddress</code> field. This address will be used to create routes for the web terminal to the lab nodes.
+For example, if you use the address <code>example.com</code>, the console of a node called <code>sample-node-1</code> will be available at <code>https://labinstance-sample-sample-node-1.example.com/</code> via a web terminal.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">labTemplateReference</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;labtemplate-sample&quot;</span>
-<span class="w">  </span><span class="nt">dnsAddress</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;labinstance-sample.example.com&quot;</span>
+<span class="w">  </span><span class="nt">dnsAddress</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example.com&quot;</span>
 </code></pre></div>
-<p>The above lab instance will create a lab instance called labinstance-sample using the data from the referenced resource labtemplate-sample, which is provided at the beginning as an example.</p>
+<h2 id="uninstall">Uninstall<a class="headerlink" href="#uninstall" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Delete the subscription
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>subscriptions.operators.coreos.com<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-subscription
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete the CSV
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-operator.&lt;version&gt;
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete the CRDs
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>crd<span class="w"> </span>labinstances.ltb-backend.ltb<span class="w"> </span>labtemplates.ltb-backend.ltb<span class="w"> </span>nodetypes.ltb-backend.ltb
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete operator
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>operator<span class="w"> </span>ltb-operator.operators
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete the CatalogSource
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>catalogsource.operators.coreos.com<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-catalog
+</code></pre></div></p>
+</li>
+</ol>
 
 
 
