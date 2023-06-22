@@ -4,7 +4,7 @@
 
 The Lab Topology Builder (LTB) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
 
-![LTB](../assets/images/LTB.jpg)
+![LTB](./assets/images/LTB.jpg)
 
 ## LTB Kubernetes Backend
 
@@ -30,6 +30,7 @@ Defining a CRD object creates a new custom resource with a name and schema that 
 The custom resource created from a CRD object can be either namespaced or cluster-scoped.
 CustomResourceDefinitions themselves are non-namespaced and are available to all namespaces.
 
+<!-- TODO Maybe move to contributor section -->
 The following example shows a CRD for a LabInstance object, how they are defined in go and how the YAML output looks like.
 
 ```go
@@ -148,6 +149,7 @@ Lab Template is a CR, which defines a template for a lab. It contains informatio
 
 The following YAML is an example of a LabTemplate:
 
+<!-- TODO Remove and add link to example in user guide -->
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
 kind: LabTemplate
@@ -197,6 +199,7 @@ It has a reference to the lab template you want to use and also has a status fie
 
 The following YAML is an example of a LabInstance:
 
+<!-- TODO Remove and add link to example in user guide -->
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
 kind: LabInstance
@@ -221,7 +224,7 @@ A deployment of a lab instance is called a lab.
 In a network, a node represents any device that is part of the lab. A NodeType is a CR that defines a type of node that can be part of a lab. You reference the node type you want to have in your lab in the lab template.
 Within LTB, a node can be either a KubeVirt virtual machine or a pod.
 
-<!--TODO: Example of a node type should come here -->
+<!--TODO: Link to an example of a node type in user guide-->
 
 ## Network Topology
 

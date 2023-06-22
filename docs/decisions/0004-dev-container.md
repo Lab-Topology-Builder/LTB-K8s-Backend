@@ -1,18 +1,20 @@
-# DevContainer
+# Dev Container
 
 ## Context and Problem Statement
 
-Every team member could set up their development environment manually or they can create an automated and same development environment for everyone by using a DevContainer.
+Every team member could set up their development environment manually or we could use a dev container to provide a consistent development environment for all team members and future contributors.
 
 ## Considered Options
 
-* DevContainer
+* Dev Container
 * Manual Setup
 
 ## Decision Outcome
 
-Chosen option: "DevContainer", because DevContainer setup lets you create the same development environment for all team members, which ensures consistency. It also provides a completely isolated development environment, which helps to avoid software incompatibility issues, such as operator-sdk not working on Windows. Moreover, DevContainer is easily portable and can be shared between team members irrespective of the operating system they use.
+Chosen option: "Dev Container", because a dev container setup lets you create the same development environment for all team members, which ensures consistency. It also provides a completely isolated development environment, which helps to avoid software incompatibility issues, such as operator-sdk not working on Windows. Moreover, a dev container is easily portable and works on all operating systems that support Docker.
+The only downside is that not all IDEs support dev containers, but at least two of the currently most popular IDEs VS Code and Visual Studio support dev containers.
 
-## More Information
+## Links
 
 * [DevContainer](http://bit.ly/3TQ8zhx)
+* [Most Popular IDEs](https://survey.stackoverflow.co/2023/#most-popular-technologies-new-collab-tools)

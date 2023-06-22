@@ -6,11 +6,19 @@ repo_name: Lab-Topology-Builder/LTB-K8s-Backend
 repo_url: https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/
 copyright: Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
 
-# TODO: sorting the nav need to be changed
-
 nav:
   - Home: README.md
+  - User Guide: user-guide.md
+  - Concepts: concepts.md
+  - Contributions:
+    - Contributor Guide: contributions/contributor-guide.md
+    - Coding Conventions: contributions/coding-conventions.md
+    - Development Cluster Setup: contributions/dev-cluster-setup.md
+    - Local Development: contributions/local-dev-setup.md
+    - Tools and Frameworks: contributions/technologies-used.md
+    - Testing: contributions/test-concepts.md
   - ...
+  - About: about.md
 plugins:
   - search
   - awesome-pages:
@@ -49,7 +57,7 @@ theme:
     - navigation.tracking
     - navigation.top
     # - navigation.footer
-    # - navigation.tabs
+    - navigation.tabs
     # - navigation.tabs.sticky
     # - search.highlight
     - search.suggest
