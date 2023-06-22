@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/local-environment-setup/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0011-programming-language/">
       
       
-        <link rel="prev" href="../dev-cluster-setup/">
+        <link rel="prev" href="../0010-extending-ltb-with-new-node-types/">
       
       
-        <link rel="next" href="../technologies-used/">
+        <link rel="next" href="../../about/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Test to run application locally using K3d - LTB K8s Backend</title>
+        <title>Programming Language - LTB K8s Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#test-to-run-application-locally-using-k3d" class="md-skip">
+        <a href="#programming-language" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Test to run application locally using K3d
+              Programming Language
             
           </span>
         </div>
@@ -195,6 +195,113 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../user-guide/" class="md-tabs__link">
+      User Guide
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../concepts/" class="md-tabs__link">
+      Concepts
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributions/contributor-guide/" class="md-tabs__link">
+        Contributions
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/k8s-ltb-architecture/" class="md-tabs__link">
+        Architecture
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../0000-use-markdown-architectural-decision-records/" class="md-tabs__link md-tabs__link--active">
+        Decisions
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../about/" class="md-tabs__link">
+      About
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -207,8 +314,10 @@
                   <div class="md-sidebar__inner">
                     
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="LTB K8s Backend" class="md-nav__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
       
@@ -255,8 +364,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../user-guide/" class="md-nav__link">
+        User Guide
       </a>
     </li>
   
@@ -284,10 +393,128 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Contributions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Contributions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../../user-guide/" class="md-nav__link">
-        User Guide
+      <a href="../../contributions/contributor-guide/" class="md-nav__link">
+        Contributor Guide
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributions/coding-conventions/" class="md-nav__link">
+        Coding Conventions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributions/dev-cluster-setup/" class="md-nav__link">
+        Development Cluster Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributions/local-dev-setup/" class="md-nav__link">
+        Local Development
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributions/technologies-used/" class="md-nav__link">
+        Tools and Frameworks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributions/test-concepts/" class="md-nav__link">
+        Testing
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -392,17 +619,31 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-          Contributor
+          Decisions
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Contributor
+          Decisions
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -412,8 +653,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../coding-conventions/" class="md-nav__link">
-        Coding Conventions
+      <a href="../0000-use-markdown-architectural-decision-records/" class="md-nav__link">
+        Use Markdown Architectural Decision Records
       </a>
     </li>
   
@@ -426,8 +667,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributor-guide/" class="md-nav__link">
-        Contributor Guide
+      <a href="../0001-operator-SDK/" class="md-nav__link">
+        Operator SDK
       </a>
     </li>
   
@@ -440,8 +681,134 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-cluster-setup/" class="md-nav__link">
-        Development cluster setup
+      <a href="../00011-remote-access/" class="md-nav__link">
+        Remote-Access
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-operator-scope/" class="md-nav__link">
+        Operator Scope
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-api-and-operator-deployment/" class="md-nav__link">
+        API and Operator Deployment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-dev-container/" class="md-nav__link">
+        Dev Container
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
+        Replace Current LTB Backend
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-lab-instance-set/" class="md-nav__link">
+        Lab Instance Set
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-interaction-with-operator/" class="md-nav__link">
+        Interaction with Operator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-namespace-per-labinstance/" class="md-nav__link">
+        Namespace Per LabInstance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
+        K8s Aggreted API Over Standalone API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-extending-ltb-with-new-node-types/" class="md-nav__link">
+        Extending LTB with New Node Types
       </a>
     </li>
   
@@ -463,38 +830,55 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Programming Language
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
-        Test to run application locally using K3d
+        Programming Language
       </a>
       
-    </li>
-  
+        
 
-            
-          
-            
-              
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
-    <li class="md-nav__item">
-      <a href="../technologies-used/" class="md-nav__link">
-        Tools and Frameworks
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
+    
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context-and-problem-statement" class="md-nav__link">
+    Context and Problem Statement
+  </a>
   
-    <li class="md-nav__item">
-      <a href="../test-concepts/" class="md-nav__link">
-        Test Concept
-      </a>
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    Considered Options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-outcome" class="md-nav__link">
+    Decision Outcome
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -513,224 +897,10 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-      
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-          Decisions
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_7">
-          <span class="md-nav__icon md-icon"></span>
-          Decisions
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
-        Use Markdown Architectural Decision Records
+      <a href="../../about/" class="md-nav__link">
+        About
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/00011-remote-access/" class="md-nav__link">
-        Remote-Access
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0002-operator-scope/" class="md-nav__link">
-        Operator Scope
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0003-api-and-operator-run-in-one-container/" class="md-nav__link">
-        API and Operator Run in One Container
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0004-dev-container/" class="md-nav__link">
-        DevContainer
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0006-lab-instance-set/" class="md-nav__link">
-        Lab Instance Set
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0007-deployment-to-k8s/" class="md-nav__link">
-        Deployment to K8s
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
-        Namespace Per LabInstance
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
-        K8s Aggreted API Over Standalone API
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0010-extending-ltb-with-new-node-types/" class="md-nav__link">
-        Extending LTB with New Node Types
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -755,6 +925,35 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context-and-problem-statement" class="md-nav__link">
+    Context and Problem Statement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#considered-options" class="md-nav__link">
+    Considered Options
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-outcome" class="md-nav__link">
+    Decision Outcome
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -768,7 +967,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/contributor/local-environment-setup.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/decisions/0011-programming-language.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -776,9 +975,18 @@
   
 
 
-<h1 id="test-to-run-application-locally-using-k3d">Test to run application locally using K3d<a class="headerlink" href="#test-to-run-application-locally-using-k3d" title="Permanent link">&para;</a></h1>
-<p><a href="https://k3d.io/">K3d</a> was used  to run a local Kubernetes cluster to test the application if it works as expected. K3d was preferred because of its simplicity and ease of use. It is a lightweight wrapper to run Kubernetes in Docker. Other tools such as <a href="https://minikube.sigs.k8s.io/docs/">Minikube</a> could have been used as well, but K3d was chosen because of the reasons mentioned above.</p>
-<p>After installing all the dependencies listed in the <a href="../../user-guide/">User Guide</a> and <a href="../dev-cluster-setup/">Development cluster setup</a> sections, deploying lab instances was possible, and the pods were running as expected, but the virtual machines had a pending status. The reason for this was, Kubevirt was crashing. Because of the lack of time, we didn't investigate the issue further, which means we can't say for sure if the issue was Kubevirt's incompatibility with K3d or something else.</p>
+<h1 id="programming-language">Programming Language<a class="headerlink" href="#programming-language" title="Permanent link">&para;</a></h1>
+<h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>We need to choose a programming language for the project.
+The considered options are based on the supported languages of the Operator SDK.</p>
+<h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Go</li>
+<li>Helm</li>
+<li>Ansible</li>
+</ul>
+<h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Go", because many cloud native projects are written in Go, and it is a compiled language, which is more performant than interpreted languages. Also, Go is a statically typed language, which makes it easier to maintain and refactor the code. It is also easier to write complicated logic and tests in Go than in Helm or Ansible.</p>
 
 
 
@@ -840,7 +1048,7 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.tabs", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.2a6f1dda.min.js"></script>

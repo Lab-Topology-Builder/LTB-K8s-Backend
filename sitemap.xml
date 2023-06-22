@@ -31,32 +31,32 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/coding-conventions/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/coding-conventions/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/contributor-guide/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/contributor-guide/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/dev-cluster-setup/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/dev-cluster-setup/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/local-environment-setup/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/local-dev-setup/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/technologies-used/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/technologies-used/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/test-concepts/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/test-concepts/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -81,7 +81,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0003-api-and-operator-run-in-one-container/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0003-api-and-operator-deployment/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -101,7 +101,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0007-deployment-to-k8s/</loc>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0007-interaction-with-operator/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -117,6 +117,11 @@
     </url>
     <url>
          <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0010-extending-ltb-with-new-node-types/</loc>
+         <lastmod>2023-06-22</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://lab-topology-builder.github.io/LTB-K8s-Backend/decisions/0011-programming-language/</loc>
          <lastmod>2023-06-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
