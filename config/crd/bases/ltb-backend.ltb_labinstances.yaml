@@ -19,10 +19,10 @@ spec:
     - jsonPath: .status.status
       name: STATUS
       type: string
-    - jsonPath: .status.numpodsrunning
+    - jsonPath: .status.numPodsRunning
       name: PODS_RUNNING
       type: string
-    - jsonPath: .status.numvmsrunning
+    - jsonPath: .status.numVMsRunning
       name: VMS_RUNNING
       type: string
     name: v1alpha1
@@ -53,9 +53,9 @@ spec:
             type: object
           status:
             properties:
-              numpodsrunning:
+              numPodsRunning:
                 type: string
-              numvmsrunning:
+              numVMsRunning:
                 type: string
               status:
                 type: string

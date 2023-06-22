@@ -11,7 +11,7 @@ metadata:
 spec:
   nodes:
   - name: "sample-node-1"
-    nodetyperef:
+    nodeTypeRef:
       type: "nodetypeubuntuvm"
       image: "ubuntu"
       version: "22.04"
@@ -21,7 +21,7 @@ spec:
       port: 22
       protocol: "TCP"
   - name: "sample-node-2"
-    nodetyperef:
+    nodeTypeRef:
       type: "genericpod"
       image: "ghcr.io/insrapperswil/network-ninja"
       version: "latest"
@@ -31,7 +31,7 @@ spec:
       protocol: "TCP"
     config: '["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]'
   - name: "sample-node-3"
-    nodetyperef:
+    nodeTypeRef:
       type: "genericpod"
       image: "ubuntu"
       version: "22.04"

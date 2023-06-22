@@ -20,52 +20,31 @@ Change the version to the desired one.
 ## Installation of the LTB K8s operator
 
 1. Install the operator by creating a catalog source and subscription.
-
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
 ```
 
 2. Wait for the operator to be installed
-
 ```sh
 kubectl get csv -n operators -w
 ```
 
-## Uninstall
+## Usage
 
-1. Delete the subscription
+To create a lab you'll need to create at least one node type and one lab template.
+Node types define the basic properties of a node. For VMs this includes everything that can be defined in a [Kubevirt VirtualMachineSpec](https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachinespec) and for pods everything that can be defined in a [Kubernetes PodSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#podspec-v1-core).
 
-```sh
-kubectl delete subscriptions.operators.coreos.com -n operators ltb-subscription
-```
+In order to provide better reusability of node types, you can use [Go templating Syntax](https://golang.org/pkg/text/template/) to include information from the lab template (like configuration or node name) in the node type.
+The following example node types show how this can be done. You can use them as a starting point for your own node types.
 
-2. Delete the CSV
+### Example Node Type
 
-```sh
-kubectl delete csv -n operators ltb-operator.<version>
-```
+This is an example of a VM node type. It creates a VM with 2 vCPUs and 4GB of RAM, using the Ubuntu 22.04 container disk image from [quay.io/containerdisks/ubuntu](https://quay.io/repository/containerdisks/ubuntu?tab=tags) and the `cloudInitNoCloud` volume source to provide a cloud-init configuration to the VM.
 
-3. Delete the CRDs
+Everything that is defined in the `node` field of the lab template is available to the node type via the `.` variable.
+Example: `{{ .Name }}` will be replaced with the name of the node from the lab template.
 
-```sh
-kubectl delete crd labinstances.ltb-backend.ltb labtemplates.ltb-backend.ltb nodetypes.ltb-backend.ltb
-```
-
-4. Delete operator
-
-```sh
-kubectl delete operator ltb-operator.operators
-```
-
-5. Delete the CatalogSource
-
-```sh
-kubectl delete catalogsource.operators.coreos.com -n operators ltb-catalog
-```
-
-## Example Node Type
-
-This is an example of a VM node type, which you can use as a starting point for your own node types.
+Currently, you cannot provide the cloud-init configuration as a YAML string via the .Config field of the lab template. Instead, you have to encode it as base64 string and therefore use the `userDataBase64` field of the volume source, because of indentation issues while rendering configuration.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
@@ -102,7 +81,7 @@ spec:
               userDataBase64: {{ .Config }}
 ```
 
-This is an example of a pod node type, which you can use as a starting point for your own node types.
+This is an example of a generic pod node type. It creates a pod with a single container. The container name, container image, command and ports to expose are taken from the lab template.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
@@ -124,9 +103,16 @@ spec:
           {{- end }}
 ```
 
-## Example Lab Template
+After you have defined some node types, you can create a lab template.
+A lab template defines the nodes that should be created for a lab, how they should be configured and how they should be connected.
 
-This is an example of lab template, which you can use as a starting point for your own labs.
+### Example Lab Template
+
+This is an example of a lab template, which you can use as a starting point for your own labs.
+It uses the previously defined node types to create a VM and two pods. They are referenced via the `nodeTypeRef` field.
+The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running `kubectl get node -o wide` and the port number by running `kubectl get svc`.
+
+Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
@@ -136,17 +122,15 @@ metadata:
 spec:
   nodes:
   - name: "sample-node-1"
-    nodetyperef:
+    nodeTypeRef:
       type: "nodetypeubuntuvm"
-      image: "ubuntu"
-      version: "22.04"
     config: "I2Nsb3VkLWNvbmZpZwpwYXNzd29yZDogdWJ1bnR1CmNocGFzc3dkOiB7IGV4cGlyZTogRmFsc2UgfQpzc2hfcHdhdXRoOiBUcnVlCnBhY2thZ2VzOgogLSBxZW11LWd1ZXN0LWFnZW50CiAtIGNtYXRyaXgKcnVuY21kOgogLSBbIHN5c3RlbWN0bCwgc3RhcnQsIHFlbXUtZ3Vlc3QtYWdlbnQgXQo="
     ports:
     - name: "ssh"
       port: 22
       protocol: "TCP"
   - name: "sample-node-2"
-    nodetyperef:
+    nodeTypeRef:
       type: "genericpod"
       image: "ghcr.io/insrapperswil/network-ninja"
       version: "latest"
@@ -156,7 +140,7 @@ spec:
       protocol: "TCP"
     config: '["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]'
   - name: "sample-node-3"
-    nodetyperef:
+    nodeTypeRef:
       type: "genericpod"
       image: "ubuntu"
       version: "22.04"
@@ -165,17 +149,16 @@ spec:
       port: 22
       protocol: "TCP"
     config: '["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]'
-  neighbors:
-  - "TestHost1:1,TestHost2:1"
-  - "TestHost1:2,TestHost3:1"
-
 ```
 
-The above lab template will define three nodes and one connection between two of the nodes.
+With the lab template defined, you can create a lab instance.
 
 ## Example Lab Instance
 
 This is an example of lab instance, which you can use as a starting point for your own labs.
+The lab instance references the previously defined lab template with the `labTemplateReference` field.
+You also need to provide a DNS address via the `dnsAddress` field. This address will be used to create routes for the web terminal to the lab nodes.
+For example, if you use the address `example.com`, the console of a node called `sample-node-1` will be available at `https://labinstance-sample-sample-node-1.example.com/` via a web terminal.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
@@ -184,7 +167,32 @@ metadata:
   name: labinstance-sample
 spec:
   labTemplateReference: "labtemplate-sample"
-  dnsAddress: "labinstance-sample.example.com"
+  dnsAddress: "example.com"
 ```
 
-The above lab instance will create a lab instance called labinstance-sample using the data from the referenced resource labtemplate-sample, which is provided at the beginning as an example.
+## Uninstall
+
+1. Delete the subscription
+```sh
+kubectl delete subscriptions.operators.coreos.com -n operators ltb-subscription
+```
+
+2. Delete the CSV
+```sh
+kubectl delete csv -n operators ltb-operator.<version>
+```
+
+3. Delete the CRDs
+```sh
+kubectl delete crd labinstances.ltb-backend.ltb labtemplates.ltb-backend.ltb nodetypes.ltb-backend.ltb
+```
+
+4. Delete operator
+```sh
+kubectl delete operator ltb-operator.operators
+```
+
+5. Delete the CatalogSource
+```sh
+kubectl delete catalogsource.operators.coreos.com -n operators ltb-catalog
+```

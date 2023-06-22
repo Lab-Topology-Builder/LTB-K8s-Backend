@@ -52,10 +52,8 @@ spec:
                         type: object
                       type: array
                     name:
-                      maxLength: 32
-                      minLength: 1
                       type: string
-                    nodetyperef:
+                    nodeTypeRef:
                       properties:
                         image:
                           type: string
@@ -87,7 +85,7 @@ spec:
                       type: string
                   required:
                   - name
-                  - nodetyperef
+                  - nodeTypeRef
                   type: object
                 type: array
             required:
