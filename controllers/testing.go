@@ -624,7 +624,7 @@ template:
 
 	testPodIngress = &networkingv1.Ingress{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      testLabInstance.Name + "-" + testPodNode.Name + "-ingress",
+			Name:      testLabInstance.Name + "-" + testPodNode.Name,
 			Namespace: namespace,
 			Annotations: map[string]string{
 				"nginx.ingress.kubernetes.io/rewrite-target": "/?arg=pod&arg=" + testLabInstance.Name + "-" + testPodNode.Name + "&arg=bash",
@@ -634,7 +634,7 @@ template:
 
 	testVMIngress = &networkingv1.Ingress{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      testLabInstance.Name + "-" + testVMNode.Name + "-ingress",
+			Name:      testLabInstance.Name + "-" + testVMNode.Name,
 			Namespace: namespace,
 		},
 	}
