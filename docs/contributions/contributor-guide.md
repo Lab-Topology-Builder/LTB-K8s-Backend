@@ -6,7 +6,7 @@ Contributions are welcome and appreciated.
 
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/)
+It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/),
 which provides a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.
 
 ## Development Environment
@@ -31,6 +31,7 @@ We recommend using VSCode with the [Remote - Containers](https://marketplace.vis
 Now you are ready to start developing!
 
 ### Running the operator locally
+
 You can run the operator locally on your machine, this is useful for quick testing and debugging. However, you will need to be aware that the operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore it also does not use the RBAC rules it would usually be deployed with.
 
 1. Install the CRDs into the cluster:
