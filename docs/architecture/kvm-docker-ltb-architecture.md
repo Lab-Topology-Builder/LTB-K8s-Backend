@@ -1,15 +1,23 @@
 
-# Current (KVM/Docker)-base LTB Architecture
+# Preliminary Work (KVM/Docker)-base LTB Architecture
 
-The following diagram shows the current KVM/Docker based LTB.
+The Kubernetes based LTB was inspired by a previous implementation of the LTB, which was based on direct KVM and Docker usage.
 
-![Current LTB Architecture](../assets/drawings/ltb-stack-node.svg)
+The following diagram shows the components and how lab nodes are deployed on a hypervisor in the KVM/Docker based LTB:
+
+![(KVM/Docker) LTB Architecture](../assets/drawings/ltb-stack-node.svg)
 
 Currently the KVM/Docker based LTB is composed of the following containers:
 
 - [Frontend](#frontend) built with React
 - [Backend](#backend) built with Django
-- [Deployment](#deployment) built with docker-compose
+- [Databases](#databases) (PostgreSQL, Redis)
+- [Beat](#beat)
+- [Celery](#celery)
+- [Web-SSH](#web-ssh)
+- [Prometheus](#prometheus)
+- [Traefik](#traefik)
+- [Nginx](#nginx)
 
 ## Backend
 
@@ -71,10 +79,57 @@ This component is responsible for storing lab templates.
 
 This component is responsible for user authentication and management.
 
-## Deployment
+## Databases
 
-The deployment component is responsible for deploying the LTB backend and frontend components.
+The following databases are used:
+
+- PostgreSQL
+- Redis for caching
+
+The Databases are used by the following components:
+
+- Backend
+- Beat
+- Celery
+
+## Beat
+
+The beat component is responsible for scheduling periodic tasks.
+To be more precise, it is responsible for scheduling the deployment and deletion of labs, according to the reservation information.
+
+## Celery
+
+Celery is used to execute the commands to create and delete the lab nodes and connections.
+
+## Web-SSH
+
+Web-SSH is used to provide a web based ssh client, which can be used to access the deployed containers and vms aka lab nodes.
+
+## Prometheus
+
+Prometheus is used to collect metrics about CPU, memory and disk usage of the hypervisor nodes.
+
+## Traefik
+
+Traefik is used as a proxy for the following components:
+
+- Frontend
+- Web-SSH
+- Prometheus
+- Nginx
+
+## Nginx
+
+Nginx is used as a reverse proxy for the backend.
 
 ## Frontend
 
-The frontend allows users to access their labs and their devices.
+The frontend provides a web UI with the following features:
+
+- User authentication
+- Management of lab templates
+- Management of reservations for labs
+- Start/stop running labs
+- Resource usage overview
+- Provides information on how to access the deployed containers and vms
+- Create wireshark capture interfaces

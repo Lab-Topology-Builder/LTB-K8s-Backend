@@ -1,6 +1,5 @@
 # Kubernetes Lab Topology Builder Architecture
 
-The Kubernetes Lab Topology Builder (K8s-LTB) is a Kubernetes native version of the Lab Topology Builder (LTB).
 It is composed of a [Frontend](#frontend) and a [Backend](#backend).
 
 ![Architecture Overview](../assets/drawings/LTB-Architecture.drawio.svg)
