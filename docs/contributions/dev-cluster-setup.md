@@ -270,7 +270,6 @@ Currently no storage backend has been tested with the LTB operator, but you can 
 Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.
 
 Following you will find some instructions that may help you to install Trident on your cluster.
-But keep in mind that they are not tested and may not work, so you may want to skip this section and use the LTB operator without a storage backend.
 
 You always can find more information about Trident in the [official documentation](https://docs.netapp.com/us-en/trident/index.html).
 
