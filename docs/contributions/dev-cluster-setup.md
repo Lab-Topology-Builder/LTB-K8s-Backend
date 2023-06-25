@@ -2,9 +2,9 @@
 
 Steps to setup a Kubernetes development cluster for testing and development of the LTB operator.
 
-## Prerequisites
+## Prerequisites Remote Cluster
 
-- Linux OS (Recommended Ubuntu 22.04)
+- Server with Linux OS (Recommended Ubuntu 22.04)
 
 ## Prepare Node
 
@@ -320,3 +320,17 @@ Check the installation:
 ```bash
 kubectl get pods -n trident
 ```
+
+## Local development cluster
+
+[K3d](https://k3d.io), [Minikube](https://minikube.sigs.k8s.io/docs/) or [Kind](https://kind.sigs.k8s.io/) can be used to run a local Kubernetes cluster, if you don't have access to a remote cluster/server.
+
+Make sure to install the following tools:
+
+- [KubeVirt](https://kubevirt.io/)
+- [Containerized Data Importer](https://github.com/kubevirt/containerized-data-importer)
+- [Cluster Network Addon Operator](https://github.com/kubevirt/cluster-network-addons-operator)
+
+!!! warning "KubeVirt may not work properly on local development clusters"
+    KubeVirt may not work properly on local development clusters, because it requires nested virtualization support, which is not available on all local development clusters.
+    Make sure to enable nested virtualization on your local machine, if you want to run KubeVirt on a local development cluster.
