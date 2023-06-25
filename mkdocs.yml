@@ -48,6 +48,8 @@ markdown_extensions:
   - pymdownx.snippets:
       auto_append:
         - doc-includes/glossary.md
+  - pymdownx.tasklist:
+      custom_checkbox: false
 theme:
   name: material
   logo: assets/images/LTB_Text_RGB.svg

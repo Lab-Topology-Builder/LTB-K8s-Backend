@@ -160,6 +160,8 @@ The lab instance references the previously defined lab template with the `labTem
 You also need to provide a DNS address via the `dnsAddress` field. This address will be used to create routes for the web terminal to the lab nodes.
 For example, if you use the address `example.com`, the console of a node called `sample-node-1` will be available at `https://labinstance-sample-sample-node-1.example.com/` via a web terminal.
 
+Currently, there is no support to edit the lab instance after it has been created. If you want to change the lab, you have to delete the lab instance and create a new one.
+
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1
 kind: LabInstance
