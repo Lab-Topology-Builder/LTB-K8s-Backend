@@ -9,8 +9,8 @@ To get started, please refer to the [User Guide](user-guide.md).
 - Deployment of networking labs on Kubernetes
 - Deletion of networking labs on Kubernetes
 - Status querying of lab deployments
-- Remote access to console of lab nodes via web browser
-- Remote access to OOB management of lab nodes (e.g. SSH)
+- Remote access to lab nodes' console via web browser
+- Remote access to lab nodes' OOB management (e.g. SSH)
 - Managing custom node types
 
 ## Roadmap
