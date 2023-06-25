@@ -1,6 +1,6 @@
 # Development cluster setup
 
-Setup for a development Kubernetes cluster.
+Steps to setup a Kubernetes development cluster for testing and development of the LTB operator.
 
 ## Prepare Node
 
