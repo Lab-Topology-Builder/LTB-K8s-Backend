@@ -566,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributions/local-dev-setup/" class="md-nav__link">
+      <a href="../contributions/local-dev-setup.md" class="md-nav__link">
         Local Development
       </a>
     </li>
@@ -1206,6 +1206,7 @@ The provided ports will be exposed to the host network and can be accessed via t
 The lab instance references the previously defined lab template with the <code>labTemplateReference</code> field.
 You also need to provide a DNS address via the <code>dnsAddress</code> field. This address will be used to create routes for the web terminal to the lab nodes.
 For example, if you use the address <code>example.com</code>, the console of a node called <code>sample-node-1</code> will be available at <code>https://labinstance-sample-sample-node-1.example.com/</code> via a web terminal.</p>
+<p>Currently, there is no support to edit the lab instance after it has been created. If you want to change the lab, you have to delete the lab instance and create a new one.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
 <span class="nt">metadata</span><span class="p">:</span>

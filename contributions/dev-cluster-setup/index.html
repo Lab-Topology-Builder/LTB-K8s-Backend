@@ -18,7 +18,7 @@
         <link rel="prev" href="../coding-conventions/">
       
       
-        <link rel="next" href="../local-dev-setup/">
+        <link rel="next" href="../technologies-used/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
@@ -499,6 +499,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#prerequisites-remote-cluster" class="md-nav__link">
+    Prerequisites Remote Cluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prepare-node" class="md-nav__link">
     Prepare Node
   </a>
@@ -635,8 +642,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#trident" class="md-nav__link">
-    Trident
+  <a href="#storage" class="md-nav__link">
+    Storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-cluster" class="md-nav__link">
+    Local development cluster
   </a>
   
 </li>
@@ -656,7 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../local-dev-setup/" class="md-nav__link">
+      <a href="../local-dev-setup.md" class="md-nav__link">
         Local Development
       </a>
     </li>
@@ -1054,6 +1068,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#prerequisites-remote-cluster" class="md-nav__link">
+    Prerequisites Remote Cluster
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prepare-node" class="md-nav__link">
     Prepare Node
   </a>
@@ -1190,8 +1211,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#trident" class="md-nav__link">
-    Trident
+  <a href="#storage" class="md-nav__link">
+    Storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-cluster" class="md-nav__link">
+    Local development cluster
   </a>
   
 </li>
@@ -1220,7 +1248,11 @@
 
 
 <h1 id="development-cluster-setup">Development cluster setup<a class="headerlink" href="#development-cluster-setup" title="Permanent link">&para;</a></h1>
-<p>Setup for a development Kubernetes cluster.</p>
+<p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> operator.</p>
+<h2 id="prerequisites-remote-cluster">Prerequisites Remote Cluster<a class="headerlink" href="#prerequisites-remote-cluster" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Server with Linux OS (Recommended Ubuntu 22.04)</li>
+</ul>
 <h2 id="prepare-node">Prepare Node<a class="headerlink" href="#prepare-node" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
@@ -1347,8 +1379,13 @@ kubectl<span class="w"> </span>-n<span class="w"> </span>cdi<span class="w"> </s
 kubectl<span class="w"> </span>krew<span class="w"> </span>install<span class="w"> </span>virt
 kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help</span>
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">You are ready to go!</p>
+<p>You're now ready to use the cluster for development or testing purposes.</p>
+</div>
 <h2 id="metallb">MetalLB<a class="headerlink" href="#metallb" title="Permanent link">&para;</a></h2>
-<p><a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters, using standard routing protocols.</p>
+<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> operator.
+<a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters.</p>
 <h3 id="install-operator-lifecycle-manager-olm">Install Operator Lifecycle Manager (OLM)<a class="headerlink" href="#install-operator-lifecycle-manager-olm" title="Permanent link">&para;</a></h3>
 <p>Install Operator Lifecycle Manager (OLM), a tool to help manage the Operators running on your cluster.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.24.0
@@ -1390,7 +1427,12 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>metallb-ipaddresspool.yaml
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>l2advertisment.yaml
 </code></pre></div>
-<h2 id="trident">Trident<a class="headerlink" href="#trident" title="Permanent link">&para;</a></h2>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
+<p>To store your virtual machine images and disks you may want to use a storage backend.
+Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
+Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
+<p>Following you will find some instructions that may help you to install Trident on your cluster.</p>
+<p>You always can find more information about Trident in the <a href="https://docs.netapp.com/us-en/trident/index.html">official documentation</a>.</p>
 <p>Check connectivity to NetApp Storage:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--tty<span class="w"> </span>ping<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--rm<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ping<span class="w"> </span>&lt;NetApp<span class="w"> </span>Management<span class="w"> </span>IP&gt;
@@ -1405,7 +1447,38 @@ vim<span class="w"> </span>./setup/backend.json
 </code></pre></div>
 <p>Configure the installer:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ./backend.json</span>
+<span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="m">1</span>,
+<span class="w">    </span><span class="s2">&quot;storageDriverName&quot;</span>:<span class="w"> </span><span class="s2">&quot;ontap-nas&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;managementLIF&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;NetApp Management IP&gt;&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;dataLIF&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;NetApp Data IP&gt;&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;svm&quot;</span>:<span class="w"> </span><span class="s2">&quot;svm_k8s&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;username&quot;</span>:<span class="w"> </span><span class="s2">&quot;admin&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;password&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;NetApp Password&gt;&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;storagePrefix&quot;</span>:<span class="w"> </span><span class="s2">&quot;trident_&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;nfsMountOptions&quot;</span>:<span class="w"> </span><span class="s2">&quot;-o nfsvers=4.1 -o mountport=2049 -o nolock&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;debug&quot;</span>:<span class="w"> </span><span class="nb">true</span>
+<span class="o">}</span>
 </code></pre></div>
+<p>Install Trident:</p>
+<div class="highlight"><pre><span></span><code>./tridentctl<span class="w"> </span>install<span class="w"> </span>-n<span class="w"> </span>trident<span class="w"> </span>-f<span class="w"> </span>./setup/backend.json
+</code></pre></div>
+<p>Check the installation:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>trident
+</code></pre></div>
+<h2 id="local-development-cluster">Local development cluster<a class="headerlink" href="#local-development-cluster" title="Permanent link">&para;</a></h2>
+<p><a href="https://k3d.io">K3d</a>, <a href="https://minikube.sigs.k8s.io/docs/">Minikube</a> or <a href="https://kind.sigs.k8s.io/">Kind</a> can be used to run a local Kubernetes cluster, if you don't have access to a remote cluster/server.</p>
+<p>Make sure to install the following tools:</p>
+<ul>
+<li><a href="https://kubevirt.io/">KubeVirt</a></li>
+<li><a href="https://github.com/kubevirt/containerized-data-importer">Containerized Data Importer</a></li>
+<li><a href="https://github.com/kubevirt/cluster-network-addons-operator">Cluster Network Addon Operator</a></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">KubeVirt may not work properly on local development clusters</p>
+<p>KubeVirt may not work properly on local development clusters, because it requires nested virtualization support, which is not available on all local development clusters.
+Make sure to enable nested virtualization on your local machine, if you want to run KubeVirt on a local development cluster.</p>
+</div>
 
 
 

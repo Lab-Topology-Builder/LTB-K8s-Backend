@@ -471,34 +471,40 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#contributing-quickstart" class="md-nav__link">
-    Contributing Quickstart
-  </a>
-  
-    <nav class="md-nav" aria-label="Contributing Quickstart">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     How it works
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#test-it-out" class="md-nav__link">
-    Test It Out
+      
+        <li class="md-nav__item">
+  <a href="#development-environment" class="md-nav__link">
+    Development Environment
   </a>
   
-    <nav class="md-nav" aria-label="Test It Out">
+    <nav class="md-nav" aria-label="Development Environment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#running-on-the-cluster" class="md-nav__link">
-    Running on the cluster
+  <a href="#prerequisites-for-recommended-ide-setup" class="md-nav__link">
+    Prerequisites for recommended IDE setup
   </a>
   
-    <nav class="md-nav" aria-label="Running on the cluster">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    Getting Started
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-operator-locally" class="md-nav__link">
+    Running the operator locally
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the operator locally">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -507,6 +513,14 @@
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-operator-on-the-cluster" class="md-nav__link">
+    Running the operator on the cluster
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the operator on the cluster">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#undeploy-controller" class="md-nav__link">
@@ -522,13 +536,6 @@
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-locally" class="md-nav__link">
-    Running locally
-  </a>
   
 </li>
         
@@ -587,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../local-dev-setup/" class="md-nav__link">
+      <a href="../local-dev-setup.md" class="md-nav__link">
         Local Development
       </a>
     </li>
@@ -985,34 +992,40 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#contributing-quickstart" class="md-nav__link">
-    Contributing Quickstart
-  </a>
-  
-    <nav class="md-nav" aria-label="Contributing Quickstart">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     How it works
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#test-it-out" class="md-nav__link">
-    Test It Out
+      
+        <li class="md-nav__item">
+  <a href="#development-environment" class="md-nav__link">
+    Development Environment
   </a>
   
-    <nav class="md-nav" aria-label="Test It Out">
+    <nav class="md-nav" aria-label="Development Environment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#running-on-the-cluster" class="md-nav__link">
-    Running on the cluster
+  <a href="#prerequisites-for-recommended-ide-setup" class="md-nav__link">
+    Prerequisites for recommended IDE setup
   </a>
   
-    <nav class="md-nav" aria-label="Running on the cluster">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    Getting Started
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-operator-locally" class="md-nav__link">
+    Running the operator locally
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the operator locally">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1021,6 +1034,14 @@
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-operator-on-the-cluster" class="md-nav__link">
+    Running the operator on the cluster
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the operator on the cluster">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#undeploy-controller" class="md-nav__link">
@@ -1036,13 +1057,6 @@
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-locally" class="md-nav__link">
-    Running locally
-  </a>
   
 </li>
         
@@ -1082,40 +1096,30 @@
 
 
 <h1 id="contributor-guide">Contributor Guide<a class="headerlink" href="#contributor-guide" title="Permanent link">&para;</a></h1>
-<h2 id="contributing-quickstart">Contributing Quickstart<a class="headerlink" href="#contributing-quickstart" title="Permanent link">&para;</a></h2>
 <p>Contributions are welcome and appreciated.</p>
-<h3 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <p>This project aims to follow the Kubernetes <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Operator pattern</a></p>
-<p>It uses <a href="https://kubernetes.io/docs/concepts/architecture/controller/">Controllers</a>
+<p>It uses <a href="https://kubernetes.io/docs/concepts/architecture/controller/">Controllers</a>,
 which provides a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.</p>
-<h3 id="test-it-out">Test It Out<a class="headerlink" href="#test-it-out" title="Permanent link">&para;</a></h3>
-<p>You’ll need a Kubernetes cluster to run against. You can use <a href="https://sigs.k8s.io/kind">KIND</a> to get a local cluster for testing, or run against a remote cluster.
+<h2 id="development-environment">Development Environment<a class="headerlink" href="#development-environment" title="Permanent link">&para;</a></h2>
+<p>You’ll need a Kubernetes cluster to run against. You can find instructions on how to setup your dev cluster in the <a href="../dev-cluster-setup/">Dev Cluster Setup</a> section.
 <strong>Note:</strong> Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster <code>kubectl cluster-info</code> shows).</p>
-<h4 id="running-on-the-cluster">Running on the cluster<a class="headerlink" href="#running-on-the-cluster" title="Permanent link">&para;</a></h4>
+<p>We recommend using VSCode with the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the operator already installed.</p>
+<h3 id="prerequisites-for-recommended-ide-setup">Prerequisites for recommended IDE setup<a class="headerlink" href="#prerequisites-for-recommended-ide-setup" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.docker.com/get-docker/">Docker</a></li>
+<li><a href="https://code.visualstudio.com/">VSCode</a></li>
+<li><a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension</li>
+</ul>
+<h3 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Install Instances of Custom Resources:</li>
+<li>Clone the repository</li>
+<li>Open the repository in VSCode</li>
+<li>Click the popup or use the command palette to reopen the repository in a container (Dev Containers: Reopen in Container)</li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>config/samples/
-</code></pre></div>
-<ol>
-<li>Build and push your image to the location specified by <code>IMG</code>:</li>
-</ol>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>docker-build<span class="w"> </span>docker-push<span class="w"> </span><span class="nv">IMG</span><span class="o">=</span>&lt;some-registry&gt;/operator:tag
-</code></pre></div>
-<ol>
-<li>Deploy the controller to the cluster with the image specified by <code>IMG</code>:</li>
-</ol>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>deploy<span class="w"> </span><span class="nv">IMG</span><span class="o">=</span>&lt;some-registry&gt;/operator:tag
-</code></pre></div>
-<h5 id="uninstall-crds">Uninstall CRDs<a class="headerlink" href="#uninstall-crds" title="Permanent link">&para;</a></h5>
-<p>To delete the CRDs from the cluster:</p>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>uninstall
-</code></pre></div>
-<h5 id="undeploy-controller">Undeploy controller<a class="headerlink" href="#undeploy-controller" title="Permanent link">&para;</a></h5>
-<p>Undeploy the controller from the cluster:</p>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>undeploy
-</code></pre></div>
-<h3 id="running-locally">Running locally<a class="headerlink" href="#running-locally" title="Permanent link">&para;</a></h3>
+<p>Now you are ready to start developing!</p>
+<h3 id="running-the-operator-locally">Running the operator locally<a class="headerlink" href="#running-the-operator-locally" title="Permanent link">&para;</a></h3>
+<p>You can run the operator locally on your machine, this is useful for quick testing and debugging. However, you will need to be aware that the operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore it also does not use the RBAC rules it would usually be deployed with.</p>
 <ol>
 <li>Install the CRDs into the cluster:</li>
 </ol>
@@ -1127,12 +1131,40 @@ which provides a reconcile function responsible for synchronizing resources unti
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>run
 </code></pre></div>
 <p><strong>NOTE:</strong> You can also run this in one step by running: <code>make install run</code></p>
+<h4 id="uninstall-crds">Uninstall CRDs<a class="headerlink" href="#uninstall-crds" title="Permanent link">&para;</a></h4>
+<p>To delete the CRDs from the cluster:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>uninstall
+</code></pre></div>
+<h4 id="running-the-operator-on-the-cluster">Running the operator on the cluster<a class="headerlink" href="#running-the-operator-on-the-cluster" title="Permanent link">&para;</a></h4>
+<p>You can also run the operator on the cluster, this is useful for testing the operator in a more realistic environment.
+However, you will first need to login to some container registry that the cluster can access, so that you can push the operator image to that registry.
+This will allow you to test the operators RBAC rules.</p>
+<p>Make sure to replace <code>&lt;some-registry&gt;</code> with the location of your container registry and <code>&lt;tag&gt;</code> with the tag you want to use.</p>
+<ol>
+<li>Install Instances of Custom Resources:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>config/samples/
+</code></pre></div>
+<ol>
+<li>Build and push your image to the location specified by <code>IMG</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>docker-build<span class="w"> </span>docker-push<span class="w"> </span><span class="nv">IMG</span><span class="o">=</span>&lt;some-registry&gt;/ltb-operator:&lt;tag&gt;
+</code></pre></div>
+<ol>
+<li>Deploy the controller to the cluster with the image specified by <code>IMG</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>deploy<span class="w"> </span><span class="nv">IMG</span><span class="o">=</span>&lt;some-registry&gt;/ltb-operator:&lt;tag&gt;
+</code></pre></div>
+<h5 id="undeploy-controller">Undeploy controller<a class="headerlink" href="#undeploy-controller" title="Permanent link">&para;</a></h5>
+<p>Undeploy the controller from the cluster:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>undeploy
+</code></pre></div>
 <h3 id="modifying-the-api-definitions">Modifying the API definitions<a class="headerlink" href="#modifying-the-api-definitions" title="Permanent link">&para;</a></h3>
 <p>If you are editing the API definitions, generate the manifests such as CRs or CRDs using:</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>manifests
 </code></pre></div>
 <p><strong>NOTE:</strong> Run <code>make --help</code> for more information on all potential <code>make</code> targets</p>
-<p>More information can be found via the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p>
+<p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p>
 
 
 
