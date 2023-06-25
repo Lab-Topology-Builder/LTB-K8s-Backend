@@ -2,6 +2,10 @@
 
 Steps to setup a Kubernetes development cluster for testing and development of the LTB operator.
 
+## Prerequisites
+
+- Linux OS (Recommended Ubuntu 22.04)
+
 ## Prepare Node
 
 ```bash
@@ -186,9 +190,13 @@ kubectl krew install virt
 kubectl virt help
 ```
 
+!!! info "You are ready to go!"
+    You're now ready to use the cluster for development or testing purposes.
+
 ## MetalLB
 
-[MetalLB](https://metallb.universe.tf/) is a load-balancer implementation for bare metal Kubernetes clusters, using standard routing protocols.
+You can optionally install MetalLB, currently it is not required to use the LTB operator.
+[MetalLB](https://metallb.universe.tf/) is a load-balancer implementation for bare metal Kubernetes clusters.
 
 ### Install Operator Lifecycle Manager (OLM)
 
@@ -255,7 +263,16 @@ kubectl apply -f metallb-ipaddresspool.yaml
 kubectl apply -f l2advertisment.yaml
 ```
 
-## Trident
+## Storage
+
+To store your virtual machine images and disks you may want to use a storage backend.
+Currently no storage backend has been tested with the LTB operator, but you can try to use [Trident](https://docs.netapp.com/us-en/trident/index.html).
+Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.
+
+Following you will find some instructions that may help you to install Trident on your cluster.
+But keep in mind that they are not tested and may not work, so you may want to skip this section and use the LTB operator without a storage backend.
+
+You always can find more information about Trident in the [official documentation](https://docs.netapp.com/us-en/trident/index.html).
 
 Check connectivity to NetApp Storage:
 
@@ -279,5 +296,28 @@ Configure the installer:
 
 ```bash
 # ./backend.json
+{
+    "version": 1,
+    "storageDriverName": "ontap-nas",
+    "managementLIF": "<NetApp Management IP>",
+    "dataLIF": "<NetApp Data IP>",
+    "svm": "svm_k8s",
+    "username": "admin",
+    "password": "<NetApp Password>",
+    "storagePrefix": "trident_",
+    "nfsMountOptions": "-o nfsvers=4.1 -o mountport=2049 -o nolock",
+    "debug": true
+}
+```
 
+Install Trident:
+
+```bash
+./tridentctl install -n trident -f ./setup/backend.json
+```
+
+Check the installation:
+
+```bash
+kubectl get pods -n trident
 ```
