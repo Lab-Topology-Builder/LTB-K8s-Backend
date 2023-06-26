@@ -1,5 +1,5 @@
 
-# Preliminary Work (KVM/Docker)-base LTB Architecture
+# Preliminary Work (KVM/Docker)-based LTB Architecture
 
 The Kubernetes based LTB was inspired by a previous implementation of the LTB, which was based on direct KVM and Docker usage.
 
@@ -21,7 +21,7 @@ Currently the KVM/Docker based LTB is composed of the following containers:
 
 ## Backend
 
-The backend is accessible via API and a Admin Web UI.
+The backend is accessible via API and an Admin Web UI.
 It is responsible for the following tasks:
 
 - parsing the yaml topology files
@@ -68,7 +68,7 @@ The reservation component is responsible for reserving system resources in advan
 
 This component is responsible for storing information about running labs, such as:
 
-- The devices taking part in the running lab, inclusive of the interfaces
+- The devices taking part in the running lab, including the interfaces
 - Connection information
 
 ### Template store
