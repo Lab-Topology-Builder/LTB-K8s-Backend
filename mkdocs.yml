@@ -25,6 +25,8 @@ plugins:
       glob:
         - decisions/adr-template.md
         - decisions/README.md
+  - glightbox
+  - print-site
   # - git-authors
   # - git-revision-date-localized:
   #     fallback_to_build_date: true
@@ -58,7 +60,7 @@ theme:
     - navigation.tracking
     - navigation.top
     # - navigation.footer
-    - navigation.tabs
+    # - navigation.tabs
     # - navigation.tabs.sticky
     # - search.highlight
     - search.suggest
