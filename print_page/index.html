@@ -1,0 +1,2243 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Kubernetes Operator and User management for the Lab Topology Builder.">
+      
+      
+        <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
+      
+      
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/print_page/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
+    
+    
+      
+        <title>Print Site - LTB K8s Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ffa9267a.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../css/print-site.css">
+    
+      <link rel="stylesheet" href="../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("/LTB-K8s-Backend/",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  
+        <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            remove_material_navigation();remove_mkdocs_theme_navigation();generate_toc();
+        })
+        </script>
+        </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LTB K8s Backend" class="md-header__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
+      
+  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LTB K8s Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Print Site
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Lab-Topology-Builder/LTB-K8s-Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LTB K8s Backend" class="md-nav__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
+      
+  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
+
+    </a>
+    LTB K8s Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Lab-Topology-Builder/LTB-K8s-Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        User Guide
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Contributions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Contributions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/contributor-guide/" class="md-nav__link">
+        Contributor Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/coding-conventions/" class="md-nav__link">
+        Coding Conventions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/dev-cluster-setup/" class="md-nav__link">
+        Development Cluster Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/technologies-used/" class="md-nav__link">
+        Tools and Frameworks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/test-concepts/" class="md-nav__link">
+        Testing
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/k8s-ltb-architecture/" class="md-nav__link">
+        Kubernetes Lab Topology Builder Architecture
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
+        Preliminary Work (KVM/Docker)-based LTB Architecture
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Decisions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Decisions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
+        Use Markdown Architectural Decision Records
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0001-operator-SDK/" class="md-nav__link">
+        Operator SDK
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/00011-remote-access/" class="md-nav__link">
+        Remote-Access
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0002-operator-scope/" class="md-nav__link">
+        Operator Scope
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0003-api-and-operator-deployment/" class="md-nav__link">
+        API and Operator Deployment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0004-dev-container/" class="md-nav__link">
+        Dev Container
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
+        Replace Current LTB Backend
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0006-lab-instance-set/" class="md-nav__link">
+        Lab Instance Set
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0007-interaction-with-operator/" class="md-nav__link">
+        Interaction with Operator
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
+        Namespace Per LabInstance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
+        K8s Aggreted API Over Standalone API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0010-extending-ltb-with-new-node-types/" class="md-nav__link">
+        Extending LTB with New Node Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0011-programming-language/" class="md-nav__link">
+        Programming Language
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#" class="md-nav__link">
+    1. Home
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-guide" class="md-nav__link">
+    2. User Guide
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    3. Concepts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-contributions" class="md-nav__link">
+    I. Contributions
+  </a>
+  
+    <nav class="md-nav" aria-label="I. Contributions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contributions-contributor-guide" class="md-nav__link">
+    4. Contributor Guide
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contributions-coding-conventions" class="md-nav__link">
+    5. Coding Conventions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contributions-dev-cluster-setup" class="md-nav__link">
+    6. Development Cluster Setup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contributions-technologies-used" class="md-nav__link">
+    7. Tools and Frameworks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contributions-test-concepts" class="md-nav__link">
+    8. Testing
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-architecture" class="md-nav__link">
+    II. Architecture
+  </a>
+  
+    <nav class="md-nav" aria-label="II. Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-k8s-ltb-architecture" class="md-nav__link">
+    9. Kubernetes Lab Topology Builder Architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-kvm-docker-ltb-architecture" class="md-nav__link">
+    10. Preliminary Work (KVM/Docker)-based LTB Architecture
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-decisions" class="md-nav__link">
+    III. Decisions
+  </a>
+  
+    <nav class="md-nav" aria-label="III. Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0000-use-markdown-architectural-decision-records" class="md-nav__link">
+    11. Use Markdown Architectural Decision Records
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0001-operator-sdk" class="md-nav__link">
+    12. Operator SDK
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-00011-remote-access" class="md-nav__link">
+    13. Remote-Access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0002-operator-scope" class="md-nav__link">
+    14. Operator Scope
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0003-api-and-operator-deployment" class="md-nav__link">
+    15. API and Operator Deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0004-dev-container" class="md-nav__link">
+    16. Dev Container
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0005-replace-current-ltb-backend" class="md-nav__link">
+    17. Replace Current LTB Backend
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0006-lab-instance-set" class="md-nav__link">
+    18. Lab Instance Set
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0007-interaction-with-operator" class="md-nav__link">
+    19. Interaction with Operator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0008-namespace-per-labinstance" class="md-nav__link">
+    20. Namespace Per LabInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0009-k8s-aggreted-api-over-standalone-api" class="md-nav__link">
+    21. K8s Aggreted API Over Standalone API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0010-extending-ltb-with-new-node-types" class="md-nav__link">
+    22. Extending LTB with New Node Types
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decisions-0011-programming-language" class="md-nav__link">
+    23. Programming Language
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    24. About
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<div id="print-site-page" class="print-site-enumerate-headings print-site-enumerate-figures">
+        <section class="print-page">
+            <div id="print-page-toc" data-toc-depth="3">
+                <nav role='navigation' class='print-page-toc-nav'>
+                <h1 class='print-page-toc-title'>Table of Contents</h1>
+                </nav>
+            </div>
+        </section>
+        <section class="print-page" id="index"><h1 id="index-lab-topology-builder-documentation">Lab Topology Builder Documentation<a class="headerlink" href="#index-lab-topology-builder-documentation" title="Permanent link">&para;</a></h1>
+<p>The Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>) is an open source project that allows users to deploy networking labs on Kubernetes. It is a tool that enables you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
+<p>To get started, please refer to the <a href="#user-guide">User Guide</a>.</p>
+<h2 id="index-features">Features<a class="headerlink" href="#index-features" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Deployment of networking labs on Kubernetes</li>
+<li>Deletion of networking labs on Kubernetes</li>
+<li>Status querying of lab deployments</li>
+<li>Remote access to lab nodes' console via web browser</li>
+<li>Remote access to lab nodes' <abbr title="Out-of-Band">OOB</abbr> management (e.g. SSH)</li>
+<li>Managing custom node types</li>
+</ul>
+<h2 id="index-roadmap">Roadmap<a class="headerlink" href="#index-roadmap" title="Permanent link">&para;</a></h2>
+<p><a class="glightbox" href="../assets/drawings/roadmap.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Roadmap" src="../assets/drawings/roadmap.drawio.svg" /></a></p></section><section class="print-page" id="user-guide"><h1 id="user-guide-user-guide">User Guide<a class="headerlink" href="#user-guide-user-guide" title="Permanent link">&para;</a></h1>
+<h2 id="user-guide-installation-pre-requisites">Installation Pre-requisites<a class="headerlink" href="#user-guide-installation-pre-requisites" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Version</th>
+<th>Installation</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://kubernetes.io/">Kubernetes</a></td>
+<td>^1.26.0</td>
+<td><a href="https://kubernetes.io/docs/setup/">Installation</a></td>
+<td>Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications.</td>
+</tr>
+<tr>
+<td><a href="https://kubevirt.io/">Kubevirt</a></td>
+<td>0.59.0</td>
+<td><a href="https://kubevirt.io/user-guide/#/installation/installation">Installation</a></td>
+<td>Kubevirt is a Kubernetes add-on to run virtual machines on Kubernetes.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus-CNI</a></td>
+<td>3.9.0</td>
+<td><a href="https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/docs/quickstart.md">Installation</a></td>
+<td>Multus-CNI is a plugin for K8s to attach multiple network interfaces to pods.</td>
+</tr>
+<tr>
+<td><a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a></td>
+<td>^0.24.0</td>
+<td><a href="https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/install/install.md">Installation</a></td>
+<td>Operator Lifecycle Manager (OLM) helps users install, update, and manage the lifecycle of all Operators and their associated services running across their Kubernetes clusters.</td>
+</tr>
+</tbody>
+</table>
+<p>Alternative OLM installation:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.25.0
+</code></pre></div>
+<p>Change the version to the desired one.</p>
+<h2 id="user-guide-installation-of-the-ltb-k8s-operator">Installation of the <abbr title="Lab Topology Builder">LTB</abbr> K8s operator<a class="headerlink" href="#user-guide-installation-of-the-ltb-k8s-operator" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Install the operator by creating a catalog source and subscription.
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
+</code></pre></div></p>
+</li>
+<li>
+<p>Wait for the operator to be installed
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>-w
+</code></pre></div></p>
+</li>
+</ol>
+<h2 id="user-guide-usage">Usage<a class="headerlink" href="#user-guide-usage" title="Permanent link">&para;</a></h2>
+<p>To create a lab you'll need to create at least one node type and one lab template.
+Node types define the basic properties of a node. For VMs this includes everything that can be defined in a <a href="https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachinespec">Kubevirt VirtualMachineSpec</a> and for pods everything that can be defined in a <a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#podspec-v1-core">Kubernetes PodSpec</a>.</p>
+<p>In order to provide better reusability of node types, you can use <a href="https://golang.org/pkg/text/template/">Go templating Syntax</a> to include information from the lab template (like configuration or node name) in the node type.
+The following example node types show how this can be done. You can use them as a starting point for your own node types.</p>
+<h3 id="user-guide-example-node-type">Example Node Type<a class="headerlink" href="#user-guide-example-node-type" title="Permanent link">&para;</a></h3>
+<p>This is an example of a <abbr title="Virtual Machine">VM</abbr> node type. It creates a <abbr title="Virtual Machine">VM</abbr> with 2 vCPUs and 4GB of RAM, using the Ubuntu 22.04 container disk image from <a href="https://quay.io/repository/containerdisks/ubuntu?tab=tags">quay.io/containerdisks/ubuntu</a> and the <code>cloudInitNoCloud</code> volume source to provide a cloud-init configuration to the <abbr title="Virtual Machine">VM</abbr>.</p>
+<p>Everything that is defined in the <code>node</code> field of the lab template is available to the node type via the <code>.</code> variable.
+Example: <code>{{ .Name }}</code> will be replaced with the name of the node from the lab template.</p>
+<p>Currently, you cannot provide the cloud-init configuration as a YAML string via the .Config field of the lab template. Instead, you have to encode it as base64 string and therefore use the <code>userDataBase64</code> field of the volume source, because of indentation issues while rendering configuration.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NodeType</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodetypeubuntuvm</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vm</span>
+<span class="w">  </span><span class="nt">nodeSpec</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">running: true</span>
+<span class="w">    </span><span class="no">template:</span>
+<span class="w">      </span><span class="no">spec:</span>
+<span class="w">        </span><span class="no">domain:</span>
+<span class="w">          </span><span class="no">resources:</span>
+<span class="w">            </span><span class="no">requests:</span>
+<span class="w">              </span><span class="no">memory: 4096M</span>
+<span class="w">          </span><span class="no">cpu:</span>
+<span class="w">            </span><span class="no">cores: 2</span>
+<span class="w">          </span><span class="no">devices:</span>
+<span class="w">            </span><span class="no">disks:</span>
+<span class="w">              </span><span class="no">- name: containerdisk</span>
+<span class="w">                </span><span class="no">disk:</span>
+<span class="w">                  </span><span class="no">bus: virtio</span>
+<span class="w">              </span><span class="no">- name: cloudinitdisk</span>
+<span class="w">                </span><span class="no">disk:</span>
+<span class="w">                  </span><span class="no">bus: virtio</span>
+<span class="w">        </span><span class="no">terminationGracePeriodSeconds: 0</span>
+<span class="w">        </span><span class="no">volumes:</span>
+<span class="w">          </span><span class="no">- name: containerdisk</span>
+<span class="w">            </span><span class="no">containerDisk:</span>
+<span class="w">              </span><span class="no">image: quay.io/containerdisks/ubuntu:22.04</span>
+<span class="w">          </span><span class="no">- name: cloudinitdisk</span>
+<span class="w">            </span><span class="no">cloudInitNoCloud:</span>
+<span class="w">              </span><span class="no">userDataBase64: {{ .Config }}</span>
+</code></pre></div>
+<p>This is an example of a generic pod node type. It creates a pod with a single container. The container name, container image, command and ports to expose are taken from the lab template.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NodeType</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genericpod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pod</span>
+<span class="w">  </span><span class="nt">nodeSpec</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">containers:</span>
+<span class="w">      </span><span class="no">- name: {{ .Name }}</span>
+<span class="w">        </span><span class="no">image: {{ .NodeTypeRef.Image}}:{{ .NodeTypeRef.Version }}</span>
+<span class="w">        </span><span class="no">command: {{ .Config }}</span>
+<span class="w">        </span><span class="no">ports:</span>
+<span class="w">          </span><span class="no">{{- range $index, $port := .Ports }}</span>
+<span class="w">          </span><span class="no">- name: {{ $port.Name }}</span>
+<span class="w">            </span><span class="no">containerPort: {{ $port.Port }}</span>
+<span class="w">            </span><span class="no">protocol: {{ $port.Protocol }}</span>
+<span class="w">          </span><span class="no">{{- end }}</span>
+</code></pre></div>
+<p>After you have defined some node types, you can create a lab template.
+A lab template defines the nodes that should be created for a lab, how they should be configured and how they should be connected.</p>
+<h3 id="user-guide-example-lab-template">Example Lab Template<a class="headerlink" href="#user-guide-example-lab-template" title="Permanent link">&para;</a></h3>
+<p>This is an example of a lab template, which you can use as a starting point for your own labs.
+It uses the previously defined node types to create a <abbr title="Virtual Machine">VM</abbr> and two pods. They are referenced via the <code>nodeTypeRef</code> field.
+The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running <code>kubectl get node -o wide</code> and the port number by running <code>kubectl get svc</code>.</p>
+<p>Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabTemplate</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate-sample</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nodes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-1&quot;</span>
+<span class="w">    </span><span class="nt">nodeTypeRef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nodetypeubuntuvm&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;I2Nsb3VkLWNvbmZpZwpwYXNzd29yZDogdWJ1bnR1CmNocGFzc3dkOiB7IGV4cGlyZTogRmFsc2UgfQpzc2hfcHdhdXRoOiBUcnVlCnBhY2thZ2VzOgogLSBxZW11LWd1ZXN0LWFnZW50CiAtIGNtYXRyaXgKcnVuY21kOgogLSBbIHN5c3RlbWN0bCwgc3RhcnQsIHFlbXUtZ3Vlc3QtYWdlbnQgXQo=&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ssh&quot;</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TCP&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-2&quot;</span>
+<span class="w">    </span><span class="nt">nodeTypeRef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;genericpod&quot;</span>
+<span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ghcr.io/insrapperswil/network-ninja&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ssh&quot;</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TCP&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[&quot;/bin/bash&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;apt</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">-y</span><span class="nv"> </span><span class="s">openssh-server</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">ssh</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">365d&quot;]&#39;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-3&quot;</span>
+<span class="w">    </span><span class="nt">nodeTypeRef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;genericpod&quot;</span>
+<span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;22.04&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ssh&quot;</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TCP&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[&quot;/bin/bash&quot;,</span><span class="nv"> </span><span class="s">&quot;-c&quot;,</span><span class="nv"> </span><span class="s">&quot;apt</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">-y</span><span class="nv"> </span><span class="s">openssh-server</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">service</span><span class="nv"> </span><span class="s">ssh</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">365d&quot;]&#39;</span>
+</code></pre></div>
+<p>With the lab template defined, you can create a lab instance.</p>
+<h2 id="user-guide-example-lab-instance">Example Lab Instance<a class="headerlink" href="#user-guide-example-lab-instance" title="Permanent link">&para;</a></h2>
+<p>This is an example of lab instance, which you can use as a starting point for your own labs.
+The lab instance references the previously defined lab template with the <code>labTemplateReference</code> field.
+You also need to provide a DNS address via the <code>dnsAddress</code> field. This address will be used to create routes for the web terminal to the lab nodes.
+For example, if you use the address <code>example.com</code>, the console of a node called <code>sample-node-1</code> will be available at <code>https://labinstance-sample-sample-node-1.example.com/</code> via a web terminal.</p>
+<p>Currently, there is no support to edit the lab instance after it has been created. If you want to change the lab, you have to delete the lab instance and create a new one.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labTemplateReference</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;labtemplate-sample&quot;</span>
+<span class="w">  </span><span class="nt">dnsAddress</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example.com&quot;</span>
+</code></pre></div>
+<h2 id="user-guide-uninstall">Uninstall<a class="headerlink" href="#user-guide-uninstall" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Delete the subscription
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>subscriptions.operators.coreos.com<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-subscription
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete the CSV
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-operator.&lt;version&gt;
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete the CRDs
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>crd<span class="w"> </span>labinstances.ltb-backend.ltb<span class="w"> </span>labtemplates.ltb-backend.ltb<span class="w"> </span>nodetypes.ltb-backend.ltb
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete operator
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>operator<span class="w"> </span>ltb-operator.operators
+</code></pre></div></p>
+</li>
+<li>
+<p>Delete the CatalogSource
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>catalogsource.operators.coreos.com<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>ltb-catalog
+</code></pre></div></p>
+</li>
+</ol></section><section class="print-page" id="concepts"><h1 id="concepts-concepts">Concepts<a class="headerlink" href="#concepts-concepts" title="Permanent link">&para;</a></h1>
+<h2 id="concepts-lab-topology-builder-ltb">Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#concepts-lab-topology-builder-ltb" title="Permanent link">&para;</a></h2>
+<p>The Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
+<p><a class="glightbox" href="../assets/images/LTB.jpg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="LTB" src="../assets/images/LTB.jpg" /></a></p>
+<h2 id="concepts-ltb-kubernetes-backend"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Backend<a class="headerlink" href="#concepts-ltb-kubernetes-backend" title="Permanent link">&para;</a></h2>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Backend consists of the <abbr title="Lab Topology Builder">LTB</abbr> Operator and the <abbr title="Lab Topology Builder">LTB</abbr> Operator API, which replaces the current (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker) based backend of <abbr title="Lab Topology Builder">LTB</abbr>. It is responsible for managing the lab instances in a Kubernetes cluster and provide a REST API for the frontend to interact with the kubernetes cluster.</p>
+<h2 id="concepts-kubernetes-cluster">Kubernetes Cluster<a class="headerlink" href="#concepts-kubernetes-cluster" title="Permanent link">&para;</a></h2>
+<p>Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes. A Kubernetes cluster consists of a control plane and one or more nodes. The control plane is responsible for maintaining the desired state of the cluster, such as which applications are running and which container images they use, etc. And the nodes run the applications and workloads.</p>
+<h2 id="concepts-kubernetes-operator">Kubernetes operator<a class="headerlink" href="#concepts-kubernetes-operator" title="Permanent link">&para;</a></h2>
+<p>A Kubernetes operator is an application-specific controller that extends the functionality of the Kubernetes API to create, configure, and manage instances of complex applications on behalf of a Kubernetes user.
+It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages.</p>
+<h3 id="concepts-ltb-kubernetes-operator"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator<a class="headerlink" href="#concepts-ltb-kubernetes-operator" title="Permanent link">&para;</a></h3>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator is a K8s Operator for the <abbr title="Lab Topology Builder">LTB</abbr> application, which manages lab templates, lab instances in a Kubernetes cluster. It manages lab instances, node types, etc. It also updates the status of the lab instances according to the current state of the containers and virtual machines that are part of the lab instance.</p>
+<h2 id="concepts-custom-resource-definition-crd">Custom Resource Definition (<abbr title="Custom Resource Definition">CRD</abbr>)<a class="headerlink" href="#concepts-custom-resource-definition-crd" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions">custom resource definition</a> (<abbr title="Custom Resource Definition">CRD</abbr>) is a Kubernetes native resource.
+Defining a <abbr title="Custom Resource Definition">CRD</abbr> object creates a new custom resource with a name and schema that you specify.
+The custom resource created from a <abbr title="Custom Resource Definition">CRD</abbr> object can be either namespaced or cluster-scoped.
+CustomResourceDefinitions themselves are non-namespaced and are available to all namespaces.</p>
+<!-- TODO Maybe move to contributor section -->
+<p>The following example shows a <abbr title="Custom Resource Definition">CRD</abbr> for a LabInstance object, how they are defined in go and how the YAML output looks like.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w"> </span><span class="nx">metav1</span><span class="w"> </span><span class="s">&quot;k8s.io/apimachinery/pkg/apis/meta/v1&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstanceSpec</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="nx">LabTemplateReference</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;labTemplateReference&quot;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstanceStatus</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="nx">Status</span><span class="w">         </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;status,omitempty&quot;`</span>
+<span class="w"> </span><span class="nx">NumPodsRunning</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;numpodsrunning,omitempty&quot;`</span>
+<span class="w"> </span><span class="nx">NumVMsRunning</span><span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;numvmsrunning,omitempty&quot;`</span>
+<span class="p">}</span>
+
+<span class="c1">//+kubebuilder:object:root=true</span>
+<span class="c1">//+kubebuilder:subresource:status</span>
+<span class="c1">//+kubebuilder:printcolumn:name=&quot;STATUS&quot;,type=string,JSONPath=`.status.status`</span>
+<span class="c1">//+kubebuilder:printcolumn:name=&quot;PODS_RUNNING&quot;,type=string,JSONPath=`.status.numpodsrunning`</span>
+<span class="c1">//+kubebuilder:printcolumn:name=&quot;VMS_RUNNING&quot;,type=string,JSONPath=`.status.numvmsrunning`</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstance</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span><span class="w">   </span><span class="s">`json:&quot;,inline&quot;`</span>
+<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span><span class="w"> </span><span class="s">`json:&quot;metadata,omitempty&quot;`</span>
+
+<span class="w"> </span><span class="nx">Spec</span><span class="w">   </span><span class="nx">LabInstanceSpec</span><span class="w">   </span><span class="s">`json:&quot;spec,omitempty&quot;`</span>
+<span class="w"> </span><span class="nx">Status</span><span class="w"> </span><span class="nx">LabInstanceStatus</span><span class="w"> </span><span class="s">`json:&quot;status,omitempty&quot;`</span>
+<span class="p">}</span>
+
+<span class="c1">// +kubebuilder:object:root=true</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstanceList</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span><span class="w"> </span><span class="s">`json:&quot;,inline&quot;`</span>
+<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ListMeta</span><span class="w"> </span><span class="s">`json:&quot;metadata,omitempty&quot;`</span>
+<span class="w"> </span><span class="nx">Items</span><span class="w">           </span><span class="p">[]</span><span class="nx">LabInstance</span><span class="w"> </span><span class="s">`json:&quot;items&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiextensions.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CustomResourceDefinition</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">controller-gen.kubebuilder.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.10.0</span>
+<span class="w">  </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstances.ltb-backend.ltb</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb</span>
+<span class="w">  </span><span class="nt">names</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
+<span class="w">    </span><span class="nt">listKind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstanceList</span>
+<span class="w">    </span><span class="nt">plural</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstances</span>
+<span class="w">    </span><span class="nt">singular</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance</span>
+<span class="w">  </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespaced</span>
+<span class="w">  </span><span class="nt">versions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">additionalPrinterColumns</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.status.status</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STATUS</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.status.numpodsrunning</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PODS_RUNNING</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.status.numvmsrunning</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMS_RUNNING</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1alpha1</span>
+<span class="w">    </span><span class="nt">schema</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">openAPIV3Schema</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">apiVersion</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;APIVersion</span><span class="nv"> </span><span class="s">defines</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">versioned</span><span class="nv"> </span><span class="s">schema</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">representation</span>
+<span class="w">              </span><span class="s">of</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">object.</span><span class="nv"> </span><span class="s">Servers</span><span class="nv"> </span><span class="s">should</span><span class="nv"> </span><span class="s">convert</span><span class="nv"> </span><span class="s">recognized</span><span class="nv"> </span><span class="s">schemas</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">latest</span>
+<span class="w">              </span><span class="s">internal</span><span class="nv"> </span><span class="s">value,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">reject</span><span class="nv"> </span><span class="s">unrecognized</span><span class="nv"> </span><span class="s">values.</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">info:</span><span class="nv"> </span><span class="s">https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">          </span><span class="nt">kind</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kind</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">string</span><span class="nv"> </span><span class="s">value</span><span class="nv"> </span><span class="s">representing</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">REST</span><span class="nv"> </span><span class="s">resource</span><span class="nv"> </span><span class="s">this</span>
+<span class="w">              </span><span class="s">object</span><span class="nv"> </span><span class="s">represents.</span><span class="nv"> </span><span class="s">Servers</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">infer</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">endpoint</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">client</span>
+<span class="w">              </span><span class="s">submits</span><span class="nv"> </span><span class="s">requests</span><span class="nv"> </span><span class="s">to.</span><span class="nv"> </span><span class="s">Cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">updated.</span><span class="nv"> </span><span class="s">In</span><span class="nv"> </span><span class="s">CamelCase.</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">info:</span><span class="nv"> </span><span class="s">https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds&#39;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">          </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">labTemplateReference</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labTemplateReference</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">          </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">numpodsrunning</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">              </span><span class="nt">numvmsrunning</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">              </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">    </span><span class="nt">served</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">subresources</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</code></pre></div>
+<h2 id="concepts-custom-resource-cr">Custom Resource (<abbr title="Custom Resource">CR</abbr>)<a class="headerlink" href="#concepts-custom-resource-cr" title="Permanent link">&para;</a></h2>
+<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-controllers">custom resource</a> (<abbr title="Custom Resource">CR</abbr>) is an extension of the Kubernetes API that allows you to define and manage your own API objects.
+It provides a way to store and retrieve structured data and can be used with a custom controller to provide a declarative API.
+Custom resources can be defined as a Kubernetes API extension using Custom Resource Definitions (CRDs) or via API aggregation.</p>
+<h2 id="concepts-lab-template">Lab Template<a class="headerlink" href="#concepts-lab-template" title="Permanent link">&para;</a></h2>
+<p>Lab Template is a <abbr title="Custom Resource">CR</abbr>, which defines a template for a lab. It contains information about the lab you want to deploy and a reference to the node types that are part of the lab.</p>
+<p>The following YAML is an example of a LabTemplate:</p>
+<!-- TODO Remove and add link to example in user guide -->
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabTemplate</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate-sample</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kustomize</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/created-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate-sample</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nodes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-1&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;22.04&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vm&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">              </span><span class="no">#cloud-config</span>
+<span class="w">              </span><span class="no">password: ubuntu</span>
+<span class="w">              </span><span class="no">chpasswd: { expire: False }</span>
+<span class="w">              </span><span class="no">ssh_authorized_keys:</span>
+<span class="w">                </span><span class="no">- &lt;your-ssh-pub-key&gt;</span>
+<span class="w">              </span><span class="no">packages:</span>
+<span class="w">                </span><span class="no">- qemu-guest-agent</span>
+<span class="w">              </span><span class="no">runcmd:</span>
+<span class="w">                </span><span class="no">- [ systemctl, start, qemu-guest-agent ]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-2&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ghcr.io/insrapperswil/network-ninja&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-3&quot;</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
+<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
+<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pod&quot;</span>
+<span class="w">  </span><span class="nt">connections</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">neighbors</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TestHost1:1,TestHost2:1&quot;</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+</code></pre></div>
+<h2 id="concepts-lab-instance">Lab Instance<a class="headerlink" href="#concepts-lab-instance" title="Permanent link">&para;</a></h2>
+<p>A lab instance is a <abbr title="Custom Resource">CR</abbr> that describes a lab that you want to deploy in a Kubernetes cluster.
+It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself.</p>
+<p>The following YAML is an example of a LabInstance:</p>
+<!-- TODO Remove and add link to example in user guide -->
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kustomize</span>
+<span class="w">    </span><span class="nt">app.kubernetes.io/created-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">labTemplateReference</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;labtemplate-sample&quot;</span>
+</code></pre></div>
+<h2 id="concepts-lab">Lab<a class="headerlink" href="#concepts-lab" title="Permanent link">&para;</a></h2>
+<p>A deployment of a lab instance is called a lab.</p>
+<h2 id="concepts-nodetype">NodeType<a class="headerlink" href="#concepts-nodetype" title="Permanent link">&para;</a></h2>
+<p>In a network, a node represents any device that is part of the lab. A NodeType is a <abbr title="Custom Resource">CR</abbr> that defines a type of node that can be part of a lab. You reference the node type you want to have in your lab in the lab template.
+Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a KubeVirt virtual machine or a pod.</p>
+<!--TODO: Link to an example of a node type in user guide-->
+
+<h2 id="concepts-network-topology">Network Topology<a class="headerlink" href="#concepts-network-topology" title="Permanent link">&para;</a></h2>
+<p>The arrangement or pattern in which all nodes on a network are connected together is referred to as the network’s topology.</p></section>
+                        <h1 class='nav-section-title' id='section-contributions'>
+                            Contributions <a class='headerlink' href='#section-contributions' title='Permanent link'>↵</a>
+                        </h1>
+                        <section class="print-page" id="contributions-contributor-guide"><h1 id="contributions-contributor-guide-contributor-guide">Contributor Guide<a class="headerlink" href="#contributions-contributor-guide-contributor-guide" title="Permanent link">&para;</a></h1>
+<p>Contributions are welcome and appreciated.</p>
+<h2 id="contributions-contributor-guide-how-it-works">How it works<a class="headerlink" href="#contributions-contributor-guide-how-it-works" title="Permanent link">&para;</a></h2>
+<p>This project aims to follow the Kubernetes <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Operator pattern</a></p>
+<p>It uses <a href="https://kubernetes.io/docs/concepts/architecture/controller/">Controllers</a>,
+which provides a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.</p>
+<h2 id="contributions-contributor-guide-development-environment">Development Environment<a class="headerlink" href="#contributions-contributor-guide-development-environment" title="Permanent link">&para;</a></h2>
+<p>You’ll need a Kubernetes cluster to run against. You can find instructions on how to setup your dev cluster in the <a href="#contributions-dev-cluster-setup">Dev Cluster Setup</a> section.
+<strong>Note:</strong> Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster <code>kubectl cluster-info</code> shows).</p>
+<p>We recommend using VSCode with the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the operator already installed.</p>
+<h3 id="contributions-contributor-guide-prerequisites-for-recommended-ide-setup">Prerequisites for recommended IDE setup<a class="headerlink" href="#contributions-contributor-guide-prerequisites-for-recommended-ide-setup" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.docker.com/get-docker/">Docker</a></li>
+<li><a href="https://code.visualstudio.com/">VSCode</a></li>
+<li><a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension</li>
+</ul>
+<h3 id="contributions-contributor-guide-getting-started">Getting Started<a class="headerlink" href="#contributions-contributor-guide-getting-started" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Clone the repository</li>
+<li>Open the repository in VSCode</li>
+<li>Click the popup or use the command palette to reopen the repository in a container (Dev Containers: Reopen in Container)</li>
+</ol>
+<p>Now you are ready to start developing!</p>
+<h3 id="contributions-contributor-guide-running-the-operator-locally">Running the operator locally<a class="headerlink" href="#contributions-contributor-guide-running-the-operator-locally" title="Permanent link">&para;</a></h3>
+<p>You can run the operator locally on your machine, this is useful for quick testing and debugging. However, you will need to be aware that the operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore it also does not use the RBAC rules it would usually be deployed with.</p>
+<ol>
+<li>Install the CRDs into the cluster:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>install
+</code></pre></div>
+<ol>
+<li>Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>run
+</code></pre></div>
+<p><strong>NOTE:</strong> You can also run this in one step by running: <code>make install run</code></p>
+<h4 id="contributions-contributor-guide-uninstall-crds">Uninstall CRDs<a class="headerlink" href="#contributions-contributor-guide-uninstall-crds" title="Permanent link">&para;</a></h4>
+<p>To delete the CRDs from the cluster:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>uninstall
+</code></pre></div>
+<h4 id="contributions-contributor-guide-running-the-operator-on-the-cluster">Running the operator on the cluster<a class="headerlink" href="#contributions-contributor-guide-running-the-operator-on-the-cluster" title="Permanent link">&para;</a></h4>
+<p>You can also run the operator on the cluster, this is useful for testing the operator in a more realistic environment.
+However, you will first need to login to some container registry that the cluster can access, so that you can push the operator image to that registry.
+This will allow you to test the operators RBAC rules.</p>
+<p>Make sure to replace <code>&lt;some-registry&gt;</code> with the location of your container registry and <code>&lt;tag&gt;</code> with the tag you want to use.</p>
+<ol>
+<li>Install Instances of Custom Resources:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>config/samples/
+</code></pre></div>
+<ol>
+<li>Build and push your image to the location specified by <code>IMG</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>docker-build<span class="w"> </span>docker-push<span class="w"> </span><span class="nv">IMG</span><span class="o">=</span>&lt;some-registry&gt;/ltb-operator:&lt;tag&gt;
+</code></pre></div>
+<ol>
+<li>Deploy the controller to the cluster with the image specified by <code>IMG</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>deploy<span class="w"> </span><span class="nv">IMG</span><span class="o">=</span>&lt;some-registry&gt;/ltb-operator:&lt;tag&gt;
+</code></pre></div>
+<h5 id="contributions-contributor-guide-undeploy-controller">Undeploy controller<a class="headerlink" href="#contributions-contributor-guide-undeploy-controller" title="Permanent link">&para;</a></h5>
+<p>Undeploy the controller from the cluster:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>undeploy
+</code></pre></div>
+<h3 id="contributions-contributor-guide-modifying-the-api-definitions">Modifying the API definitions<a class="headerlink" href="#contributions-contributor-guide-modifying-the-api-definitions" title="Permanent link">&para;</a></h3>
+<p>If you are editing the API definitions, generate the manifests such as CRs or CRDs using:</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>manifests
+</code></pre></div>
+<p><strong>NOTE:</strong> Run <code>make --help</code> for more information on all potential <code>make</code> targets</p>
+<p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p></section><section class="print-page" id="contributions-coding-conventions"><h1 id="contributions-coding-conventions-coding-conventions">Coding Conventions<a class="headerlink" href="#contributions-coding-conventions-coding-conventions" title="Permanent link">&para;</a></h1>
+<h2 id="contributions-coding-conventions-naming">Naming<a class="headerlink" href="#contributions-coding-conventions-naming" title="Permanent link">&para;</a></h2>
+<p>The following naming conventions are used in the project:</p>
+<h3 id="contributions-coding-conventions-naming-conventions-in-go"><a href="https://golang.org/doc/effective_go#names">Naming conventions in Go</a><a class="headerlink" href="#contributions-coding-conventions-naming-conventions-in-go" title="Permanent link">&para;</a></h3>
+<ul>
+<li><em>camelCase</em> for variables and functions, which are not exported</li>
+<li><em>PascalCase</em> for types and functions that need to be exported</li>
+</ul>
+<h4 id="contributions-coding-conventions-examples">Examples<a class="headerlink" href="#contributions-coding-conventions-examples" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>labInstanceStatus</strong>: variable name for a status of a lab instance</li>
+<li><strong>UpdateLabInstanceStatus</strong>: name for an exported function, starts with a capital letter</li>
+</ul>
+<h2 id="contributions-coding-conventions-coding">Coding<a class="headerlink" href="#contributions-coding-conventions-coding" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The Go extension in VSCode has a linting capability, so that will be used for linting and formatting.</li>
+</ul></section><section class="print-page" id="contributions-dev-cluster-setup"><h1 id="contributions-dev-cluster-setup-development-cluster-setup">Development cluster setup<a class="headerlink" href="#contributions-dev-cluster-setup-development-cluster-setup" title="Permanent link">&para;</a></h1>
+<p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> operator.</p>
+<h2 id="contributions-dev-cluster-setup-prerequisites-remote-cluster">Prerequisites Remote Cluster<a class="headerlink" href="#contributions-dev-cluster-setup-prerequisites-remote-cluster" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Server with Linux OS (Recommended Ubuntu 22.04)</li>
+</ul>
+<h2 id="contributions-dev-cluster-setup-prepare-node">Prepare Node<a class="headerlink" href="#contributions-dev-cluster-setup-prepare-node" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
+sudo<span class="w"> </span>swapoff<span class="w"> </span>-a
+sudo<span class="w"> </span>sed<span class="w"> </span>-ri<span class="w"> </span><span class="s1">&#39;/\sswap\s/s/^#?/#/&#39;</span><span class="w"> </span>/etc/fstab
+</code></pre></div>
+<h2 id="contributions-dev-cluster-setup-rke2-server-configuration">RKE2 Server Configuration<a class="headerlink" href="#contributions-dev-cluster-setup-rke2-server-configuration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/rancher/rke2
+sudo<span class="w"> </span>vim<span class="w"> </span>/etc/rancher/rke2/config.yaml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/rancher/rke2/config.yaml</span>
+<span class="nt">write-kubeconfig-mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0644&quot;</span>
+<span class="nt">kube-apiserver-arg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;allow-privileged=true&quot;</span>
+<span class="nt">cni</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multus,cilium</span>
+<span class="nt">disable-kube-proxy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-cilium-configuration-for-multus">Cilium Configuration for Multus<a class="headerlink" href="#contributions-dev-cluster-setup-cilium-configuration-for-multus" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/lib/rancher/rke2/server/manifests
+sudo<span class="w"> </span>vim<span class="w"> </span>/var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml</span>
+<span class="c1"># k8sServiceHost/Port IP of Control Plane node default Port 6443</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helm.cattle.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HelmChartConfig</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rke2-cilium</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">valuesContent</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">cni:</span>
+<span class="w">      </span><span class="no">chainingMode: &quot;none&quot;</span>
+<span class="w">      </span><span class="no">exclusive: false</span>
+<span class="w">    </span><span class="no">kubeProxyReplacement: strict</span>
+<span class="w">    </span><span class="no">k8sServiceHost: &quot;&lt;NodeIP&gt;&quot;</span>
+<span class="w">    </span><span class="no">k8sServicePort: 6443</span>
+<span class="w">    </span><span class="no">operator:</span>
+<span class="w">      </span><span class="no">replicas: 1</span>
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-install-and-start-server-and-check-logs">Install and start Server and check logs<a class="headerlink" href="#contributions-dev-cluster-setup-install-and-start-server-and-check-logs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sfL<span class="w"> </span>https://get.rke2.io<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">INSTALL_RKE2_VERSION</span><span class="o">=</span>v1.26.0+rke2r2<span class="w"> </span>sudo<span class="w"> </span>-E<span class="w"> </span>sh<span class="w"> </span>-
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rke2-server.service
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>rke2-server.service
+sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>rke2-server<span class="w"> </span>-f
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-add-kubernetes-tools-to-path-and-set-kubeconfig">Add Kubernetes tools to path and set kubeconfig<a class="headerlink" href="#contributions-dev-cluster-setup-add-kubernetes-tools-to-path-and-set-kubeconfig" title="Permanent link">&para;</a></h3>
+<p>Adds kubectl, crictl and ctr to path</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$PATH:/var/lib/rancher/rke2/bin&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;source &lt;(kubectl completion bash)&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;alias k=kubectl&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;complete -o default -F __start_kubectl k&#39;</span><span class="w"> </span>&gt;&gt;~/.bashrc
+<span class="nb">source</span><span class="w"> </span>~/.bashrc
+mkdir<span class="w"> </span>~/.kube
+ln<span class="w"> </span>-s<span class="w"> </span>/etc/rancher/rke2/rke2.yaml<span class="w"> </span>~/.kube/config
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-get-token-for-agent">Get Token for Agent<a class="headerlink" href="#contributions-dev-cluster-setup-get-token-for-agent" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>cat<span class="w"> </span>/var/lib/rancher/rke2/server/node-token
+</code></pre></div>
+<h2 id="contributions-dev-cluster-setup-rke2-agent-configuration-optional">RKE2 Agent Configuration (Optional)<a class="headerlink" href="#contributions-dev-cluster-setup-rke2-agent-configuration-optional" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/rancher/rke2
+sudo<span class="w"> </span>vim<span class="w"> </span>/etc/rancher/rke2/config.yaml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/rancher/rke2/config.yaml</span>
+<span class="nn">---</span>
+<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://&lt;server&gt;:9345</span>
+<span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;token from server node&gt;</span>
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-install-and-start-agent-and-check-logs">Install and start Agent and check logs<a class="headerlink" href="#contributions-dev-cluster-setup-install-and-start-agent-and-check-logs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sfL<span class="w"> </span>https://get.rke2.io<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">INSTALL_RKE2_TYPE</span><span class="o">=</span><span class="s2">&quot;agent&quot;</span><span class="w"> </span><span class="nv">INSTALL_RKE2_VERSION</span><span class="o">=</span>v1.26.0+rke2r2<span class="w"> </span>sudo<span class="w"> </span>-E<span class="w"> </span>sh<span class="w"> </span>-
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rke2-agent.service
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>rke2-agent.service
+sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>rke2-agent<span class="w"> </span>-f
+</code></pre></div>
+<h2 id="contributions-dev-cluster-setup-install-cluster-network-addons-operator">Install Cluster Network Addons Operator<a class="headerlink" href="#contributions-dev-cluster-setup-install-cluster-network-addons-operator" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://github.com/kubevirt/cluster-network-addons-operator">Cluster Network Addons Operator</a> can be used to deploy additional networking components.
+Multus and Cilium are already installed via RKE2.
+Open vSwitch CNI Plugin can be installed via this operator.</p>
+<p>First install the operator itself:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/namespace.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/network-addons-config.crd.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/operator.yaml
+</code></pre></div>
+<p>Then you need to create a configuration for the operator example <abbr title="Custom Resource">CR</abbr>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/network-addons-config-example.cr.yaml
+</code></pre></div>
+<p>Wait until the operator has finished the installation:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>networkaddonsconfig<span class="w"> </span>cluster<span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>Available
+</code></pre></div>
+<h2 id="contributions-dev-cluster-setup-kubevirt">Kubevirt<a class="headerlink" href="#contributions-dev-cluster-setup-kubevirt" title="Permanent link">&para;</a></h2>
+<p><a href="https://kubevirt.io/">Kubevirt</a> is a Kubernetes add-on to run virtual machines.</p>
+<h3 id="contributions-dev-cluster-setup-validate-hardware-virtualization-support">Validate Hardware Virtualization Support<a class="headerlink" href="#contributions-dev-cluster-setup-validate-hardware-virtualization-support" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libvirt-clients
+sudo<span class="w"> </span>virt-host-validate<span class="w"> </span>qemu
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-install-kubevirt">Install Kubevirt<a class="headerlink" href="#contributions-dev-cluster-setup-install-kubevirt" title="Permanent link">&para;</a></h3>
+<p>Latest Release: <code>export RELEASE=$(curl https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt)</code></p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">RELEASE</span><span class="o">=</span>v0.58.1
+<span class="c1"># Deploy the KubeVirt operator</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/kubevirt/releases/download/<span class="si">${</span><span class="nv">RELEASE</span><span class="si">}</span>/kubevirt-operator.yaml
+<span class="c1"># Create the KubeVirt CR (instance deployment request) which triggers the actual installation</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/kubevirt/releases/download/<span class="si">${</span><span class="nv">RELEASE</span><span class="si">}</span>/kubevirt-cr.yaml
+<span class="c1"># wait until all KubeVirt components are up</span>
+kubectl<span class="w"> </span>-n<span class="w"> </span>kubevirt<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>kv<span class="w"> </span>kubevirt<span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>Available
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-install-containerized-data-importer">Install Containerized Data Importer<a class="headerlink" href="#contributions-dev-cluster-setup-install-containerized-data-importer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">CDI_VERSION</span><span class="o">=</span>v1.55.2
+kubectl<span class="w"> </span>create<span class="w"> </span>ns<span class="w"> </span>cdi
+kubectl<span class="w"> </span>-n<span class="w"> </span>cdi<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/containerized-data-importer/releases/download/<span class="nv">$CDI_VERSION</span>/cdi-operator.yaml
+kubectl<span class="w"> </span>-n<span class="w"> </span>cdi<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/containerized-data-importer/releases/download/<span class="nv">$CDI_VERSION</span>/cdi-cr.yaml
+</code></pre></div>
+<h3 id="contributions-dev-cluster-setup-install-virtctl-via-krew">Install virtctl via Krew<a class="headerlink" href="#contributions-dev-cluster-setup-install-virtctl-via-krew" title="Permanent link">&para;</a></h3>
+<p>First install Krew and then install virtctl via Krew</p>
+<div class="highlight"><pre><span></span><code><span class="o">(</span>
+<span class="w">  </span><span class="nb">set</span><span class="w"> </span>-x<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">  </span><span class="nv">OS</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>uname<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">&#39;[:upper:]&#39;</span><span class="w"> </span><span class="s1">&#39;[:lower:]&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">  </span><span class="nv">ARCH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>uname<span class="w"> </span>-m<span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;s/x86_64/amd64/&#39;</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;s/\(arm\)\(64\)\?.*/\1\2/&#39;</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;s/aarch64$/arm64/&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">  </span><span class="nv">KREW</span><span class="o">=</span><span class="s2">&quot;krew-</span><span class="si">${</span><span class="nv">OS</span><span class="si">}</span><span class="s2">_</span><span class="si">${</span><span class="nv">ARCH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">  </span>curl<span class="w"> </span>-fsSLO<span class="w"> </span><span class="s2">&quot;https://github.com/kubernetes-sigs/krew/releases/latest/download/</span><span class="si">${</span><span class="nv">KREW</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">  </span>tar<span class="w"> </span>zxvf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">KREW</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">  </span>./<span class="s2">&quot;</span><span class="si">${</span><span class="nv">KREW</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>install<span class="w"> </span>krew
+<span class="o">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;${KREW_ROOT:-$HOME/.krew}/bin:$PATH&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">source</span><span class="w"> </span>~/.bashrc
+kubectl<span class="w"> </span>krew<span class="w"> </span>install<span class="w"> </span>virt
+kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">You are ready to go!</p>
+<p>You're now ready to use the cluster for development or testing purposes.</p>
+</div>
+<h2 id="contributions-dev-cluster-setup-metallb">MetalLB<a class="headerlink" href="#contributions-dev-cluster-setup-metallb" title="Permanent link">&para;</a></h2>
+<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> operator.
+<a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters.</p>
+<h3 id="contributions-dev-cluster-setup-install-operator-lifecycle-manager-olm">Install Operator Lifecycle Manager (OLM)<a class="headerlink" href="#contributions-dev-cluster-setup-install-operator-lifecycle-manager-olm" title="Permanent link">&para;</a></h3>
+<p>Install Operator Lifecycle Manager (OLM), a tool to help manage the Operators running on your cluster.</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.24.0
+</code></pre></div>
+<p>Install the operator by running the following command:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>https://operatorhub.io/install/metallb-operator.yaml
+</code></pre></div>
+<p>This Operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.</p>
+<p>After install, watch your operator come up using next command.</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators
+</code></pre></div>
+<p>Now create a MetalLB IPAddressPool <abbr title="Custom Resource">CR</abbr> to configure the IP address range that MetalLB will use:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>vim<span class="w"> </span>metallb-ipaddresspool.yaml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># metallb-ipaddresspool.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metallb.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IPAddressPool</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operators</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">addresses</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X.X.X.X/XX</span>
+</code></pre></div>
+<p>Create a L2Advertisement to tell MetalLB to responde to ARP requests for all IP address pools (no named ip address pool, means all pools):</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>vim<span class="w"> </span>l2advertisment.yaml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># l2advertisment.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metallb.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">L2Advertisement</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operators</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ipAddressPools</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+</code></pre></div>
+<p>Apply the configuration:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>metallb-ipaddresspool.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>l2advertisment.yaml
+</code></pre></div>
+<h2 id="contributions-dev-cluster-setup-storage">Storage<a class="headerlink" href="#contributions-dev-cluster-setup-storage" title="Permanent link">&para;</a></h2>
+<p>To store your virtual machine images and disks you may want to use a storage backend.
+Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
+Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
+<p>Following you will find some instructions that may help you to install Trident on your cluster.</p>
+<p>You always can find more information about Trident in the <a href="https://docs.netapp.com/us-en/trident/index.html">official documentation</a>.</p>
+<p>Check connectivity to NetApp Storage:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--tty<span class="w"> </span>ping<span class="w"> </span>--image<span class="o">=</span>busybox<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--rm<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>ping<span class="w"> </span>&lt;NetApp<span class="w"> </span>Management<span class="w"> </span>IP&gt;
+</code></pre></div>
+<p>Download and extract the Trident installer:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">TRIDENT_VERSION</span><span class="o">=</span><span class="m">23</span>.01.0
+wget<span class="w"> </span>https://github.com/NetApp/trident/releases/download/v<span class="nv">$TRIDENT_VERSION</span>/trident-installer-<span class="nv">$TRIDENT_VERSION</span>.tar.gz
+tar<span class="w"> </span>-xf<span class="w"> </span>trident-installer-<span class="nv">$TRIDENT_VERSION</span>.tar.gz
+<span class="nb">cd</span><span class="w"> </span>trident-installer
+mkdir<span class="w"> </span>setup
+vim<span class="w"> </span>./setup/backend.json
+</code></pre></div>
+<p>Configure the installer:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ./backend.json</span>
+<span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="m">1</span>,
+<span class="w">    </span><span class="s2">&quot;storageDriverName&quot;</span>:<span class="w"> </span><span class="s2">&quot;ontap-nas&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;managementLIF&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;NetApp Management IP&gt;&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;dataLIF&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;NetApp Data IP&gt;&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;svm&quot;</span>:<span class="w"> </span><span class="s2">&quot;svm_k8s&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;username&quot;</span>:<span class="w"> </span><span class="s2">&quot;admin&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;password&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;NetApp Password&gt;&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;storagePrefix&quot;</span>:<span class="w"> </span><span class="s2">&quot;trident_&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;nfsMountOptions&quot;</span>:<span class="w"> </span><span class="s2">&quot;-o nfsvers=4.1 -o mountport=2049 -o nolock&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;debug&quot;</span>:<span class="w"> </span><span class="nb">true</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Install Trident:</p>
+<div class="highlight"><pre><span></span><code>./tridentctl<span class="w"> </span>install<span class="w"> </span>-n<span class="w"> </span>trident<span class="w"> </span>-f<span class="w"> </span>./setup/backend.json
+</code></pre></div>
+<p>Check the installation:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>trident
+</code></pre></div>
+<h2 id="contributions-dev-cluster-setup-local-development-cluster">Local development cluster<a class="headerlink" href="#contributions-dev-cluster-setup-local-development-cluster" title="Permanent link">&para;</a></h2>
+<p><a href="https://k3d.io">K3d</a>, <a href="https://minikube.sigs.k8s.io/docs/">Minikube</a> or <a href="https://kind.sigs.k8s.io/">Kind</a> can be used to run a local Kubernetes cluster, if you don't have access to a remote cluster/server.</p>
+<p>Make sure to install the following tools:</p>
+<ul>
+<li><a href="https://kubevirt.io/">KubeVirt</a></li>
+<li><a href="https://github.com/kubevirt/containerized-data-importer">Containerized Data Importer</a></li>
+<li><a href="https://github.com/kubevirt/cluster-network-addons-operator">Cluster Network Addon Operator</a></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">KubeVirt may not work properly on local development clusters</p>
+<p>KubeVirt may not work properly on local development clusters, because it requires nested virtualization support, which is not available on all local development clusters.
+Make sure to enable nested virtualization on your local machine, if you want to run KubeVirt on a local development cluster.</p>
+</div></section><section class="print-page" id="contributions-technologies-used"><h1 id="contributions-technologies-used-tools-and-frameworks">Tools and Frameworks<a class="headerlink" href="#contributions-technologies-used-tools-and-frameworks" title="Permanent link">&para;</a></h1>
+<p>The tools and frameworks used in the project are listed below.</p>
+<h2 id="contributions-technologies-used-go-based-operator-sdk-framework">Go-based Operator SDK framework<a class="headerlink" href="#contributions-technologies-used-go-based-operator-sdk-framework" title="Permanent link">&para;</a></h2>
+<p>To create the <abbr title="Lab Topology Builder">LTB</abbr> operator, we used the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/">Go-based Operator-sdk</a> framework, which provides a set of tools to simplify the process of building, testing and packaging our operator.</p>
+<h2 id="contributions-technologies-used-kubevirt">Kubevirt<a class="headerlink" href="#contributions-technologies-used-kubevirt" title="Permanent link">&para;</a></h2>
+<p><a href="https://kubevirt.io/">Kubevirt</a> is a tool that provides a virtual machine management layer on top of Kubernetes. It allows us to deploy virtual machines on Kubernetes.</p>
+<h2 id="contributions-technologies-used-kubernetes">Kubernetes<a class="headerlink" href="#contributions-technologies-used-kubernetes" title="Permanent link">&para;</a></h2>
+<p>We use <a href="https://kubernetes.io/">Kubernetes</a> as the container orchestration platform for the <abbr title="Lab Topology Builder">LTB</abbr> application.</p>
+<h2 id="contributions-technologies-used-multus-cni">Multus CNI<a class="headerlink" href="#contributions-technologies-used-multus-cni" title="Permanent link">&para;</a></h2>
+<p>To create multiple network interfaces for the pods, <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus CNI</a> is used.</p></section><section class="print-page" id="contributions-test-concepts"><h1 id="contributions-test-concepts-test-concept">Test Concept<a class="headerlink" href="#contributions-test-concepts-test-concept" title="Permanent link">&para;</a></h1>
+<h2 id="contributions-test-concepts-overview">Overview<a class="headerlink" href="#contributions-test-concepts-overview" title="Permanent link">&para;</a></h2>
+<p>This document outlines the approaches, methodologies, and types of tests that will be used to ensure the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components are functioning as expected.</p>
+<h2 id="contributions-test-concepts-test-categories">Test categories<a class="headerlink" href="#contributions-test-concepts-test-categories" title="Permanent link">&para;</a></h2>
+<p>The tests will primarily focus on the following category:</p>
+<ul>
+<li><em>Functionality and Logic</em>: This includes automated integration tests to evaluate how the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend interacts with other components of the <abbr title="Lab Topology Builder">LTB</abbr> application, such as the operator's function in a Kubernetes cluster with a K8s API server and other resources.</li>
+</ul>
+<p>Testing in the other categories, such as Security and Performance, will be considered later time and their specifics will be determined accordingly.</p>
+<h2 id="contributions-test-concepts-tools">Tools<a class="headerlink" href="#contributions-test-concepts-tools" title="Permanent link">&para;</a></h2>
+<p>The tools listed below are going to be used to perform the tests mentioned above. Moreover, the tools are used in a suite test, which is created when a controller is scaffolded by the tool.</p>
+<ul>
+<li><a href="https://github.com/stretchr/testify">Testify</a>: a go package that provides a set of features to perform unit tests, such as assertions, mocks, etc.</li>
+<li><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a>: a Go library that helps write integration tests for Kubernetes controllers by setting up an instance of etcd and a Kubernetes API server, without kubelet, controller-manager, or other components.</li>
+<li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write epxressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
+<li><a href="https://onsi.github.io/gomega/">Gomega</a>: a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the <a href="https://onsi.github.io/ginkgo/">Ginkgo</a> testing framework.</li>
+</ul>
+<h2 id="contributions-test-concepts-strategies-test-approach">Strategies: Test Approach<a class="headerlink" href="#contributions-test-concepts-strategies-test-approach" title="Permanent link">&para;</a></h2>
+<p>The following test approaches are going to be used to test the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components:</p>
+<h3 id="contributions-test-concepts-unit-tests">Unit Tests<a class="headerlink" href="#contributions-test-concepts-unit-tests" title="Permanent link">&para;</a></h3>
+<p>Unit tests are going to be used to test small pieces of code, such as functions, which don't involve setting up testing Kubernetes environment with a K8s API server and other resources.</p>
+<h3 id="contributions-test-concepts-integration-tests">Integration Tests<a class="headerlink" href="#contributions-test-concepts-integration-tests" title="Permanent link">&para;</a></h3>
+<p>Integration tests are going to be used to test the different components of the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend, such as the operator, the controllers, etc., and how they interact with each other.</p>
+<h2 id="contributions-test-concepts-environment">Environment<a class="headerlink" href="#contributions-test-concepts-environment" title="Permanent link">&para;</a></h2>
+<p><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> is going to be used to set up a testing Kubernetes environment with a K8s API server and other resources.</p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
+                        <h1 class='nav-section-title' id='section-architecture'>
+                            Architecture <a class='headerlink' href='#section-architecture' title='Permanent link'>↵</a>
+                        </h1>
+                        <section class="print-page" id="architecture-k8s-ltb-architecture"><h1 id="architecture-k8s-ltb-architecture-kubernetes-lab-topology-builder-architecture">Kubernetes Lab Topology Builder Architecture<a class="headerlink" href="#architecture-k8s-ltb-architecture-kubernetes-lab-topology-builder-architecture" title="Permanent link">&para;</a></h1>
+<p>The main components of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr> are:</p>
+<ul>
+<li><a href="#architecture-k8s-ltb-architecture-frontend">Frontend</a></li>
+<li><a href="#architecture-k8s-ltb-architecture-api">API</a></li>
+<li><a href="#architecture-k8s-ltb-architecture-operator">Operator</a></li>
+</ul>
+<p>The following diagram shows how the components interact with each other:</p>
+<p><a class="glightbox" href="../assets/drawings/LTB-Architecture.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Architecture Overview" src="../assets/drawings/LTB-Architecture.drawio.svg" /></a></p>
+<h2 id="architecture-k8s-ltb-architecture-frontend">Frontend<a class="headerlink" href="#architecture-k8s-ltb-architecture-frontend" title="Permanent link">&para;</a></h2>
+<p>The frontend can be implemented in any language and framework, it just needs to be able to communicate via an HTTP API with the <abbr title="Lab Topology Builder">LTB</abbr> API.
+The frontend is responsible for the following tasks:</p>
+<ul>
+<li>Providing a web UI for the user to interact with the labs.</li>
+<li>Providing a web UI for the admin to manage:</li>
+<li>Lab templates</li>
+<li>Lab deployments</li>
+<li>Reservations</li>
+</ul>
+<p>There is a possibility to reuse parts of the existing frontend from the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
+<h2 id="architecture-k8s-ltb-architecture-api">API<a class="headerlink" href="#architecture-k8s-ltb-architecture-api" title="Permanent link">&para;</a></h2>
+<p>The API is responsible for the following tasks:</p>
+<ul>
+<li>To create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
+<li>Exposes status of lab instances</li>
+<li>Expose information on how to access the deployed lab nodes</li>
+<li>Authentication via an external authentication provider</li>
+</ul>
+<p>No parts from the existing <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> can be reused for the API.</p>
+<h3 id="architecture-k8s-ltb-architecture-authentication-and-authorization">Authentication and Authorization<a class="headerlink" href="#architecture-k8s-ltb-architecture-authentication-and-authorization" title="Permanent link">&para;</a></h3>
+<p>The authentication can be implemented by using an external authentication provider like <a href="https://www.keycloak.org/">Keycloak</a>.
+Keycloak can be configured to act as an authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
+This has the benefit that the <abbr title="Lab Topology Builder">LTB</abbr> does not need to implement any authentication logic and can focus on the lab deployment.
+Additionally, it enables the <abbr title="Lab Topology Builder">LTB</abbr> to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
+On the other hand, it has the drawback that the <abbr title="Lab Topology Builder">LTB</abbr> needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.</p>
+<p>Authorization can also be implemented using Keycloak and its <a href="https://www.keycloak.org/docs/latest/authorization_services/">Authorization Services</a>.</p>
+<h2 id="architecture-k8s-ltb-architecture-operator">Operator<a class="headerlink" href="#architecture-k8s-ltb-architecture-operator" title="Permanent link">&para;</a></h2>
+<p>The operator is responsible for the following tasks:</p>
+<ul>
+<li>Deploying/destroying the containers and vms</li>
+<li>Check validity of <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
+<li>Enables you to access the deployed containers and vms via different protocols</li>
+<li>Providing remote access to the lab node console via a web terminal</li>
+<li>Managing reservations (create, delete, etc.)</li>
+<li>Providing remote Wireshark capture capabilities</li>
+</ul>
+<p>The operator is implemented according to the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes operator pattern</a>.
+It has multiple controllers that are responsible for managing a particular custom resource like a lab template.</p>
+<h3 id="architecture-k8s-ltb-architecture-network-connectivity-between-lab-nodes">Network connectivity between lab nodes<a class="headerlink" href="#architecture-k8s-ltb-architecture-network-connectivity-between-lab-nodes" title="Permanent link">&para;</a></h3>
+<p>The network connectivity between lab nodes can be implemented with <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus</a>, which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
+Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.</p>
+<p>Currently we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
+Additionally the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
+<h3 id="architecture-k8s-ltb-architecture-remote-access-to-lab-nodes">Remote access to lab nodes<a class="headerlink" href="#architecture-k8s-ltb-architecture-remote-access-to-lab-nodes" title="Permanent link">&para;</a></h3>
+<p>Remote access to the lab nodes has two variants:</p>
+<ul>
+<li>Console access via a web terminal</li>
+<li>Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol</li>
+</ul>
+<h4 id="architecture-k8s-ltb-architecture-console-access-via-a-web-terminal">Console access via a web terminal<a class="headerlink" href="#architecture-k8s-ltb-architecture-console-access-via-a-web-terminal" title="Permanent link">&para;</a></h4>
+<p>The console access via a web terminal is implemented with <a href="https://github.com/INSRapperswil/kube-ttyd">kube-ttyd</a>, which is a tool based on <a href="https://github.com/tsl0922/ttyd">ttyd</a>, with the addition to use kubectl exec and virsh console to connect to the lab nodes.
+<code>kube-ttyd</code> was provided by Yannick Zwicker from the INS specifically for this project.
+Access to the web terminal is routed through a NGINX ingress controller, and a Kubernetes service of type <code>ClusterIP</code>.</p>
+<p>The <a href="https://kubernetes.github.io/ingress-nginx/examples/auth/external-auth/">authentication feature</a> of the NGINX ingress controller can be used to restrict access to the web terminal to authenticated users.
+It might be possible to use the same authentication provider as the <abbr title="Lab Topology Builder">LTB</abbr> API, but this needs to be tested.</p>
+<h4 id="architecture-k8s-ltb-architecture-access-to-configurable-ports-with-any-oob-management-protocol">Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol<a class="headerlink" href="#architecture-k8s-ltb-architecture-access-to-configurable-ports-with-any-oob-management-protocol" title="Permanent link">&para;</a></h4>
+<p>Access to lab nodes via freely choosable <abbr title="Out-of-Band">OOB</abbr> management protocols is implemented by providing a Kubernetes service of type <code>LoadBalancer</code> for each lab node, which is configured to expose the ports specified in the lab template.</p>
+<p>Access control needs to be implemented by the lab node itself, because the Kubernetes service of type <code>LoadBalancer</code> does not provide any authentication or authorization features.
+An example for this would be to provide SSH keys for the lab nodes inside the lab template config field.</p>
+<h3 id="architecture-k8s-ltb-architecture-scheduling-lab-instances-and-resource-reservation">Scheduling lab instances and resource reservation<a class="headerlink" href="#architecture-k8s-ltb-architecture-scheduling-lab-instances-and-resource-reservation" title="Permanent link">&para;</a></h3>
+<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding an additional fields (creationTimestamp, deletionTimestamp) to the lab instance custom resource.
+The lab instance controller then is able to check these fields and deploy or delete the lab instance at the specified time.
+There are multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.</p>
+<p>If there are any issues with the requeuing of these events over such a long period of time, writing a Kubernetes <a href="https://pkg.go.dev/k8s.io/client-go/informers">informer</a> could be a solution.</p>
+<p>Resource reservation in a capacity planning sense is not provided by Kubernetes, a manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
+Planned resource management is a huge topic, and we would recommend to create a dedicated project for this.</p>
+<h2 id="architecture-k8s-ltb-architecture-c4-model">C4 Model<a class="headerlink" href="#architecture-k8s-ltb-architecture-c4-model" title="Permanent link">&para;</a></h2>
+<p>The following diagrams show the C4 model of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr>, it should provide a high level overview of the system.</p>
+<h3 id="architecture-k8s-ltb-architecture-system-context-diagram">System Context Diagram<a class="headerlink" href="#architecture-k8s-ltb-architecture-system-context-diagram" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../assets/drawings/C4-System-Context.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 System Context" src="../assets/drawings/C4-System-Context.drawio.svg" /></a></p>
+<h3 id="architecture-k8s-ltb-architecture-container-diagram">Container Diagram<a class="headerlink" href="#architecture-k8s-ltb-architecture-container-diagram" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../assets/drawings/C4-Container.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 Container" src="../assets/drawings/C4-Container.drawio.svg" /></a></p>
+<h3 id="architecture-k8s-ltb-architecture-component-diagram">Component Diagram<a class="headerlink" href="#architecture-k8s-ltb-architecture-component-diagram" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" href="../assets/drawings/C4-Component.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 Component" src="../assets/drawings/C4-Component.drawio.svg" /></a></p>
+<h4 id="architecture-k8s-ltb-architecture-legend">Legend<a class="headerlink" href="#architecture-k8s-ltb-architecture-legend" title="Permanent link">&para;</a></h4>
+<ul>
+<li><span style="color: #083f75">Dark blue</span>: represents Personas (User, Admin)</li>
+<li><span style="color: #23a2d9">Blue</span>: represents Internal Components (Frontend Web UI, <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend)</li>
+<li><span style="color: #63bef2">Light blue</span>: represents Components which will be implemented in this project (<abbr title="Lab Topology Builder">LTB</abbr> Operator, <abbr title="Lab Topology Builder">LTB</abbr> Operator API)</li>
+<li><span style="color: #8c8496">Dark gray</span>: represents External Components (K8s, Keycloak)</li>
+</ul></section><section class="print-page" id="architecture-kvm-docker-ltb-architecture"><h1 id="architecture-kvm-docker-ltb-architecture-preliminary-work-kvmdocker-based-ltb-architecture">Preliminary Work (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-based <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-preliminary-work-kvmdocker-based-ltb-architecture" title="Permanent link">&para;</a></h1>
+<p>The Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr> was inspired by a previous implementation of the <abbr title="Lab Topology Builder">LTB</abbr>, which was based on direct <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker usage.</p>
+<p>The following diagram shows the components and how lab nodes are deployed on a hypervisor in the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>:</p>
+<p><a class="glightbox" href="../assets/drawings/ltb-stack-node.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="(KVM/Docker) LTB Architecture" src="../assets/drawings/ltb-stack-node.svg" /></a></p>
+<p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
+<ul>
+<li><a href="#architecture-kvm-docker-ltb-architecture-frontend">Frontend</a> built with React</li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-backend">Backend</a> built with Django</li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-databases">Databases</a> (PostgreSQL, Redis)</li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-beat">Beat</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-celery">Celery</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-web-ssh">Web-SSH</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-prometheus">Prometheus</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-traefik">Traefik</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-nginx">Nginx</a></li>
+</ul>
+<h2 id="architecture-kvm-docker-ltb-architecture-backend">Backend<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-backend" title="Permanent link">&para;</a></h2>
+<p>The backend is accessible via API and an Admin Web UI.
+It is responsible for the following tasks:</p>
+<ul>
+<li>parsing the yaml topology files</li>
+<li>deploying/destroying the containers and vms</li>
+<li>exposes status of lab deployments</li>
+<li>exposes information on how to access the deployed containers and vms</li>
+<li>provides remote ssh capabilities</li>
+<li>provides remote Wireshark capture capabilities</li>
+<li>managing reservations (create, delete, etc.)</li>
+<li>exposes node resource usage</li>
+<li>user management</li>
+<li>exposes information about a device (version, groups, etc.)</li>
+</ul>
+<p>It is composed of the following components:</p>
+<ul>
+<li><a href="#architecture-kvm-docker-ltb-architecture-reservations">Reservations</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-running-lab-store">Running lab store</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-template-store">Template store</a></li>
+<li><a href="#architecture-kvm-docker-ltb-architecture-authentication">Authentication</a></li>
+</ul>
+<p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
+There are 4 different types of tasks:</p>
+<ul>
+<li>DeploymentTask</li>
+<li>Deploys containers in docker</li>
+<li>Deploys VMs using <abbr title="Kernel-based Virtual Machine">KVM</abbr></li>
+<li>Creates connections between containers and VMs using an <abbr title="Open vSwitch">OVS</abbr> bridge</li>
+<li>RemovalTask</li>
+<li>Removes a running lab</li>
+<li>MirrorInterfaceTask</li>
+<li>Creates a mirror interface on a connection</li>
+<li>SnapshotTask</li>
+<li>Takes a snapshot of a running lab</li>
+</ul>
+<h3 id="architecture-kvm-docker-ltb-architecture-reservations">Reservations<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-reservations" title="Permanent link">&para;</a></h3>
+<p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
+<ul>
+<li>Create a reservation</li>
+<li>Delete a reservation</li>
+<li>Update a reservation</li>
+</ul>
+<h3 id="architecture-kvm-docker-ltb-architecture-running-lab-store">Running lab store<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-running-lab-store" title="Permanent link">&para;</a></h3>
+<p>This component is responsible for storing information about running labs, such as:</p>
+<ul>
+<li>The devices taking part in the running lab, including the interfaces</li>
+<li>Connection information</li>
+</ul>
+<h3 id="architecture-kvm-docker-ltb-architecture-template-store">Template store<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-template-store" title="Permanent link">&para;</a></h3>
+<p>This component is responsible for storing lab templates.</p>
+<h3 id="architecture-kvm-docker-ltb-architecture-authentication">Authentication<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-authentication" title="Permanent link">&para;</a></h3>
+<p>This component is responsible for user authentication and management.</p>
+<h2 id="architecture-kvm-docker-ltb-architecture-databases">Databases<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-databases" title="Permanent link">&para;</a></h2>
+<p>The following databases are used:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>Redis for caching</li>
+</ul>
+<p>The Databases are used by the following components:</p>
+<ul>
+<li>Backend</li>
+<li>Beat</li>
+<li>Celery</li>
+</ul>
+<h2 id="architecture-kvm-docker-ltb-architecture-beat">Beat<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-beat" title="Permanent link">&para;</a></h2>
+<p>The beat component is responsible for scheduling periodic tasks.
+To be more precise, it is responsible for scheduling the deployment and deletion of labs, according to the reservation information.</p>
+<h2 id="architecture-kvm-docker-ltb-architecture-celery">Celery<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-celery" title="Permanent link">&para;</a></h2>
+<p>Celery is used to execute the commands to create and delete the lab nodes and connections.</p>
+<h2 id="architecture-kvm-docker-ltb-architecture-web-ssh">Web-SSH<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-web-ssh" title="Permanent link">&para;</a></h2>
+<p>Web-SSH is used to provide a web based ssh client, which can be used to access the deployed containers and vms aka lab nodes.</p>
+<h2 id="architecture-kvm-docker-ltb-architecture-prometheus">Prometheus<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-prometheus" title="Permanent link">&para;</a></h2>
+<p>Prometheus is used to collect metrics about CPU, memory and disk usage of the hypervisor nodes.</p>
+<h2 id="architecture-kvm-docker-ltb-architecture-traefik">Traefik<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-traefik" title="Permanent link">&para;</a></h2>
+<p>Traefik is used as a proxy for the following components:</p>
+<ul>
+<li>Frontend</li>
+<li>Web-SSH</li>
+<li>Prometheus</li>
+<li>Nginx</li>
+</ul>
+<h2 id="architecture-kvm-docker-ltb-architecture-nginx">Nginx<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-nginx" title="Permanent link">&para;</a></h2>
+<p>Nginx is used as a reverse proxy for the backend.</p>
+<h2 id="architecture-kvm-docker-ltb-architecture-frontend">Frontend<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-frontend" title="Permanent link">&para;</a></h2>
+<p>The frontend provides a web UI with the following features:</p>
+<ul>
+<li>User authentication</li>
+<li>Management of lab templates</li>
+<li>Management of reservations for labs</li>
+<li>Start/stop running labs</li>
+<li>Resource usage overview</li>
+<li>Provides information on how to access the deployed containers and vms</li>
+<li>Create wireshark capture interfaces</li>
+</ul></section><h1 class='nav-section-title-end'>Ended: Architecture</h1>
+                        <h1 class='nav-section-title' id='section-decisions'>
+                            Decisions <a class='headerlink' href='#section-decisions' title='Permanent link'>↵</a>
+                        </h1>
+                        <section class="print-page" id="decisions-0000-use-markdown-architectural-decision-records"><h1 id="decisions-0000-use-markdown-architectural-decision-records-use-markdown-architectural-decision-records">Use Markdown Architectural Decision Records<a class="headerlink" href="#decisions-0000-use-markdown-architectural-decision-records-use-markdown-architectural-decision-records" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0000-use-markdown-architectural-decision-records-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0000-use-markdown-architectural-decision-records-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>We want to record design decisions made in this project.
+Which format and structure should these records follow?</p>
+<h2 id="decisions-0000-use-markdown-architectural-decision-records-considered-options">Considered Options<a class="headerlink" href="#decisions-0000-use-markdown-architectural-decision-records-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://adr.github.io/madr/">MADR</a> 2.1.2 – The Markdown Architectural Decision Records</li>
+<li><a href="http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions">Michael Nygard's template</a> – The first incarnation of the term "ADR"</li>
+<li><a href="https://www.infoq.com/articles/sustainable-architectural-design-decisions">Sustainable Architectural Decisions</a> – The Y-Statements</li>
+<li>Other templates listed at <a href="https://github.com/joelparkerhenderson/architecture_decision_record">https://github.com/joelparkerhenderson/architecture_decision_record</a></li>
+<li>Formless – No conventions for file format and structure</li>
+</ul>
+<h2 id="decisions-0000-use-markdown-architectural-decision-records-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0000-use-markdown-architectural-decision-records-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "MADR 2.1.2", because</p>
+<ul>
+<li>Implicit assumptions should be made explicit.
+  Design documentation is important to enable people understanding the decisions later on.
+  See also <a href="https://doi.org/10.1109/TSE.1986.6312940">A rational design process: How and why to fake it</a>.</li>
+<li>The MADR format is lean and fits our development style.</li>
+<li>The MADR structure is comprehensible and facilitates usage &amp; maintenance.</li>
+<li>The MADR project is vivid.</li>
+<li>Version 2.1.2 is the latest one available when starting to document ADRs.</li>
+<li>A Visual Studio Code extension <a href="https://marketplace.visualstudio.com/items?itemName=StevenChen.vscode-adr-manager">ADR Manager</a> for MADR exits, which makes managing ADRs easy.</li>
+</ul></section><section class="print-page" id="decisions-0001-operator-sdk"><h1 id="decisions-0001-operator-sdk-operator-sdk">Operator SDK<a class="headerlink" href="#decisions-0001-operator-sdk-operator-sdk" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0001-operator-sdk-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0001-operator-sdk-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>It's best practice to use an SDK to build operators for Kubernetes. The SDK provides a higher level of abstraction for creating Kubernetes operators, which makes it easier to write and manage operators.
+There are multiple SDKs available for building operators.
+We need a SDK that's flexible and easy to use and can be used with Go.</p>
+<h2 id="decisions-0001-operator-sdk-considered-options">Considered Options<a class="headerlink" href="#decisions-0001-operator-sdk-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Operator SDK (Operator Framework)</li>
+<li>KubeBuilder</li>
+<li>Kopf</li>
+<li>KUDO</li>
+<li>Metacontroller</li>
+</ul>
+<h2 id="decisions-0001-operator-sdk-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0001-operator-sdk-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Operator SDK", because it provides a high level of abstraction for creating Kubernetes operators, which makes it easier to write and manage operators.
+Additionally, there are tools and libraries for building and testing the operator included in Operator SDK, it's easy to use and can be used with Go.</p>
+<h2 id="decisions-0001-operator-sdk-links">Links<a class="headerlink" href="#decisions-0001-operator-sdk-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sdk.operatorframework.io/">Operator SDK</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Tools to build an operator</a></li>
+</ul></section><section class="print-page" id="decisions-00011-remote-access"><h1 id="decisions-00011-remote-access-remote-access">Remote-Access<a class="headerlink" href="#decisions-00011-remote-access-remote-access" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-00011-remote-access-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-00011-remote-access-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>For the lab instances to be useful for the students, they need to be able to access the pods (containers) and VMs.
+Access to pods/VMs should only be granted to user with the appropriate access rights.
+It should be possible to access the pods/VMs console and or access it via multiple <abbr title="Out-of-Band">OOB</abbr> protocols (SSH, RDP, VNC, etc.).</p>
+<h2 id="decisions-00011-remote-access-considered-options">Considered Options<a class="headerlink" href="#decisions-00011-remote-access-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Kubernetes Service</li>
+<li>Gotty</li>
+<li>ttyd</li>
+</ul>
+<h2 id="decisions-00011-remote-access-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-00011-remote-access-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "ttyd and Kubernetes Service", ttyd will be used as a jump host to access the pods/VMs console. A Kubernetes service will be used to allow access the pods/VMs via <abbr title="Out-of-Band">OOB</abbr> protocols.
+Security for the console access will likely be easy to implement.
+Secure access via <abbr title="Out-of-Band">OOB</abbr> protocols was considered, but will need to be researched further, currently it would depend on the <abbr title="Out-of-Band">OOB</abbr> protocol used and the security features it provides.</p></section><section class="print-page" id="decisions-0002-operator-scope"><h1 id="decisions-0002-operator-scope-operator-scope">Operator Scope<a class="headerlink" href="#decisions-0002-operator-scope-operator-scope" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0002-operator-scope-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0002-operator-scope-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>The Operator could be a namespace-scoped or cluster-scoped.</p>
+<h2 id="decisions-0002-operator-scope-considered-options">Considered Options<a class="headerlink" href="#decisions-0002-operator-scope-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Namespace-scoped</li>
+<li>Cluster-scoped</li>
+</ul>
+<h2 id="decisions-0002-operator-scope-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0002-operator-scope-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Cluster-scoped", because cluster-scoped operators enable you to manage namespaces or resources in the entire cluster. This is needed to ensure that each lab instance can be deployed within its own namespace. Cluster-scoped operators are also capable of managing infrastructure-level resources, such as nodes. Additionally, cluster-scoped operators provide greater visibility and control over the entire cluster.</p>
+<h2 id="decisions-0002-operator-scope-links">Links<a class="headerlink" href="#decisions-0002-operator-scope-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sdk.operatorframework.io/docs/building-operators/golang/operator-scope/">Operator Scope</a></li>
+</ul></section><section class="print-page" id="decisions-0003-api-and-operator-deployment"><h1 id="decisions-0003-api-and-operator-deployment-api-and-operator-deployment">API and Operator Deployment<a class="headerlink" href="#decisions-0003-api-and-operator-deployment-api-and-operator-deployment" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0003-api-and-operator-deployment-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0003-api-and-operator-deployment-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>The operator and the API could be separated and deployed as two services/containers or they could be deployed as one service/container.</p>
+<h2 id="decisions-0003-api-and-operator-deployment-considered-options">Considered Options<a class="headerlink" href="#decisions-0003-api-and-operator-deployment-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>One container</li>
+<li>Separate containers</li>
+</ul>
+<h2 id="decisions-0003-api-and-operator-deployment-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0003-api-and-operator-deployment-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Separate containers", because it provides more flexibility and scalability. It also makes it easier to update the operator and the API separately. Additionally, it is easy to separate the API and the operator into two different services, as they talk to each other via the Kubernetes API.</p></section><section class="print-page" id="decisions-0004-dev-container"><h1 id="decisions-0004-dev-container-dev-container">Dev Container<a class="headerlink" href="#decisions-0004-dev-container-dev-container" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0004-dev-container-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0004-dev-container-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>Every team member could set up their development environment manually or we could use a dev container to provide a consistent development environment for all team members and future contributors.</p>
+<h2 id="decisions-0004-dev-container-considered-options">Considered Options<a class="headerlink" href="#decisions-0004-dev-container-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Dev Container</li>
+<li>Manual Setup</li>
+</ul>
+<h2 id="decisions-0004-dev-container-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0004-dev-container-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Dev Container", because a dev container setup lets you create the same development environment for all team members, which ensures consistency. It also provides a completely isolated development environment, which helps to avoid software incompatibility issues, such as operator-sdk not working on Windows. Moreover, a dev container is easily portable and works on all operating systems that support Docker.
+The only downside is that not all IDEs support dev containers, but at least two of the currently most popular IDEs VS Code and Visual Studio support dev containers.</p>
+<h2 id="decisions-0004-dev-container-links">Links<a class="headerlink" href="#decisions-0004-dev-container-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="http://bit.ly/3TQ8zhx">DevContainer</a></li>
+<li><a href="https://survey.stackoverflow.co/2023/#most-popular-technologies-new-collab-tools">Most Popular IDEs</a></li>
+</ul></section><section class="print-page" id="decisions-0005-replace-current-ltb-backend"><h1 id="decisions-0005-replace-current-ltb-backend-replace-current-ltb-backend">Replace Current <abbr title="Lab Topology Builder">LTB</abbr> Backend<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-replace-current-ltb-backend" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0005-replace-current-ltb-backend-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend could replace the current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully or partially by leaving features, such as User-Management in the current <abbr title="Lab Topology Builder">LTB</abbr> Backend.</p>
+<h2 id="decisions-0005-replace-current-ltb-backend-considered-options">Considered Options<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully</li>
+<li>Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend partially</li>
+</ul>
+<h2 id="decisions-0005-replace-current-ltb-backend-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully", because huge parts of the current <abbr title="Lab Topology Builder">LTB</abbr> Backend would need to be rewritten to be compatible with the new <abbr title="Lab Topology Builder">LTB</abbr> K8s operator and it would be easier to rewrite the whole backend. Additionally, the same programming language can be used throughout the whole Backend, Go.</p></section><section class="print-page" id="decisions-0006-lab-instance-set"><h1 id="decisions-0006-lab-instance-set-lab-instance-set">Lab Instance Set<a class="headerlink" href="#decisions-0006-lab-instance-set-lab-instance-set" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0006-lab-instance-set-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0006-lab-instance-set-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>We could create a <abbr title="Custom Resource">CR</abbr> called LabInstanceSet, and tell the operator we want e.g. 10 LabInstances by providing one LabInstance <abbr title="Custom Resource">CR</abbr> and a generator like a list of names or we could provide the operator 10 CRs to create 10 LabInstances.</p>
+<h2 id="decisions-0006-lab-instance-set-considered-options">Considered Options<a class="headerlink" href="#decisions-0006-lab-instance-set-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>With LabInstanceSet</li>
+<li>Without LabInstanceSet</li>
+</ul>
+<h2 id="decisions-0006-lab-instance-set-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0006-lab-instance-set-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Without LabInstanceSet", because we currently don't see a need for it. This could change in the future, but for now we will not implement it.</p></section><section class="print-page" id="decisions-0007-interaction-with-operator"><h1 id="decisions-0007-interaction-with-operator-interaction-with-operator">Interaction with Operator<a class="headerlink" href="#decisions-0007-interaction-with-operator-interaction-with-operator" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0007-interaction-with-operator-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0007-interaction-with-operator-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>There are multiple ways to interact with the operator, such as a GitOps approach, using the frontend via the API or using <code>kubectl</code>.</p>
+<h2 id="decisions-0007-interaction-with-operator-considered-options">Considered Options<a class="headerlink" href="#decisions-0007-interaction-with-operator-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>GitOps</li>
+<li>Use frontend</li>
+<li>Use kubectl</li>
+<li>All</li>
+</ul>
+<h2 id="decisions-0007-interaction-with-operator-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0007-interaction-with-operator-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "All", because these options are not mutually exclusive and can be used together, we want to support all of them.</p></section><section class="print-page" id="decisions-0008-namespace-per-labinstance"><h1 id="decisions-0008-namespace-per-labinstance-namespace-per-labinstance">Namespace Per LabInstance<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-namespace-per-labinstance" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0008-namespace-per-labinstance-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>LabInstances could be created in separate namespaces or one namespace for all LabInstances.</p>
+<h2 id="decisions-0008-namespace-per-labinstance-considered-options">Considered Options<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>One Namespace for all LabInstances</li>
+<li>Namespace per LabInstance</li>
+</ul>
+<h2 id="decisions-0008-namespace-per-labinstance-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Namespace per LabInstance", because it will be easier in the future to implement features like RBAC and resource quotas and limits.</p></section><section class="print-page" id="decisions-0009-k8s-aggreted-api-over-standalone-api"><h1 id="decisions-0009-k8s-aggreted-api-over-standalone-api-k8s-aggreted-api-over-standalone-api">K8s Aggreted API Over Standalone API<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-k8s-aggreted-api-over-standalone-api" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>We want a declarative way of creating <abbr title="Lab Topology Builder">LTB</abbr> labs inside Kubernetes using Kubernetes native pods and KubeVirt virtual machines.
+We could either create a standalone API which interacts with the Kubernetes API and does not follow the Kubernetes API conventions. And therefore is not compatible with Kubernetes tools, such as dashboards or <code>kubectl</code>, but would allow complete control over the API design.
+Or we could create an aggregated API which uses the Kubernetes aggregation layer to extend the Kubernetes API, which would allow us to use Kubernetes tools, such as dashboards or <code>kubectl</code>, but would limit the control over the API design.</p>
+<h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-considered-options">Considered Options<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Standalone API</li>
+<li>Aggregated API</li>
+</ul>
+<h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Aggregated API", because Is better suited for declerative API, our new types will be readable and writeable using kubectl/Kubernetes tools, such as dashboards.
+We also can leverage Kuberbetes API support features this way.
+Additionally, our resources are scoped to a cluster or namespaces of a cluster.
+Finally, the Operator Pattern is simpler to implement this way.</p>
+<h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-links">Links<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#should-i-add-a-custom-resource-to-my-kubernetes-cluster">Standalone vs Aggregated API</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/">Aggregated API</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Operator Pattern</a></li>
+</ul></section><section class="print-page" id="decisions-0010-extending-ltb-with-new-node-types"><h1 id="decisions-0010-extending-ltb-with-new-node-types-extending-ltb-with-new-node-types">Extending <abbr title="Lab Topology Builder">LTB</abbr> with New Node Types<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-extending-ltb-with-new-node-types" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0010-extending-ltb-with-new-node-types-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>It should be possible to create, update and delete node types (e.g. Ubuntu, XRD, XR, IOS, Cumulus, etc.)
+Node types should be used inside lab templates and expose a way to provide a node with configuration (cloud-init, zero-touch, etc.)
+The amount of available network interfaces is dynamic and depends on how many connections a node has according to a specific lab template.</p>
+<h2 id="decisions-0010-extending-ltb-with-new-node-types-decision-drivers">Decision Drivers<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-decision-drivers" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Certain operating systems' images like XR, and XRD need a specific interface configuration which depends on how many interfaces a certain node will receive.</li>
+<li>The chosen solution should support multiple version of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...).</li>
+<li>For XRd images, interfaces need to have environment variables set for each interface they use, and the interface count needs to be dynamically set according to the lab template.</li>
+<li>For XR <abbr title="Virtual Machine">VM</abbr> images, the first interface is the management interface and then there are two empty interfaces that need a special configuration.</li>
+<li>For mount from config might be different</li>
+<li>Cumulus VX images need a privileged container</li>
+<li>XRd need additional privileges</li>
+</ul>
+<h2 id="decisions-0010-extending-ltb-with-new-node-types-considered-options">Considered Options<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Custom Resources</li>
+<li>Go</li>
+</ul>
+<h2 id="decisions-0010-extending-ltb-with-new-node-types-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Custom Resources", because it will be possible to support all the cases mentioned in the decision drivers using go templates and CRs. Implementing the types in Go does not seem to bring any major advantages, whereas using CRs will be easier for external users to extend the system with new node types.</p>
+<h3 id="decisions-0010-extending-ltb-with-new-node-types-positive-consequences">Positive Consequences<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-positive-consequences" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Easy to extend during runtime</li>
+<li>Easy to extend for external users</li>
+<li>All decision drivers will be supported</li>
+</ul>
+<h3 id="decisions-0010-extending-ltb-with-new-node-types-negative-consequences">Negative Consequences<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-negative-consequences" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Go Templates are not as powerful as Go, which could make it harder to implement certain node types.</li>
+<li>A Custom Resource is also a little bit less flexible than a Go type, but this should not be a problem for the use cases we have.</li>
+</ul>
+<h2 id="decisions-0010-extending-ltb-with-new-node-types-links">Links<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/vrnetlab/vrnetlab">Example of similar solution using Go node types</a></li>
+</ul></section><section class="print-page" id="decisions-0011-programming-language"><h1 id="decisions-0011-programming-language-programming-language">Programming Language<a class="headerlink" href="#decisions-0011-programming-language-programming-language" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0011-programming-language-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0011-programming-language-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>We need to choose a programming language for the project.
+The considered options are based on the supported languages of the Operator SDK.</p>
+<h2 id="decisions-0011-programming-language-considered-options">Considered Options<a class="headerlink" href="#decisions-0011-programming-language-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Go</li>
+<li>Helm</li>
+<li>Ansible</li>
+</ul>
+<h2 id="decisions-0011-programming-language-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0011-programming-language-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Go", because many cloud native projects are written in Go, and it is a compiled language, which is more performant than interpreted languages. Also, Go is a statically typed language, which makes it easier to maintain and refactor the code. It is also easier to write complicated logic and tests in Go than in Helm or Ansible.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="about"><h1 id="about-about">About<a class="headerlink" href="#about-about" title="Permanent link">&para;</a></h1>
+<p>This project was created as part of a bachelor thesis at the <a href="https://www.ost.ch/en/">Eastern Switzerland University of Applied Sciences</a> in Rapperswil, in cooperation with the <a href="https://www.ost.ch/en/research-and-consulting-services/computer-science/ins-institute-for-network-and-security">Institue for Network and Security</a>.</p>
+<h2 id="about-authors">Authors<a class="headerlink" href="#about-authors" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="mailto:jan.untersander@ost.ch">Jan Untersander</a></li>
+<li><a href="mailto:nebaitsigereda@gmail.com">Tsigereda Nebai Kidane</a></li>
+</ul></section></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 Jan Untersander, Tsigereda Nebai Kidane
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "/LTB-K8s-Backend/", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.2a6f1dda.min.js"></script>
+      
+        <script src="../js/print-site.js"></script>
+      
+    
+  </body>
+</html>

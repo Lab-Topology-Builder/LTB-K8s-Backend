@@ -48,6 +48,22 @@
       
     
     
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -55,7 +71,18 @@
     
     
     
-  </head>
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+        html.glightbox-open { overflow: initial; height: 100%; }
+        .gslide-title { margin-top: 0px; user-select: text; }
+        .gslide-desc { color: #666; user-select: text; }
+        .gslide-image img { background: white; }
+        
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+            </style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -195,113 +222,6 @@
       
         
           
-            
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../.." class="md-tabs__link">
-      Home
-    </a>
-  </li>
-
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../user-guide/" class="md-tabs__link">
-      User Guide
-    </a>
-  </li>
-
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../concepts/" class="md-tabs__link">
-      Concepts
-    </a>
-  </li>
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../contributions/contributor-guide/" class="md-tabs__link">
-        Contributions
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-    
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
-        Architecture
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-tabs__link">
-        Decisions
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../about/" class="md-tabs__link">
-      About
-    </a>
-  </li>
-
-      
-    </ul>
-  </div>
-</nav>
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -314,10 +234,8 @@
                   <div class="md-sidebar__inner">
                     
 
-  
 
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="LTB K8s Backend" class="md-nav__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
       
@@ -587,9 +505,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    Backend
+  <a href="#api" class="md-nav__link">
+    API
   </a>
+  
+    <nav class="md-nav" aria-label="API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-and-authorization" class="md-nav__link">
+    Authentication and Authorization
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator" class="md-nav__link">
+    Operator
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-connectivity-between-lab-nodes" class="md-nav__link">
+    Network connectivity between lab nodes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-access-to-lab-nodes" class="md-nav__link">
+    Remote access to lab nodes
+  </a>
+  
+    <nav class="md-nav" aria-label="Remote access to lab nodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#console-access-via-a-web-terminal" class="md-nav__link">
+    Console access via a web terminal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-to-configurable-ports-with-any-oob-management-protocol" class="md-nav__link">
+    Access to configurable ports with any OOB management protocol
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-lab-instances-and-resource-reservation" class="md-nav__link">
+    Scheduling lab instances and resource reservation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -656,7 +641,7 @@
   
     <li class="md-nav__item">
       <a href="../kvm-docker-ltb-architecture/" class="md-nav__link">
-        Current (KVM/Docker)-base LTB Architecture
+        Preliminary Work (KVM/Docker)-based LTB Architecture
       </a>
     </li>
   
@@ -963,9 +948,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backend" class="md-nav__link">
-    Backend
+  <a href="#api" class="md-nav__link">
+    API
   </a>
+  
+    <nav class="md-nav" aria-label="API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-and-authorization" class="md-nav__link">
+    Authentication and Authorization
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator" class="md-nav__link">
+    Operator
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-connectivity-between-lab-nodes" class="md-nav__link">
+    Network connectivity between lab nodes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-access-to-lab-nodes" class="md-nav__link">
+    Remote access to lab nodes
+  </a>
+  
+    <nav class="md-nav" aria-label="Remote access to lab nodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#console-access-via-a-web-terminal" class="md-nav__link">
+    Console access via a web terminal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-to-configurable-ports-with-any-oob-management-protocol" class="md-nav__link">
+    Access to configurable ports with any OOB management protocol
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-lab-instances-and-resource-reservation" class="md-nav__link">
+    Scheduling lab instances and resource reservation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1040,46 +1092,89 @@
 
 
 <h1 id="kubernetes-lab-topology-builder-architecture">Kubernetes Lab Topology Builder Architecture<a class="headerlink" href="#kubernetes-lab-topology-builder-architecture" title="Permanent link">&para;</a></h1>
-<p>The Kubernetes Lab Topology Builder (K8s-<abbr title="Lab Topology Builder">LTB</abbr>) is a Kubernetes native version of the Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>).
-It is composed of a <a href="#frontend">Frontend</a> and a <a href="#backend">Backend</a>.</p>
-<p><img alt="Architecture Overview" src="../../assets/drawings/LTB-Architecture.drawio.svg" /></p>
+<p>The main components of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr> are:</p>
+<ul>
+<li><a href="#frontend">Frontend</a></li>
+<li><a href="#api">API</a></li>
+<li><a href="#operator">Operator</a></li>
+</ul>
+<p>The following diagram shows how the components interact with each other:</p>
+<p><a class="glightbox" href="../../assets/drawings/LTB-Architecture.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Architecture Overview" src="../../assets/drawings/LTB-Architecture.drawio.svg" /></a></p>
 <h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
-<p>The frontend is responsible for the following tasks:</p>
+<p>The frontend can be implemented in any language and framework, it just needs to be able to communicate via an HTTP API with the <abbr title="Lab Topology Builder">LTB</abbr> API.
+The frontend is responsible for the following tasks:</p>
 <ul>
 <li>Providing a web UI for the user to interact with the labs.</li>
 <li>Providing a web UI for the admin to manage:</li>
-<li>Users</li>
 <li>Lab templates</li>
 <li>Lab deployments</li>
 <li>Reservations</li>
 </ul>
-<h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
-<p>The backend is composed of the following components:</p>
+<p>There is a possibility to reuse parts of the existing frontend from the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
+<h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
+<p>The API is responsible for the following tasks:</p>
 <ul>
-<li>Operator</li>
-<li>API</li>
-</ul>
-<p>The backend is responsible for the following tasks:</p>
-<ul>
-<li>Parsing the yaml topology files</li>
-<li>Deploying/destroying the containers and vms</li>
+<li>To create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
 <li>Exposes status of lab instances</li>
-<li>Enables you to access the deployed containers and vms via different protocols</li>
-<li>Provides remote ssh capabilities</li>
-<li>Exposes information about a node (version, groups, etc.)</li>
-<li>Exposes node resource usage</li>
-<li>Provides remote Wireshark capture capabilities</li>
-<li>Managing reservations (create, delete, etc.)</li>
-<li>User management</li>
-<li>etc.</li>
+<li>Expose information on how to access the deployed lab nodes</li>
+<li>Authentication via an external authentication provider</li>
 </ul>
+<p>No parts from the existing <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> can be reused for the API.</p>
+<h3 id="authentication-and-authorization">Authentication and Authorization<a class="headerlink" href="#authentication-and-authorization" title="Permanent link">&para;</a></h3>
+<p>The authentication can be implemented by using an external authentication provider like <a href="https://www.keycloak.org/">Keycloak</a>.
+Keycloak can be configured to act as an authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
+This has the benefit that the <abbr title="Lab Topology Builder">LTB</abbr> does not need to implement any authentication logic and can focus on the lab deployment.
+Additionally, it enables the <abbr title="Lab Topology Builder">LTB</abbr> to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
+On the other hand, it has the drawback that the <abbr title="Lab Topology Builder">LTB</abbr> needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.</p>
+<p>Authorization can also be implemented using Keycloak and its <a href="https://www.keycloak.org/docs/latest/authorization_services/">Authorization Services</a>.</p>
+<h2 id="operator">Operator<a class="headerlink" href="#operator" title="Permanent link">&para;</a></h2>
+<p>The operator is responsible for the following tasks:</p>
+<ul>
+<li>Deploying/destroying the containers and vms</li>
+<li>Check validity of <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
+<li>Enables you to access the deployed containers and vms via different protocols</li>
+<li>Providing remote access to the lab node console via a web terminal</li>
+<li>Managing reservations (create, delete, etc.)</li>
+<li>Providing remote Wireshark capture capabilities</li>
+</ul>
+<p>The operator is implemented according to the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes operator pattern</a>.
+It has multiple controllers that are responsible for managing a particular custom resource like a lab template.</p>
+<h3 id="network-connectivity-between-lab-nodes">Network connectivity between lab nodes<a class="headerlink" href="#network-connectivity-between-lab-nodes" title="Permanent link">&para;</a></h3>
+<p>The network connectivity between lab nodes can be implemented with <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus</a>, which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
+Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.</p>
+<p>Currently we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
+Additionally the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
+<h3 id="remote-access-to-lab-nodes">Remote access to lab nodes<a class="headerlink" href="#remote-access-to-lab-nodes" title="Permanent link">&para;</a></h3>
+<p>Remote access to the lab nodes has two variants:</p>
+<ul>
+<li>Console access via a web terminal</li>
+<li>Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol</li>
+</ul>
+<h4 id="console-access-via-a-web-terminal">Console access via a web terminal<a class="headerlink" href="#console-access-via-a-web-terminal" title="Permanent link">&para;</a></h4>
+<p>The console access via a web terminal is implemented with <a href="https://github.com/INSRapperswil/kube-ttyd">kube-ttyd</a>, which is a tool based on <a href="https://github.com/tsl0922/ttyd">ttyd</a>, with the addition to use kubectl exec and virsh console to connect to the lab nodes.
+<code>kube-ttyd</code> was provided by Yannick Zwicker from the INS specifically for this project.
+Access to the web terminal is routed through a NGINX ingress controller, and a Kubernetes service of type <code>ClusterIP</code>.</p>
+<p>The <a href="https://kubernetes.github.io/ingress-nginx/examples/auth/external-auth/">authentication feature</a> of the NGINX ingress controller can be used to restrict access to the web terminal to authenticated users.
+It might be possible to use the same authentication provider as the <abbr title="Lab Topology Builder">LTB</abbr> API, but this needs to be tested.</p>
+<h4 id="access-to-configurable-ports-with-any-oob-management-protocol">Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol<a class="headerlink" href="#access-to-configurable-ports-with-any-oob-management-protocol" title="Permanent link">&para;</a></h4>
+<p>Access to lab nodes via freely choosable <abbr title="Out-of-Band">OOB</abbr> management protocols is implemented by providing a Kubernetes service of type <code>LoadBalancer</code> for each lab node, which is configured to expose the ports specified in the lab template.</p>
+<p>Access control needs to be implemented by the lab node itself, because the Kubernetes service of type <code>LoadBalancer</code> does not provide any authentication or authorization features.
+An example for this would be to provide SSH keys for the lab nodes inside the lab template config field.</p>
+<h3 id="scheduling-lab-instances-and-resource-reservation">Scheduling lab instances and resource reservation<a class="headerlink" href="#scheduling-lab-instances-and-resource-reservation" title="Permanent link">&para;</a></h3>
+<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding an additional fields (creationTimestamp, deletionTimestamp) to the lab instance custom resource.
+The lab instance controller then is able to check these fields and deploy or delete the lab instance at the specified time.
+There are multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.</p>
+<p>If there are any issues with the requeuing of these events over such a long period of time, writing a Kubernetes <a href="https://pkg.go.dev/k8s.io/client-go/informers">informer</a> could be a solution.</p>
+<p>Resource reservation in a capacity planning sense is not provided by Kubernetes, a manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
+Planned resource management is a huge topic, and we would recommend to create a dedicated project for this.</p>
 <h2 id="c4-model">C4 Model<a class="headerlink" href="#c4-model" title="Permanent link">&para;</a></h2>
+<p>The following diagrams show the C4 model of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr>, it should provide a high level overview of the system.</p>
 <h3 id="system-context-diagram">System Context Diagram<a class="headerlink" href="#system-context-diagram" title="Permanent link">&para;</a></h3>
-<p><img alt="C4 System Context" src="../../assets/drawings/C4-System-Context.drawio.svg" /></p>
+<p><a class="glightbox" href="../../assets/drawings/C4-System-Context.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 System Context" src="../../assets/drawings/C4-System-Context.drawio.svg" /></a></p>
 <h3 id="container-diagram">Container Diagram<a class="headerlink" href="#container-diagram" title="Permanent link">&para;</a></h3>
-<p><img alt="C4 Container" src="../../assets/drawings/C4-Container.drawio.svg" /></p>
+<p><a class="glightbox" href="../../assets/drawings/C4-Container.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 Container" src="../../assets/drawings/C4-Container.drawio.svg" /></a></p>
 <h3 id="component-diagram">Component Diagram<a class="headerlink" href="#component-diagram" title="Permanent link">&para;</a></h3>
-<p><img alt="C4 Component" src="../../assets/drawings/C4-Component.drawio.svg" /></p>
+<p><a class="glightbox" href="../../assets/drawings/C4-Component.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 Component" src="../../assets/drawings/C4-Component.drawio.svg" /></a></p>
 <h4 id="legend">Legend<a class="headerlink" href="#legend" title="Permanent link">&para;</a></h4>
 <ul>
 <li><span style="color: #083f75">Dark blue</span>: represents Personas (User, Admin)</li>
@@ -1148,11 +1243,13 @@ It is composed of a <a href="#frontend">Frontend</a> and a <a href="#backend">Ba
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.tabs", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.2a6f1dda.min.js"></script>
       
+        <script src="../../js/print-site.js"></script>
+      
     
-  </body>
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
 </html>

@@ -25,7 +25,7 @@
     
     
       
-        <title>Current (KVM/Docker)-base LTB Architecture - LTB K8s Backend</title>
+        <title>Preliminary Work (KVM/Docker)-based LTB Architecture - LTB K8s Backend</title>
       
     
     
@@ -48,6 +48,22 @@
       
     
     
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -55,7 +71,18 @@
     
     
     
-  </head>
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+        html.glightbox-open { overflow: initial; height: 100%; }
+        .gslide-title { margin-top: 0px; user-select: text; }
+        .gslide-desc { color: #666; user-select: text; }
+        .gslide-image img { background: white; }
+        
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+            </style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -77,7 +104,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#current-kvmdocker-base-ltb-architecture" class="md-skip">
+        <a href="#preliminary-work-kvmdocker-based-ltb-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +136,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Current (KVM/Docker)-base LTB Architecture
+              Preliminary Work (KVM/Docker)-based LTB Architecture
             
           </span>
         </div>
@@ -195,113 +222,6 @@
       
         
           
-            
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../.." class="md-tabs__link">
-      Home
-    </a>
-  </li>
-
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../user-guide/" class="md-tabs__link">
-      User Guide
-    </a>
-  </li>
-
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../concepts/" class="md-tabs__link">
-      Concepts
-    </a>
-  </li>
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../contributions/contributor-guide/" class="md-tabs__link">
-        Contributions
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-    
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../k8s-ltb-architecture/" class="md-tabs__link md-tabs__link--active">
-        Architecture
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-tabs__link">
-        Decisions
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../about/" class="md-tabs__link">
-      About
-    </a>
-  </li>
-
-      
-    </ul>
-  </div>
-</nav>
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -314,10 +234,8 @@
                   <div class="md-sidebar__inner">
                     
 
-  
 
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="LTB K8s Backend" class="md-nav__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
       
@@ -570,12 +488,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Current (KVM/Docker)-base LTB Architecture
+          Preliminary Work (KVM/Docker)-based LTB Architecture
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Current (KVM/Docker)-base LTB Architecture
+        Preliminary Work (KVM/Docker)-based LTB Architecture
       </a>
       
         
@@ -635,8 +553,50 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    Deployment
+  <a href="#databases" class="md-nav__link">
+    Databases
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beat" class="md-nav__link">
+    Beat
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#celery" class="md-nav__link">
+    Celery
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-ssh" class="md-nav__link">
+    Web-SSH
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prometheus" class="md-nav__link">
+    Prometheus
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traefik" class="md-nav__link">
+    Traefik
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nginx" class="md-nav__link">
+    Nginx
   </a>
   
 </li>
@@ -991,8 +951,50 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment" class="md-nav__link">
-    Deployment
+  <a href="#databases" class="md-nav__link">
+    Databases
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beat" class="md-nav__link">
+    Beat
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#celery" class="md-nav__link">
+    Celery
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-ssh" class="md-nav__link">
+    Web-SSH
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prometheus" class="md-nav__link">
+    Prometheus
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traefik" class="md-nav__link">
+    Traefik
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nginx" class="md-nav__link">
+    Nginx
   </a>
   
 </li>
@@ -1027,17 +1029,24 @@
   
 
 
-<h1 id="current-kvmdocker-base-ltb-architecture">Current (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-base <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#current-kvmdocker-base-ltb-architecture" title="Permanent link">&para;</a></h1>
-<p>The following diagram shows the current <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
-<p><img alt="Current LTB Architecture" src="../../assets/drawings/ltb-stack-node.svg" /></p>
+<h1 id="preliminary-work-kvmdocker-based-ltb-architecture">Preliminary Work (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-based <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#preliminary-work-kvmdocker-based-ltb-architecture" title="Permanent link">&para;</a></h1>
+<p>The Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr> was inspired by a previous implementation of the <abbr title="Lab Topology Builder">LTB</abbr>, which was based on direct <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker usage.</p>
+<p>The following diagram shows the components and how lab nodes are deployed on a hypervisor in the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>:</p>
+<p><a class="glightbox" href="../../assets/drawings/ltb-stack-node.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="(KVM/Docker) LTB Architecture" src="../../assets/drawings/ltb-stack-node.svg" /></a></p>
 <p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
 <ul>
 <li><a href="#frontend">Frontend</a> built with React</li>
 <li><a href="#backend">Backend</a> built with Django</li>
-<li><a href="#deployment">Deployment</a> built with docker-compose</li>
+<li><a href="#databases">Databases</a> (PostgreSQL, Redis)</li>
+<li><a href="#beat">Beat</a></li>
+<li><a href="#celery">Celery</a></li>
+<li><a href="#web-ssh">Web-SSH</a></li>
+<li><a href="#prometheus">Prometheus</a></li>
+<li><a href="#traefik">Traefik</a></li>
+<li><a href="#nginx">Nginx</a></li>
 </ul>
 <h2 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
-<p>The backend is accessible via API and a Admin Web UI.
+<p>The backend is accessible via API and an Admin Web UI.
 It is responsible for the following tasks:</p>
 <ul>
 <li>parsing the yaml topology files</li>
@@ -1082,17 +1091,55 @@ There are 4 different types of tasks:</p>
 <h3 id="running-lab-store">Running lab store<a class="headerlink" href="#running-lab-store" title="Permanent link">&para;</a></h3>
 <p>This component is responsible for storing information about running labs, such as:</p>
 <ul>
-<li>The devices taking part in the running lab, inclusive of the interfaces</li>
+<li>The devices taking part in the running lab, including the interfaces</li>
 <li>Connection information</li>
 </ul>
 <h3 id="template-store">Template store<a class="headerlink" href="#template-store" title="Permanent link">&para;</a></h3>
 <p>This component is responsible for storing lab templates.</p>
 <h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
 <p>This component is responsible for user authentication and management.</p>
-<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
-<p>The deployment component is responsible for deploying the <abbr title="Lab Topology Builder">LTB</abbr> backend and frontend components.</p>
+<h2 id="databases">Databases<a class="headerlink" href="#databases" title="Permanent link">&para;</a></h2>
+<p>The following databases are used:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>Redis for caching</li>
+</ul>
+<p>The Databases are used by the following components:</p>
+<ul>
+<li>Backend</li>
+<li>Beat</li>
+<li>Celery</li>
+</ul>
+<h2 id="beat">Beat<a class="headerlink" href="#beat" title="Permanent link">&para;</a></h2>
+<p>The beat component is responsible for scheduling periodic tasks.
+To be more precise, it is responsible for scheduling the deployment and deletion of labs, according to the reservation information.</p>
+<h2 id="celery">Celery<a class="headerlink" href="#celery" title="Permanent link">&para;</a></h2>
+<p>Celery is used to execute the commands to create and delete the lab nodes and connections.</p>
+<h2 id="web-ssh">Web-SSH<a class="headerlink" href="#web-ssh" title="Permanent link">&para;</a></h2>
+<p>Web-SSH is used to provide a web based ssh client, which can be used to access the deployed containers and vms aka lab nodes.</p>
+<h2 id="prometheus">Prometheus<a class="headerlink" href="#prometheus" title="Permanent link">&para;</a></h2>
+<p>Prometheus is used to collect metrics about CPU, memory and disk usage of the hypervisor nodes.</p>
+<h2 id="traefik">Traefik<a class="headerlink" href="#traefik" title="Permanent link">&para;</a></h2>
+<p>Traefik is used as a proxy for the following components:</p>
+<ul>
+<li>Frontend</li>
+<li>Web-SSH</li>
+<li>Prometheus</li>
+<li>Nginx</li>
+</ul>
+<h2 id="nginx">Nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h2>
+<p>Nginx is used as a reverse proxy for the backend.</p>
 <h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
-<p>The frontend allows users to access their labs and their devices.</p>
+<p>The frontend provides a web UI with the following features:</p>
+<ul>
+<li>User authentication</li>
+<li>Management of lab templates</li>
+<li>Management of reservations for labs</li>
+<li>Start/stop running labs</li>
+<li>Resource usage overview</li>
+<li>Provides information on how to access the deployed containers and vms</li>
+<li>Create wireshark capture interfaces</li>
+</ul>
 
 
 
@@ -1154,11 +1201,13 @@ There are 4 different types of tasks:</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "navigation.tabs", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.2a6f1dda.min.js"></script>
       
+        <script src="../../js/print-site.js"></script>
+      
     
-  </body>
+  <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
 </html>
