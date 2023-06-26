@@ -40,7 +40,7 @@ The authentication can be implemented by using an external authentication provid
 Keycloak can be configured to act as a authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
 This has the benefit that the LTB does not need to implement any authentication logic and can focus on the lab deployment.
 Additionally, it enables the LTB to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
-On the other hand, it has the drawback that the LTB needs an external authentication provider to work.
+On the other hand, it has the drawback that the LTB needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.
 
 Authorization can also be implemented by using Keycloak and its [Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/).
 
