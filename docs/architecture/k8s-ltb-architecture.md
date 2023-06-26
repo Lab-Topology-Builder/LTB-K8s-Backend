@@ -17,7 +17,6 @@ The frontend is responsible for the following tasks:
 
 - Providing a web UI for the user to interact with the labs.
 - Providing a web UI for the admin to manage:
-  - Users
   - Lab templates
   - Lab deployments
   - Reservations
@@ -35,12 +34,15 @@ The API is responsible for the following tasks:
 
 No parts from the existing KVMDocker based LTB can be reused for the API.
 
-### Authentication
+### Authentication and Authorization
 
 The authentication can be implemented by using an external authentication provider like [Keycloak](https://www.keycloak.org/).
 Keycloak can be configured to act as a authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
 This has the benefit that the LTB does not need to implement any authentication logic and can focus on the lab deployment.
 Additionally, it enables the LTB to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
+On the other hand, it has the drawback that the LTB needs an external authentication provider to work.
+
+Authorization can also be implemented by using Keycloak and its [Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/).
 
 ## Operator
 
