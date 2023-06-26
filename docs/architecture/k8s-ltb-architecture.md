@@ -12,7 +12,7 @@ The following diagram shows how the components interact with each other:
 
 ## Frontend
 
-The frontend can be implemented in any language and framework, it just needs to be able to communicate via a HTTP API with the LTB API.
+The frontend can be implemented in any language and framework, it just needs to be able to communicate via an HTTP API with the LTB API.
 The frontend is responsible for the following tasks:
 
 - Providing a web UI for the user to interact with the labs.
@@ -32,17 +32,17 @@ The API is responsible for the following tasks:
 - Expose information on how to access the deployed lab nodes
 - Authentication via an external authentication provider
 
-No parts from the existing KVMDocker based LTB can be reused for the API.
+No parts from the existing KVM/Docker based LTB can be reused for the API.
 
 ### Authentication and Authorization
 
 The authentication can be implemented by using an external authentication provider like [Keycloak](https://www.keycloak.org/).
-Keycloak can be configured to act as a authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
+Keycloak can be configured to act as an authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
 This has the benefit that the LTB does not need to implement any authentication logic and can focus on the lab deployment.
 Additionally, it enables the LTB to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
 On the other hand, it has the drawback that the LTB needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.
 
-Authorization can also be implemented by using Keycloak and its [Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/).
+Authorization can also be implemented using Keycloak and its [Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/).
 
 ## Operator
 
@@ -60,7 +60,7 @@ It has multiple controllers that are responsible for managing a particular custo
 
 ### Network connectivity between lab nodes
 
-The network connectivity between lab nodes can be implemented with [Multus](https://github.com/k8snetworkplumbingwg/multus-cni), which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm
+The network connectivity between lab nodes can be implemented with [Multus](https://github.com/k8snetworkplumbingwg/multus-cni), which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
 Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.
 
 Currently we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
@@ -93,7 +93,7 @@ An example for this would be to provide SSH keys for the lab nodes inside the la
 
 A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding an additional fields (creationTimestamp, deletionTimestamp) to the lab instance custom resource.
 The lab instance controller then is able to check these fields and deploy or delete the lab instance at the specified time.
-There multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.
+There are multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.
 
 If there are any issues with the requeuing of these events over such a long period of time, writing a Kubernetes [informer](https://pkg.go.dev/k8s.io/client-go/informers) could be a solution.
 
