@@ -37,6 +37,11 @@ No parts from the existing KVMDocker based LTB can be reused for the API.
 
 ### Authentication
 
+The authentication can be implemented by using an external authentication provider like [Keycloak](https://www.keycloak.org/).
+Keycloak can be configured to act as a authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
+This has the benefit that the LTB does not need to implement any authentication logic and can focus on the lab deployment.
+Additionally, it enables the LTB to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
+
 ## Operator
 
 The operator is responsible for the following tasks:
@@ -73,6 +78,7 @@ The console access via a web terminal is implemented with [kube-ttyd](https://gi
 Access to the web terminal is routed through a NGINX ingress controller, and a Kubernetes service of type `ClusterIP`.
 
 The [authentication feature](https://kubernetes.github.io/ingress-nginx/examples/auth/external-auth/) of the NGINX ingress controller can be used to restrict access to the web terminal to authenticated users.
+It might be possible to use the same authentication provider as the LTB API, but this needs to be tested.
 
 #### Access to configurable ports with any OOB management protocol
 
