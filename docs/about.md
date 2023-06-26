@@ -5,4 +5,4 @@ This project was created as part of a bachelor thesis at the [Eastern Switzerlan
 ## Authors
 
 - [Jan Untersander](mailto:jan.untersander@ost.ch)
-- [Tsigereda Nebai Kidane](mailto:tsigereda.nebai@ost.ch) <!-- TODO You might want to add an email address that exists after you're finished with your bachelor :) -->
+- [Tsigereda Nebai Kidane](mailto:nebaitsigereda@gmail.com)
