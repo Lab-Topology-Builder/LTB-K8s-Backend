@@ -200,7 +200,7 @@ You can optionally install MetalLB, currently it is not required to use the LTB 
 
 ### Install Operator Lifecycle Manager (OLM)
 
-Install Operator Lifecycle Manager (OLM), a tool to help manage the Operators running on your cluster.
+Install Operator Lifecycle Manager (OLM), a tool to help manage the operators running on your cluster.
 
 ```bash
 curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh | bash -s v0.24.0
@@ -212,7 +212,7 @@ Install the operator by running the following command:
 kubectl create -f https://operatorhub.io/install/metallb-operator.yaml
 ```
 
-This Operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.
+This operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.
 
 After install, watch your operator come up using next command.
 
