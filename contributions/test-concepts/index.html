@@ -443,13 +443,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#test-categories" class="md-nav__link">
     Test categories
   </a>
@@ -487,13 +480,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    Environment
-  </a>
   
 </li>
       
@@ -597,6 +583,8 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
       
       
+        
+          
         
           
         
@@ -820,6 +808,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -868,13 +870,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#test-categories" class="md-nav__link">
     Test categories
   </a>
@@ -915,13 +910,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    Environment
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -946,30 +934,26 @@
 
 
 <h1 id="test-concept">Test Concept<a class="headerlink" href="#test-concept" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This document outlines the approaches, methodologies, and types of tests that will be used to ensure the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components are functioning as expected.</p>
+<p>This document outlines the approaches, methodologies, and types of tests that ensure that the <abbr title="Lab Topology Builder">LTB</abbr> Operator components are functioning as expected.</p>
 <h2 id="test-categories">Test categories<a class="headerlink" href="#test-categories" title="Permanent link">&para;</a></h2>
-<p>The tests will primarily focus on the following category:</p>
-<ul>
-<li><em>Functionality and Logic</em>: This includes automated integration tests to evaluate how the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend interacts with other components of the <abbr title="Lab Topology Builder">LTB</abbr> application, such as the operator's function in a Kubernetes cluster with a K8s API server and other resources.</li>
-</ul>
-<p>Testing in the other categories, such as Security and Performance, will be considered later time and their specifics will be determined accordingly.</p>
+<p>The tests primarily focus on Functionality and Logic.
+Security and Performance tests should be added in the future as the project matures.</p>
 <h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
-<p>The tools listed below are going to be used to perform the tests mentioned above. Moreover, the tools are used in a suite test, which is created when a controller is scaffolded by the tool.</p>
+<p>The following tools are used to test the <abbr title="Lab Topology Builder">LTB</abbr> Operator, you can find more information why they were chosen in the <a href="../../decisions/0012-testing-framework/">Testing Framework Decision</a>:</p>
 <ul>
-<li><a href="https://github.com/stretchr/testify">Testify</a>: a go package that provides a set of features to perform unit tests, such as assertions, mocks, etc.</li>
-<li><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a>: a Go library that helps write integration tests for Kubernetes controllers by setting up an instance of etcd and a Kubernetes API server, without kubelet, controller-manager, or other components.</li>
-<li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write epxressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
+<li><a href="https://pkg.go.dev/testing">Testing</a>: The default Go testing library that provides support for automated testing of Go packages. It is intended to be used in concert with the "go test" command, which automates execution of any function of the form</li>
+<li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write expressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
 <li><a href="https://onsi.github.io/gomega/">Gomega</a>: a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the <a href="https://onsi.github.io/ginkgo/">Ginkgo</a> testing framework.</li>
 </ul>
 <h2 id="strategies-test-approach">Strategies: Test Approach<a class="headerlink" href="#strategies-test-approach" title="Permanent link">&para;</a></h2>
-<p>The following test approaches are going to be used to test the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components:</p>
+<p>We focused on unit tests for the <abbr title="Lab Topology Builder">LTB</abbr> Operator, as they were easy to implement and provide a good coverage of the code.
+At a later stage of the project, we could add integration tests to ensure that the <abbr title="Lab Topology Builder">LTB</abbr> Operator works as expected with other components like the <abbr title="Lab Topology Builder">LTB</abbr> API.</p>
+<p>We aspire to achieve approximately 90% test coverage, to increase the maintainability and stability of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h3>
-<p>Unit tests are going to be used to test small pieces of code, such as functions, which don't involve setting up testing Kubernetes environment with a K8s API server and other resources.</p>
+<p>Unit rely on the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client/fake">Fake Client</a> package from the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library to create a fake client that can be used to mock interactions with the Kubernetes API.
+This allows us to test functions that interact with the Kubernetes API without mocking the complete API or using a real Kubernetes cluster.</p>
 <h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h3>
-<p>Integration tests are going to be used to test the different components of the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend, such as the operator, the controllers, etc., and how they interact with each other.</p>
-<h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h2>
-<p><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> is going to be used to set up a testing Kubernetes environment with a K8s API server and other resources.</p>
+<p>The integration tests could be implemented by using the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> package from the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library.</p>
 
 
 

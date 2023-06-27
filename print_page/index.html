@@ -524,6 +524,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -714,6 +716,20 @@
     <li class="md-nav__item">
       <a href="../decisions/0011-programming-language/" class="md-nav__link">
         Programming Language
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -960,6 +976,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#decisions-0012-testing-framework" class="md-nav__link">
+    24. Testing Framework
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -967,7 +990,7 @@
       
         <li class="md-nav__item">
   <a href="#about" class="md-nav__link">
-    24. About
+    25. About
   </a>
   
 </li>
@@ -1493,7 +1516,7 @@ This will allow you to test the operators RBAC rules.</p>
 <ul>
 <li>The Go extension in VSCode has a linting capability, so that will be used for linting and formatting.</li>
 </ul></section><section class="print-page" id="contributions-dev-cluster-setup"><h1 id="contributions-dev-cluster-setup-development-cluster-setup">Development cluster setup<a class="headerlink" href="#contributions-dev-cluster-setup-development-cluster-setup" title="Permanent link">&para;</a></h1>
-<p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> operator.</p>
+<p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h2 id="contributions-dev-cluster-setup-prerequisites-remote-cluster">Prerequisites Remote Cluster<a class="headerlink" href="#contributions-dev-cluster-setup-prerequisites-remote-cluster" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Server with Linux OS (Recommended Ubuntu 22.04)</li>
@@ -1629,16 +1652,16 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 <p>You're now ready to use the cluster for development or testing purposes.</p>
 </div>
 <h2 id="contributions-dev-cluster-setup-metallb">MetalLB<a class="headerlink" href="#contributions-dev-cluster-setup-metallb" title="Permanent link">&para;</a></h2>
-<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> operator.
+<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> Operator.
 <a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters.</p>
 <h3 id="contributions-dev-cluster-setup-install-operator-lifecycle-manager-olm">Install Operator Lifecycle Manager (OLM)<a class="headerlink" href="#contributions-dev-cluster-setup-install-operator-lifecycle-manager-olm" title="Permanent link">&para;</a></h3>
-<p>Install Operator Lifecycle Manager (OLM), a tool to help manage the Operators running on your cluster.</p>
+<p>Install Operator Lifecycle Manager (OLM), a tool to help manage the operators running on your cluster.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.24.0
 </code></pre></div>
 <p>Install the operator by running the following command:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>https://operatorhub.io/install/metallb-operator.yaml
 </code></pre></div>
-<p>This Operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.</p>
+<p>This operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.</p>
 <p>After install, watch your operator come up using next command.</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators
 </code></pre></div>
@@ -1674,7 +1697,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </code></pre></div>
 <h2 id="contributions-dev-cluster-setup-storage">Storage<a class="headerlink" href="#contributions-dev-cluster-setup-storage" title="Permanent link">&para;</a></h2>
 <p>To store your virtual machine images and disks you may want to use a storage backend.
-Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
+Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> Operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
 Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
 <p>Following you will find some instructions that may help you to install Trident on your cluster.</p>
 <p>You always can find more information about Trident in the <a href="https://docs.netapp.com/us-en/trident/index.html">official documentation</a>.</p>
@@ -1726,37 +1749,33 @@ Make sure to enable nested virtualization on your local machine, if you want to 
 </div></section><section class="print-page" id="contributions-technologies-used"><h1 id="contributions-technologies-used-tools-and-frameworks">Tools and Frameworks<a class="headerlink" href="#contributions-technologies-used-tools-and-frameworks" title="Permanent link">&para;</a></h1>
 <p>The tools and frameworks used in the project are listed below.</p>
 <h2 id="contributions-technologies-used-go-based-operator-sdk-framework">Go-based Operator SDK framework<a class="headerlink" href="#contributions-technologies-used-go-based-operator-sdk-framework" title="Permanent link">&para;</a></h2>
-<p>To create the <abbr title="Lab Topology Builder">LTB</abbr> operator, we used the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/">Go-based Operator-sdk</a> framework, which provides a set of tools to simplify the process of building, testing and packaging our operator.</p>
+<p>To create the <abbr title="Lab Topology Builder">LTB</abbr> Operator, we used the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/">Go-based Operator-SDK</a> framework, which provides a set of tools to simplify the process of building, testing and packaging our operator.</p>
 <h2 id="contributions-technologies-used-kubevirt">Kubevirt<a class="headerlink" href="#contributions-technologies-used-kubevirt" title="Permanent link">&para;</a></h2>
 <p><a href="https://kubevirt.io/">Kubevirt</a> is a tool that provides a virtual machine management layer on top of Kubernetes. It allows us to deploy virtual machines on Kubernetes.</p>
 <h2 id="contributions-technologies-used-kubernetes">Kubernetes<a class="headerlink" href="#contributions-technologies-used-kubernetes" title="Permanent link">&para;</a></h2>
 <p>We use <a href="https://kubernetes.io/">Kubernetes</a> as the container orchestration platform for the <abbr title="Lab Topology Builder">LTB</abbr> application.</p>
 <h2 id="contributions-technologies-used-multus-cni">Multus CNI<a class="headerlink" href="#contributions-technologies-used-multus-cni" title="Permanent link">&para;</a></h2>
 <p>To create multiple network interfaces for the pods, <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus CNI</a> is used.</p></section><section class="print-page" id="contributions-test-concepts"><h1 id="contributions-test-concepts-test-concept">Test Concept<a class="headerlink" href="#contributions-test-concepts-test-concept" title="Permanent link">&para;</a></h1>
-<h2 id="contributions-test-concepts-overview">Overview<a class="headerlink" href="#contributions-test-concepts-overview" title="Permanent link">&para;</a></h2>
-<p>This document outlines the approaches, methodologies, and types of tests that will be used to ensure the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components are functioning as expected.</p>
+<p>This document outlines the approaches, methodologies, and types of tests that ensure that the <abbr title="Lab Topology Builder">LTB</abbr> Operator components are functioning as expected.</p>
 <h2 id="contributions-test-concepts-test-categories">Test categories<a class="headerlink" href="#contributions-test-concepts-test-categories" title="Permanent link">&para;</a></h2>
-<p>The tests will primarily focus on the following category:</p>
-<ul>
-<li><em>Functionality and Logic</em>: This includes automated integration tests to evaluate how the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend interacts with other components of the <abbr title="Lab Topology Builder">LTB</abbr> application, such as the operator's function in a Kubernetes cluster with a K8s API server and other resources.</li>
-</ul>
-<p>Testing in the other categories, such as Security and Performance, will be considered later time and their specifics will be determined accordingly.</p>
+<p>The tests primarily focus on Functionality and Logic.
+Security and Performance tests should be added in the future as the project matures.</p>
 <h2 id="contributions-test-concepts-tools">Tools<a class="headerlink" href="#contributions-test-concepts-tools" title="Permanent link">&para;</a></h2>
-<p>The tools listed below are going to be used to perform the tests mentioned above. Moreover, the tools are used in a suite test, which is created when a controller is scaffolded by the tool.</p>
+<p>The following tools are used to test the <abbr title="Lab Topology Builder">LTB</abbr> Operator, you can find more information why they were chosen in the <a href="#decisions-0012-testing-framework">Testing Framework Decision</a>:</p>
 <ul>
-<li><a href="https://github.com/stretchr/testify">Testify</a>: a go package that provides a set of features to perform unit tests, such as assertions, mocks, etc.</li>
-<li><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a>: a Go library that helps write integration tests for Kubernetes controllers by setting up an instance of etcd and a Kubernetes API server, without kubelet, controller-manager, or other components.</li>
-<li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write epxressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
+<li><a href="https://pkg.go.dev/testing">Testing</a>: The default Go testing library that provides support for automated testing of Go packages. It is intended to be used in concert with the "go test" command, which automates execution of any function of the form</li>
+<li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write expressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
 <li><a href="https://onsi.github.io/gomega/">Gomega</a>: a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the <a href="https://onsi.github.io/ginkgo/">Ginkgo</a> testing framework.</li>
 </ul>
 <h2 id="contributions-test-concepts-strategies-test-approach">Strategies: Test Approach<a class="headerlink" href="#contributions-test-concepts-strategies-test-approach" title="Permanent link">&para;</a></h2>
-<p>The following test approaches are going to be used to test the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend components:</p>
+<p>We focused on unit tests for the <abbr title="Lab Topology Builder">LTB</abbr> Operator, as they were easy to implement and provide a good coverage of the code.
+At a later stage of the project, we could add integration tests to ensure that the <abbr title="Lab Topology Builder">LTB</abbr> Operator works as expected with other components like the <abbr title="Lab Topology Builder">LTB</abbr> API.</p>
+<p>We aspire to achieve approximately 90% test coverage, to increase the maintainability and stability of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h3 id="contributions-test-concepts-unit-tests">Unit Tests<a class="headerlink" href="#contributions-test-concepts-unit-tests" title="Permanent link">&para;</a></h3>
-<p>Unit tests are going to be used to test small pieces of code, such as functions, which don't involve setting up testing Kubernetes environment with a K8s API server and other resources.</p>
+<p>Unit rely on the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client/fake">Fake Client</a> package from the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library to create a fake client that can be used to mock interactions with the Kubernetes API.
+This allows us to test functions that interact with the Kubernetes API without mocking the complete API or using a real Kubernetes cluster.</p>
 <h3 id="contributions-test-concepts-integration-tests">Integration Tests<a class="headerlink" href="#contributions-test-concepts-integration-tests" title="Permanent link">&para;</a></h3>
-<p>Integration tests are going to be used to test the different components of the <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend, such as the operator, the controllers, etc., and how they interact with each other.</p>
-<h2 id="contributions-test-concepts-environment">Environment<a class="headerlink" href="#contributions-test-concepts-environment" title="Permanent link">&para;</a></h2>
-<p><a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> is going to be used to set up a testing Kubernetes environment with a K8s API server and other resources.</p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
+<p>The integration tests could be implemented by using the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> package from the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library.</p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
                         <h1 class='nav-section-title' id='section-architecture'>
                             Architecture <a class='headerlink' href='#section-architecture' title='Permanent link'>↵</a>
                         </h1>
@@ -2163,7 +2182,19 @@ The considered options are based on the supported languages of the Operator SDK.
 <li>Ansible</li>
 </ul>
 <h2 id="decisions-0011-programming-language-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0011-programming-language-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Go", because many cloud native projects are written in Go, and it is a compiled language, which is more performant than interpreted languages. Also, Go is a statically typed language, which makes it easier to maintain and refactor the code. It is also easier to write complicated logic and tests in Go than in Helm or Ansible.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="about"><h1 id="about-about">About<a class="headerlink" href="#about-about" title="Permanent link">&para;</a></h1>
+<p>Chosen option: "Go", because many cloud native projects are written in Go, and it is a compiled language, which is more performant than interpreted languages. Also, Go is a statically typed language, which makes it easier to maintain and refactor the code. It is also easier to write complicated logic and tests in Go than in Helm or Ansible.</p></section><section class="print-page" id="decisions-0012-testing-framework"><h1 id="decisions-0012-testing-framework-testing-framework">Testing Framework<a class="headerlink" href="#decisions-0012-testing-framework-testing-framework" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0012-testing-framework-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0012-testing-framework-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>Every project needs to be tested.
+There are multiple testing libraries and frameworks to test Go applications, which can be used in addition to the default Go testing library.</p>
+<h2 id="decisions-0012-testing-framework-considered-options">Considered Options<a class="headerlink" href="#decisions-0012-testing-framework-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Testify</li>
+<li>Ginkgo/Gomega</li>
+<li>GoSpec</li>
+<li>GoConvey</li>
+</ul>
+<h2 id="decisions-0012-testing-framework-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0012-testing-framework-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the <a href="https://kubevirt.io/">Kubevirt</a> project, which is used in the <abbr title="Lab Topology Builder">LTB</abbr> Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="about"><h1 id="about-about">About<a class="headerlink" href="#about-about" title="Permanent link">&para;</a></h1>
 <p>This project was created as part of a bachelor thesis at the <a href="https://www.ost.ch/en/">Eastern Switzerland University of Applied Sciences</a> in Rapperswil, in cooperation with the <a href="https://www.ost.ch/en/research-and-consulting-services/computer-science/ins-institute-for-network-and-security">Institue for Network and Security</a>.</p>
 <h2 id="about-authors">Authors<a class="headerlink" href="#about-authors" title="Permanent link">&para;</a></h2>
 <ul>

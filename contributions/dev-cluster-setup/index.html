@@ -726,6 +726,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -916,6 +918,20 @@
     <li class="md-nav__item">
       <a href="../../decisions/0011-programming-language/" class="md-nav__link">
         Programming Language
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -1150,7 +1166,7 @@
 
 
 <h1 id="development-cluster-setup">Development cluster setup<a class="headerlink" href="#development-cluster-setup" title="Permanent link">&para;</a></h1>
-<p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> operator.</p>
+<p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h2 id="prerequisites-remote-cluster">Prerequisites Remote Cluster<a class="headerlink" href="#prerequisites-remote-cluster" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Server with Linux OS (Recommended Ubuntu 22.04)</li>
@@ -1286,16 +1302,16 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 <p>You're now ready to use the cluster for development or testing purposes.</p>
 </div>
 <h2 id="metallb">MetalLB<a class="headerlink" href="#metallb" title="Permanent link">&para;</a></h2>
-<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> operator.
+<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> Operator.
 <a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters.</p>
 <h3 id="install-operator-lifecycle-manager-olm">Install Operator Lifecycle Manager (OLM)<a class="headerlink" href="#install-operator-lifecycle-manager-olm" title="Permanent link">&para;</a></h3>
-<p>Install Operator Lifecycle Manager (OLM), a tool to help manage the Operators running on your cluster.</p>
+<p>Install Operator Lifecycle Manager (OLM), a tool to help manage the operators running on your cluster.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.24.0
 </code></pre></div>
 <p>Install the operator by running the following command:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>https://operatorhub.io/install/metallb-operator.yaml
 </code></pre></div>
-<p>This Operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.</p>
+<p>This operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.</p>
 <p>After install, watch your operator come up using next command.</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators
 </code></pre></div>
@@ -1331,7 +1347,7 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </code></pre></div>
 <h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
 <p>To store your virtual machine images and disks you may want to use a storage backend.
-Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
+Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> Operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
 Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
 <p>Following you will find some instructions that may help you to install Trident on your cluster.</p>
 <p>You always can find more information about Trident in the <a href="https://docs.netapp.com/us-en/trident/index.html">official documentation</a>.</p>
