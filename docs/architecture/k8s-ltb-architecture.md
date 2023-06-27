@@ -21,7 +21,7 @@ The frontend is responsible for the following tasks:
   - Lab deployments
   - Reservations
 
-There is a possibility to reuse parts of the existing frontend from the KVM/Docker based LTB.
+There is a possibility to reuse parts of the existing frontend from the KVM/Docker-based LTB.
 
 ## API
 
@@ -32,7 +32,7 @@ The API is responsible for the following tasks:
 - Expose information on how to access the deployed lab nodes
 - Authentication via an external authentication provider
 
-No parts from the existing KVM/Docker based LTB can be reused for the API.
+No parts from the existing KVM/Docker-based LTB can be reused for the API.
 
 ### Authentication and Authorization
 

@@ -1,13 +1,13 @@
 
-# Preliminary Work (KVM/Docker)-based LTB Architecture
+# Preliminary Work KVM/Docker-based LTB Architecture
 
 The Kubernetes based LTB was inspired by a previous implementation of the LTB, which was based on direct KVM and Docker usage.
 
-The following diagram shows the components and how lab nodes are deployed on a hypervisor in the KVM/Docker based LTB:
+The following diagram shows the components and how lab nodes are deployed on a hypervisor in the KVM/Docker-based LTB:
 
-![(KVM/Docker) LTB Architecture](../assets/drawings/ltb-stack-node.svg)
+![KVM/Docker LTB Architecture](../assets/drawings/ltb-stack-node.svg)
 
-Currently the KVM/Docker based LTB is composed of the following containers:
+Currently the KVM/Docker-based LTB is composed of the following containers:
 
 - [Frontend](#frontend) built with React
 - [Backend](#backend) built with Django
