@@ -16,6 +16,7 @@ nav:
     - Development Cluster Setup: contributions/dev-cluster-setup.md
     - Tools and Frameworks: contributions/technologies-used.md
     - Testing: contributions/test-concepts.md
+    - Continuous Integration: contributions/ci.md
   - ...
   - About: about.md
 plugins:
