@@ -1,15 +1,19 @@
 # Concepts
 
-## Lab Topology Builder (LTB)
+## Lab Topology Builder
 
-The Lab Topology Builder (LTB) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
+The Lab Topology Builder is a network emulator that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.
 
-![LTB](./assets/images/LTB.jpg)
+<figure>
+![LTB](./assets/images/Lab-Topology.png)
+  <figcaption>Example of Lab Topology</figcaption>
+</figure>
 
-## LTB Kubernetes Backend
+## Kubernetes
 
-The LTB Kubernetes Backend consists of the LTB Operator and the LTB Operator API, which replaces the current KVM/Docker-based backend of LTB. It is responsible for managing the lab instances in a Kubernetes cluster and provide a REST API for the frontend to interact with the kubernetes cluster.
+Kubernetes is a portable, extensible, open source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available. [^1]
 
+[^1]: Excerpt from [kubernetes.io](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/)
 ## Kubernetes Cluster
 
 Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes. A Kubernetes cluster consists of a control plane and one or more nodes. The control plane is responsible for maintaining the desired state of the cluster, such as which applications are running and which container images they use, etc. And the nodes run the applications and workloads.
