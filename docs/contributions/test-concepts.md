@@ -1,38 +1,32 @@
 # Test Concept
 
-## Overview
-
-This document outlines the approaches, methodologies, and types of tests that will be used to ensure the LTB K8s Backend components are functioning as expected.
+This document outlines the approaches, methodologies, and types of tests that ensure that the LTB Operator components are functioning as expected.
 
 ## Test categories
 
-The tests will primarily focus on the following category:
-
-- *Functionality and Logic*: This includes automated integration tests to evaluate how the LTB K8s Backend interacts with other components of the LTB application, such as the operator's function in a Kubernetes cluster with a K8s API server and other resources.
-
-Testing in the other categories, such as Security and Performance, will be considered later time and their specifics will be determined accordingly.
+The tests primarily focus on Functionality and Logic.
+Security and Performance tests should be added in the future as the project matures.
 
 ## Tools
 
-The tools listed below are going to be used to perform the tests mentioned above. Moreover, the tools are used in a suite test, which is created when a controller is scaffolded by the tool.
+The following tools are used to test the LTB Operator, you can find more information why they were chosen in the [Testing Framework Decision](../decisions/0012-testing-framework.md):
 
-- [Testify](https://github.com/stretchr/testify): a go package that provides a set of features to perform unit tests, such as assertions, mocks, etc.
-- [EnvTest](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest): a Go library that helps write integration tests for Kubernetes controllers by setting up an instance of etcd and a Kubernetes API server, without kubelet, controller-manager, or other components.
-- [Ginkgo](https://onsi.github.io/ginkgo/): a Go testing framework for Go to help you write epxressive, readable, and maintainable tests. It is best used with the [Gomega](https://onsi.github.io/gomega/) matcher library.
+- [Testing](https://pkg.go.dev/testing): The default Go testing library that provides support for automated testing of Go packages. It is intended to be used in concert with the "go test" command, which automates execution of any function of the form
+- [Ginkgo](https://onsi.github.io/ginkgo/): a Go testing framework for Go to help you write expressive, readable, and maintainable tests. It is best used with the [Gomega](https://onsi.github.io/gomega/) matcher library.
 - [Gomega](https://onsi.github.io/gomega/): a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the [Ginkgo](https://onsi.github.io/ginkgo/) testing framework.
 
 ## Strategies: Test Approach
 
-The following test approaches are going to be used to test the LTB K8s Backend components:
+We focused on unit tests for the LTB Operator, as they were easy to implement and provide a good coverage of the code.
+At a later stage of the project, we could add integration tests to ensure that the LTB Operator works as expected with other components like the LTB API.
+
+We aspire to achieve approximately 90% test coverage, to increase the maintainability and stability of the LTB Operator.
 
 ### Unit Tests
 
-Unit tests are going to be used to test small pieces of code, such as functions, which don't involve setting up testing Kubernetes environment with a K8s API server and other resources.
+Unit rely on the [Fake Client](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client/fake) package from the [controller-runtime](https://pkg.go.dev/sigs.k8s.io/controller-runtime) library to create a fake client that can be used to mock interactions with the Kubernetes API.
+This allows us to test functions that interact with the Kubernetes API without mocking the complete API or using a real Kubernetes cluster.
 
 ### Integration Tests
 
-Integration tests are going to be used to test the different components of the LTB K8s Backend, such as the operator, the controllers, etc., and how they interact with each other.
-
-## Environment
-
-[EnvTest](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest) is going to be used to set up a testing Kubernetes environment with a K8s API server and other resources.
+The integration tests could be implemented by using the [EnvTest](https://https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest) package from the [controller-runtime](https://https://pkg.go.dev/sigs.k8s.io/controller-runtime) library.

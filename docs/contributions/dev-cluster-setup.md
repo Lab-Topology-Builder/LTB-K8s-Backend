@@ -1,6 +1,6 @@
 # Development cluster setup
 
-Steps to setup a Kubernetes development cluster for testing and development of the LTB operator.
+Steps to setup a Kubernetes development cluster for testing and development of the LTB Operator.
 
 ## Prerequisites Remote Cluster
 
@@ -195,12 +195,12 @@ kubectl virt help
 
 ## MetalLB
 
-You can optionally install MetalLB, currently it is not required to use the LTB operator.
+You can optionally install MetalLB, currently it is not required to use the LTB Operator.
 [MetalLB](https://metallb.universe.tf/) is a load-balancer implementation for bare metal Kubernetes clusters.
 
 ### Install Operator Lifecycle Manager (OLM)
 
-Install Operator Lifecycle Manager (OLM), a tool to help manage the Operators running on your cluster.
+Install Operator Lifecycle Manager (OLM), a tool to help manage the operators running on your cluster.
 
 ```bash
 curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh | bash -s v0.24.0
@@ -212,7 +212,7 @@ Install the operator by running the following command:
 kubectl create -f https://operatorhub.io/install/metallb-operator.yaml
 ```
 
-This Operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.
+This operator will be installed in the "operators" namespace and will be usable from all namespaces in the cluster.
 
 After install, watch your operator come up using next command.
 
@@ -266,7 +266,7 @@ kubectl apply -f l2advertisment.yaml
 ## Storage
 
 To store your virtual machine images and disks you may want to use a storage backend.
-Currently no storage backend has been tested with the LTB operator, but you can try to use [Trident](https://docs.netapp.com/us-en/trident/index.html).
+Currently no storage backend has been tested with the LTB Operator, but you can try to use [Trident](https://docs.netapp.com/us-en/trident/index.html).
 Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.
 
 Following you will find some instructions that may help you to install Trident on your cluster.
