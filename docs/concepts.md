@@ -56,7 +56,7 @@ Lab Template is a CR, which defines a template for a lab. It contains informatio
 ## Lab Instance
 
 A lab instance is a CR that describes a lab that you want to deploy in a Kubernetes cluster.
-It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself.
+It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself. In addition, it also has a dns address field, which will be used to access the nodes using the web-based terminal.
 
 ## Node Type
 
