@@ -31,7 +31,7 @@ A Kubernetes operator is an application-specific controller that extends the fun
 It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages.
 More information can be found [here](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
 
-### LTB Operator
+## LTB Operator
 
 The LTB Operator is a K8s Operator for the LTB application, which is responsible for creating, configuring, and managing the emulated network topologies of the LTB application inside a Kubernetes cluster.
 It also automatically updates the status of the labs based on the current state of the associated containers and virtual machines, ensuring accurate and real-time lab information.

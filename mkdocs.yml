@@ -18,6 +18,7 @@ nav:
     - Testing: contributions/test-concepts.md
     - Continuous Integration: contributions/ci.md
   - ...
+  - Comparison: comparison.md
   - About: about.md
 plugins:
   - search
