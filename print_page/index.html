@@ -322,6 +322,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -406,6 +408,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributions/ci/" class="md-nav__link">
+        Continuous Integration
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -468,7 +484,7 @@
   
     <li class="md-nav__item">
       <a href="../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
-        Preliminary Work (KVM/Docker)-based LTB Architecture
+        Preliminary Work KVM/Docker-based LTB Architecture
       </a>
     </li>
   
@@ -750,6 +766,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../comparison/" class="md-nav__link">
+        Comparison
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../about/" class="md-nav__link">
         About
       </a>
@@ -845,6 +876,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#contributions-ci" class="md-nav__link">
+    9. Continuous Integration
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -860,14 +898,14 @@
         
           <li class="md-nav__item">
   <a href="#architecture-k8s-ltb-architecture" class="md-nav__link">
-    9. Kubernetes Lab Topology Builder Architecture
+    10. Kubernetes Lab Topology Builder Architecture
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#architecture-kvm-docker-ltb-architecture" class="md-nav__link">
-    10. Preliminary Work (KVM/Docker)-based LTB Architecture
+    11. Preliminary Work KVM/Docker-based LTB Architecture
   </a>
   
 </li>
@@ -887,98 +925,98 @@
         
           <li class="md-nav__item">
   <a href="#decisions-0000-use-markdown-architectural-decision-records" class="md-nav__link">
-    11. Use Markdown Architectural Decision Records
+    12. Use Markdown Architectural Decision Records
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0001-operator-sdk" class="md-nav__link">
-    12. Operator SDK
+    13. Operator SDK
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-00011-remote-access" class="md-nav__link">
-    13. Remote-Access
+    14. Remote-Access
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0002-operator-scope" class="md-nav__link">
-    14. Operator Scope
+    15. Operator Scope
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0003-api-and-operator-deployment" class="md-nav__link">
-    15. API and Operator Deployment
+    16. API and Operator Deployment
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0004-dev-container" class="md-nav__link">
-    16. Dev Container
+    17. Dev Container
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0005-replace-current-ltb-backend" class="md-nav__link">
-    17. Replace Current LTB Backend
+    18. Replace Current LTB Backend
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0006-lab-instance-set" class="md-nav__link">
-    18. Lab Instance Set
+    19. Lab Instance Set
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0007-interaction-with-operator" class="md-nav__link">
-    19. Interaction with Operator
+    20. Interaction with Operator
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0008-namespace-per-labinstance" class="md-nav__link">
-    20. Namespace Per LabInstance
+    21. Namespace Per LabInstance
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0009-k8s-aggreted-api-over-standalone-api" class="md-nav__link">
-    21. K8s Aggreted API Over Standalone API
+    22. K8s Aggreted API Over Standalone API
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0010-extending-ltb-with-new-node-types" class="md-nav__link">
-    22. Extending LTB with New Node Types
+    23. Extending LTB with New Node Types
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0011-programming-language" class="md-nav__link">
-    23. Programming Language
+    24. Programming Language
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#decisions-0012-testing-framework" class="md-nav__link">
-    24. Testing Framework
+    25. Testing Framework
   </a>
   
 </li>
@@ -989,8 +1027,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#comparison" class="md-nav__link">
+    26. Comparison
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#about" class="md-nav__link">
-    25. About
+    27. About
   </a>
   
 </li>
@@ -1233,200 +1278,34 @@ For example, if you use the address <code>example.com</code>, the console of a n
 </code></pre></div></p>
 </li>
 </ol></section><section class="print-page" id="concepts"><h1 id="concepts-concepts">Concepts<a class="headerlink" href="#concepts-concepts" title="Permanent link">&para;</a></h1>
-<h2 id="concepts-lab-topology-builder-ltb">Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>)<a class="headerlink" href="#concepts-lab-topology-builder-ltb" title="Permanent link">&para;</a></h2>
-<p>The Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>) is a tool that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
-<p><a class="glightbox" href="../assets/images/LTB.jpg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="LTB" src="../assets/images/LTB.jpg" /></a></p>
-<h2 id="concepts-ltb-kubernetes-backend"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Backend<a class="headerlink" href="#concepts-ltb-kubernetes-backend" title="Permanent link">&para;</a></h2>
-<p>The <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Backend consists of the <abbr title="Lab Topology Builder">LTB</abbr> Operator and the <abbr title="Lab Topology Builder">LTB</abbr> Operator API, which replaces the current (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker) based backend of <abbr title="Lab Topology Builder">LTB</abbr>. It is responsible for managing the lab instances in a Kubernetes cluster and provide a REST API for the frontend to interact with the kubernetes cluster.</p>
-<h2 id="concepts-kubernetes-cluster">Kubernetes Cluster<a class="headerlink" href="#concepts-kubernetes-cluster" title="Permanent link">&para;</a></h2>
-<p>Kubernetes Cluster is a set of nodes that run containerized applications managed by Kubernetes. A Kubernetes cluster consists of a control plane and one or more nodes. The control plane is responsible for maintaining the desired state of the cluster, such as which applications are running and which container images they use, etc. And the nodes run the applications and workloads.</p>
-<h2 id="concepts-kubernetes-operator">Kubernetes operator<a class="headerlink" href="#concepts-kubernetes-operator" title="Permanent link">&para;</a></h2>
-<p>A Kubernetes operator is an application-specific controller that extends the functionality of the Kubernetes API to create, configure, and manage instances of complex applications on behalf of a Kubernetes user.
-It builds upon the basic Kubernetes resource and controller concepts but includes domain or application-specific knowledge to automate the entire life cycle of the software it manages.</p>
-<h3 id="concepts-ltb-kubernetes-operator"><abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator<a class="headerlink" href="#concepts-ltb-kubernetes-operator" title="Permanent link">&para;</a></h3>
-<p>The <abbr title="Lab Topology Builder">LTB</abbr> Kubernetes Operator is a K8s Operator for the <abbr title="Lab Topology Builder">LTB</abbr> application, which manages lab templates, lab instances in a Kubernetes cluster. It manages lab instances, node types, etc. It also updates the status of the lab instances according to the current state of the containers and virtual machines that are part of the lab instance.</p>
-<h2 id="concepts-custom-resource-definition-crd">Custom Resource Definition (<abbr title="Custom Resource Definition">CRD</abbr>)<a class="headerlink" href="#concepts-custom-resource-definition-crd" title="Permanent link">&para;</a></h2>
-<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions">custom resource definition</a> (<abbr title="Custom Resource Definition">CRD</abbr>) is a Kubernetes native resource.
-Defining a <abbr title="Custom Resource Definition">CRD</abbr> object creates a new custom resource with a name and schema that you specify.
-The custom resource created from a <abbr title="Custom Resource Definition">CRD</abbr> object can be either namespaced or cluster-scoped.
-CustomResourceDefinitions themselves are non-namespaced and are available to all namespaces.</p>
-<!-- TODO Maybe move to contributor section -->
-<p>The following example shows a <abbr title="Custom Resource Definition">CRD</abbr> for a LabInstance object, how they are defined in go and how the YAML output looks like.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w"> </span><span class="nx">metav1</span><span class="w"> </span><span class="s">&quot;k8s.io/apimachinery/pkg/apis/meta/v1&quot;</span>
-<span class="p">)</span>
-
-<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstanceSpec</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w"> </span><span class="nx">LabTemplateReference</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;labTemplateReference&quot;`</span>
-<span class="p">}</span>
-
-<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstanceStatus</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w"> </span><span class="nx">Status</span><span class="w">         </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;status,omitempty&quot;`</span>
-<span class="w"> </span><span class="nx">NumPodsRunning</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;numpodsrunning,omitempty&quot;`</span>
-<span class="w"> </span><span class="nx">NumVMsRunning</span><span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;numvmsrunning,omitempty&quot;`</span>
-<span class="p">}</span>
-
-<span class="c1">//+kubebuilder:object:root=true</span>
-<span class="c1">//+kubebuilder:subresource:status</span>
-<span class="c1">//+kubebuilder:printcolumn:name=&quot;STATUS&quot;,type=string,JSONPath=`.status.status`</span>
-<span class="c1">//+kubebuilder:printcolumn:name=&quot;PODS_RUNNING&quot;,type=string,JSONPath=`.status.numpodsrunning`</span>
-<span class="c1">//+kubebuilder:printcolumn:name=&quot;VMS_RUNNING&quot;,type=string,JSONPath=`.status.numvmsrunning`</span>
-
-<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstance</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span><span class="w">   </span><span class="s">`json:&quot;,inline&quot;`</span>
-<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ObjectMeta</span><span class="w"> </span><span class="s">`json:&quot;metadata,omitempty&quot;`</span>
-
-<span class="w"> </span><span class="nx">Spec</span><span class="w">   </span><span class="nx">LabInstanceSpec</span><span class="w">   </span><span class="s">`json:&quot;spec,omitempty&quot;`</span>
-<span class="w"> </span><span class="nx">Status</span><span class="w"> </span><span class="nx">LabInstanceStatus</span><span class="w"> </span><span class="s">`json:&quot;status,omitempty&quot;`</span>
-<span class="p">}</span>
-
-<span class="c1">// +kubebuilder:object:root=true</span>
-<span class="kd">type</span><span class="w"> </span><span class="nx">LabInstanceList</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">TypeMeta</span><span class="w"> </span><span class="s">`json:&quot;,inline&quot;`</span>
-<span class="w"> </span><span class="nx">metav1</span><span class="p">.</span><span class="nx">ListMeta</span><span class="w"> </span><span class="s">`json:&quot;metadata,omitempty&quot;`</span>
-<span class="w"> </span><span class="nx">Items</span><span class="w">           </span><span class="p">[]</span><span class="nx">LabInstance</span><span class="w"> </span><span class="s">`json:&quot;items&quot;`</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span>
-<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiextensions.k8s.io/v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CustomResourceDefinition</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">controller-gen.kubebuilder.io/version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.10.0</span>
-<span class="w">  </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstances.ltb-backend.ltb</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb</span>
-<span class="w">  </span><span class="nt">names</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
-<span class="w">    </span><span class="nt">listKind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstanceList</span>
-<span class="w">    </span><span class="nt">plural</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstances</span>
-<span class="w">    </span><span class="nt">singular</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance</span>
-<span class="w">  </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Namespaced</span>
-<span class="w">  </span><span class="nt">versions</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">additionalPrinterColumns</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.status.status</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STATUS</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.status.numpodsrunning</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PODS_RUNNING</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jsonPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.status.numvmsrunning</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMS_RUNNING</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1alpha1</span>
-<span class="w">    </span><span class="nt">schema</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">openAPIV3Schema</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">apiVersion</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;APIVersion</span><span class="nv"> </span><span class="s">defines</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">versioned</span><span class="nv"> </span><span class="s">schema</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">representation</span>
-<span class="w">              </span><span class="s">of</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">object.</span><span class="nv"> </span><span class="s">Servers</span><span class="nv"> </span><span class="s">should</span><span class="nv"> </span><span class="s">convert</span><span class="nv"> </span><span class="s">recognized</span><span class="nv"> </span><span class="s">schemas</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">latest</span>
-<span class="w">              </span><span class="s">internal</span><span class="nv"> </span><span class="s">value,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">reject</span><span class="nv"> </span><span class="s">unrecognized</span><span class="nv"> </span><span class="s">values.</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">info:</span><span class="nv"> </span><span class="s">https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources&#39;</span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">          </span><span class="nt">kind</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kind</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">string</span><span class="nv"> </span><span class="s">value</span><span class="nv"> </span><span class="s">representing</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">REST</span><span class="nv"> </span><span class="s">resource</span><span class="nv"> </span><span class="s">this</span>
-<span class="w">              </span><span class="s">object</span><span class="nv"> </span><span class="s">represents.</span><span class="nv"> </span><span class="s">Servers</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">infer</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">endpoint</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">client</span>
-<span class="w">              </span><span class="s">submits</span><span class="nv"> </span><span class="s">requests</span><span class="nv"> </span><span class="s">to.</span><span class="nv"> </span><span class="s">Cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">updated.</span><span class="nv"> </span><span class="s">In</span><span class="nv"> </span><span class="s">CamelCase.</span><span class="nv"> </span><span class="s">More</span><span class="nv"> </span><span class="s">info:</span><span class="nv"> </span><span class="s">https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds&#39;</span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">          </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
-<span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">labTemplateReference</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labTemplateReference</span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
-<span class="w">          </span><span class="nt">status</span><span class="p">:</span>
-<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
-<span class="w">              </span><span class="nt">numpodsrunning</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">              </span><span class="nt">numvmsrunning</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">              </span><span class="nt">status</span><span class="p">:</span>
-<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
-<span class="w">    </span><span class="nt">served</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">subresources</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
-</code></pre></div>
-<h2 id="concepts-custom-resource-cr">Custom Resource (<abbr title="Custom Resource">CR</abbr>)<a class="headerlink" href="#concepts-custom-resource-cr" title="Permanent link">&para;</a></h2>
-<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-controllers">custom resource</a> (<abbr title="Custom Resource">CR</abbr>) is an extension of the Kubernetes API that allows you to define and manage your own API objects.
-It provides a way to store and retrieve structured data and can be used with a custom controller to provide a declarative API.
-Custom resources can be defined as a Kubernetes API extension using Custom Resource Definitions (CRDs) or via API aggregation.</p>
+<h2 id="concepts-lab-topology-builder">Lab Topology Builder<a class="headerlink" href="#concepts-lab-topology-builder" title="Permanent link">&para;</a></h2>
+<p>The Lab Topology Builder is a network emulator that allows you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
+<h2 id="concepts-network-topology">Network Topology<a class="headerlink" href="#concepts-network-topology" title="Permanent link">&para;</a></h2>
+<p>The arrangement or pattern in which all nodes on a network are connected together is referred to as the network’s topology.</p>
+<p>Here is an example of a network topology:</p>
+<p><a class="glightbox" href="../assets/images/Lab-Topology.png" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="LTB" src="../assets/images/Lab-Topology.png" /></a></p>
+<h2 id="concepts-lab">Lab<a class="headerlink" href="#concepts-lab" title="Permanent link">&para;</a></h2>
+<p>In our context, a lab refers to a networking lab consisting of interconnected nodes following a specific network topology.</p>
+<h2 id="concepts-ltb-operator"><abbr title="Lab Topology Builder">LTB</abbr> Operator<a class="headerlink" href="#concepts-ltb-operator" title="Permanent link">&para;</a></h2>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> Operator is a K8s Operator for the <abbr title="Lab Topology Builder">LTB</abbr> application, which is responsible for creating, configuring, and managing the emulated network topologies of the <abbr title="Lab Topology Builder">LTB</abbr> application inside a Kubernetes cluster.
+It also automatically updates the status of the labs based on the current state of the associated containers and virtual machines, ensuring accurate and real-time lab information.</p>
 <h2 id="concepts-lab-template">Lab Template<a class="headerlink" href="#concepts-lab-template" title="Permanent link">&para;</a></h2>
-<p>Lab Template is a <abbr title="Custom Resource">CR</abbr>, which defines a template for a lab. It contains information about the lab you want to deploy and a reference to the node types that are part of the lab.</p>
-<p>The following YAML is an example of a LabTemplate:</p>
-<!-- TODO Remove and add link to example in user guide -->
-<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabTemplate</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate-sample</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kustomize</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/created-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labtemplate-sample</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">nodes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-1&quot;</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;22.04&quot;</span>
-<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vm&quot;</span>
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
-<span class="w">              </span><span class="no">#cloud-config</span>
-<span class="w">              </span><span class="no">password: ubuntu</span>
-<span class="w">              </span><span class="no">chpasswd: { expire: False }</span>
-<span class="w">              </span><span class="no">ssh_authorized_keys:</span>
-<span class="w">                </span><span class="no">- &lt;your-ssh-pub-key&gt;</span>
-<span class="w">              </span><span class="no">packages:</span>
-<span class="w">                </span><span class="no">- qemu-guest-agent</span>
-<span class="w">              </span><span class="no">runcmd:</span>
-<span class="w">                </span><span class="no">- [ systemctl, start, qemu-guest-agent ]</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-2&quot;</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ghcr.io/insrapperswil/network-ninja&quot;</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sample-node-3&quot;</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ubuntu&quot;</span>
-<span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest&quot;</span>
-<span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pod&quot;</span>
-<span class="w">  </span><span class="nt">connections</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">neighbors</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TestHost1:1,TestHost2:1&quot;</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
-</code></pre></div>
+<p>Lab Template is a <abbr title="Custom Resource">CR</abbr>, which defines a template for a lab. It contains information about which nodes are part of the lab, their configuration and how they are connected to each other.</p>
 <h2 id="concepts-lab-instance">Lab Instance<a class="headerlink" href="#concepts-lab-instance" title="Permanent link">&para;</a></h2>
 <p>A lab instance is a <abbr title="Custom Resource">CR</abbr> that describes a lab that you want to deploy in a Kubernetes cluster.
-It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself.</p>
-<p>The following YAML is an example of a LabInstance:</p>
-<!-- TODO Remove and add link to example in user guide -->
-<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ltb-backend.ltb/v1alpha1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LabInstance</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/part-of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/managed-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kustomize</span>
-<span class="w">    </span><span class="nt">app.kubernetes.io/created-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">operator</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labinstance-sample</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">labTemplateReference</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;labtemplate-sample&quot;</span>
-</code></pre></div>
-<h2 id="concepts-lab">Lab<a class="headerlink" href="#concepts-lab" title="Permanent link">&para;</a></h2>
-<p>A deployment of a lab instance is called a lab.</p>
-<h2 id="concepts-nodetype">NodeType<a class="headerlink" href="#concepts-nodetype" title="Permanent link">&para;</a></h2>
+It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself. In addition, it also has a dns address field, which will be used to access the nodes using the web-based terminal.</p>
+<h2 id="concepts-node-type">Node Type<a class="headerlink" href="#concepts-node-type" title="Permanent link">&para;</a></h2>
 <p>In a network, a node represents any device that is part of the lab. A NodeType is a <abbr title="Custom Resource">CR</abbr> that defines a type of node that can be part of a lab. You reference the node type you want to have in your lab in the lab template.
-Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a KubeVirt virtual machine or a pod.</p>
-<!--TODO: Link to an example of a node type in user guide-->
-
-<h2 id="concepts-network-topology">Network Topology<a class="headerlink" href="#concepts-network-topology" title="Permanent link">&para;</a></h2>
-<p>The arrangement or pattern in which all nodes on a network are connected together is referred to as the network’s topology.</p></section>
+Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a KubeVirt virtual machine or a regular Kubernetes pod.</p>
+<h2 id="concepts-links">Links<a class="headerlink" href="#concepts-links" title="Permanent link">&para;</a></h2>
+<p>If you would like to familiarize yourself with the concepts mentioned below, please refer to the following links:</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/">Kubernetes</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/architecture/cluster-components/">Kubernetes Cluster</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes Operator</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions">Custom Resource Definition</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-controllers">Custom Resource</a></li>
+</ul></section>
                         <h1 class='nav-section-title' id='section-contributions'>
                             Contributions <a class='headerlink' href='#section-contributions' title='Permanent link'>↵</a>
                         </h1>
@@ -1500,6 +1379,8 @@ This will allow you to test the operators RBAC rules.</p>
 </code></pre></div>
 <p><strong>NOTE:</strong> Run <code>make --help</code> for more information on all potential <code>make</code> targets</p>
 <p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p></section><section class="print-page" id="contributions-coding-conventions"><h1 id="contributions-coding-conventions-coding-conventions">Coding Conventions<a class="headerlink" href="#contributions-coding-conventions-coding-conventions" title="Permanent link">&para;</a></h1>
+<p>We are following the <a href="https://golang.org/doc/effective_go">Effective Go</a> guidelines for coding conventions.
+The following is a summary of the most important conventions.</p>
 <h2 id="contributions-coding-conventions-naming">Naming<a class="headerlink" href="#contributions-coding-conventions-naming" title="Permanent link">&para;</a></h2>
 <p>The following naming conventions are used in the project:</p>
 <h3 id="contributions-coding-conventions-naming-conventions-in-go"><a href="https://golang.org/doc/effective_go#names">Naming conventions in Go</a><a class="headerlink" href="#contributions-coding-conventions-naming-conventions-in-go" title="Permanent link">&para;</a></h3>
@@ -1512,10 +1393,9 @@ This will allow you to test the operators RBAC rules.</p>
 <li><strong>labInstanceStatus</strong>: variable name for a status of a lab instance</li>
 <li><strong>UpdateLabInstanceStatus</strong>: name for an exported function, starts with a capital letter</li>
 </ul>
-<h2 id="contributions-coding-conventions-coding">Coding<a class="headerlink" href="#contributions-coding-conventions-coding" title="Permanent link">&para;</a></h2>
-<ul>
-<li>The Go extension in VSCode has a linting capability, so that will be used for linting and formatting.</li>
-</ul></section><section class="print-page" id="contributions-dev-cluster-setup"><h1 id="contributions-dev-cluster-setup-development-cluster-setup">Development cluster setup<a class="headerlink" href="#contributions-dev-cluster-setup-development-cluster-setup" title="Permanent link">&para;</a></h1>
+<h2 id="contributions-coding-conventions-formatting"><a href="https://golang.org/doc/effective_go#formatting">Formatting</a><a class="headerlink" href="#contributions-coding-conventions-formatting" title="Permanent link">&para;</a></h2>
+<p>We are using the <a href="https://golang.org/cmd/gofmt/">gofmt</a> from the Go standard library to format our code.</p>
+<p><a href="https://staticcheck.dev/">staticcheck</a> is used as a linter in addition to the formatting guidelines from Effective Go, because it is the default linter of the Go extension for VS Code.</p></section><section class="print-page" id="contributions-dev-cluster-setup"><h1 id="contributions-dev-cluster-setup-development-cluster-setup">Development cluster setup<a class="headerlink" href="#contributions-dev-cluster-setup-development-cluster-setup" title="Permanent link">&para;</a></h1>
 <p>Steps to setup a Kubernetes development cluster for testing and development of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h2 id="contributions-dev-cluster-setup-prerequisites-remote-cluster">Prerequisites Remote Cluster<a class="headerlink" href="#contributions-dev-cluster-setup-prerequisites-remote-cluster" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1775,7 +1655,31 @@ At a later stage of the project, we could add integration tests to ensure that t
 <p>Unit rely on the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client/fake">Fake Client</a> package from the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library to create a fake client that can be used to mock interactions with the Kubernetes API.
 This allows us to test functions that interact with the Kubernetes API without mocking the complete API or using a real Kubernetes cluster.</p>
 <h3 id="contributions-test-concepts-integration-tests">Integration Tests<a class="headerlink" href="#contributions-test-concepts-integration-tests" title="Permanent link">&para;</a></h3>
-<p>The integration tests could be implemented by using the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> package from the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library.</p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
+<p>The integration tests could be implemented by using the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest">EnvTest</a> package from the <a href="https://https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library.</p></section><section class="print-page" id="contributions-ci"><h1 id="contributions-ci-continuos-integration">Continuos Integration<a class="headerlink" href="#contributions-ci-continuos-integration" title="Permanent link">&para;</a></h1>
+<p>We use <a href="https://github.com/features/actions">GitHub Actions</a> as our CI/CD tool.
+Currently, we have two workflows:</p>
+<ul>
+<li><a href="#contributions-ci-deploy-docs">Deploy docs</a></li>
+<li><a href="#contributions-ci-operator-ci">Operator CI</a></li>
+</ul>
+<h2 id="contributions-ci-deploy-docs">Deploy docs<a class="headerlink" href="#contributions-ci-deploy-docs" title="Permanent link">&para;</a></h2>
+<p>This workflow is used to deploy the <a href="https://www.mkdocs.org/">mkdocs</a> documentation to GitHub Pages.
+It is triggered on every push to the <code>main</code> branch, that affects the documentation. Specifically, it is triggered when a file in the <code>docs</code> directory or the <code>mkdocs.yaml</code> configuration file has changed.</p>
+<p>Check the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/edit/main/.github/workflows/deploy-docs-ci.yml">deploy-docs-ci.yaml</a> action for more details.</p>
+<h2 id="contributions-ci-operator-ci">Operator CI<a class="headerlink" href="#contributions-ci-operator-ci" title="Permanent link">&para;</a></h2>
+<p>This workflow is used to test, build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image, CatalogSource and Bundle to the GitHub Container Registry.
+It is triggered for every push to a pull request and for every push to the <code>main</code> branch.</p>
+<p>You can find this action here: <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/.github/workflows/operator-ci.yml">operator-ci.yaml</a></p>
+<h3 id="contributions-ci-test">Test<a class="headerlink" href="#contributions-ci-test" title="Permanent link">&para;</a></h3>
+<p>The test step runs the unit tests of the <abbr title="Lab Topology Builder">LTB</abbr> Operator and fails the pipeline if any test fails.
+Additionally, a coverage report is generated and uploaded to <a href="https://app.codecov.io/gh/Lab-Topology-Builder/LTB-K8s-Backend">Codecov</a>.
+Pull requests are checked for the code coverage and will block the merge if the coverage drops below 80%. This is ensured by the Codecov GitHub integration and defined in the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/codecov.yml">codecov.yml</a> file.</p>
+<h3 id="contributions-ci-build">Build<a class="headerlink" href="#contributions-ci-build" title="Permanent link">&para;</a></h3>
+<p>We use the GitHub actions provided by <a href="https://github.com/docker">Docker</a> to build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image to the GitHub Container Registry.
+Additionally, we use <a href="https://github.com/sigstore/cosign">cosign</a> to sign the images, so that users can verify the authenticity of the image.</p>
+<h3 id="contributions-ci-additional-deployment-artifacts">Additional deployment artifacts<a class="headerlink" href="#contributions-ci-additional-deployment-artifacts" title="Permanent link">&para;</a></h3>
+<p>To be able to deploy the operator with the <a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a>, a <a href="https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/">Bundle</a> and a <a href="https://olm.operatorframework.io/docs/tasks/creating-a-catalog/">CatalogSource</a> must be created.
+These artifacts are created with the [Operator-SDK], to simplify the pipeline these tasks have been exported to the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile">Makefile</a></p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
                         <h1 class='nav-section-title' id='section-architecture'>
                             Architecture <a class='headerlink' href='#section-architecture' title='Permanent link'>↵</a>
                         </h1>
@@ -1798,7 +1702,7 @@ The frontend is responsible for the following tasks:</p>
 <li>Lab deployments</li>
 <li>Reservations</li>
 </ul>
-<p>There is a possibility to reuse parts of the existing frontend from the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
+<p>There is a possibility to reuse parts of the existing frontend from the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
 <h2 id="architecture-k8s-ltb-architecture-api">API<a class="headerlink" href="#architecture-k8s-ltb-architecture-api" title="Permanent link">&para;</a></h2>
 <p>The API is responsible for the following tasks:</p>
 <ul>
@@ -1807,12 +1711,12 @@ The frontend is responsible for the following tasks:</p>
 <li>Expose information on how to access the deployed lab nodes</li>
 <li>Authentication via an external authentication provider</li>
 </ul>
-<p>No parts from the existing <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> can be reused for the API.</p>
+<p>No parts from the existing <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> can be reused for the API.</p>
 <h3 id="architecture-k8s-ltb-architecture-authentication-and-authorization">Authentication and Authorization<a class="headerlink" href="#architecture-k8s-ltb-architecture-authentication-and-authorization" title="Permanent link">&para;</a></h3>
 <p>The authentication can be implemented by using an external authentication provider like <a href="https://www.keycloak.org/">Keycloak</a>.
 Keycloak can be configured to act as an authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
 This has the benefit that the <abbr title="Lab Topology Builder">LTB</abbr> does not need to implement any authentication logic and can focus on the lab deployment.
-Additionally, it enables the <abbr title="Lab Topology Builder">LTB</abbr> to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
+Additionally, it enables the <abbr title="Lab Topology Builder">LTB</abbr> to be integrated into an existing authentication infrastructures, with the benefit that users do not need to create a new account.
 On the other hand, it has the drawback that the <abbr title="Lab Topology Builder">LTB</abbr> needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.</p>
 <p>Authorization can also be implemented using Keycloak and its <a href="https://www.keycloak.org/docs/latest/authorization_services/">Authorization Services</a>.</p>
 <h2 id="architecture-k8s-ltb-architecture-operator">Operator<a class="headerlink" href="#architecture-k8s-ltb-architecture-operator" title="Permanent link">&para;</a></h2>
@@ -1826,7 +1730,7 @@ On the other hand, it has the drawback that the <abbr title="Lab Topology Builde
 <li>Providing remote Wireshark capture capabilities</li>
 </ul>
 <p>The operator is implemented according to the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes operator pattern</a>.
-It has multiple controllers that are responsible for managing a particular custom resource like a lab template.</p>
+It has multiple controllers that are responsible for managing a particular custom resource like lab template.</p>
 <h3 id="architecture-k8s-ltb-architecture-network-connectivity-between-lab-nodes">Network connectivity between lab nodes<a class="headerlink" href="#architecture-k8s-ltb-architecture-network-connectivity-between-lab-nodes" title="Permanent link">&para;</a></h3>
 <p>The network connectivity between lab nodes can be implemented with <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus</a>, which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
 Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.</p>
@@ -1841,7 +1745,7 @@ Additionally the connection between the lab nodes only work on the same Kubernet
 <h4 id="architecture-k8s-ltb-architecture-console-access-via-a-web-terminal">Console access via a web terminal<a class="headerlink" href="#architecture-k8s-ltb-architecture-console-access-via-a-web-terminal" title="Permanent link">&para;</a></h4>
 <p>The console access via a web terminal is implemented with <a href="https://github.com/INSRapperswil/kube-ttyd">kube-ttyd</a>, which is a tool based on <a href="https://github.com/tsl0922/ttyd">ttyd</a>, with the addition to use kubectl exec and virsh console to connect to the lab nodes.
 <code>kube-ttyd</code> was provided by Yannick Zwicker from the INS specifically for this project.
-Access to the web terminal is routed through a NGINX ingress controller, and a Kubernetes service of type <code>ClusterIP</code>.</p>
+Access to the web terminal is routed through an NGINX ingress controller, and a Kubernetes service of type <code>ClusterIP</code>.</p>
 <p>The <a href="https://kubernetes.github.io/ingress-nginx/examples/auth/external-auth/">authentication feature</a> of the NGINX ingress controller can be used to restrict access to the web terminal to authenticated users.
 It might be possible to use the same authentication provider as the <abbr title="Lab Topology Builder">LTB</abbr> API, but this needs to be tested.</p>
 <h4 id="architecture-k8s-ltb-architecture-access-to-configurable-ports-with-any-oob-management-protocol">Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol<a class="headerlink" href="#architecture-k8s-ltb-architecture-access-to-configurable-ports-with-any-oob-management-protocol" title="Permanent link">&para;</a></h4>
@@ -1869,11 +1773,11 @@ Planned resource management is a huge topic, and we would recommend to create a 
 <li><span style="color: #23a2d9">Blue</span>: represents Internal Components (Frontend Web UI, <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend)</li>
 <li><span style="color: #63bef2">Light blue</span>: represents Components which will be implemented in this project (<abbr title="Lab Topology Builder">LTB</abbr> Operator, <abbr title="Lab Topology Builder">LTB</abbr> Operator API)</li>
 <li><span style="color: #8c8496">Dark gray</span>: represents External Components (K8s, Keycloak)</li>
-</ul></section><section class="print-page" id="architecture-kvm-docker-ltb-architecture"><h1 id="architecture-kvm-docker-ltb-architecture-preliminary-work-kvmdocker-based-ltb-architecture">Preliminary Work (<abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker)-based <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-preliminary-work-kvmdocker-based-ltb-architecture" title="Permanent link">&para;</a></h1>
+</ul></section><section class="print-page" id="architecture-kvm-docker-ltb-architecture"><h1 id="architecture-kvm-docker-ltb-architecture-preliminary-work-kvmdocker-based-ltb-architecture">Preliminary Work <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Architecture<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-preliminary-work-kvmdocker-based-ltb-architecture" title="Permanent link">&para;</a></h1>
 <p>The Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr> was inspired by a previous implementation of the <abbr title="Lab Topology Builder">LTB</abbr>, which was based on direct <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker usage.</p>
-<p>The following diagram shows the components and how lab nodes are deployed on a hypervisor in the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr>:</p>
-<p><a class="glightbox" href="../assets/drawings/ltb-stack-node.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="(KVM/Docker) LTB Architecture" src="../assets/drawings/ltb-stack-node.svg" /></a></p>
-<p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
+<p>The following diagram shows the components and how lab nodes are deployed on a hypervisor in the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>:</p>
+<p><a class="glightbox" href="../assets/drawings/ltb-stack-node.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="KVM/Docker LTB Architecture" src="../assets/drawings/ltb-stack-node.svg" /></a></p>
+<p>Currently the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> is composed of the following containers:</p>
 <ul>
 <li><a href="#architecture-kvm-docker-ltb-architecture-frontend">Frontend</a> built with React</li>
 <li><a href="#architecture-kvm-docker-ltb-architecture-backend">Backend</a> built with Django</li>
@@ -2194,7 +2098,26 @@ There are multiple testing libraries and frameworks to test Go applications, whi
 <li>GoConvey</li>
 </ul>
 <h2 id="decisions-0012-testing-framework-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0012-testing-framework-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the <a href="https://kubevirt.io/">Kubevirt</a> project, which is used in the <abbr title="Lab Topology Builder">LTB</abbr> Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="about"><h1 id="about-about">About<a class="headerlink" href="#about-about" title="Permanent link">&para;</a></h1>
+<p>Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the <a href="https://kubevirt.io/">Kubevirt</a> project, which is used in the <abbr title="Lab Topology Builder">LTB</abbr> Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="comparison"><h1 id="comparison-comparison-to-other-similar-projects">Comparison to other similar projects<a class="headerlink" href="#comparison-comparison-to-other-similar-projects" title="Permanent link">&para;</a></h1>
+<p>The Lab Topology Builder is just one among many open-source projects available for building emulated network topologies.
+The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the optimal solution for their use case.</p>
+<h2 id="comparison-vrnetlab-vr-network-lab">vrnetlab - VR Network Lab<a class="headerlink" href="#comparison-vrnetlab-vr-network-lab" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/vrnetlab/vrnetlab">vrnetlab</a> is a network emulator that runs virtual routers using <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker. It is similar to the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>, but is more simple and only provides the deployment functionality.</p>
+<h2 id="comparison-containerlab">Containerlab<a class="headerlink" href="#comparison-containerlab" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/srl-labs/containerlab">Containerlab</a> is a tool to deploy network labs with virtual routers, firewalls, load balancers, and more, using Docker containers. It is based on <a href="#comparison-vrnetlab---vr-network-lab">vrnetlab</a> and provides a declarative way to define the lab topology using a YAML file.
+Containerlab is not capable of deploying lab topologies over multiple host nodes, which is a key feature that the K8s-based <abbr title="Lab Topology Builder">LTB</abbr> aims to provide in the future.</p>
+<h2 id="comparison-netlab">Netlab<a class="headerlink" href="#comparison-netlab" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/ipspace/netlab">Netlab</a> is an abstraction layer to deploy network topologies based on <a href="#comparison-containerlab">containerlab</a> or Vagrant. It provides a declarative way to define the lab topology using a YAML file.
+It mainly provides an abstracted way to define lab topologies with preconfigured lab nodes.</p>
+<h2 id="comparison-kubernetes-network-emulator">Kubernetes Network Emulator<a class="headerlink" href="#comparison-kubernetes-network-emulator" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/openconfig/kne">Kubernetes Network Emulator</a> is a network emulator that aims to provide a standard interface so that vendors can produce a standard container implementation of their network operating system that can be used in a network emulation environment.
+Currently, it does not seem to support many network operating systems and additional operators are required to support different vendors.</p>
+<h2 id="comparison-mininet">Mininet<a class="headerlink" href="#comparison-mininet" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/mininet/mininet">Minitnet</a> is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.</p>
+<h2 id="comparison-gns3">GNS3<a class="headerlink" href="#comparison-gns3" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.gns3.com/software">GNS3</a> is a network emulator that can run network devices as virtual machines or Docker containers.
+It primarily focuses on providing an emulated network environment for a single user and its deployment and usage can be quite complex.
+Additionally, it does not provide a way to scale labs over multiple host nodes.</p></section><section class="print-page" id="about"><h1 id="about-about">About<a class="headerlink" href="#about-about" title="Permanent link">&para;</a></h1>
 <p>This project was created as part of a bachelor thesis at the <a href="https://www.ost.ch/en/">Eastern Switzerland University of Applied Sciences</a> in Rapperswil, in cooperation with the <a href="https://www.ost.ch/en/research-and-consulting-services/computer-science/ins-institute-for-network-and-security">Institue for Network and Security</a>.</p>
 <h2 id="about-authors">Authors<a class="headerlink" href="#about-authors" title="Permanent link">&para;</a></h2>
 <ul>

@@ -12,20 +12,20 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/architecture/k8s-ltb-architecture/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/ci/">
       
       
-        <link rel="prev" href="../../contributions/ci/">
+        <link rel="prev" href="../test-concepts/">
       
       
-        <link rel="next" href="../kvm-docker-ltb-architecture/">
+        <link rel="next" href="../../architecture/k8s-ltb-architecture/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Kubernetes Lab Topology Builder Architecture - LTB K8s Backend</title>
+        <title>Continuous Integration - LTB K8s Backend</title>
       
     
     
@@ -104,7 +104,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#kubernetes-lab-topology-builder-architecture" class="md-skip">
+        <a href="#continuos-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -136,7 +136,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Kubernetes Lab Topology Builder Architecture
+              Continuous Integration
             
           </span>
         </div>
@@ -310,14 +310,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
       
       
         
@@ -340,7 +342,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Contributions
@@ -353,7 +355,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributions/contributor-guide/" class="md-nav__link">
+      <a href="../contributor-guide/" class="md-nav__link">
         Contributor Guide
       </a>
     </li>
@@ -367,7 +369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributions/coding-conventions/" class="md-nav__link">
+      <a href="../coding-conventions/" class="md-nav__link">
         Coding Conventions
       </a>
     </li>
@@ -381,7 +383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributions/dev-cluster-setup/" class="md-nav__link">
+      <a href="../dev-cluster-setup/" class="md-nav__link">
         Development Cluster Setup
       </a>
     </li>
@@ -395,7 +397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributions/technologies-used/" class="md-nav__link">
+      <a href="../technologies-used/" class="md-nav__link">
         Tools and Frameworks
       </a>
     </li>
@@ -409,70 +411,13 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributions/test-concepts/" class="md-nav__link">
+      <a href="../test-concepts/" class="md-nav__link">
         Testing
       </a>
     </li>
   
 
             
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributions/ci/" class="md-nav__link">
-        Continuous Integration
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
-      
-      
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-          Architecture
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-        <label class="md-nav__title" for="__nav_5">
-          <span class="md-nav__icon md-icon"></span>
-          Architecture
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
           
             
               
@@ -490,12 +435,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Kubernetes Lab Topology Builder Architecture
+          Continuous Integration
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Kubernetes Lab Topology Builder Architecture
+        Continuous Integration
       </a>
       
         
@@ -514,125 +459,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#frontend" class="md-nav__link">
-    Frontend
+  <a href="#deploy-docs" class="md-nav__link">
+    Deploy docs
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
-    API
+  <a href="#operator-ci" class="md-nav__link">
+    Operator CI
   </a>
   
-    <nav class="md-nav" aria-label="API">
+    <nav class="md-nav" aria-label="Operator CI">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#authentication-and-authorization" class="md-nav__link">
-    Authentication and Authorization
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operator" class="md-nav__link">
-    Operator
-  </a>
-  
-    <nav class="md-nav" aria-label="Operator">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#network-connectivity-between-lab-nodes" class="md-nav__link">
-    Network connectivity between lab nodes
+  <a href="#test" class="md-nav__link">
+    Test
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-access-to-lab-nodes" class="md-nav__link">
-    Remote access to lab nodes
-  </a>
-  
-    <nav class="md-nav" aria-label="Remote access to lab nodes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#console-access-via-a-web-terminal" class="md-nav__link">
-    Console access via a web terminal
+  <a href="#build" class="md-nav__link">
+    Build
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#access-to-configurable-ports-with-any-oob-management-protocol" class="md-nav__link">
-    Access to configurable ports with any OOB management protocol
+  <a href="#additional-deployment-artifacts" class="md-nav__link">
+    Additional deployment artifacts
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scheduling-lab-instances-and-resource-reservation" class="md-nav__link">
-    Scheduling lab instances and resource reservation
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#c4-model" class="md-nav__link">
-    C4 Model
-  </a>
-  
-    <nav class="md-nav" aria-label="C4 Model">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#system-context-diagram" class="md-nav__link">
-    System Context Diagram
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#container-diagram" class="md-nav__link">
-    Container Diagram
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#component-diagram" class="md-nav__link">
-    Component Diagram
-  </a>
-  
-    <nav class="md-nav" aria-label="Component Diagram">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#legend" class="md-nav__link">
-    Legend
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -650,13 +508,68 @@
 
             
           
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
               
   
   
   
     <li class="md-nav__item">
-      <a href="../kvm-docker-ltb-architecture/" class="md-nav__link">
+      <a href="../../architecture/k8s-ltb-architecture/" class="md-nav__link">
+        Kubernetes Lab Topology Builder Architecture
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
         Preliminary Work KVM/Docker-based LTB Architecture
       </a>
     </li>
@@ -988,125 +901,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#frontend" class="md-nav__link">
-    Frontend
+  <a href="#deploy-docs" class="md-nav__link">
+    Deploy docs
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
-    API
+  <a href="#operator-ci" class="md-nav__link">
+    Operator CI
   </a>
   
-    <nav class="md-nav" aria-label="API">
+    <nav class="md-nav" aria-label="Operator CI">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#authentication-and-authorization" class="md-nav__link">
-    Authentication and Authorization
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operator" class="md-nav__link">
-    Operator
-  </a>
-  
-    <nav class="md-nav" aria-label="Operator">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#network-connectivity-between-lab-nodes" class="md-nav__link">
-    Network connectivity between lab nodes
+  <a href="#test" class="md-nav__link">
+    Test
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-access-to-lab-nodes" class="md-nav__link">
-    Remote access to lab nodes
-  </a>
-  
-    <nav class="md-nav" aria-label="Remote access to lab nodes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#console-access-via-a-web-terminal" class="md-nav__link">
-    Console access via a web terminal
+  <a href="#build" class="md-nav__link">
+    Build
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#access-to-configurable-ports-with-any-oob-management-protocol" class="md-nav__link">
-    Access to configurable ports with any OOB management protocol
+  <a href="#additional-deployment-artifacts" class="md-nav__link">
+    Additional deployment artifacts
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scheduling-lab-instances-and-resource-reservation" class="md-nav__link">
-    Scheduling lab instances and resource reservation
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#c4-model" class="md-nav__link">
-    C4 Model
-  </a>
-  
-    <nav class="md-nav" aria-label="C4 Model">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#system-context-diagram" class="md-nav__link">
-    System Context Diagram
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#container-diagram" class="md-nav__link">
-    Container Diagram
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#component-diagram" class="md-nav__link">
-    Component Diagram
-  </a>
-  
-    <nav class="md-nav" aria-label="Component Diagram">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#legend" class="md-nav__link">
-    Legend
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1130,7 +956,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/architecture/k8s-ltb-architecture.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/contributions/ci.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -1138,97 +964,31 @@
   
 
 
-<h1 id="kubernetes-lab-topology-builder-architecture">Kubernetes Lab Topology Builder Architecture<a class="headerlink" href="#kubernetes-lab-topology-builder-architecture" title="Permanent link">&para;</a></h1>
-<p>The main components of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr> are:</p>
+<h1 id="continuos-integration">Continuos Integration<a class="headerlink" href="#continuos-integration" title="Permanent link">&para;</a></h1>
+<p>We use <a href="https://github.com/features/actions">GitHub Actions</a> as our CI/CD tool.
+Currently, we have two workflows:</p>
 <ul>
-<li><a href="#frontend">Frontend</a></li>
-<li><a href="#api">API</a></li>
-<li><a href="#operator">Operator</a></li>
+<li><a href="#deploy-docs">Deploy docs</a></li>
+<li><a href="#operator-ci">Operator CI</a></li>
 </ul>
-<p>The following diagram shows how the components interact with each other:</p>
-<p><a class="glightbox" href="../../assets/drawings/LTB-Architecture.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Architecture Overview" src="../../assets/drawings/LTB-Architecture.drawio.svg" /></a></p>
-<h2 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h2>
-<p>The frontend can be implemented in any language and framework, it just needs to be able to communicate via an HTTP API with the <abbr title="Lab Topology Builder">LTB</abbr> API.
-The frontend is responsible for the following tasks:</p>
-<ul>
-<li>Providing a web UI for the user to interact with the labs.</li>
-<li>Providing a web UI for the admin to manage:</li>
-<li>Lab templates</li>
-<li>Lab deployments</li>
-<li>Reservations</li>
-</ul>
-<p>There is a possibility to reuse parts of the existing frontend from the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>.</p>
-<h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
-<p>The API is responsible for the following tasks:</p>
-<ul>
-<li>To create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
-<li>Exposes status of lab instances</li>
-<li>Expose information on how to access the deployed lab nodes</li>
-<li>Authentication via an external authentication provider</li>
-</ul>
-<p>No parts from the existing <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> can be reused for the API.</p>
-<h3 id="authentication-and-authorization">Authentication and Authorization<a class="headerlink" href="#authentication-and-authorization" title="Permanent link">&para;</a></h3>
-<p>The authentication can be implemented by using an external authentication provider like <a href="https://www.keycloak.org/">Keycloak</a>.
-Keycloak can be configured to act as an authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
-This has the benefit that the <abbr title="Lab Topology Builder">LTB</abbr> does not need to implement any authentication logic and can focus on the lab deployment.
-Additionally, it enables the <abbr title="Lab Topology Builder">LTB</abbr> to be integrated into an existing authentication infrastructures, with the benefit that users do not need to create a new account.
-On the other hand, it has the drawback that the <abbr title="Lab Topology Builder">LTB</abbr> needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.</p>
-<p>Authorization can also be implemented using Keycloak and its <a href="https://www.keycloak.org/docs/latest/authorization_services/">Authorization Services</a>.</p>
-<h2 id="operator">Operator<a class="headerlink" href="#operator" title="Permanent link">&para;</a></h2>
-<p>The operator is responsible for the following tasks:</p>
-<ul>
-<li>Deploying/destroying the containers and vms</li>
-<li>Check validity of <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
-<li>Enables you to access the deployed containers and vms via different protocols</li>
-<li>Providing remote access to the lab node console via a web terminal</li>
-<li>Managing reservations (create, delete, etc.)</li>
-<li>Providing remote Wireshark capture capabilities</li>
-</ul>
-<p>The operator is implemented according to the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes operator pattern</a>.
-It has multiple controllers that are responsible for managing a particular custom resource like lab template.</p>
-<h3 id="network-connectivity-between-lab-nodes">Network connectivity between lab nodes<a class="headerlink" href="#network-connectivity-between-lab-nodes" title="Permanent link">&para;</a></h3>
-<p>The network connectivity between lab nodes can be implemented with <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus</a>, which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
-Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.</p>
-<p>Currently we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
-Additionally the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
-<h3 id="remote-access-to-lab-nodes">Remote access to lab nodes<a class="headerlink" href="#remote-access-to-lab-nodes" title="Permanent link">&para;</a></h3>
-<p>Remote access to the lab nodes has two variants:</p>
-<ul>
-<li>Console access via a web terminal</li>
-<li>Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol</li>
-</ul>
-<h4 id="console-access-via-a-web-terminal">Console access via a web terminal<a class="headerlink" href="#console-access-via-a-web-terminal" title="Permanent link">&para;</a></h4>
-<p>The console access via a web terminal is implemented with <a href="https://github.com/INSRapperswil/kube-ttyd">kube-ttyd</a>, which is a tool based on <a href="https://github.com/tsl0922/ttyd">ttyd</a>, with the addition to use kubectl exec and virsh console to connect to the lab nodes.
-<code>kube-ttyd</code> was provided by Yannick Zwicker from the INS specifically for this project.
-Access to the web terminal is routed through an NGINX ingress controller, and a Kubernetes service of type <code>ClusterIP</code>.</p>
-<p>The <a href="https://kubernetes.github.io/ingress-nginx/examples/auth/external-auth/">authentication feature</a> of the NGINX ingress controller can be used to restrict access to the web terminal to authenticated users.
-It might be possible to use the same authentication provider as the <abbr title="Lab Topology Builder">LTB</abbr> API, but this needs to be tested.</p>
-<h4 id="access-to-configurable-ports-with-any-oob-management-protocol">Access to configurable ports with any <abbr title="Out-of-Band">OOB</abbr> management protocol<a class="headerlink" href="#access-to-configurable-ports-with-any-oob-management-protocol" title="Permanent link">&para;</a></h4>
-<p>Access to lab nodes via freely choosable <abbr title="Out-of-Band">OOB</abbr> management protocols is implemented by providing a Kubernetes service of type <code>LoadBalancer</code> for each lab node, which is configured to expose the ports specified in the lab template.</p>
-<p>Access control needs to be implemented by the lab node itself, because the Kubernetes service of type <code>LoadBalancer</code> does not provide any authentication or authorization features.
-An example for this would be to provide SSH keys for the lab nodes inside the lab template config field.</p>
-<h3 id="scheduling-lab-instances-and-resource-reservation">Scheduling lab instances and resource reservation<a class="headerlink" href="#scheduling-lab-instances-and-resource-reservation" title="Permanent link">&para;</a></h3>
-<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding an additional fields (creationTimestamp, deletionTimestamp) to the lab instance custom resource.
-The lab instance controller then is able to check these fields and deploy or delete the lab instance at the specified time.
-There are multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.</p>
-<p>If there are any issues with the requeuing of these events over such a long period of time, writing a Kubernetes <a href="https://pkg.go.dev/k8s.io/client-go/informers">informer</a> could be a solution.</p>
-<p>Resource reservation in a capacity planning sense is not provided by Kubernetes, a manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
-Planned resource management is a huge topic, and we would recommend to create a dedicated project for this.</p>
-<h2 id="c4-model">C4 Model<a class="headerlink" href="#c4-model" title="Permanent link">&para;</a></h2>
-<p>The following diagrams show the C4 model of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr>, it should provide a high level overview of the system.</p>
-<h3 id="system-context-diagram">System Context Diagram<a class="headerlink" href="#system-context-diagram" title="Permanent link">&para;</a></h3>
-<p><a class="glightbox" href="../../assets/drawings/C4-System-Context.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 System Context" src="../../assets/drawings/C4-System-Context.drawio.svg" /></a></p>
-<h3 id="container-diagram">Container Diagram<a class="headerlink" href="#container-diagram" title="Permanent link">&para;</a></h3>
-<p><a class="glightbox" href="../../assets/drawings/C4-Container.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 Container" src="../../assets/drawings/C4-Container.drawio.svg" /></a></p>
-<h3 id="component-diagram">Component Diagram<a class="headerlink" href="#component-diagram" title="Permanent link">&para;</a></h3>
-<p><a class="glightbox" href="../../assets/drawings/C4-Component.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 Component" src="../../assets/drawings/C4-Component.drawio.svg" /></a></p>
-<h4 id="legend">Legend<a class="headerlink" href="#legend" title="Permanent link">&para;</a></h4>
-<ul>
-<li><span style="color: #083f75">Dark blue</span>: represents Personas (User, Admin)</li>
-<li><span style="color: #23a2d9">Blue</span>: represents Internal Components (Frontend Web UI, <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend)</li>
-<li><span style="color: #63bef2">Light blue</span>: represents Components which will be implemented in this project (<abbr title="Lab Topology Builder">LTB</abbr> Operator, <abbr title="Lab Topology Builder">LTB</abbr> Operator API)</li>
-<li><span style="color: #8c8496">Dark gray</span>: represents External Components (K8s, Keycloak)</li>
-</ul>
+<h2 id="deploy-docs">Deploy docs<a class="headerlink" href="#deploy-docs" title="Permanent link">&para;</a></h2>
+<p>This workflow is used to deploy the <a href="https://www.mkdocs.org/">mkdocs</a> documentation to GitHub Pages.
+It is triggered on every push to the <code>main</code> branch, that affects the documentation. Specifically, it is triggered when a file in the <code>docs</code> directory or the <code>mkdocs.yaml</code> configuration file has changed.</p>
+<p>Check the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/edit/main/.github/workflows/deploy-docs-ci.yml">deploy-docs-ci.yaml</a> action for more details.</p>
+<h2 id="operator-ci">Operator CI<a class="headerlink" href="#operator-ci" title="Permanent link">&para;</a></h2>
+<p>This workflow is used to test, build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image, CatalogSource and Bundle to the GitHub Container Registry.
+It is triggered for every push to a pull request and for every push to the <code>main</code> branch.</p>
+<p>You can find this action here: <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/.github/workflows/operator-ci.yml">operator-ci.yaml</a></p>
+<h3 id="test">Test<a class="headerlink" href="#test" title="Permanent link">&para;</a></h3>
+<p>The test step runs the unit tests of the <abbr title="Lab Topology Builder">LTB</abbr> Operator and fails the pipeline if any test fails.
+Additionally, a coverage report is generated and uploaded to <a href="https://app.codecov.io/gh/Lab-Topology-Builder/LTB-K8s-Backend">Codecov</a>.
+Pull requests are checked for the code coverage and will block the merge if the coverage drops below 80%. This is ensured by the Codecov GitHub integration and defined in the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/codecov.yml">codecov.yml</a> file.</p>
+<h3 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h3>
+<p>We use the GitHub actions provided by <a href="https://github.com/docker">Docker</a> to build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image to the GitHub Container Registry.
+Additionally, we use <a href="https://github.com/sigstore/cosign">cosign</a> to sign the images, so that users can verify the authenticity of the image.</p>
+<h3 id="additional-deployment-artifacts">Additional deployment artifacts<a class="headerlink" href="#additional-deployment-artifacts" title="Permanent link">&para;</a></h3>
+<p>To be able to deploy the operator with the <a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a>, a <a href="https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/">Bundle</a> and a <a href="https://olm.operatorframework.io/docs/tasks/creating-a-catalog/">CatalogSource</a> must be created.
+These artifacts are created with the [Operator-SDK], to simplify the pipeline these tasks have been exported to the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile">Makefile</a></p>
 
 
 

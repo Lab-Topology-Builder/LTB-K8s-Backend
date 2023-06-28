@@ -12,27 +12,27 @@
         <meta name="author" content="Jan Untersander, Tsigereda Nebai Kidane">
       
       
-        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/contributions/coding-conventions/">
+        <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/comparison/">
       
       
-        <link rel="prev" href="../contributor-guide/">
+        <link rel="prev" href="../decisions/0012-testing-framework/">
       
       
-        <link rel="next" href="../dev-cluster-setup/">
+        <link rel="next" href="../about/">
       
-      <link rel="icon" href="../../assets/images/favicon.ico">
+      <link rel="icon" href="../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.13">
     
     
       
-        <title>Coding Conventions - LTB K8s Backend</title>
+        <title>Comparison - LTB K8s Backend</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ffa9267a.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ffa9267a.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
       
       
 
@@ -48,30 +48,30 @@
       
     
     
-      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+      <link rel="stylesheet" href="../css/print-site-enum-headings1.css">
     
-      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+      <link rel="stylesheet" href="../css/print-site-enum-headings2.css">
     
-      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+      <link rel="stylesheet" href="../css/print-site-enum-headings3.css">
     
-      <link rel="stylesheet" href="../../css/print-site-enum-headings4.css">
+      <link rel="stylesheet" href="../css/print-site-enum-headings4.css">
     
-      <link rel="stylesheet" href="../../css/print-site-enum-headings5.css">
+      <link rel="stylesheet" href="../css/print-site-enum-headings5.css">
     
-      <link rel="stylesheet" href="../../css/print-site-enum-headings6.css">
+      <link rel="stylesheet" href="../css/print-site-enum-headings6.css">
     
-      <link rel="stylesheet" href="../../css/print-site.css">
+      <link rel="stylesheet" href="../css/print-site.css">
     
-      <link rel="stylesheet" href="../../css/print-site-material.css">
+      <link rel="stylesheet" href="../css/print-site-material.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
     
-   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
         html.glightbox-open { overflow: initial; height: 100%; }
         .gslide-title { margin-top: 0px; user-select: text; }
         .gslide-desc { color: #666; user-select: text; }
@@ -82,7 +82,7 @@
             body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
             body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
             body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
-            </style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+            </style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -104,7 +104,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#coding-conventions" class="md-skip">
+        <a href="#comparison-to-other-similar-projects" class="md-skip">
           Skip to content
         </a>
       
@@ -118,9 +118,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="LTB K8s Backend" class="md-header__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
+    <a href=".." title="LTB K8s Backend" class="md-header__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
       
-  <img src="../../assets/images/LTB_Text_RGB.svg" alt="logo">
+  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -136,7 +136,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Coding Conventions
+              Comparison
             
           </span>
         </div>
@@ -237,9 +237,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="LTB K8s Backend" class="md-nav__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
+    <a href=".." title="LTB K8s Backend" class="md-nav__button md-logo" aria-label="LTB K8s Backend" data-md-component="logo">
       
-  <img src="../../assets/images/LTB_Text_RGB.svg" alt="logo">
+  <img src="../assets/images/LTB_Text_RGB.svg" alt="logo">
 
     </a>
     LTB K8s Backend
@@ -267,7 +267,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Home
       </a>
     </li>
@@ -282,7 +282,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/" class="md-nav__link">
+      <a href="../user-guide/" class="md-nav__link">
         User Guide
       </a>
     </li>
@@ -297,7 +297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/" class="md-nav__link">
+      <a href="../concepts/" class="md-nav__link">
         Concepts
       </a>
     </li>
@@ -310,16 +310,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
       
       
         
@@ -342,7 +340,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Contributions
@@ -355,7 +353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributor-guide/" class="md-nav__link">
+      <a href="../contributions/contributor-guide/" class="md-nav__link">
         Contributor Guide
       </a>
     </li>
@@ -367,85 +365,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Coding Conventions
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../contributions/coding-conventions/" class="md-nav__link">
         Coding Conventions
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#naming" class="md-nav__link">
-    Naming
-  </a>
-  
-    <nav class="md-nav" aria-label="Naming">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#naming-conventions-in-go" class="md-nav__link">
-    Naming conventions in Go
-  </a>
-  
-    <nav class="md-nav" aria-label="Naming conventions in Go">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    Examples
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#formatting" class="md-nav__link">
-    Formatting
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -457,7 +381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-cluster-setup/" class="md-nav__link">
+      <a href="../contributions/dev-cluster-setup/" class="md-nav__link">
         Development Cluster Setup
       </a>
     </li>
@@ -471,7 +395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../technologies-used/" class="md-nav__link">
+      <a href="../contributions/technologies-used/" class="md-nav__link">
         Tools and Frameworks
       </a>
     </li>
@@ -485,7 +409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../test-concepts/" class="md-nav__link">
+      <a href="../contributions/test-concepts/" class="md-nav__link">
         Testing
       </a>
     </li>
@@ -499,7 +423,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ci/" class="md-nav__link">
+      <a href="../contributions/ci/" class="md-nav__link">
         Continuous Integration
       </a>
     </li>
@@ -554,7 +478,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/k8s-ltb-architecture/" class="md-nav__link">
+      <a href="../architecture/k8s-ltb-architecture/" class="md-nav__link">
         Kubernetes Lab Topology Builder Architecture
       </a>
     </li>
@@ -568,7 +492,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
+      <a href="../architecture/kvm-docker-ltb-architecture/" class="md-nav__link">
         Preliminary Work KVM/Docker-based LTB Architecture
       </a>
     </li>
@@ -647,7 +571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
+      <a href="../decisions/0000-use-markdown-architectural-decision-records/" class="md-nav__link">
         Use Markdown Architectural Decision Records
       </a>
     </li>
@@ -661,7 +585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
+      <a href="../decisions/0001-operator-SDK/" class="md-nav__link">
         Operator SDK
       </a>
     </li>
@@ -675,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/00011-remote-access/" class="md-nav__link">
+      <a href="../decisions/00011-remote-access/" class="md-nav__link">
         Remote-Access
       </a>
     </li>
@@ -689,7 +613,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-operator-scope/" class="md-nav__link">
+      <a href="../decisions/0002-operator-scope/" class="md-nav__link">
         Operator Scope
       </a>
     </li>
@@ -703,7 +627,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-api-and-operator-deployment/" class="md-nav__link">
+      <a href="../decisions/0003-api-and-operator-deployment/" class="md-nav__link">
         API and Operator Deployment
       </a>
     </li>
@@ -717,7 +641,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-dev-container/" class="md-nav__link">
+      <a href="../decisions/0004-dev-container/" class="md-nav__link">
         Dev Container
       </a>
     </li>
@@ -731,7 +655,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
+      <a href="../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
         Replace Current LTB Backend
       </a>
     </li>
@@ -745,7 +669,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-lab-instance-set/" class="md-nav__link">
+      <a href="../decisions/0006-lab-instance-set/" class="md-nav__link">
         Lab Instance Set
       </a>
     </li>
@@ -759,7 +683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-interaction-with-operator/" class="md-nav__link">
+      <a href="../decisions/0007-interaction-with-operator/" class="md-nav__link">
         Interaction with Operator
       </a>
     </li>
@@ -773,7 +697,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
+      <a href="../decisions/0008-namespace-per-labinstance/" class="md-nav__link">
         Namespace Per LabInstance
       </a>
     </li>
@@ -787,7 +711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
+      <a href="../decisions/0009-k8s-aggreted-api-over-standalone-api/" class="md-nav__link">
         K8s Aggreted API Over Standalone API
       </a>
     </li>
@@ -801,7 +725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0010-extending-ltb-with-new-node-types/" class="md-nav__link">
+      <a href="../decisions/0010-extending-ltb-with-new-node-types/" class="md-nav__link">
         Extending LTB with New Node Types
       </a>
     </li>
@@ -815,7 +739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
+      <a href="../decisions/0011-programming-language/" class="md-nav__link">
         Programming Language
       </a>
     </li>
@@ -829,7 +753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
         Testing Framework
       </a>
     </li>
@@ -849,11 +773,87 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../comparison/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Comparison
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Comparison
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vrnetlab-vr-network-lab" class="md-nav__link">
+    vrnetlab - VR Network Lab
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#containerlab" class="md-nav__link">
+    Containerlab
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netlab" class="md-nav__link">
+    Netlab
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-network-emulator" class="md-nav__link">
+    Kubernetes Network Emulator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mininet" class="md-nav__link">
+    Mininet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gns3" class="md-nav__link">
+    GNS3
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -866,7 +866,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
+      <a href="../about/" class="md-nav__link">
         About
       </a>
     </li>
@@ -900,41 +900,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#naming" class="md-nav__link">
-    Naming
+  <a href="#vrnetlab-vr-network-lab" class="md-nav__link">
+    vrnetlab - VR Network Lab
   </a>
-  
-    <nav class="md-nav" aria-label="Naming">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#naming-conventions-in-go" class="md-nav__link">
-    Naming conventions in Go
-  </a>
-  
-    <nav class="md-nav" aria-label="Naming conventions in Go">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    Examples
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#formatting" class="md-nav__link">
-    Formatting
+  <a href="#containerlab" class="md-nav__link">
+    Containerlab
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netlab" class="md-nav__link">
+    Netlab
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-network-emulator" class="md-nav__link">
+    Kubernetes Network Emulator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mininet" class="md-nav__link">
+    Mininet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gns3" class="md-nav__link">
+    GNS3
   </a>
   
 </li>
@@ -954,7 +956,7 @@
                   
 
   
-    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/contributions/coding-conventions.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/docs/comparison.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -962,24 +964,26 @@
   
 
 
-<h1 id="coding-conventions">Coding Conventions<a class="headerlink" href="#coding-conventions" title="Permanent link">&para;</a></h1>
-<p>We are following the <a href="https://golang.org/doc/effective_go">Effective Go</a> guidelines for coding conventions.
-The following is a summary of the most important conventions.</p>
-<h2 id="naming">Naming<a class="headerlink" href="#naming" title="Permanent link">&para;</a></h2>
-<p>The following naming conventions are used in the project:</p>
-<h3 id="naming-conventions-in-go"><a href="https://golang.org/doc/effective_go#names">Naming conventions in Go</a><a class="headerlink" href="#naming-conventions-in-go" title="Permanent link">&para;</a></h3>
-<ul>
-<li><em>camelCase</em> for variables and functions, which are not exported</li>
-<li><em>PascalCase</em> for types and functions that need to be exported</li>
-</ul>
-<h4 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>labInstanceStatus</strong>: variable name for a status of a lab instance</li>
-<li><strong>UpdateLabInstanceStatus</strong>: name for an exported function, starts with a capital letter</li>
-</ul>
-<h2 id="formatting"><a href="https://golang.org/doc/effective_go#formatting">Formatting</a><a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h2>
-<p>We are using the <a href="https://golang.org/cmd/gofmt/">gofmt</a> from the Go standard library to format our code.</p>
-<p><a href="https://staticcheck.dev/">staticcheck</a> is used as a linter in addition to the formatting guidelines from Effective Go, because it is the default linter of the Go extension for VS Code.</p>
+<h1 id="comparison-to-other-similar-projects">Comparison to other similar projects<a class="headerlink" href="#comparison-to-other-similar-projects" title="Permanent link">&para;</a></h1>
+<p>The Lab Topology Builder is just one among many open-source projects available for building emulated network topologies.
+The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the optimal solution for their use case.</p>
+<h2 id="vrnetlab-vr-network-lab">vrnetlab - VR Network Lab<a class="headerlink" href="#vrnetlab-vr-network-lab" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/vrnetlab/vrnetlab">vrnetlab</a> is a network emulator that runs virtual routers using <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker. It is similar to the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>, but is more simple and only provides the deployment functionality.</p>
+<h2 id="containerlab">Containerlab<a class="headerlink" href="#containerlab" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/srl-labs/containerlab">Containerlab</a> is a tool to deploy network labs with virtual routers, firewalls, load balancers, and more, using Docker containers. It is based on <a href="#vrnetlab---vr-network-lab">vrnetlab</a> and provides a declarative way to define the lab topology using a YAML file.
+Containerlab is not capable of deploying lab topologies over multiple host nodes, which is a key feature that the K8s-based <abbr title="Lab Topology Builder">LTB</abbr> aims to provide in the future.</p>
+<h2 id="netlab">Netlab<a class="headerlink" href="#netlab" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/ipspace/netlab">Netlab</a> is an abstraction layer to deploy network topologies based on <a href="#containerlab">containerlab</a> or Vagrant. It provides a declarative way to define the lab topology using a YAML file.
+It mainly provides an abstracted way to define lab topologies with preconfigured lab nodes.</p>
+<h2 id="kubernetes-network-emulator">Kubernetes Network Emulator<a class="headerlink" href="#kubernetes-network-emulator" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/openconfig/kne">Kubernetes Network Emulator</a> is a network emulator that aims to provide a standard interface so that vendors can produce a standard container implementation of their network operating system that can be used in a network emulation environment.
+Currently, it does not seem to support many network operating systems and additional operators are required to support different vendors.</p>
+<h2 id="mininet">Mininet<a class="headerlink" href="#mininet" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/mininet/mininet">Minitnet</a> is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.</p>
+<h2 id="gns3">GNS3<a class="headerlink" href="#gns3" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.gns3.com/software">GNS3</a> is a network emulator that can run network devices as virtual machines or Docker containers.
+It primarily focuses on providing an emulated network environment for a single user and its deployment and usage can be quite complex.
+Additionally, it does not provide a way to scale labs over multiple host nodes.</p>
 
 
 
@@ -1041,12 +1045,12 @@ The following is a summary of the most important conventions.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.suggest", "content.action.edit", "content.code.copy", "navigation.indexes"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.2a6f1dda.min.js"></script>
+      <script src="../assets/javascripts/bundle.2a6f1dda.min.js"></script>
       
-        <script src="../../js/print-site.js"></script>
+        <script src="../js/print-site.js"></script>
       
     
   <script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
