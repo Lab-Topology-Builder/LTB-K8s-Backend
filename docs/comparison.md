@@ -15,12 +15,12 @@ Containerlab is not capable of deploying lab topologies over multiple host nodes
 ## Netlab
 
 [Netlab](https://github.com/ipspace/netlab) is an abstraction layer to deploy network topologies based on [containerlab](#containerlab) or Vagrant. It provides a declarative way to define the lab topology using a YAML file.
-It mainly provides an abstracted way to define labs topologies with preconfigured lab nodes.
+It mainly provides an abstracted way to define lab topologies with preconfigured lab nodes.
 
 ## Kubernetes Network Emulator
 
 [Kubernetes Network Emulator](https://github.com/openconfig/kne) is a network emulator that aims to provide a standard interface so that vendors can produce a standard container implementation of their network operating system that can be used in a network emulation environment.
-Currently, it currently does not seem to support many network operating systems and additional operators are required to support different vendors.
+Currently, it does not seem to support many network operating systems and additional operators are required to support different vendors.
 
 ## Mininet
 
@@ -29,5 +29,5 @@ Currently, it currently does not seem to support many network operating systems 
 ## GNS3
 
 [GNS3](https://www.gns3.com/software) is a network emulator that can run network devices as virtual machines or Docker containers.
-It primarily focuses on providing a emulated network environment for a single user and its deployment and usage can be quite complex.
+It primarily focuses on providing an emulated network environment for a single user and its deployment and usage can be quite complex.
 Additionally, it does not provide a way to scale labs over multiple host nodes.
