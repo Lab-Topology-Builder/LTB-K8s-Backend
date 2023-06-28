@@ -41,5 +41,5 @@ spec:
       protocol: "TCP"
     config: '["/bin/bash", "-c", "apt update && apt install -y openssh-server && service ssh start && sleep 365d"]'
   neighbors:
-  - "TestHost1:1,TestHost2:1"
-  - "TestHost1:2,TestHost3:1"
+  - "sample-node-1:1,sample-node-2:1"
+  - "sample-node-2:2-sample-node-3:1"
