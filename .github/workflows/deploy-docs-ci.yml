@@ -3,12 +3,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
 permissions:
   contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: squidfunk/mkdocs-material:9.0.13
     steps:
       - uses: actions/checkout@v3

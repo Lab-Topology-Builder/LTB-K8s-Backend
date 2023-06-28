@@ -21,7 +21,7 @@ The frontend is responsible for the following tasks:
   - Lab deployments
   - Reservations
 
-There is a possibility to reuse parts of the existing frontend from the KVM/Docker based LTB.
+There is a possibility to reuse parts of the existing frontend from the KVM/Docker-based LTB.
 
 ## API
 
@@ -32,14 +32,14 @@ The API is responsible for the following tasks:
 - Expose information on how to access the deployed lab nodes
 - Authentication via an external authentication provider
 
-No parts from the existing KVM/Docker based LTB can be reused for the API.
+No parts from the existing KVM/Docker-based LTB can be reused for the API.
 
 ### Authentication and Authorization
 
 The authentication can be implemented by using an external authentication provider like [Keycloak](https://www.keycloak.org/).
 Keycloak can be configured to act as an authentication broker with external identity providers like LDAP, OpenID Connect, SAML, etc.
 This has the benefit that the LTB does not need to implement any authentication logic and can focus on the lab deployment.
-Additionally, it enables the LTB to be integrated into existing authentication infrastructures, with the benefit that users do not need to create a new account.
+Additionally, it enables the LTB to be integrated into an existing authentication infrastructures, with the benefit that users do not need to create a new account.
 On the other hand, it has the drawback that the LTB needs an external authentication provider to work and that the users access rights would need to be managed in Keycloak.
 
 Authorization can also be implemented using Keycloak and its [Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/).
@@ -56,7 +56,7 @@ The operator is responsible for the following tasks:
 - Providing remote Wireshark capture capabilities
 
 The operator is implemented according to the [Kubernetes operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
-It has multiple controllers that are responsible for managing a particular custom resource like a lab template.
+It has multiple controllers that are responsible for managing a particular custom resource like lab template.
 
 ### Network connectivity between lab nodes
 
@@ -77,7 +77,7 @@ Remote access to the lab nodes has two variants:
 
 The console access via a web terminal is implemented with [kube-ttyd](https://github.com/INSRapperswil/kube-ttyd), which is a tool based on [ttyd](https://github.com/tsl0922/ttyd), with the addition to use kubectl exec and virsh console to connect to the lab nodes.
 `kube-ttyd` was provided by Yannick Zwicker from the INS specifically for this project.
-Access to the web terminal is routed through a NGINX ingress controller, and a Kubernetes service of type `ClusterIP`.
+Access to the web terminal is routed through an NGINX ingress controller, and a Kubernetes service of type `ClusterIP`.
 
 The [authentication feature](https://kubernetes.github.io/ingress-nginx/examples/auth/external-auth/) of the NGINX ingress controller can be used to restrict access to the web terminal to authenticated users.
 It might be possible to use the same authentication provider as the LTB API, but this needs to be tested.

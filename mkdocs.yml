@@ -16,7 +16,9 @@ nav:
     - Development Cluster Setup: contributions/dev-cluster-setup.md
     - Tools and Frameworks: contributions/technologies-used.md
     - Testing: contributions/test-concepts.md
+    - Continuous Integration: contributions/ci.md
   - ...
+  - Comparison: comparison.md
   - About: about.md
 plugins:
   - search
@@ -37,6 +39,7 @@ plugins:
 markdown_extensions:
   - abbr
   - attr_list
+  - md_in_html
   - admonition
   - def_list
   - footnotes
