@@ -100,6 +100,12 @@ If there are any issues with the requeuing of these events over such a long peri
 Resource reservation in a capacity planning sense is not provided by Kubernetes, a manual solution could be implemented by using [limit ranges](https://kubernetes.io/docs/concepts/policy/limit-range/), [resource quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/) and the Kubernetes node resources.
 Planned resource management is a huge topic, and we would recommend to create a dedicated project for this.
 
+## Comparison to the KVM/Docker-based LTB
+
+The diagram below illustrates the components of the KVM/Docker-based LTB, highlighting the changes introduced by the Kubernetes LTB.
+
+![Comparison to the KVM/Docker-based LTB](../assets/drawings/Old-LTB-Architecture-replaced.drawio.svg)
+
 ## C4 Model
 
 The following diagrams show the C4 model of the Kubernetes based LTB, it should provide a high level overview of the system.
