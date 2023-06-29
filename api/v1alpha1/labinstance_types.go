@@ -5,8 +5,11 @@ import (
 )
 
 type LabInstanceSpec struct {
+	// Reference to the name of a LabTemplate to use for the lab instance.
 	LabTemplateReference string `json:"labTemplateReference"`
-	DNSAddress           string `json:"dnsAddress"`
+	// The DNS address, which will be used to expose the lab instance.
+	// It should point to the Kubernetes node where the lab instance is running.
+	DNSAddress string `json:"dnsAddress"`
 }
 
 type LabInstanceStatus struct {

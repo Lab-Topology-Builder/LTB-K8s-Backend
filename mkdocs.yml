@@ -10,6 +10,7 @@ nav:
   - Home: README.md
   - User Guide: user-guide.md
   - Concepts: concepts.md
+  - API Reference: api-reference.md
   - Contributions:
     - Contributor Guide: contributions/contributor-guide.md
     - Coding Conventions: contributions/coding-conventions.md

@@ -11,28 +11,41 @@ type LabTemplateSpec struct {
 }
 
 type LabInstanceNodes struct {
-	Name             string          `json:"name"`
-	NodeTypeRef      NodeTypeRef     `json:"nodeTypeRef"`
-	Interfaces       []NodeInterface `json:"interfaces,omitempty"`
-	Config           string          `json:"config,omitempty"`
-	Ports            []Port          `json:"ports,omitempty"`
-	RenderedNodeSpec string          `json:"renderedNodeSpec,omitempty"`
+	// The name of the lab node.
+	Name string `json:"name"`
+	// The type of the lab node.
+	NodeTypeRef NodeTypeRef `json:"nodeTypeRef"`
+	// Interface configuration for the lab node (currently not supported).
+	Interfaces []NodeInterface `json:"interfaces,omitempty"`
+	// The configuration for the lab node.
+	Config string `json:"config,omitempty"`
+	// The ports which should be publicly exposed for the lab node.
+	Ports            []Port `json:"ports,omitempty"`
+	RenderedNodeSpec string `json:"renderedNodeSpec,omitempty"`
 }
 
 type Port struct {
-	Name     string          `json:"name"`
+	// Arbitrary name for the port.
+	Name string `json:"name"`
+	// Choose either TCP or UDP.
 	Protocol corev1.Protocol `json:"protocol"`
-	Port     int32           `json:"port"`
+	// The port number to expose.
+	Port int32 `json:"port"`
 }
 
 type NodeInterface struct {
+	// IPv4 address of the interface.
 	IPv4 string `json:"ipv4,omitempty"`
+	// IPv6 address of the interface.
 	IPv6 string `json:"ipv6,omitempty"`
 }
 
 type NodeTypeRef struct {
-	Type    string `json:"type"`
-	Image   string `json:"image,omitempty"`
+	// Reference to the name of a NodeType.
+	Type string `json:"type"`
+	// Image to use for the NodeType (functionality depends on the NodeType).
+	Image string `json:"image,omitempty"`
+	// Version of the NodeType (functionality depends on the NodeType).
 	Version string `json:"version,omitempty"`
 }
 
