@@ -63,7 +63,7 @@ type LabTemplateStatus struct {
 //+kubebuilder:resource:scope=Cluster
 //+kubebuilder:subresource:status
 
-// TODO: add LabTemplate explanation
+// Defines the lab topology, its nodes and their configuration.
 type LabTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

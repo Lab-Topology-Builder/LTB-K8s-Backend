@@ -25,7 +25,7 @@ type LabInstanceStatus struct {
 //+kubebuilder:printcolumn:name="PODS_RUNNING",type=string,JSONPath=`.status.numPodsRunning`
 //+kubebuilder:printcolumn:name="VMS_RUNNING",type=string,JSONPath=`.status.numVMsRunning`
 
-// TODO: Explain LabInstance
+// A lab instance is created as a specific instance of a deployed lab, using the configuration from the corresponding lab template.
 type LabInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
