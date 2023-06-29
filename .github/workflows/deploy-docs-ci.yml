@@ -12,8 +12,6 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    container:
-      image: squidfunk/mkdocs-material:9.0.13
     steps:
       - uses: actions/checkout@v3
         with:
@@ -23,7 +21,6 @@ jobs:
         with:
           key: ${{ github.ref }}
           path: .cache
-      - run: git config --global --add safe.directory /__w/LTB-K8s-Backend/LTB-K8s-Backend
       # Install Go
       - name: Setup Go environment
         uses: actions/setup-go@v4
@@ -32,7 +29,7 @@ jobs:
       # Install crd-ref-docs for generating API reference docs
       - run: go install github.com/elastic/crd-ref-docs@v0.0.9
       # Install mkdocs and plugins
-      - run: pip install mkdocs-material pymdown-extensions mkdocs-exclude mkdocstrings[crystal,python] mkdocs-monorepo-plugin mkdocs-print-site-plugin mkdocs-awesome-pages-plugin mkdocs-glightbox mkdocs-git-authors-plugin mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin-2 pillow cairosvg
+      - run: pip install mkdocs mkdocs-material pymdown-extensions mkdocs-exclude mkdocstrings[crystal,python] mkdocs-monorepo-plugin mkdocs-print-site-plugin mkdocs-awesome-pages-plugin mkdocs-glightbox mkdocs-git-authors-plugin mkdocs-git-revision-date-localized-plugin mkdocs-git-committers-plugin-2 pillow cairosvg
       # Generate API reference docs
       - run: make generate-crd-docs
       # Build the site
