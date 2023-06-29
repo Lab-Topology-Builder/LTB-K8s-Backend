@@ -6,12 +6,11 @@ To get started, please refer to the [User Guide](user-guide.md).
 
 ## Features
 
-- Deployment of networking labs on Kubernetes
-- Deletion of networking labs on Kubernetes
+- Management of networking labs on Kubernetes
 - Status querying of lab deployments
 - Remote access to lab nodes' console via web browser
 - Remote access to lab nodes' OOB management (e.g. SSH)
-- Managing custom node types
+- Management of custom node types
 
 ## Roadmap
 
