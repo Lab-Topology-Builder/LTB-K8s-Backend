@@ -9,7 +9,7 @@ type NodeTypeSpec struct {
 
 	// Kind can be used to specify if the nodes is either a pod or a vm
 	Kind string `json:"kind,omitempty"`
-	// NodeSpec is the PodSpec or VirtualMachineSpec for the node
+	// NodeSpec is the PodSpec or VirtualMachineSpec configuration for the node with the possibility to use go templating syntax to include LabTemplate variables (see [User Guide](https://lab-topology-builder.github.io/LTB-K8s-Backend/user-guide/#example-node-type))
 	// See [PodSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#podspec-v1-core) and [VirtualMachineSpec](https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachinespec)
 	NodeSpec string `json:"nodeSpec,omitempty"`
 }

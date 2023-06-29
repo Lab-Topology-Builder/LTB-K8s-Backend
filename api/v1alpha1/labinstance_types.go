@@ -4,6 +4,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// LabInstanceSpec define which LabTemplate should be used for the lab instance and the DNS address.
 type LabInstanceSpec struct {
 	// Reference to the name of a LabTemplate to use for the lab instance.
 	LabTemplateReference string `json:"labTemplateReference"`
@@ -24,6 +25,7 @@ type LabInstanceStatus struct {
 //+kubebuilder:printcolumn:name="PODS_RUNNING",type=string,JSONPath=`.status.numPodsRunning`
 //+kubebuilder:printcolumn:name="VMS_RUNNING",type=string,JSONPath=`.status.numVMsRunning`
 
+// TODO: Explain LabInstance
 type LabInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
