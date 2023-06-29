@@ -1,5 +1,5 @@
-site_name: LTB K8s Backend
-site_description: A Kubernetes Operator and User management for the Lab Topology Builder.
+site_name: Kubernetes LTB
+site_description: Lab Topology Builder, a network emulator on Kubernetes
 site_author: Jan Untersander, Tsigereda Nebai Kidane
 site_url: https://lab-topology-builder.github.io/LTB-K8s-Backend/
 repo_name: Lab-Topology-Builder/LTB-K8s-Backend
@@ -10,6 +10,7 @@ nav:
   - Home: README.md
   - User Guide: user-guide.md
   - Concepts: concepts.md
+  - API Reference: api-reference.md
   - Contributions:
     - Contributor Guide: contributions/contributor-guide.md
     - Coding Conventions: contributions/coding-conventions.md
@@ -28,14 +29,14 @@ plugins:
         - decisions/adr-template.md
         - decisions/README.md
   - glightbox
-  - print-site
+  - git-revision-date-localized:
+      fallback_to_build_date: true
   # - git-authors
-  # - git-revision-date-localized:
-  #     fallback_to_build_date: true
   # - git-committers:
   #     repository: Lab-Topology-Builder/LTB-Kubernetes-Operator
   #     branch: main
   # - social
+  - print-site
 markdown_extensions:
   - abbr
   - attr_list
@@ -58,6 +59,7 @@ theme:
   name: material
   logo: assets/images/LTB_Text_RGB.svg
   favicon: assets/images/favicon.ico
+  custom_dir: docs/overrides
   features:
     - navigation.instant
     - navigation.tracking

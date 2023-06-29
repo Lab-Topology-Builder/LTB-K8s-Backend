@@ -148,6 +148,14 @@ docker-buildx: test ## Build and push docker image for the manager for cross-pla
 	- docker buildx rm project-v3-builder
 	rm Dockerfile.cross
 
+.PHONY:  generate-crd-docs
+generate-crd-docs: ## Generate CRD API docs
+	crd-ref-docs \
+		--source-path api \
+		--config api-doc-generator/config.yaml \
+		--renderer markdown \
+		--output-path docs/api-reference.md
+
 ##@ Deployment
 
 ifndef ignore-not-found

@@ -6,8 +6,8 @@ This Kubernetes Operator is part of the [Lab Topology Builder Backend](https://l
 
 ## Description
 
-<!-- TODO: Something is missing in this sentence, but I don't know how to formulate it right now, need to check it with the docu update later. -->
-The LTB K8s Operator is a Kubernetes Operator that manages the lifecycle of Lab Topology Builder Lab Instances, Lab Templates and Node Types.
+The LTB Operator is a K8s Operator for the LTB application, which is responsible for creating, configuring, and managing the emulated network topologies inside a Kubernetes cluster.
+It also automatically updates the status of the labs based on the current state of the associated containers and virtual machines, ensuring accurate and real-time lab information.
 
 ## Installation
 
@@ -17,3 +17,7 @@ Please refer to the [User Guide](https://lab-topology-builder.github.io/LTB-K8s-
 
 Contributions are welcome and appreciated.
 More information about how to contribute can be found in the [Contributing Guide](https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/contributor-guide/)
+
+## Disclaimer
+
+This repository is a work in progress and might be renamed and split into multiple repositories in the future.

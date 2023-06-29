@@ -113,6 +113,16 @@ It uses the previously defined node types to create a VM and two pods. They are 
 The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running `kubectl get node -o wide` and the port number by running `kubectl get svc`.
 
 Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.
+In the future, we plan to add support for point to point connections, which will be able to be defined as neighbors in the lab template.
+The syntax for this is not yet definite, but it will probably look something like this:
+
+```yaml
+  neighbors:
+  - "sample-node-1:1,sample-node-2:1"
+  - "sample-node-2:2-sample-node-3:1"
+```
+
+This would connect the first port of `sample-node-1` to the first port of `sample-node-2` and the second port of `sample-node-2` to the first port of `sample-node-3`.
 
 ```yaml
 apiVersion: ltb-backend.ltb/v1alpha1

@@ -3,9 +3,9 @@
 
 The Kubernetes based LTB was inspired by a previous implementation of the LTB, which was based on direct KVM and Docker usage.
 
-The following diagram shows the components and how lab nodes are deployed on a hypervisor in the KVM/Docker-based LTB:
+The following diagram shows the components of the KVM/Docker-based LTB, the lines indicate communication between the components:
 
-![KVM/Docker LTB Architecture](../assets/drawings/ltb-stack-node.svg)
+![KVM/Docker LTB Software Stack](../assets/drawings/Old-LTB-Architecture.drawio.svg)
 
 Currently the KVM/Docker-based LTB is composed of the following containers:
 
