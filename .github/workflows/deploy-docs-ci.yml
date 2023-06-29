@@ -6,7 +6,7 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
-      - '.github/workflows/deploy-docs.yml'
+      - '.github/workflows/deploy-docs-ci.yml'
 permissions:
   contents: write
 jobs:

@@ -8,12 +8,14 @@ on:
             - 'docs/**'
             - 'mkdocs.yml'
             - 'README.md'
+            - '.github/workflows/deploy-docs-ci.yml'
     pull_request:
         branches: [ "main" ]
         paths-ignore:
             - 'docs/**'
             - 'mkdocs.yml'
             - 'README.md'
+            - '.github/workflows/deploy-docs-ci.yml'
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
