@@ -28,6 +28,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
+        description: A lab instance is created as a specific instance of a deployed
+          lab, using the configuration from the corresponding lab template.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -42,10 +44,17 @@ spec:
           metadata:
             type: object
           spec:
+            description: LabInstanceSpec define which LabTemplate should be used for
+              the lab instance and the DNS address.
             properties:
               dnsAddress:
+                description: The DNS address, which will be used to expose the lab
+                  instance. It should point to the Kubernetes node where the lab instance
+                  is running.
                 type: string
               labTemplateReference:
+                description: Reference to the name of a LabTemplate to use for the
+                  lab instance.
                 type: string
             required:
             - dnsAddress

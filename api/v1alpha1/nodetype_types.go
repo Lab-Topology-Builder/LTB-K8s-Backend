@@ -23,7 +23,7 @@ type NodeTypeStatus struct {
 //+kubebuilder:resource:scope=Cluster
 //+kubebuilder:subresource:status
 
-// NodeType is defines a type of node that can be used in a lab template
+// NodeType defines a type of node that can be used in a lab template
 type NodeType struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

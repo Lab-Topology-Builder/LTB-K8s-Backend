@@ -18,7 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: NodeType is the Schema for the nodetypes API
+        description: NodeType defines a type of node that can be used in a lab template
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,15 +33,18 @@ spec:
           metadata:
             type: object
           spec:
-            description: NodeTypeSpec defines the desired state of NodeType
+            description: NodeTypeSpec defines the Kind and NodeSpec for a NodeType
             properties:
               kind:
                 description: Kind can be used to specify if the nodes is either a
                   pod or a vm
                 type: string
               nodeSpec:
-                description: NodeSpec is the PodSpec or VirtualMachineSpec for the
-                  node
+                description: NodeSpec is the PodSpec or VirtualMachineSpec configuration
+                  for the node with the possibility to use go templating syntax to
+                  include LabTemplate variables (see [User Guide](https://lab-topology-builder.github.io/LTB-K8s-Backend/user-guide/#example-node-type))
+                  See [PodSpec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#podspec-v1-core)
+                  and [VirtualMachineSpec](https://kubevirt.io/api-reference/master/definitions.html#_v1_virtualmachinespec)
                 type: string
             type: object
           status:

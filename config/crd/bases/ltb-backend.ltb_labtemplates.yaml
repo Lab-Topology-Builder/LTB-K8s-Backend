@@ -18,6 +18,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
+        description: Defines the lab topology, its nodes and their configuration.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -32,48 +33,74 @@ spec:
           metadata:
             type: object
           spec:
+            description: LabTemplateSpec defines the Lab nodes and their connections.
             properties:
               neighbors:
+                description: Array of connections between lab nodes. (currently not
+                  supported)
                 items:
                   type: string
                 type: array
               nodes:
+                description: Array of lab nodes and their configuration.
                 items:
+                  description: Configuration for a lab node.
                   properties:
                     config:
+                      description: The configuration for the lab node.
                       type: string
                     interfaces:
+                      description: Array of interface configurations for the lab node.
+                        (currently not supported)
                       items:
+                        description: Interface configuration for the lab node (currently
+                          not supported)
                         properties:
                           ipv4:
+                            description: IPv4 address of the interface.
                             type: string
                           ipv6:
+                            description: IPv6 address of the interface.
                             type: string
                         type: object
                       type: array
                     name:
+                      description: The name of the lab node.
                       type: string
                     nodeTypeRef:
+                      description: The type of the lab node.
                       properties:
                         image:
+                          description: Image to use for the NodeType. Is available
+                            as variable in the NodeType and functionality depends
+                            on its usage.
                           type: string
                         type:
+                          description: Reference to the name of a NodeType.
                           type: string
                         version:
+                          description: Version of the NodeType. Is available as variable
+                            in the NodeType and functionality depends on its usage.
                           type: string
                       required:
                       - type
                       type: object
                     ports:
+                      description: Array of ports which should be publicly exposed
+                        for the lab node.
                       items:
+                        description: Port of a lab node which should be publicly exposed.
                         properties:
                           name:
+                            description: Arbitrary name for the port.
                             type: string
                           port:
+                            description: The port number to expose.
                             format: int32
                             type: integer
                           protocol:
                             default: TCP
+                            description: Choose either TCP or UDP.
                             type: string
                         required:
                         - name
