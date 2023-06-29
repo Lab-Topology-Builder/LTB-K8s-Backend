@@ -17,3 +17,7 @@ Please refer to the [User Guide](https://lab-topology-builder.github.io/LTB-K8s-
 
 Contributions are welcome and appreciated.
 More information about how to contribute can be found in the [Contributing Guide](https://lab-topology-builder.github.io/LTB-K8s-Backend/contributor/contributor-guide/)
+
+## Disclaimer
+
+This repository is a work in progress and might be renamed and split into multiple repositories in the future.
