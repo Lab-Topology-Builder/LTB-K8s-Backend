@@ -18,7 +18,7 @@
 
 
 
-TODO: Explain LabInstance
+A lab instance is created as a specific instance of a deployed lab, using the configuration from the corresponding lab template.
 
 
 
@@ -69,7 +69,7 @@ _Appears in:_
 
 
 
-TODO: add LabTemplate explanation
+Defines the lab topology, its nodes and their configuration.
 
 
 
@@ -117,7 +117,7 @@ _Appears in:_
 
 
 
-NodeType is defines a type of node that can be used in a lab template
+NodeType defines a type of node that can be used in a lab template
 
 
 
