@@ -69,7 +69,7 @@ sudo journalctl -u rke2-server -f
 
 ### Add Kubernetes tools to path and set kubeconfig
 
-Adds kubectl, crictl and ctr to path
+Adds kubectl, crictl and ctr to path.
 
 ```bash
 echo 'export PATH="$PATH:/var/lib/rancher/rke2/bin"' >> ~/.bashrc
@@ -114,7 +114,7 @@ sudo journalctl -u rke2-agent -f
 
 The [Cluster Network Addons Operator](https://github.com/kubevirt/cluster-network-addons-operator) can be used to deploy additional networking components.
 Multus and Cilium are already installed via RKE2.
-Open vSwitch CNI Plugin can be installed via this operator.
+The Open vSwitch CNI Plugin can be installed via this operator.
 
 First install the operator itself:
 
@@ -195,7 +195,7 @@ kubectl virt help
 
 ## MetalLB
 
-You can optionally install MetalLB, currently it is not required to use the LTB Operator.
+Optionally, you can install MetalLB, but currently it is not required for using the LTB Operator.
 [MetalLB](https://metallb.universe.tf/) is a load-balancer implementation for bare metal Kubernetes clusters.
 
 ### Install Operator Lifecycle Manager (OLM)
@@ -265,9 +265,9 @@ kubectl apply -f l2advertisment.yaml
 
 ## Storage
 
-To store your virtual machine images and disks you may want to use a storage backend.
+To store your virtual machine images and disks, you may want to use a storage backend.
 Currently no storage backend has been tested with the LTB Operator, but you can try to use [Trident](https://docs.netapp.com/us-en/trident/index.html).
-Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.
+Trident is a dynamic storage provisioner for Kubernetes, and it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.
 
 Following you will find some instructions that may help you to install Trident on your cluster.
 

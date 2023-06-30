@@ -23,21 +23,21 @@ It also automatically updates the status of the labs based on the current state 
 
 ## Lab Template
 
-Lab Template is a CR, which defines a template for a lab. It contains information about which nodes are part of the lab, their configuration and how they are connected to each other.
+A `LabTemplate` is a Kubernetes custom resource (CR), that defines a template for a lab. It contains information about which nodes are part of the lab, their configuration, and how they are connected to each other.
 
 ## Lab Instance
 
-A lab instance is a CR that describes a lab that you want to deploy in a Kubernetes cluster.
-It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself. In addition, it also has a dns address field, which will be used to access the nodes using the web-based terminal.
+A `LabInstance` is a custom resource (CR) that describes a specific lab intended for deployment within a Kubernetes cluster.
+It has a reference to the `LabTemplate` you want to use and also has a status field that is updated by the LTB Operator. This status field shows how many pods and VMs are running in the lab and the status of the `LabInstance` itself. In addition, it also has a dns address field, that will be used to access the nodes using the web-based terminal.
 
 ## Node Type
 
-In a network, a node represents any device that is part of the lab. A NodeType is a CR that defines a type of node that can be part of a lab. You reference the node type you want to have in your lab in the lab template.
+In a network, a node represents any device that is part of the lab. A `NodeType` is a CR that defines a type of node that can be part of a lab. You reference the `NodeType` you want to have in your lab in the `LabTemplate`.
 Within LTB, a node can be either a KubeVirt virtual machine or a regular Kubernetes pod.
 
 ## Links
 
-If you would like to familiarize yourself with the concepts mentioned below, please refer to the following links:
+If you would like to familiarize yourself with the Kubernetes concepts mentioned above, please refer to the following links:
 
 - [Kubernetes](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/)
 - [Kubernetes Cluster](https://kubernetes.io/docs/concepts/architecture/cluster-components/)

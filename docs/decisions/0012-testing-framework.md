@@ -14,4 +14,4 @@ There are multiple testing libraries and frameworks to test Go applications, whi
 
 ## Decision Outcome
 
-Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the [Kubevirt](https://kubevirt.io/) project, which is used in the LTB Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.
+Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the [Kubevirt](https://kubevirt.io/) project, that is used by the LTB Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.

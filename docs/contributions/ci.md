@@ -9,7 +9,7 @@ Currently, we have two workflows:
 ## Deploy docs
 
 This workflow is used to deploy the [mkdocs](https://www.mkdocs.org/) documentation to GitHub Pages.
-It is triggered on every push to the `main` branch, that affects the documentation. Specifically, it is triggered when a file in the `docs` directory or the `mkdocs.yaml` configuration file has changed.
+It is triggered on every push to the `main` branch that affects the documentation. Specifically, it is triggered when a file in the `docs` directory or the `mkdocs.yaml` configuration file has changed.
 
 Check the [deploy-docs-ci.yaml](https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/edit/main/.github/workflows/deploy-docs-ci.yml) action for more details.
 
@@ -33,5 +33,5 @@ Additionally, we use [cosign](https://github.com/sigstore/cosign) to sign the im
 
 ### Additional deployment artifacts
 
-To be able to deploy the operator with the [Operator Lifecycle Manager](https://olm.operatorframework.io/), a [Bundle](https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/) and a [CatalogSource](https://olm.operatorframework.io/docs/tasks/creating-a-catalog/) must be created.
-These artifacts are created with the [Operator-SDK], to simplify the pipeline these tasks have been exported to the [Makefile](https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile)
+To be able to deploy the LTB Operator with the [Operator Lifecycle Manager](https://olm.operatorframework.io/), a [Bundle](https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/) and a [CatalogSource](https://olm.operatorframework.io/docs/tasks/creating-a-catalog/) must be created.
+These artifacts are created with the [Operator-SDK](https://sdk.operatorframework.io/), to simplify the pipeline these tasks have been exported to the [Makefile](https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile)

@@ -24,16 +24,16 @@ Currently the KVM/Docker-based LTB is composed of the following containers:
 The backend is accessible via API and an Admin Web UI.
 It is responsible for the following tasks:
 
-- parsing the yaml topology files
-- deploying/destroying the containers and vms
-- exposes status of lab deployments
-- exposes information on how to access the deployed containers and vms
-- provides remote ssh capabilities
-- provides remote Wireshark capture capabilities
-- managing reservations (create, delete, etc.)
-- exposes node resource usage
-- user management
-- exposes information about a device (version, groups, etc.)
+- Parse the yaml topology files
+- Deploy/destroy the containers and vms
+- Expose status of lab deployments
+- Expose information on how to access the deployed containers and vms
+- Provide remote ssh capabilities
+- Provide remote Wireshark capture capabilities
+- Manage reservations (create, delete, etc.)
+- Expose node resource usage
+- User management
+- Expose information about a device (version, groups, configuration, etc)
 
 It is composed of the following components:
 
@@ -46,19 +46,19 @@ The orchestration component is responsible for creating different tasks using Ce
 There are 4 different types of tasks:
 
 - DeploymentTask
-  - Deploys containers in docker
-  - Deploys VMs using KVM
-  - Creates connections between containers and VMs using an OVS bridge
+    - Deploys containers in docker
+    - Deploys VMs using KVM
+    - Creates connections between containers and VMs using an OVS bridge
 - RemovalTask
-  - Removes a running lab
+    - Removes a running lab
 - MirrorInterfaceTask
-  - Creates a mirror interface on a connection
+    - Creates a mirror interface on a connection
 - SnapshotTask
-  - Takes a snapshot of a running lab
+    - Takes a snapshot of a running lab
 
 ### Reservations
 
-The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:
+The reservation component is responsible for reserving system resources in advance, comprising the following tasks:
 
 - Create a reservation
 - Delete a reservation
@@ -103,7 +103,7 @@ Celery is used to execute the commands to create and delete the lab nodes and co
 
 ## Web-SSH
 
-Web-SSH is used to provide a web based ssh client, which can be used to access the deployed containers and vms aka lab nodes.
+Web-SSH is used to provide a web based ssh client, that can be used to access the deployed containers and vms aka lab nodes.
 
 ## Prometheus
 

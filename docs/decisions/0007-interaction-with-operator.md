@@ -9,8 +9,7 @@ There are multiple ways to interact with the operator, such as a GitOps approach
 * GitOps
 * Use frontend
 * Use kubectl
-* All
 
 ## Decision Outcome
 
-Chosen option: "All", because these options are not mutually exclusive and can be used together, we want to support all of them.
+Chosen option: "All considered options", because these options are not mutually exclusive and can be used together, therefore we want to support all of them.

@@ -17,14 +17,14 @@ curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releas
 
 Change the version to the desired one.
 
-## Installation of the LTB K8s operator
+## Installation of the LTB K8s Operator
 
-1. Install the operator by creating a catalog source and subscription.
+1. Install the LTB Operator by creating a catalog source and subscription.
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
 ```
 
-2. Wait for the operator to be installed
+2. Wait for the LTB Operator to be installed (this might take a few seconds).
 ```sh
 kubectl get csv -n operators -w
 ```
@@ -108,12 +108,12 @@ A lab template defines the nodes that should be created for a lab, how they shou
 
 ### Example Lab Template
 
-This is an example of a lab template, which you can use as a starting point for your own labs.
+This is an example of a lab template, that can be used as a starting point for your own labs.
 It uses the previously defined node types to create a VM and two pods. They are referenced via the `nodeTypeRef` field.
 The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running `kubectl get node -o wide` and the port number by running `kubectl get svc`.
 
 Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.
-In the future, we plan to add support for point to point connections, which will be able to be defined as neighbors in the lab template.
+In the future, we plan to add support for point to point connections, that can be defined as neighbors in the lab template.
 The syntax for this is not yet definite, but it will probably look something like this:
 
 ```yaml
@@ -165,7 +165,7 @@ With the lab template defined, you can create a lab instance.
 
 ## Example Lab Instance
 
-This is an example of lab instance, which you can use as a starting point for your own labs.
+This is an example of a lab instance, that can be used as a starting point for your own labs.
 The lab instance references the previously defined lab template with the `labTemplateReference` field.
 You also need to provide a DNS address via the `dnsAddress` field. This address will be used to create routes for the web terminal to the lab nodes.
 For example, if you use the address `example.com`, the console of a node called `sample-node-1` will be available at `https://labinstance-sample-sample-node-1.example.com/` via a web terminal.
