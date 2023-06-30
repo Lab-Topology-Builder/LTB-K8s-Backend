@@ -33,5 +33,5 @@ Additionally, we use [cosign](https://github.com/sigstore/cosign) to sign the im
 
 ### Additional deployment artifacts
 
-To be able to deploy the operator with the [Operator Lifecycle Manager](https://olm.operatorframework.io/), a [Bundle](https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/) and a [CatalogSource](https://olm.operatorframework.io/docs/tasks/creating-a-catalog/) must be created.
+To be able to deploy the LTB Operator with the [Operator Lifecycle Manager](https://olm.operatorframework.io/), a [Bundle](https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/) and a [CatalogSource](https://olm.operatorframework.io/docs/tasks/creating-a-catalog/) must be created.
 These artifacts are created with the [Operator-SDK](https://sdk.operatorframework.io/), to simplify the pipeline these tasks have been exported to the [Makefile](https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile)
