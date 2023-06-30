@@ -2,7 +2,7 @@
 
 ## Context and Problem Statement
 
-One approach could involve creating a custom resource (CR) named `LabInstanceSet` and specifying our desired quantity of `LabInstances` to the operator. For instance, we could provide a single `LabInstance` along with a generator, such as a list of names, to indicate that we want 10 `LabInstances`. Alternatively, we could directly provide the operator with 10 separate `LabInstances` to create the desired quantity of 10.
+One approach could involve creating a custom resource (CR) named `LabInstanceSet` and specifying our desired quantity of `LabInstances` to the LTB Operator. For instance, we could provide a single `LabInstance` along with a generator, such as a list of names, to indicate that we want 10 `LabInstances`. Alternatively, we could directly provide the operator with 10 separate `LabInstances` to create the desired quantity of 10.
 
 ## Considered Options
 
