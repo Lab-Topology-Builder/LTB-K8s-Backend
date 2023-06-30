@@ -4,7 +4,7 @@ The tools and frameworks used in the project are listed below.
 
 ## Go-based Operator SDK framework
 
-To create the LTB Operator, we used the [Go-based Operator-SDK](https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/) framework, which provides a set of tools to simplify the process of building, testing and packaging our operator.
+To create the LTB Operator, we used the [Go-based Operator-SDK](https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/) framework. It provides a set of tools to simplify the process of building, testing and packaging our operator.
 
 ## Kubevirt
 

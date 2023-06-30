@@ -14,7 +14,7 @@ which provides a reconcile function responsible for synchronizing resources unti
 You’ll need a Kubernetes cluster to run against. You can find instructions on how to setup your dev cluster in the [Dev Cluster Setup](./dev-cluster-setup.md) section.
 **Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
 
-We recommend using VSCode with the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the operator already installed.
+We recommend using VSCode with the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the LTB Operator already installed.
 
 ### Prerequisites for recommended IDE setup
 
@@ -30,9 +30,9 @@ We recommend using VSCode with the [Remote - Containers](https://marketplace.vis
 
 Now you are ready to start developing!
 
-### Running the operator locally
+### Running the LTB Operator locally
 
-You can run the operator locally on your machine, this is useful for quick testing and debugging. However, you will need to be aware that the operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore it also does not use the RBAC rules it would usually be deployed with.
+You can run the LTB Operator locally on your machine. This is useful for quick testing and debugging. However, you will need to be aware that the LTB Operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore, it also does not use the RBAC rules it would usually be deployed with.
 
 1. Install the CRDs into the cluster:
 
@@ -56,11 +56,11 @@ To delete the CRDs from the cluster:
 make uninstall
 ```
 
-#### Running the operator on the cluster
+#### Running the LTB Operator on the cluster
 
-You can also run the operator on the cluster, this is useful for testing the operator in a more realistic environment.
-However, you will first need to login to some container registry that the cluster can access, so that you can push the operator image to that registry.
-This will allow you to test the operators RBAC rules.
+You can also run the LTB Operator on the cluster. This is useful for testing it in a more realistic environment.
+However, you will first need to login to some container registry that the cluster can access, so that you can push the LTB Operator image to that registry.
+This will allow you to test the LTB Operators RBAC rules.
 
 Make sure to replace `<some-registry>` with the location of your container registry and `<tag>` with the tag you want to use.
 
