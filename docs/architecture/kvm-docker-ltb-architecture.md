@@ -24,16 +24,16 @@ Currently the KVM/Docker-based LTB is composed of the following containers:
 The backend is accessible via API and an Admin Web UI.
 It is responsible for the following tasks:
 
-- parse the yaml topology files
-- deploy/destroy the containers and vms
-- expose status of lab deployments
-- expose information on how to access the deployed containers and vms
-- provide remote ssh capabilities
-- provide remote Wireshark capture capabilities
-- manage reservations (create, delete, etc.)
-- expose node resource usage
-- user management
-- expose information about a device (version, groups, configuration, etc)
+- Parse the yaml topology files
+- Deploy/destroy the containers and vms
+- Expose status of lab deployments
+- Expose information on how to access the deployed containers and vms
+- Provide remote ssh capabilities
+- Provide remote Wireshark capture capabilities
+- Manage reservations (create, delete, etc.)
+- Expose node resource usage
+- User management
+- Expose information about a device (version, groups, configuration, etc)
 
 It is composed of the following components:
 
