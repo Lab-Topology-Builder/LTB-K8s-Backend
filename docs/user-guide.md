@@ -19,12 +19,12 @@ Change the version to the desired one.
 
 ## Installation of the LTB K8s Operator
 
-1. Install the operator by creating a catalog source and subscription.
+1. Install the LTB Operator by creating a catalog source and subscription.
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml -f https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
 ```
 
-2. Wait for the operator to be installed (this might take a few seconds).
+2. Wait for the LTB Operator to be installed (this might take a few seconds).
 ```sh
 kubectl get csv -n operators -w
 ```
