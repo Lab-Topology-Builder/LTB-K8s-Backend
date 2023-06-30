@@ -100,4 +100,4 @@ make manifests
 
 **NOTE:** Run `make --help` for more information on all potential `make` targets
 
-You can find more information on how to develop the operator in the [Operator SDK Documentation](https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/) and the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
+You can find more information on how to develop the operator in the [Operator-SDK Documentation](https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/) and the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)

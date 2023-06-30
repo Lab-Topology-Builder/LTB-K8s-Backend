@@ -3,7 +3,7 @@
 ## Context and Problem Statement
 
 We need to choose a programming language for the project.
-The considered options are based on the supported languages of the Operator SDK.
+The considered options are based on the supported languages of the Operator-SDK.
 
 ## Considered Options
 
