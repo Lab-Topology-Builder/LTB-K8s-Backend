@@ -2,7 +2,7 @@
 
 ## Context and Problem Statement
 
-We could create a CR called LabInstanceSet, and tell the operator we want e.g. 10 LabInstances by providing one LabInstance CR and a generator like a list of names or we could provide the operator 10 CRs to create 10 LabInstances.
+One approach could involve creating a custom resource (CR) named `LabInstanceSet` and specifying our desired quantity of `LabInstances` to the operator. For instance, we could provide a single `LabInstance` along with a generator, such as a list of names, to indicate that we want 10 `LabInstances`. Alternatively, we could directly provide the operator with 10 separate `LabInstances` to create the desired quantity of 10.
 
 ## Considered Options
 

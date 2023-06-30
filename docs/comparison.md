@@ -1,7 +1,7 @@
 # Comparison to other similar projects
 
-The Lab Topology Builder is just one among many open-source projects available for building emulated network topologies.
-The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the optimal solution for their use case.
+The Lab Topology Builder is just one among many open source projects available for building emulated network topologies.
+The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the best suited solution for their use case.
 
 ## vrnetlab - VR Network Lab
 
@@ -24,7 +24,7 @@ Currently, it does not seem to support many network operating systems and additi
 
 ## Mininet
 
-[Minitnet](https://github.com/mininet/mininet) is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.
+[Mininet](https://github.com/mininet/mininet) is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.
 
 ## GNS3
 

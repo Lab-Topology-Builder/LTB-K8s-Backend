@@ -2,13 +2,14 @@
 
 ## Context and Problem Statement
 
-LabInstances could be created in separate namespaces or one namespace for all LabInstances.
+Lab instances could be created in separate namespaces or one namespace for all lab instances.
 
 ## Considered Options
 
-* One Namespace for all LabInstances
-* Namespace per LabInstance
+* One Namespace for all lab instances
+* Namespace per lab instance
 
 ## Decision Outcome
 
-Chosen option: "Namespace per LabInstance", because it will be easier in the future to implement features like RBAC and resource quotas and limits.
+Chosen option: "Namespace per lab instance", because it will be easier in the future to implement features like network policies and resource quotas and limits.
+This approach ensures easier management and isolation of each lab instance within its dedicated namespace.
