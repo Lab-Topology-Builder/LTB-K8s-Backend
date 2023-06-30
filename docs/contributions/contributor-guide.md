@@ -60,7 +60,7 @@ make uninstall
 
 You can also run the LTB Operator on the cluster. This is useful for testing it in a more realistic environment.
 However, you will first need to login to some container registry that the cluster can access, so that you can push the LTB Operator image to that registry.
-This will allow you to test the LTB Operators RBAC rules.
+This will allow you to test the LTB Operator's RBAC rules.
 
 Make sure to replace `<some-registry>` with the location of your container registry and `<tag>` with the tag you want to use.
 
