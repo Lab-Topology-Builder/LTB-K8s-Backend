@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://lab-topology-builder.github.io/LTB-K8s-Backend/comparison/">
       
       
-        <link rel="prev" href="../decisions/0012-testing-framework/">
+        <link rel="prev" href="../decisions/0013-programming-language/">
       
       
         <link rel="next" href="../about/">
@@ -609,7 +609,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -679,7 +679,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -762,8 +762,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -776,8 +776,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -988,8 +988,8 @@
 
 
 <h1 id="comparison-to-other-similar-projects">Comparison to other similar projects<a class="headerlink" href="#comparison-to-other-similar-projects" title="Permanent link">&para;</a></h1>
-<p>The Lab Topology Builder is just one among many open-source projects available for building emulated network topologies.
-The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the optimal solution for their use case.</p>
+<p>The Lab Topology Builder is just one among many open source projects available for building emulated network topologies.
+The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the best suited solution for their use case.</p>
 <h2 id="vrnetlab-vr-network-lab">vrnetlab - VR Network Lab<a class="headerlink" href="#vrnetlab-vr-network-lab" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/vrnetlab/vrnetlab">vrnetlab</a> is a network emulator that runs virtual routers using <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker. It is similar to the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>, but is more simple and only provides the deployment functionality.</p>
 <h2 id="containerlab">Containerlab<a class="headerlink" href="#containerlab" title="Permanent link">&para;</a></h2>
@@ -1002,7 +1002,7 @@ It mainly provides an abstracted way to define lab topologies with preconfigured
 <p><a href="https://github.com/openconfig/kne">Kubernetes Network Emulator</a> is a network emulator that aims to provide a standard interface so that vendors can produce a standard container implementation of their network operating system that can be used in a network emulation environment.
 Currently, it does not seem to support many network operating systems and additional operators are required to support different vendors.</p>
 <h2 id="mininet">Mininet<a class="headerlink" href="#mininet" title="Permanent link">&para;</a></h2>
-<p><a href="https://github.com/mininet/mininet">Minitnet</a> is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.</p>
+<p><a href="https://github.com/mininet/mininet">Mininet</a> is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.</p>
 <h2 id="gns3">GNS3<a class="headerlink" href="#gns3" title="Permanent link">&para;</a></h2>
 <p><a href="https://www.gns3.com/software">GNS3</a> is a network emulator that can run network devices as virtual machines or Docker containers.
 It primarily focuses on providing an emulated network environment for a single user and its deployment and usage can be quite complex.
@@ -1044,7 +1044,7 @@ Additionally, it does not provide a way to scale labs over multiple host nodes.<
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 28, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

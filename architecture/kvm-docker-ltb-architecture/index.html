@@ -742,7 +742,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -812,7 +812,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -895,8 +895,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -909,8 +909,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -1119,16 +1119,16 @@
 <p>The backend is accessible via API and an Admin Web UI.
 It is responsible for the following tasks:</p>
 <ul>
-<li>parsing the yaml topology files</li>
-<li>deploying/destroying the containers and vms</li>
-<li>exposes status of lab deployments</li>
-<li>exposes information on how to access the deployed containers and vms</li>
-<li>provides remote ssh capabilities</li>
-<li>provides remote Wireshark capture capabilities</li>
-<li>managing reservations (create, delete, etc.)</li>
-<li>exposes node resource usage</li>
-<li>user management</li>
-<li>exposes information about a device (version, groups, etc.)</li>
+<li>Parse the yaml topology files</li>
+<li>Deploy/destroy the containers and vms</li>
+<li>Expose status of lab deployments</li>
+<li>Expose information on how to access the deployed containers and vms</li>
+<li>Provide remote ssh capabilities</li>
+<li>Provide remote Wireshark capture capabilities</li>
+<li>Manage reservations (create, delete, etc.)</li>
+<li>Expose node resource usage</li>
+<li>User management</li>
+<li>Expose information about a device (version, groups, configuration, etc)</li>
 </ul>
 <p>It is composed of the following components:</p>
 <ul>
@@ -1140,19 +1140,27 @@ It is responsible for the following tasks:</p>
 <p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
 There are 4 different types of tasks:</p>
 <ul>
-<li>DeploymentTask</li>
+<li>DeploymentTask<ul>
 <li>Deploys containers in docker</li>
 <li>Deploys VMs using <abbr title="Kernel-based Virtual Machine">KVM</abbr></li>
 <li>Creates connections between containers and VMs using an <abbr title="Open vSwitch">OVS</abbr> bridge</li>
-<li>RemovalTask</li>
+</ul>
+</li>
+<li>RemovalTask<ul>
 <li>Removes a running lab</li>
-<li>MirrorInterfaceTask</li>
+</ul>
+</li>
+<li>MirrorInterfaceTask<ul>
 <li>Creates a mirror interface on a connection</li>
-<li>SnapshotTask</li>
+</ul>
+</li>
+<li>SnapshotTask<ul>
 <li>Takes a snapshot of a running lab</li>
 </ul>
+</li>
+</ul>
 <h3 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h3>
-<p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
+<p>The reservation component is responsible for reserving system resources in advance, comprising the following tasks:</p>
 <ul>
 <li>Create a reservation</li>
 <li>Delete a reservation</li>
@@ -1186,7 +1194,7 @@ To be more precise, it is responsible for scheduling the deployment and deletion
 <h2 id="celery">Celery<a class="headerlink" href="#celery" title="Permanent link">&para;</a></h2>
 <p>Celery is used to execute the commands to create and delete the lab nodes and connections.</p>
 <h2 id="web-ssh">Web-SSH<a class="headerlink" href="#web-ssh" title="Permanent link">&para;</a></h2>
-<p>Web-SSH is used to provide a web based ssh client, which can be used to access the deployed containers and vms aka lab nodes.</p>
+<p>Web-SSH is used to provide a web based ssh client, that can be used to access the deployed containers and vms aka lab nodes.</p>
 <h2 id="prometheus">Prometheus<a class="headerlink" href="#prometheus" title="Permanent link">&para;</a></h2>
 <p>Prometheus is used to collect metrics about CPU, memory and disk usage of the hypervisor nodes.</p>
 <h2 id="traefik">Traefik<a class="headerlink" href="#traefik" title="Permanent link">&para;</a></h2>
@@ -1247,7 +1255,7 @@ To be more precise, it is responsible for scheduling the deployment and deletion
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 29, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

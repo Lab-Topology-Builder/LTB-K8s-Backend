@@ -441,11 +441,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-the-operator-locally" class="md-nav__link">
-    Running the operator locally
+  <a href="#running-the-ltb-operator-locally" class="md-nav__link">
+    Running the LTB Operator locally
   </a>
   
-    <nav class="md-nav" aria-label="Running the operator locally">
+    <nav class="md-nav" aria-label="Running the LTB Operator locally">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -456,11 +456,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-the-operator-on-the-cluster" class="md-nav__link">
-    Running the operator on the cluster
+  <a href="#running-the-ltb-operator-on-the-cluster" class="md-nav__link">
+    Running the LTB Operator on the cluster
   </a>
   
-    <nav class="md-nav" aria-label="Running the operator on the cluster">
+    <nav class="md-nav" aria-label="Running the LTB Operator on the cluster">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -726,7 +726,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -796,7 +796,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -879,8 +879,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -893,8 +893,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -993,11 +993,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-the-operator-locally" class="md-nav__link">
-    Running the operator locally
+  <a href="#running-the-ltb-operator-locally" class="md-nav__link">
+    Running the LTB Operator locally
   </a>
   
-    <nav class="md-nav" aria-label="Running the operator locally">
+    <nav class="md-nav" aria-label="Running the LTB Operator locally">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1008,11 +1008,11 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#running-the-operator-on-the-cluster" class="md-nav__link">
-    Running the operator on the cluster
+  <a href="#running-the-ltb-operator-on-the-cluster" class="md-nav__link">
+    Running the LTB Operator on the cluster
   </a>
   
-    <nav class="md-nav" aria-label="Running the operator on the cluster">
+    <nav class="md-nav" aria-label="Running the LTB Operator on the cluster">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1076,7 +1076,7 @@ which provides a reconcile function responsible for synchronizing resources unti
 <h2 id="development-environment">Development Environment<a class="headerlink" href="#development-environment" title="Permanent link">&para;</a></h2>
 <p>You’ll need a Kubernetes cluster to run against. You can find instructions on how to setup your dev cluster in the <a href="../dev-cluster-setup/">Dev Cluster Setup</a> section.
 <strong>Note:</strong> Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster <code>kubectl cluster-info</code> shows).</p>
-<p>We recommend using VSCode with the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the operator already installed.</p>
+<p>We recommend using VSCode with the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the <abbr title="Lab Topology Builder">LTB</abbr> Operator already installed.</p>
 <h3 id="prerequisites-for-recommended-ide-setup">Prerequisites for recommended IDE setup<a class="headerlink" href="#prerequisites-for-recommended-ide-setup" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://docs.docker.com/get-docker/">Docker</a></li>
@@ -1090,8 +1090,8 @@ which provides a reconcile function responsible for synchronizing resources unti
 <li>Click the popup or use the command palette to reopen the repository in a container (Dev Containers: Reopen in Container)</li>
 </ol>
 <p>Now you are ready to start developing!</p>
-<h3 id="running-the-operator-locally">Running the operator locally<a class="headerlink" href="#running-the-operator-locally" title="Permanent link">&para;</a></h3>
-<p>You can run the operator locally on your machine, this is useful for quick testing and debugging. However, you will need to be aware that the operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore it also does not use the RBAC rules it would usually be deployed with.</p>
+<h3 id="running-the-ltb-operator-locally">Running the <abbr title="Lab Topology Builder">LTB</abbr> Operator locally<a class="headerlink" href="#running-the-ltb-operator-locally" title="Permanent link">&para;</a></h3>
+<p>You can run the <abbr title="Lab Topology Builder">LTB</abbr> Operator locally on your machine. This is useful for quick testing and debugging. However, you will need to be aware that the <abbr title="Lab Topology Builder">LTB</abbr> Operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore, it also does not use the RBAC rules it would usually be deployed with.</p>
 <ol>
 <li>Install the CRDs into the cluster:</li>
 </ol>
@@ -1107,10 +1107,10 @@ which provides a reconcile function responsible for synchronizing resources unti
 <p>To delete the CRDs from the cluster:</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>uninstall
 </code></pre></div>
-<h4 id="running-the-operator-on-the-cluster">Running the operator on the cluster<a class="headerlink" href="#running-the-operator-on-the-cluster" title="Permanent link">&para;</a></h4>
-<p>You can also run the operator on the cluster, this is useful for testing the operator in a more realistic environment.
-However, you will first need to login to some container registry that the cluster can access, so that you can push the operator image to that registry.
-This will allow you to test the operators RBAC rules.</p>
+<h4 id="running-the-ltb-operator-on-the-cluster">Running the <abbr title="Lab Topology Builder">LTB</abbr> Operator on the cluster<a class="headerlink" href="#running-the-ltb-operator-on-the-cluster" title="Permanent link">&para;</a></h4>
+<p>You can also run the <abbr title="Lab Topology Builder">LTB</abbr> Operator on the cluster. This is useful for testing it in a more realistic environment.
+However, you will first need to login to some container registry that the cluster can access, so that you can push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image to that registry.
+This will allow you to test the <abbr title="Lab Topology Builder">LTB</abbr> Operator's RBAC rules.</p>
 <p>Make sure to replace <code>&lt;some-registry&gt;</code> with the location of your container registry and <code>&lt;tag&gt;</code> with the tag you want to use.</p>
 <ol>
 <li>Install Instances of Custom Resources:</li>
@@ -1136,7 +1136,7 @@ This will allow you to test the operators RBAC rules.</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>manifests
 </code></pre></div>
 <p><strong>NOTE:</strong> Run <code>make --help</code> for more information on all potential <code>make</code> targets</p>
-<p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p>
+<p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator-SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p>
 
   <!--
   Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
@@ -1174,7 +1174,7 @@ This will allow you to test the operators RBAC rules.</p>
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 25, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

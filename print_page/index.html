@@ -600,7 +600,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -670,7 +670,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -753,8 +753,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -767,8 +767,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -962,7 +962,7 @@
         
           <li class="md-nav__item">
   <a href="#decisions-0001-operator-sdk" class="md-nav__link">
-    14. Operator SDK
+    14. Operator-SDK
   </a>
   
 </li>
@@ -997,7 +997,7 @@
         
           <li class="md-nav__item">
   <a href="#decisions-0005-replace-current-ltb-backend" class="md-nav__link">
-    19. Replace Current LTB Backend
+    19. Replace KVM/Docker-based LTB Backend
   </a>
   
 </li>
@@ -1038,15 +1038,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#decisions-0011-programming-language" class="md-nav__link">
-    25. Programming Language
+  <a href="#decisions-0012-testing-framework" class="md-nav__link">
+    25. Testing Framework
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#decisions-0012-testing-framework" class="md-nav__link">
-    26. Testing Framework
+  <a href="#decisions-0013-programming-language" class="md-nav__link">
+    26. Programming Language
   </a>
   
 </li>
@@ -1094,7 +1094,7 @@
             </div>
         </section>
         <section class="print-page" id="index"><h1 id="index-lab-topology-builder-documentation">Lab Topology Builder Documentation<a class="headerlink" href="#index-lab-topology-builder-documentation" title="Permanent link">&para;</a></h1>
-<p>The Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>) is an open source project that allows users to deploy networking labs on Kubernetes. It is a tool that enables you to build a topology of virtual machines and containers, which are connected to each other according to the network topology you have defined.</p>
+<p>The Lab Topology Builder (<abbr title="Lab Topology Builder">LTB</abbr>) is an open source project that allows users to deploy networking labs on Kubernetes. It is a tool that enables you to build a topology of virtual machines and containers, that are connected to each other according to the network topology you have defined.</p>
 <p>To get started, please refer to the <a href="#user-guide">User Guide</a>.</p>
 <h2 id="index-features">Features<a class="headerlink" href="#index-features" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1147,15 +1147,15 @@
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.25.0
 </code></pre></div>
 <p>Change the version to the desired one.</p>
-<h2 id="user-guide-installation-of-the-ltb-k8s-operator">Installation of the <abbr title="Lab Topology Builder">LTB</abbr> K8s operator<a class="headerlink" href="#user-guide-installation-of-the-ltb-k8s-operator" title="Permanent link">&para;</a></h2>
+<h2 id="user-guide-installation-of-the-ltb-k8s-operator">Installation of the <abbr title="Lab Topology Builder">LTB</abbr> K8s Operator<a class="headerlink" href="#user-guide-installation-of-the-ltb-k8s-operator" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>Install the operator by creating a catalog source and subscription.
+<p>Install the <abbr title="Lab Topology Builder">LTB</abbr> Operator by creating a catalog source and subscription.
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
 </code></pre></div></p>
 </li>
 <li>
-<p>Wait for the operator to be installed
+<p>Wait for the <abbr title="Lab Topology Builder">LTB</abbr> Operator to be installed (this might take a few seconds).
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>-w
 </code></pre></div></p>
 </li>
@@ -1225,11 +1225,11 @@ Example: <code>{{ .Name }}</code> will be replaced with the name of the node fro
 <p>After you have defined some node types, you can create a lab template.
 A lab template defines the nodes that should be created for a lab, how they should be configured and how they should be connected.</p>
 <h3 id="user-guide-example-lab-template">Example Lab Template<a class="headerlink" href="#user-guide-example-lab-template" title="Permanent link">&para;</a></h3>
-<p>This is an example of a lab template, which you can use as a starting point for your own labs.
+<p>This is an example of a lab template, that can be used as a starting point for your own labs.
 It uses the previously defined node types to create a <abbr title="Virtual Machine">VM</abbr> and two pods. They are referenced via the <code>nodeTypeRef</code> field.
 The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running <code>kubectl get node -o wide</code> and the port number by running <code>kubectl get svc</code>.</p>
 <p>Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.
-In the future, we plan to add support for point to point connections, which will be able to be defined as neighbors in the lab template.
+In the future, we plan to add support for point to point connections, that can be defined as neighbors in the lab template.
 The syntax for this is not yet definite, but it will probably look something like this:</p>
 <div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">neighbors</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;sample-node-1:1,sample-node-2:1&quot;</span>
@@ -1273,7 +1273,7 @@ The syntax for this is not yet definite, but it will probably look something lik
 </code></pre></div>
 <p>With the lab template defined, you can create a lab instance.</p>
 <h2 id="user-guide-example-lab-instance">Example Lab Instance<a class="headerlink" href="#user-guide-example-lab-instance" title="Permanent link">&para;</a></h2>
-<p>This is an example of lab instance, which you can use as a starting point for your own labs.
+<p>This is an example of a lab instance, that can be used as a starting point for your own labs.
 The lab instance references the previously defined lab template with the <code>labTemplateReference</code> field.
 You also need to provide a DNS address via the <code>dnsAddress</code> field. This address will be used to create routes for the web terminal to the lab nodes.
 For example, if you use the address <code>example.com</code>, the console of a node called <code>sample-node-1</code> will be available at <code>https://labinstance-sample-sample-node-1.example.com/</code> via a web terminal.</p>
@@ -1326,15 +1326,15 @@ For example, if you use the address <code>example.com</code>, the console of a n
 <p>The <abbr title="Lab Topology Builder">LTB</abbr> Operator is a K8s Operator for the <abbr title="Lab Topology Builder">LTB</abbr> application, which is responsible for creating, configuring, and managing the emulated network topologies of the <abbr title="Lab Topology Builder">LTB</abbr> application inside a Kubernetes cluster.
 It also automatically updates the status of the labs based on the current state of the associated containers and virtual machines, ensuring accurate and real-time lab information.</p>
 <h2 id="concepts-lab-template">Lab Template<a class="headerlink" href="#concepts-lab-template" title="Permanent link">&para;</a></h2>
-<p>Lab Template is a <abbr title="Custom Resource">CR</abbr>, which defines a template for a lab. It contains information about which nodes are part of the lab, their configuration and how they are connected to each other.</p>
+<p>A <code>LabTemplate</code> is a Kubernetes custom resource (<abbr title="Custom Resource">CR</abbr>), that defines a template for a lab. It contains information about which nodes are part of the lab, their configuration, and how they are connected to each other.</p>
 <h2 id="concepts-lab-instance">Lab Instance<a class="headerlink" href="#concepts-lab-instance" title="Permanent link">&para;</a></h2>
-<p>A lab instance is a <abbr title="Custom Resource">CR</abbr> that describes a lab that you want to deploy in a Kubernetes cluster.
-It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself. In addition, it also has a dns address field, which will be used to access the nodes using the web-based terminal.</p>
+<p>A <code>LabInstance</code> is a custom resource (<abbr title="Custom Resource">CR</abbr>) that describes a specific lab intended for deployment within a Kubernetes cluster.
+It has a reference to the <code>LabTemplate</code> you want to use and also has a status field that is updated by the <abbr title="Lab Topology Builder">LTB</abbr> Operator. This status field shows how many pods and VMs are running in the lab and the status of the <code>LabInstance</code> itself. In addition, it also has a dns address field, that will be used to access the nodes using the web-based terminal.</p>
 <h2 id="concepts-node-type">Node Type<a class="headerlink" href="#concepts-node-type" title="Permanent link">&para;</a></h2>
-<p>In a network, a node represents any device that is part of the lab. A NodeType is a <abbr title="Custom Resource">CR</abbr> that defines a type of node that can be part of a lab. You reference the node type you want to have in your lab in the lab template.
+<p>In a network, a node represents any device that is part of the lab. A <code>NodeType</code> is a <abbr title="Custom Resource">CR</abbr> that defines a type of node that can be part of a lab. You reference the <code>NodeType</code> you want to have in your lab in the <code>LabTemplate</code>.
 Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a KubeVirt virtual machine or a regular Kubernetes pod.</p>
 <h2 id="concepts-links">Links<a class="headerlink" href="#concepts-links" title="Permanent link">&para;</a></h2>
-<p>If you would like to familiarize yourself with the concepts mentioned below, please refer to the following links:</p>
+<p>If you would like to familiarize yourself with the Kubernetes concepts mentioned above, please refer to the following links:</p>
 <ul>
 <li><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/">Kubernetes</a></li>
 <li><a href="https://kubernetes.io/docs/concepts/architecture/cluster-components/">Kubernetes Cluster</a></li>
@@ -1623,7 +1623,7 @@ which provides a reconcile function responsible for synchronizing resources unti
 <h2 id="contributions-contributor-guide-development-environment">Development Environment<a class="headerlink" href="#contributions-contributor-guide-development-environment" title="Permanent link">&para;</a></h2>
 <p>You’ll need a Kubernetes cluster to run against. You can find instructions on how to setup your dev cluster in the <a href="#contributions-dev-cluster-setup">Dev Cluster Setup</a> section.
 <strong>Note:</strong> Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster <code>kubectl cluster-info</code> shows).</p>
-<p>We recommend using VSCode with the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the operator already installed.</p>
+<p>We recommend using VSCode with the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Remote - Containers</a> extension. This will allow you to use our devcontainer, which has all the tools needed to develop and test the <abbr title="Lab Topology Builder">LTB</abbr> Operator already installed.</p>
 <h3 id="contributions-contributor-guide-prerequisites-for-recommended-ide-setup">Prerequisites for recommended IDE setup<a class="headerlink" href="#contributions-contributor-guide-prerequisites-for-recommended-ide-setup" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://docs.docker.com/get-docker/">Docker</a></li>
@@ -1637,8 +1637,8 @@ which provides a reconcile function responsible for synchronizing resources unti
 <li>Click the popup or use the command palette to reopen the repository in a container (Dev Containers: Reopen in Container)</li>
 </ol>
 <p>Now you are ready to start developing!</p>
-<h3 id="contributions-contributor-guide-running-the-operator-locally">Running the operator locally<a class="headerlink" href="#contributions-contributor-guide-running-the-operator-locally" title="Permanent link">&para;</a></h3>
-<p>You can run the operator locally on your machine, this is useful for quick testing and debugging. However, you will need to be aware that the operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore it also does not use the RBAC rules it would usually be deployed with.</p>
+<h3 id="contributions-contributor-guide-running-the-ltb-operator-locally">Running the <abbr title="Lab Topology Builder">LTB</abbr> Operator locally<a class="headerlink" href="#contributions-contributor-guide-running-the-ltb-operator-locally" title="Permanent link">&para;</a></h3>
+<p>You can run the <abbr title="Lab Topology Builder">LTB</abbr> Operator locally on your machine. This is useful for quick testing and debugging. However, you will need to be aware that the <abbr title="Lab Topology Builder">LTB</abbr> Operator will use the kubeconfig file on your machine, so you will need to make sure that the context is set to the cluster you want to run against. Therefore, it also does not use the RBAC rules it would usually be deployed with.</p>
 <ol>
 <li>Install the CRDs into the cluster:</li>
 </ol>
@@ -1654,10 +1654,10 @@ which provides a reconcile function responsible for synchronizing resources unti
 <p>To delete the CRDs from the cluster:</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>uninstall
 </code></pre></div>
-<h4 id="contributions-contributor-guide-running-the-operator-on-the-cluster">Running the operator on the cluster<a class="headerlink" href="#contributions-contributor-guide-running-the-operator-on-the-cluster" title="Permanent link">&para;</a></h4>
-<p>You can also run the operator on the cluster, this is useful for testing the operator in a more realistic environment.
-However, you will first need to login to some container registry that the cluster can access, so that you can push the operator image to that registry.
-This will allow you to test the operators RBAC rules.</p>
+<h4 id="contributions-contributor-guide-running-the-ltb-operator-on-the-cluster">Running the <abbr title="Lab Topology Builder">LTB</abbr> Operator on the cluster<a class="headerlink" href="#contributions-contributor-guide-running-the-ltb-operator-on-the-cluster" title="Permanent link">&para;</a></h4>
+<p>You can also run the <abbr title="Lab Topology Builder">LTB</abbr> Operator on the cluster. This is useful for testing it in a more realistic environment.
+However, you will first need to login to some container registry that the cluster can access, so that you can push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image to that registry.
+This will allow you to test the <abbr title="Lab Topology Builder">LTB</abbr> Operator's RBAC rules.</p>
 <p>Make sure to replace <code>&lt;some-registry&gt;</code> with the location of your container registry and <code>&lt;tag&gt;</code> with the tag you want to use.</p>
 <ol>
 <li>Install Instances of Custom Resources:</li>
@@ -1683,7 +1683,7 @@ This will allow you to test the operators RBAC rules.</p>
 <div class="highlight"><pre><span></span><code>make<span class="w"> </span>manifests
 </code></pre></div>
 <p><strong>NOTE:</strong> Run <code>make --help</code> for more information on all potential <code>make</code> targets</p>
-<p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p></section><section class="print-page" id="contributions-coding-conventions"><h1 id="contributions-coding-conventions-coding-conventions">Coding Conventions<a class="headerlink" href="#contributions-coding-conventions-coding-conventions" title="Permanent link">&para;</a></h1>
+<p>You can find more information on how to develop the operator in the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/">Operator-SDK Documentation</a> and the <a href="https://book.kubebuilder.io/introduction.html">Kubebuilder Documentation</a></p></section><section class="print-page" id="contributions-coding-conventions"><h1 id="contributions-coding-conventions-coding-conventions">Coding Conventions<a class="headerlink" href="#contributions-coding-conventions-coding-conventions" title="Permanent link">&para;</a></h1>
 <p>We are following the <a href="https://golang.org/doc/effective_go">Effective Go</a> guidelines for coding conventions.
 The following is a summary of the most important conventions.</p>
 <h2 id="contributions-coding-conventions-naming">Naming<a class="headerlink" href="#contributions-coding-conventions-naming" title="Permanent link">&para;</a></h2>
@@ -1752,7 +1752,7 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>rke2-server<span class="w"> </span>-f
 </code></pre></div>
 <h3 id="contributions-dev-cluster-setup-add-kubernetes-tools-to-path-and-set-kubeconfig">Add Kubernetes tools to path and set kubeconfig<a class="headerlink" href="#contributions-dev-cluster-setup-add-kubernetes-tools-to-path-and-set-kubeconfig" title="Permanent link">&para;</a></h3>
-<p>Adds kubectl, crictl and ctr to path</p>
+<p>Adds kubectl, crictl and ctr to path.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$PATH:/var/lib/rancher/rke2/bin&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;source &lt;(kubectl completion bash)&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;alias k=kubectl&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
@@ -1782,7 +1782,7 @@ sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w">
 <h2 id="contributions-dev-cluster-setup-install-cluster-network-addons-operator">Install Cluster Network Addons Operator<a class="headerlink" href="#contributions-dev-cluster-setup-install-cluster-network-addons-operator" title="Permanent link">&para;</a></h2>
 <p>The <a href="https://github.com/kubevirt/cluster-network-addons-operator">Cluster Network Addons Operator</a> can be used to deploy additional networking components.
 Multus and Cilium are already installed via RKE2.
-Open vSwitch CNI Plugin can be installed via this operator.</p>
+The Open vSwitch CNI Plugin can be installed via this operator.</p>
 <p>First install the operator itself:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/namespace.yaml
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/network-addons-config.crd.yaml
@@ -1837,7 +1837,7 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 <p>You're now ready to use the cluster for development or testing purposes.</p>
 </div>
 <h2 id="contributions-dev-cluster-setup-metallb">MetalLB<a class="headerlink" href="#contributions-dev-cluster-setup-metallb" title="Permanent link">&para;</a></h2>
-<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> Operator.
+<p>Optionally, you can install MetalLB, but currently it is not required for using the <abbr title="Lab Topology Builder">LTB</abbr> Operator.
 <a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters.</p>
 <h3 id="contributions-dev-cluster-setup-install-operator-lifecycle-manager-olm">Install Operator Lifecycle Manager (OLM)<a class="headerlink" href="#contributions-dev-cluster-setup-install-operator-lifecycle-manager-olm" title="Permanent link">&para;</a></h3>
 <p>Install Operator Lifecycle Manager (OLM), a tool to help manage the operators running on your cluster.</p>
@@ -1881,9 +1881,9 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>l2advertisment.yaml
 </code></pre></div>
 <h2 id="contributions-dev-cluster-setup-storage">Storage<a class="headerlink" href="#contributions-dev-cluster-setup-storage" title="Permanent link">&para;</a></h2>
-<p>To store your virtual machine images and disks you may want to use a storage backend.
+<p>To store your virtual machine images and disks, you may want to use a storage backend.
 Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> Operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
-Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
+Trident is a dynamic storage provisioner for Kubernetes, and it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
 <p>Following you will find some instructions that may help you to install Trident on your cluster.</p>
 <p>You always can find more information about Trident in the <a href="https://docs.netapp.com/us-en/trident/index.html">official documentation</a>.</p>
 <p>Check connectivity to NetApp Storage:</p>
@@ -1933,8 +1933,8 @@ vim<span class="w"> </span>./setup/backend.json
 Make sure to enable nested virtualization on your local machine, if you want to run KubeVirt on a local development cluster.</p>
 </div></section><section class="print-page" id="contributions-technologies-used"><h1 id="contributions-technologies-used-tools-and-frameworks">Tools and Frameworks<a class="headerlink" href="#contributions-technologies-used-tools-and-frameworks" title="Permanent link">&para;</a></h1>
 <p>The tools and frameworks used in the project are listed below.</p>
-<h2 id="contributions-technologies-used-go-based-operator-sdk-framework">Go-based Operator SDK framework<a class="headerlink" href="#contributions-technologies-used-go-based-operator-sdk-framework" title="Permanent link">&para;</a></h2>
-<p>To create the <abbr title="Lab Topology Builder">LTB</abbr> Operator, we used the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/">Go-based Operator-SDK</a> framework, which provides a set of tools to simplify the process of building, testing and packaging our operator.</p>
+<h2 id="contributions-technologies-used-go-based-operator-sdk-framework">Go-based Operator-SDK framework<a class="headerlink" href="#contributions-technologies-used-go-based-operator-sdk-framework" title="Permanent link">&para;</a></h2>
+<p>To create the <abbr title="Lab Topology Builder">LTB</abbr> Operator, we used the <a href="https://sdk.operatorframework.io/docs/building-operators/golang/quickstart/">Go-based Operator-SDK</a> framework. It provides a set of tools to simplify the process of building, testing and packaging our operator.</p>
 <h2 id="contributions-technologies-used-kubevirt">Kubevirt<a class="headerlink" href="#contributions-technologies-used-kubevirt" title="Permanent link">&para;</a></h2>
 <p><a href="https://kubevirt.io/">Kubevirt</a> is a tool that provides a virtual machine management layer on top of Kubernetes. It allows us to deploy virtual machines on Kubernetes.</p>
 <h2 id="contributions-technologies-used-kubernetes">Kubernetes<a class="headerlink" href="#contributions-technologies-used-kubernetes" title="Permanent link">&para;</a></h2>
@@ -1948,14 +1948,14 @@ Security and Performance tests should be added in the future as the project matu
 <h2 id="contributions-test-concepts-tools">Tools<a class="headerlink" href="#contributions-test-concepts-tools" title="Permanent link">&para;</a></h2>
 <p>The following tools are used to test the <abbr title="Lab Topology Builder">LTB</abbr> Operator, you can find more information why they were chosen in the <a href="#decisions-0012-testing-framework">Testing Framework Decision</a>:</p>
 <ul>
-<li><a href="https://pkg.go.dev/testing">Testing</a>: The default Go testing library that provides support for automated testing of Go packages. It is intended to be used in concert with the "go test" command, which automates execution of any function of the form</li>
+<li><a href="https://pkg.go.dev/testing">Testing</a>: The default Go testing library that provides support for automated testing of Go packages. It is intended to be used together with the "go test" command, which automates execution of any function of the form <code>func TestXxx(*testing.T)</code>, where Xxx does not start with a lowercase letter.</li>
 <li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write expressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
 <li><a href="https://onsi.github.io/gomega/">Gomega</a>: a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the <a href="https://onsi.github.io/ginkgo/">Ginkgo</a> testing framework.</li>
 </ul>
 <h2 id="contributions-test-concepts-strategies-test-approach">Strategies: Test Approach<a class="headerlink" href="#contributions-test-concepts-strategies-test-approach" title="Permanent link">&para;</a></h2>
 <p>We focused on unit tests for the <abbr title="Lab Topology Builder">LTB</abbr> Operator, as they were easy to implement and provide a good coverage of the code.
 At a later stage of the project, we could add integration tests to ensure that the <abbr title="Lab Topology Builder">LTB</abbr> Operator works as expected with other components like the <abbr title="Lab Topology Builder">LTB</abbr> API.</p>
-<p>We aspire to achieve approximately 90% test coverage, to increase the maintainability and stability of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
+<p>We aspire to achieve at least 90% test coverage, to increase the maintainability and stability of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h3 id="contributions-test-concepts-unit-tests">Unit Tests<a class="headerlink" href="#contributions-test-concepts-unit-tests" title="Permanent link">&para;</a></h3>
 <p>Unit rely on the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client/fake">Fake Client</a> package from the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library to create a fake client that can be used to mock interactions with the Kubernetes API.
 This allows us to test functions that interact with the Kubernetes API without mocking the complete API or using a real Kubernetes cluster.</p>
@@ -1969,7 +1969,7 @@ Currently, we have two workflows:</p>
 </ul>
 <h2 id="contributions-ci-deploy-docs">Deploy docs<a class="headerlink" href="#contributions-ci-deploy-docs" title="Permanent link">&para;</a></h2>
 <p>This workflow is used to deploy the <a href="https://www.mkdocs.org/">mkdocs</a> documentation to GitHub Pages.
-It is triggered on every push to the <code>main</code> branch, that affects the documentation. Specifically, it is triggered when a file in the <code>docs</code> directory or the <code>mkdocs.yaml</code> configuration file has changed.</p>
+It is triggered on every push to the <code>main</code> branch that affects the documentation. Specifically, it is triggered when a file in the <code>docs</code> directory or the <code>mkdocs.yaml</code> configuration file has changed.</p>
 <p>Check the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/edit/main/.github/workflows/deploy-docs-ci.yml">deploy-docs-ci.yaml</a> action for more details.</p>
 <h2 id="contributions-ci-operator-ci">Operator CI<a class="headerlink" href="#contributions-ci-operator-ci" title="Permanent link">&para;</a></h2>
 <p>This workflow is used to test, build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image, CatalogSource and Bundle to the GitHub Container Registry.
@@ -1983,8 +1983,8 @@ Pull requests are checked for the code coverage and will block the merge if the 
 <p>We use the GitHub actions provided by <a href="https://github.com/docker">Docker</a> to build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image to the GitHub Container Registry.
 Additionally, we use <a href="https://github.com/sigstore/cosign">cosign</a> to sign the images, so that users can verify the authenticity of the image.</p>
 <h3 id="contributions-ci-additional-deployment-artifacts">Additional deployment artifacts<a class="headerlink" href="#contributions-ci-additional-deployment-artifacts" title="Permanent link">&para;</a></h3>
-<p>To be able to deploy the operator with the <a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a>, a <a href="https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/">Bundle</a> and a <a href="https://olm.operatorframework.io/docs/tasks/creating-a-catalog/">CatalogSource</a> must be created.
-These artifacts are created with the [Operator-SDK], to simplify the pipeline these tasks have been exported to the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile">Makefile</a></p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
+<p>To be able to deploy the <abbr title="Lab Topology Builder">LTB</abbr> Operator with the <a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a>, a <a href="https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/">Bundle</a> and a <a href="https://olm.operatorframework.io/docs/tasks/creating-a-catalog/">CatalogSource</a> must be created.
+These artifacts are created with the <a href="https://sdk.operatorframework.io/">Operator-SDK</a>, to simplify the pipeline these tasks have been exported to the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile">Makefile</a></p></section><h1 class='nav-section-title-end'>Ended: Contributions</h1>
                         <h1 class='nav-section-title' id='section-architecture'>
                             Architecture <a class='headerlink' href='#section-architecture' title='Permanent link'>↵</a>
                         </h1>
@@ -2011,8 +2011,8 @@ The frontend is responsible for the following tasks:</p>
 <h2 id="architecture-k8s-ltb-architecture-api">API<a class="headerlink" href="#architecture-k8s-ltb-architecture-api" title="Permanent link">&para;</a></h2>
 <p>The API is responsible for the following tasks:</p>
 <ul>
-<li>To create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
-<li>Exposes status of lab instances</li>
+<li>Create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
+<li>Expose status of lab instances</li>
 <li>Expose information on how to access the deployed lab nodes</li>
 <li>Authentication via an external authentication provider</li>
 </ul>
@@ -2027,20 +2027,20 @@ On the other hand, it has the drawback that the <abbr title="Lab Topology Builde
 <h2 id="architecture-k8s-ltb-architecture-operator">Operator<a class="headerlink" href="#architecture-k8s-ltb-architecture-operator" title="Permanent link">&para;</a></h2>
 <p>The operator is responsible for the following tasks:</p>
 <ul>
-<li>Deploying/destroying the containers and vms</li>
+<li>Deploy and destroy the containers and vms</li>
 <li>Check validity of <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
-<li>Enables you to access the deployed containers and vms via different protocols</li>
-<li>Providing remote access to the lab node console via a web terminal</li>
-<li>Managing reservations (create, delete, etc.)</li>
-<li>Providing remote Wireshark capture capabilities</li>
+<li>Enable the user to access the deployed containers and vms via different protocols</li>
+<li>Provide remote access to the lab node console via a web terminal</li>
+<li>Manage reservations (create, delete, etc.)</li>
+<li>Provide remote Wireshark capture capabilities</li>
 </ul>
 <p>The operator is implemented according to the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes operator pattern</a>.
 It has multiple controllers that are responsible for managing a particular custom resource like lab template.</p>
 <h3 id="architecture-k8s-ltb-architecture-network-connectivity-between-lab-nodes">Network connectivity between lab nodes<a class="headerlink" href="#architecture-k8s-ltb-architecture-network-connectivity-between-lab-nodes" title="Permanent link">&para;</a></h3>
 <p>The network connectivity between lab nodes can be implemented with <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus</a>, which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
 Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.</p>
-<p>Currently we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
-Additionally the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
+<p>Currently, we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
+Additionally, the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
 <h3 id="architecture-k8s-ltb-architecture-remote-access-to-lab-nodes">Remote access to lab nodes<a class="headerlink" href="#architecture-k8s-ltb-architecture-remote-access-to-lab-nodes" title="Permanent link">&para;</a></h3>
 <p>Remote access to the lab nodes has two variants:</p>
 <ul>
@@ -2058,17 +2058,17 @@ It might be possible to use the same authentication provider as the <abbr title=
 <p>Access control needs to be implemented by the lab node itself, because the Kubernetes service of type <code>LoadBalancer</code> does not provide any authentication or authorization features.
 An example for this would be to provide SSH keys for the lab nodes inside the lab template config field.</p>
 <h3 id="architecture-k8s-ltb-architecture-scheduling-lab-instances-and-resource-reservation">Scheduling lab instances and resource reservation<a class="headerlink" href="#architecture-k8s-ltb-architecture-scheduling-lab-instances-and-resource-reservation" title="Permanent link">&para;</a></h3>
-<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding an additional fields (creationTimestamp, deletionTimestamp) to the lab instance custom resource.
-The lab instance controller then is able to check these fields and deploy or delete the lab instance at the specified time.
-There are multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.</p>
+<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding additional fields (creationTimestamp, deletionTimestamp) to the lab instance's <abbr title="Custom Resource Definition">CRD</abbr>.
+Then, the lab instance controller can examine these fields and proceed to deploy or delete the lab instance at the specified time.
+There are multiple ways to implement this: either by regularly checking the lab instance, or by requeuing the creation/deletion event of the lab instance to the specified time.</p>
 <p>If there are any issues with the requeuing of these events over such a long period of time, writing a Kubernetes <a href="https://pkg.go.dev/k8s.io/client-go/informers">informer</a> could be a solution.</p>
-<p>Resource reservation in a capacity planning sense is not provided by Kubernetes, a manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
+<p>Resource reservation in a capacity planning sense is not provided by Kubernetes. A manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
 Planned resource management is a huge topic, and we would recommend to create a dedicated project for this.</p>
 <h2 id="architecture-k8s-ltb-architecture-comparison-to-the-kvmdocker-based-ltb">Comparison to the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr><a class="headerlink" href="#architecture-k8s-ltb-architecture-comparison-to-the-kvmdocker-based-ltb" title="Permanent link">&para;</a></h2>
 <p>The diagram below illustrates the components of the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>, highlighting the changes introduced by the Kubernetes <abbr title="Lab Topology Builder">LTB</abbr>.</p>
 <p><a class="glightbox" href="../assets/drawings/Old-LTB-Architecture-replaced.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Comparison to the KVM/Docker-based LTB" src="../assets/drawings/Old-LTB-Architecture-replaced.drawio.svg" /></a></p>
 <h2 id="architecture-k8s-ltb-architecture-c4-model">C4 Model<a class="headerlink" href="#architecture-k8s-ltb-architecture-c4-model" title="Permanent link">&para;</a></h2>
-<p>The following diagrams show the C4 model of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr>, it should provide a high level overview of the system.</p>
+<p>The following diagrams show the C4 model of the Kubernetes-based <abbr title="Lab Topology Builder">LTB</abbr>, offering a high-level overview of the application's architecture.</p>
 <h3 id="architecture-k8s-ltb-architecture-system-context-diagram">System Context Diagram<a class="headerlink" href="#architecture-k8s-ltb-architecture-system-context-diagram" title="Permanent link">&para;</a></h3>
 <p><a class="glightbox" href="../assets/drawings/C4-System-Context.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 System Context" src="../assets/drawings/C4-System-Context.drawio.svg" /></a></p>
 <h3 id="architecture-k8s-ltb-architecture-container-diagram">Container Diagram<a class="headerlink" href="#architecture-k8s-ltb-architecture-container-diagram" title="Permanent link">&para;</a></h3>
@@ -2101,16 +2101,16 @@ Planned resource management is a huge topic, and we would recommend to create a 
 <p>The backend is accessible via API and an Admin Web UI.
 It is responsible for the following tasks:</p>
 <ul>
-<li>parsing the yaml topology files</li>
-<li>deploying/destroying the containers and vms</li>
-<li>exposes status of lab deployments</li>
-<li>exposes information on how to access the deployed containers and vms</li>
-<li>provides remote ssh capabilities</li>
-<li>provides remote Wireshark capture capabilities</li>
-<li>managing reservations (create, delete, etc.)</li>
-<li>exposes node resource usage</li>
-<li>user management</li>
-<li>exposes information about a device (version, groups, etc.)</li>
+<li>Parse the yaml topology files</li>
+<li>Deploy/destroy the containers and vms</li>
+<li>Expose status of lab deployments</li>
+<li>Expose information on how to access the deployed containers and vms</li>
+<li>Provide remote ssh capabilities</li>
+<li>Provide remote Wireshark capture capabilities</li>
+<li>Manage reservations (create, delete, etc.)</li>
+<li>Expose node resource usage</li>
+<li>User management</li>
+<li>Expose information about a device (version, groups, configuration, etc)</li>
 </ul>
 <p>It is composed of the following components:</p>
 <ul>
@@ -2122,19 +2122,27 @@ It is responsible for the following tasks:</p>
 <p>The orchestration component is responsible for creating different tasks using Celery and executing them on a remote host.
 There are 4 different types of tasks:</p>
 <ul>
-<li>DeploymentTask</li>
+<li>DeploymentTask<ul>
 <li>Deploys containers in docker</li>
 <li>Deploys VMs using <abbr title="Kernel-based Virtual Machine">KVM</abbr></li>
 <li>Creates connections between containers and VMs using an <abbr title="Open vSwitch">OVS</abbr> bridge</li>
-<li>RemovalTask</li>
+</ul>
+</li>
+<li>RemovalTask<ul>
 <li>Removes a running lab</li>
-<li>MirrorInterfaceTask</li>
+</ul>
+</li>
+<li>MirrorInterfaceTask<ul>
 <li>Creates a mirror interface on a connection</li>
-<li>SnapshotTask</li>
+</ul>
+</li>
+<li>SnapshotTask<ul>
 <li>Takes a snapshot of a running lab</li>
 </ul>
+</li>
+</ul>
 <h3 id="architecture-kvm-docker-ltb-architecture-reservations">Reservations<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-reservations" title="Permanent link">&para;</a></h3>
-<p>The reservation component is responsible for reserving system resources in advance. It is responsible for the following tasks:</p>
+<p>The reservation component is responsible for reserving system resources in advance, comprising the following tasks:</p>
 <ul>
 <li>Create a reservation</li>
 <li>Delete a reservation</li>
@@ -2168,7 +2176,7 @@ To be more precise, it is responsible for scheduling the deployment and deletion
 <h2 id="architecture-kvm-docker-ltb-architecture-celery">Celery<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-celery" title="Permanent link">&para;</a></h2>
 <p>Celery is used to execute the commands to create and delete the lab nodes and connections.</p>
 <h2 id="architecture-kvm-docker-ltb-architecture-web-ssh">Web-SSH<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-web-ssh" title="Permanent link">&para;</a></h2>
-<p>Web-SSH is used to provide a web based ssh client, which can be used to access the deployed containers and vms aka lab nodes.</p>
+<p>Web-SSH is used to provide a web based ssh client, that can be used to access the deployed containers and vms aka lab nodes.</p>
 <h2 id="architecture-kvm-docker-ltb-architecture-prometheus">Prometheus<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-prometheus" title="Permanent link">&para;</a></h2>
 <p>Prometheus is used to collect metrics about CPU, memory and disk usage of the hypervisor nodes.</p>
 <h2 id="architecture-kvm-docker-ltb-architecture-traefik">Traefik<a class="headerlink" href="#architecture-kvm-docker-ltb-architecture-traefik" title="Permanent link">&para;</a></h2>
@@ -2218,31 +2226,31 @@ Which format and structure should these records follow?</p>
 <li>The MADR project is vivid.</li>
 <li>Version 2.1.2 is the latest one available when starting to document ADRs.</li>
 <li>A Visual Studio Code extension <a href="https://marketplace.visualstudio.com/items?itemName=StevenChen.vscode-adr-manager">ADR Manager</a> for MADR exits, which makes managing ADRs easy.</li>
-</ul></section><section class="print-page" id="decisions-0001-operator-sdk"><h1 id="decisions-0001-operator-sdk-operator-sdk">Operator SDK<a class="headerlink" href="#decisions-0001-operator-sdk-operator-sdk" title="Permanent link">&para;</a></h1>
+</ul></section><section class="print-page" id="decisions-0001-operator-sdk"><h1 id="decisions-0001-operator-sdk-operator-sdk">Operator-SDK<a class="headerlink" href="#decisions-0001-operator-sdk-operator-sdk" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0001-operator-sdk-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0001-operator-sdk-context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>It's best practice to use an SDK to build operators for Kubernetes. The SDK provides a higher level of abstraction for creating Kubernetes operators, which makes it easier to write and manage operators.
+<p>It's best practice to use an SDK to build operators for Kubernetes. The SDK provides a higher level of abstraction for creating Kubernetes operators, making it easier to write and manage operators.
 There are multiple SDKs available for building operators.
 We need a SDK that's flexible and easy to use and can be used with Go.</p>
 <h2 id="decisions-0001-operator-sdk-considered-options">Considered Options<a class="headerlink" href="#decisions-0001-operator-sdk-considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Operator SDK (Operator Framework)</li>
+<li>Operator-SDK (Operator Framework)</li>
 <li>KubeBuilder</li>
 <li>Kopf</li>
 <li>KUDO</li>
 <li>Metacontroller</li>
 </ul>
 <h2 id="decisions-0001-operator-sdk-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0001-operator-sdk-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Operator SDK", because it provides a high level of abstraction for creating Kubernetes operators, which makes it easier to write and manage operators.
-Additionally, there are tools and libraries for building and testing the operator included in Operator SDK, it's easy to use and can be used with Go.</p>
+<p>Chosen option: "Operator-SDK", because it provides a high level of abstraction for creating Kubernetes operators, making it easier to write and manage operators.
+Additionally, the Operator-SDK incorporates tools and libraries for building, testing and packaging operators, offering a user-friendly experience and is compatible with Go.</p>
 <h2 id="decisions-0001-operator-sdk-links">Links<a class="headerlink" href="#decisions-0001-operator-sdk-links" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://sdk.operatorframework.io/">Operator SDK</a></li>
+<li><a href="https://sdk.operatorframework.io/">Operator-SDK</a></li>
 <li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Tools to build an operator</a></li>
 </ul></section><section class="print-page" id="decisions-00011-remote-access"><h1 id="decisions-00011-remote-access-remote-access">Remote-Access<a class="headerlink" href="#decisions-00011-remote-access-remote-access" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-00011-remote-access-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-00011-remote-access-context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>For the lab instances to be useful for the students, they need to be able to access the pods (containers) and VMs.
 Access to pods/VMs should only be granted to user with the appropriate access rights.
-It should be possible to access the pods/VMs console and or access it via multiple <abbr title="Out-of-Band">OOB</abbr> protocols (SSH, RDP, VNC, etc.).</p>
+It should be possible to access the console of the pods/VMs and employ various out-of-band (<abbr title="Out-of-Band">OOB</abbr>) protocols such as SSH, RDP, VNC, and more.</p>
 <h2 id="decisions-00011-remote-access-considered-options">Considered Options<a class="headerlink" href="#decisions-00011-remote-access-considered-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Kubernetes Service</li>
@@ -2250,9 +2258,9 @@ It should be possible to access the pods/VMs console and or access it via multip
 <li>ttyd</li>
 </ul>
 <h2 id="decisions-00011-remote-access-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-00011-remote-access-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "ttyd and Kubernetes Service", ttyd will be used as a jump host to access the pods/VMs console. A Kubernetes service will be used to allow access the pods/VMs via <abbr title="Out-of-Band">OOB</abbr> protocols.
-Security for the console access will likely be easy to implement.
-Secure access via <abbr title="Out-of-Band">OOB</abbr> protocols was considered, but will need to be researched further, currently it would depend on the <abbr title="Out-of-Band">OOB</abbr> protocol used and the security features it provides.</p></section><section class="print-page" id="decisions-0002-operator-scope"><h1 id="decisions-0002-operator-scope-operator-scope">Operator Scope<a class="headerlink" href="#decisions-0002-operator-scope-operator-scope" title="Permanent link">&para;</a></h1>
+<p>Chosen option: "ttyd and Kubernetes Service", because ttyd can be used as a jump host to access the pods/VMs' console. A Kubernetes service can be used to allow access the pods/VMs via <abbr title="Out-of-Band">OOB</abbr> protocols.
+Security for the console access will be easy to implement.
+Secure access for <abbr title="Out-of-Band">OOB</abbr> protocols was considered, but needs to be researched further. Currently, it depends on the chosen <abbr title="Out-of-Band">OOB</abbr> protocol and the security features it provides.</p></section><section class="print-page" id="decisions-0002-operator-scope"><h1 id="decisions-0002-operator-scope-operator-scope">Operator Scope<a class="headerlink" href="#decisions-0002-operator-scope-operator-scope" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0002-operator-scope-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0002-operator-scope-context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>The Operator could be a namespace-scoped or cluster-scoped.</p>
 <h2 id="decisions-0002-operator-scope-considered-options">Considered Options<a class="headerlink" href="#decisions-0002-operator-scope-considered-options" title="Permanent link">&para;</a></h2>
@@ -2283,24 +2291,24 @@ Secure access via <abbr title="Out-of-Band">OOB</abbr> protocols was considered,
 <li>Manual Setup</li>
 </ul>
 <h2 id="decisions-0004-dev-container-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0004-dev-container-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Dev Container", because a dev container setup lets you create the same development environment for all team members, which ensures consistency. It also provides a completely isolated development environment, which helps to avoid software incompatibility issues, such as operator-sdk not working on Windows. Moreover, a dev container is easily portable and works on all operating systems that support Docker.
-The only downside is that not all IDEs support dev containers, but at least two of the currently most popular IDEs VS Code and Visual Studio support dev containers.</p>
+<p>Chosen option: "Dev Container", because a dev container setup lets you create the same development environment for all team members to ensure consistency. It also provides a completely isolated development environment, which helps to avoid software incompatibility issues, such as Operator-SDK not working on Windows. Moreover, a dev container is easily portable and works on all operating systems that support Docker.
+The only downside is that not all IDEs support dev containers, but at least two of the currently most popular IDEs, namely VS Code and Visual Studio support dev containers.</p>
 <h2 id="decisions-0004-dev-container-links">Links<a class="headerlink" href="#decisions-0004-dev-container-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="http://bit.ly/3TQ8zhx">DevContainer</a></li>
 <li><a href="https://survey.stackoverflow.co/2023/#most-popular-technologies-new-collab-tools">Most Popular IDEs</a></li>
-</ul></section><section class="print-page" id="decisions-0005-replace-current-ltb-backend"><h1 id="decisions-0005-replace-current-ltb-backend-replace-current-ltb-backend">Replace Current <abbr title="Lab Topology Builder">LTB</abbr> Backend<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-replace-current-ltb-backend" title="Permanent link">&para;</a></h1>
+</ul></section><section class="print-page" id="decisions-0005-replace-current-ltb-backend"><h1 id="decisions-0005-replace-current-ltb-backend-replace-kvmdocker-based-ltb-backend">Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-replace-kvmdocker-based-ltb-backend" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0005-replace-current-ltb-backend-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>The <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend could replace the current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully or partially by leaving features, such as User-Management in the current <abbr title="Lab Topology Builder">LTB</abbr> Backend.</p>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend could replace the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend fully or partially by reusing parts, such as</p>
 <h2 id="decisions-0005-replace-current-ltb-backend-considered-options">Considered Options<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully</li>
-<li>Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend partially</li>
+<li>Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend fully</li>
+<li>Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend partially</li>
 </ul>
 <h2 id="decisions-0005-replace-current-ltb-backend-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0005-replace-current-ltb-backend-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully", because huge parts of the current <abbr title="Lab Topology Builder">LTB</abbr> Backend would need to be rewritten to be compatible with the new <abbr title="Lab Topology Builder">LTB</abbr> K8s operator and it would be easier to rewrite the whole backend. Additionally, the same programming language can be used throughout the whole Backend, Go.</p></section><section class="print-page" id="decisions-0006-lab-instance-set"><h1 id="decisions-0006-lab-instance-set-lab-instance-set">Lab Instance Set<a class="headerlink" href="#decisions-0006-lab-instance-set-lab-instance-set" title="Permanent link">&para;</a></h1>
+<p>Chosen option: "Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend fully", because huge parts of the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend would need to be rewritten to be compatible with the new <abbr title="Lab Topology Builder">LTB</abbr> K8s operator and it would be easier to rewrite the whole backend. Additionally, the same programming language can be used throughout the whole Backend, being Go.</p></section><section class="print-page" id="decisions-0006-lab-instance-set"><h1 id="decisions-0006-lab-instance-set-lab-instance-set">Lab Instance Set<a class="headerlink" href="#decisions-0006-lab-instance-set-lab-instance-set" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0006-lab-instance-set-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0006-lab-instance-set-context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>We could create a <abbr title="Custom Resource">CR</abbr> called LabInstanceSet, and tell the operator we want e.g. 10 LabInstances by providing one LabInstance <abbr title="Custom Resource">CR</abbr> and a generator like a list of names or we could provide the operator 10 CRs to create 10 LabInstances.</p>
+<p>One approach could involve creating a custom resource (<abbr title="Custom Resource">CR</abbr>) named <code>LabInstanceSet</code> and specifying our desired quantity of <code>LabInstances</code> to the operator. For instance, we could provide a single <code>LabInstance</code> along with a generator, such as a list of names, to indicate that we want 10 <code>LabInstances</code>. Alternatively, we could directly provide the <abbr title="Lab Topology Builder">LTB</abbr> Operator with 10 separate <code>LabInstances</code> to create the desired quantity of 10.</p>
 <h2 id="decisions-0006-lab-instance-set-considered-options">Considered Options<a class="headerlink" href="#decisions-0006-lab-instance-set-considered-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li>With LabInstanceSet</li>
@@ -2315,30 +2323,30 @@ The only downside is that not all IDEs support dev containers, but at least two 
 <li>GitOps</li>
 <li>Use frontend</li>
 <li>Use kubectl</li>
-<li>All</li>
 </ul>
 <h2 id="decisions-0007-interaction-with-operator-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0007-interaction-with-operator-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "All", because these options are not mutually exclusive and can be used together, we want to support all of them.</p></section><section class="print-page" id="decisions-0008-namespace-per-labinstance"><h1 id="decisions-0008-namespace-per-labinstance-namespace-per-labinstance">Namespace Per LabInstance<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-namespace-per-labinstance" title="Permanent link">&para;</a></h1>
+<p>Chosen option: "All considered options", because these options are not mutually exclusive and can be used together, therefore we want to support all of them.</p></section><section class="print-page" id="decisions-0008-namespace-per-labinstance"><h1 id="decisions-0008-namespace-per-labinstance-namespace-per-labinstance">Namespace Per LabInstance<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-namespace-per-labinstance" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0008-namespace-per-labinstance-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>LabInstances could be created in separate namespaces or one namespace for all LabInstances.</p>
+<p>Lab instances could be created in separate namespaces or one namespace for all lab instances.</p>
 <h2 id="decisions-0008-namespace-per-labinstance-considered-options">Considered Options<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li>One Namespace for all LabInstances</li>
-<li>Namespace per LabInstance</li>
+<li>One Namespace for all lab instances</li>
+<li>Namespace per lab instance</li>
 </ul>
 <h2 id="decisions-0008-namespace-per-labinstance-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0008-namespace-per-labinstance-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Namespace per LabInstance", because it will be easier in the future to implement features like RBAC and resource quotas and limits.</p></section><section class="print-page" id="decisions-0009-k8s-aggreted-api-over-standalone-api"><h1 id="decisions-0009-k8s-aggreted-api-over-standalone-api-k8s-aggreted-api-over-standalone-api">K8s Aggreted API Over Standalone API<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-k8s-aggreted-api-over-standalone-api" title="Permanent link">&para;</a></h1>
+<p>Chosen option: "Namespace per lab instance", because it will be easier in the future to implement features like network policies and resource quotas and limits.
+This approach ensures easier management and isolation of each lab instance within its dedicated namespace.</p></section><section class="print-page" id="decisions-0009-k8s-aggreted-api-over-standalone-api"><h1 id="decisions-0009-k8s-aggreted-api-over-standalone-api-k8s-aggreted-api-over-standalone-api">K8s Aggreted API Over Standalone API<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-k8s-aggreted-api-over-standalone-api" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>We want a declarative way of creating <abbr title="Lab Topology Builder">LTB</abbr> labs inside Kubernetes using Kubernetes native pods and KubeVirt virtual machines.
-We could either create a standalone API which interacts with the Kubernetes API and does not follow the Kubernetes API conventions. And therefore is not compatible with Kubernetes tools, such as dashboards or <code>kubectl</code>, but would allow complete control over the API design.
-Or we could create an aggregated API which uses the Kubernetes aggregation layer to extend the Kubernetes API, which would allow us to use Kubernetes tools, such as dashboards or <code>kubectl</code>, but would limit the control over the API design.</p>
+We could either create a standalone API which interacts with the Kubernetes API and does not follow the Kubernetes API conventions. It would therefore not be compatible with Kubernetes tools, such as dashboards or <code>kubectl</code>, but would allow complete control over the API design.
+Or we could create an aggregated API which uses the Kubernetes aggregation layer to extend the Kubernetes API, which would allow us to use Kubernetes tools such as dashboards or <code>kubectl</code>, but would limit the control over the API design.</p>
 <h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-considered-options">Considered Options<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-considered-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Standalone API</li>
 <li>Aggregated API</li>
 </ul>
 <h2 id="decisions-0009-k8s-aggreted-api-over-standalone-api-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0009-k8s-aggreted-api-over-standalone-api-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Aggregated API", because Is better suited for declerative API, our new types will be readable and writeable using kubectl/Kubernetes tools, such as dashboards.
+<p>Chosen option: "Aggregated API", because our new types will be readable and writeable using kubectl and other Kubernetes tools, such as dashboards.
 We also can leverage Kuberbetes API support features this way.
 Additionally, our resources are scoped to a cluster or namespaces of a cluster.
 Finally, the Operator Pattern is simpler to implement this way.</p>
@@ -2349,15 +2357,15 @@ Finally, the Operator Pattern is simpler to implement this way.</p>
 <li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Operator Pattern</a></li>
 </ul></section><section class="print-page" id="decisions-0010-extending-ltb-with-new-node-types"><h1 id="decisions-0010-extending-ltb-with-new-node-types-extending-ltb-with-new-node-types">Extending <abbr title="Lab Topology Builder">LTB</abbr> with New Node Types<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-extending-ltb-with-new-node-types" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0010-extending-ltb-with-new-node-types-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>It should be possible to create, update and delete node types (e.g. Ubuntu, XRD, XR, IOS, Cumulus, etc.)
+<p>It should be possible to create, update and delete node types (e.g. Ubuntu, XRD, XR, IOS, Cumulus, etc.).
 Node types should be used inside lab templates and expose a way to provide a node with configuration (cloud-init, zero-touch, etc.)
 The amount of available network interfaces is dynamic and depends on how many connections a node has according to a specific lab template.</p>
 <h2 id="decisions-0010-extending-ltb-with-new-node-types-decision-drivers">Decision Drivers<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-decision-drivers" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Certain operating systems' images like XR, and XRD need a specific interface configuration which depends on how many interfaces a certain node will receive.</li>
-<li>The chosen solution should support multiple version of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...).</li>
+<li>The chosen solution should support multiple versions of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...).</li>
 <li>For XRd images, interfaces need to have environment variables set for each interface they use, and the interface count needs to be dynamically set according to the lab template.</li>
-<li>For XR <abbr title="Virtual Machine">VM</abbr> images, the first interface is the management interface and then there are two empty interfaces that need a special configuration.</li>
+<li>For XR virtual machine images, the first interface is the management interface and then there are two empty interfaces that need a special configuration.</li>
 <li>For mount from config might be different</li>
 <li>Cumulus VX images need a privileged container</li>
 <li>XRd need additional privileges</li>
@@ -2368,7 +2376,7 @@ The amount of available network interfaces is dynamic and depends on how many co
 <li>Go</li>
 </ul>
 <h2 id="decisions-0010-extending-ltb-with-new-node-types-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Custom Resources", because it will be possible to support all the cases mentioned in the decision drivers using go templates and CRs. Implementing the types in Go does not seem to bring any major advantages, whereas using CRs will be easier for external users to extend the system with new node types.</p>
+<p>Chosen option: "Custom Resources", because it will be possible to support all the cases mentioned in the decision drivers using Go templates and CRs. Implementing the types in Go does not seem to bring any major advantages, whereas using CRs will be easier for external users to extend the system with new node types.</p>
 <h3 id="decisions-0010-extending-ltb-with-new-node-types-positive-consequences">Positive Consequences<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-positive-consequences" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Easy to extend during runtime</li>
@@ -2377,24 +2385,13 @@ The amount of available network interfaces is dynamic and depends on how many co
 </ul>
 <h3 id="decisions-0010-extending-ltb-with-new-node-types-negative-consequences">Negative Consequences<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-negative-consequences" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Go Templates are not as powerful as Go, which could make it harder to implement certain node types.</li>
+<li>Go templates are not as powerful as Go, which could make it harder to implement certain node types.</li>
 <li>A Custom Resource is also a little bit less flexible than a Go type, but this should not be a problem for the use cases we have.</li>
 </ul>
 <h2 id="decisions-0010-extending-ltb-with-new-node-types-links">Links<a class="headerlink" href="#decisions-0010-extending-ltb-with-new-node-types-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://github.com/vrnetlab/vrnetlab">Example of similar solution using Go node types</a></li>
-</ul></section><section class="print-page" id="decisions-0011-programming-language"><h1 id="decisions-0011-programming-language-programming-language">Programming Language<a class="headerlink" href="#decisions-0011-programming-language-programming-language" title="Permanent link">&para;</a></h1>
-<h2 id="decisions-0011-programming-language-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0011-programming-language-context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>We need to choose a programming language for the project.
-The considered options are based on the supported languages of the Operator SDK.</p>
-<h2 id="decisions-0011-programming-language-considered-options">Considered Options<a class="headerlink" href="#decisions-0011-programming-language-considered-options" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Go</li>
-<li>Helm</li>
-<li>Ansible</li>
-</ul>
-<h2 id="decisions-0011-programming-language-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0011-programming-language-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Go", because many cloud native projects are written in Go, and it is a compiled language, which is more performant than interpreted languages. Also, Go is a statically typed language, which makes it easier to maintain and refactor the code. It is also easier to write complicated logic and tests in Go than in Helm or Ansible.</p></section><section class="print-page" id="decisions-0012-testing-framework"><h1 id="decisions-0012-testing-framework-testing-framework">Testing Framework<a class="headerlink" href="#decisions-0012-testing-framework-testing-framework" title="Permanent link">&para;</a></h1>
+</ul></section><section class="print-page" id="decisions-0012-testing-framework"><h1 id="decisions-0012-testing-framework-testing-framework">Testing Framework<a class="headerlink" href="#decisions-0012-testing-framework-testing-framework" title="Permanent link">&para;</a></h1>
 <h2 id="decisions-0012-testing-framework-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0012-testing-framework-context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>Every project needs to be tested.
 There are multiple testing libraries and frameworks to test Go applications, which can be used in addition to the default Go testing library.</p>
@@ -2406,9 +2403,20 @@ There are multiple testing libraries and frameworks to test Go applications, whi
 <li>GoConvey</li>
 </ul>
 <h2 id="decisions-0012-testing-framework-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0012-testing-framework-decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the <a href="https://kubevirt.io/">Kubevirt</a> project, which is used in the <abbr title="Lab Topology Builder">LTB</abbr> Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="comparison"><h1 id="comparison-comparison-to-other-similar-projects">Comparison to other similar projects<a class="headerlink" href="#comparison-comparison-to-other-similar-projects" title="Permanent link">&para;</a></h1>
-<p>The Lab Topology Builder is just one among many open-source projects available for building emulated network topologies.
-The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the optimal solution for their use case.</p>
+<p>Chosen option: "Ginkgo/Gomega", because it is widely used in the Kubernetes community to test Kubernetes operators. It is also used in the <a href="https://kubevirt.io/">Kubevirt</a> project, that is used by the <abbr title="Lab Topology Builder">LTB</abbr> Operator. Additionally, tests written with Ginkgo/Gomega are easy to read and understand.</p></section><section class="print-page" id="decisions-0013-programming-language"><h1 id="decisions-0013-programming-language-programming-language">Programming Language<a class="headerlink" href="#decisions-0013-programming-language-programming-language" title="Permanent link">&para;</a></h1>
+<h2 id="decisions-0013-programming-language-context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#decisions-0013-programming-language-context-and-problem-statement" title="Permanent link">&para;</a></h2>
+<p>We need to choose a programming language for the project.
+The considered options are based on the supported languages of the Operator-SDK.</p>
+<h2 id="decisions-0013-programming-language-considered-options">Considered Options<a class="headerlink" href="#decisions-0013-programming-language-considered-options" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Go</li>
+<li>Helm</li>
+<li>Ansible</li>
+</ul>
+<h2 id="decisions-0013-programming-language-decision-outcome">Decision Outcome<a class="headerlink" href="#decisions-0013-programming-language-decision-outcome" title="Permanent link">&para;</a></h2>
+<p>Chosen option: "Go", because many cloud native projects are written in Go, and it is a compiled language, which is more performant than interpreted languages. Also, Go is a statically typed language, making it easier to maintain and refactor the code. It is also easier to write complicated logic and tests in Go than in Helm or Ansible.</p></section><h1 class='nav-section-title-end'>Ended: Decisions</h1><section class="print-page" id="comparison"><h1 id="comparison-comparison-to-other-similar-projects">Comparison to other similar projects<a class="headerlink" href="#comparison-comparison-to-other-similar-projects" title="Permanent link">&para;</a></h1>
+<p>The Lab Topology Builder is just one among many open source projects available for building emulated network topologies.
+The aim of this project comparison is to provide a concise overview of the key features offered by some of the most well-known projects, assisting users in selecting the best suited solution for their use case.</p>
 <h2 id="comparison-vrnetlab-vr-network-lab">vrnetlab - VR Network Lab<a class="headerlink" href="#comparison-vrnetlab-vr-network-lab" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/vrnetlab/vrnetlab">vrnetlab</a> is a network emulator that runs virtual routers using <abbr title="Kernel-based Virtual Machine">KVM</abbr> and Docker. It is similar to the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>, but is more simple and only provides the deployment functionality.</p>
 <h2 id="comparison-containerlab">Containerlab<a class="headerlink" href="#comparison-containerlab" title="Permanent link">&para;</a></h2>
@@ -2421,7 +2429,7 @@ It mainly provides an abstracted way to define lab topologies with preconfigured
 <p><a href="https://github.com/openconfig/kne">Kubernetes Network Emulator</a> is a network emulator that aims to provide a standard interface so that vendors can produce a standard container implementation of their network operating system that can be used in a network emulation environment.
 Currently, it does not seem to support many network operating systems and additional operators are required to support different vendors.</p>
 <h2 id="comparison-mininet">Mininet<a class="headerlink" href="#comparison-mininet" title="Permanent link">&para;</a></h2>
-<p><a href="https://github.com/mininet/mininet">Minitnet</a> is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.</p>
+<p><a href="https://github.com/mininet/mininet">Mininet</a> is a network emulator that runs a collection of end-hosts, switches, routers, and links on a single Linux kernel. It is mainly used for testing SDN controllers and can not deploy a lab with a specific vendor image.</p>
 <h2 id="comparison-gns3">GNS3<a class="headerlink" href="#comparison-gns3" title="Permanent link">&para;</a></h2>
 <p><a href="https://www.gns3.com/software">GNS3</a> is a network emulator that can run network devices as virtual machines or Docker containers.
 It primarily focuses on providing an emulated network environment for a single user and its deployment and usage can be quite complex.

@@ -18,7 +18,7 @@
         <link rel="prev" href="../0009-k8s-aggreted-api-over-standalone-api/">
       
       
-        <link rel="next" href="../0011-programming-language/">
+        <link rel="next" href="../0012-testing-framework/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
@@ -611,7 +611,7 @@
   
     <li class="md-nav__item">
       <a href="../0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -681,7 +681,7 @@
   
     <li class="md-nav__item">
       <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -853,8 +853,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -867,8 +867,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -1017,15 +1017,15 @@
 
 <h1 id="extending-ltb-with-new-node-types">Extending <abbr title="Lab Topology Builder">LTB</abbr> with New Node Types<a class="headerlink" href="#extending-ltb-with-new-node-types" title="Permanent link">&para;</a></h1>
 <h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>It should be possible to create, update and delete node types (e.g. Ubuntu, XRD, XR, IOS, Cumulus, etc.)
+<p>It should be possible to create, update and delete node types (e.g. Ubuntu, XRD, XR, IOS, Cumulus, etc.).
 Node types should be used inside lab templates and expose a way to provide a node with configuration (cloud-init, zero-touch, etc.)
 The amount of available network interfaces is dynamic and depends on how many connections a node has according to a specific lab template.</p>
 <h2 id="decision-drivers">Decision Drivers<a class="headerlink" href="#decision-drivers" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Certain operating systems' images like XR, and XRD need a specific interface configuration which depends on how many interfaces a certain node will receive.</li>
-<li>The chosen solution should support multiple version of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...).</li>
+<li>The chosen solution should support multiple versions of a type in an easy to use way (e.g. Ubuntu 22.04, 20.04, ...).</li>
 <li>For XRd images, interfaces need to have environment variables set for each interface they use, and the interface count needs to be dynamically set according to the lab template.</li>
-<li>For XR <abbr title="Virtual Machine">VM</abbr> images, the first interface is the management interface and then there are two empty interfaces that need a special configuration.</li>
+<li>For XR virtual machine images, the first interface is the management interface and then there are two empty interfaces that need a special configuration.</li>
 <li>For mount from config might be different</li>
 <li>Cumulus VX images need a privileged container</li>
 <li>XRd need additional privileges</li>
@@ -1036,7 +1036,7 @@ The amount of available network interfaces is dynamic and depends on how many co
 <li>Go</li>
 </ul>
 <h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Custom Resources", because it will be possible to support all the cases mentioned in the decision drivers using go templates and CRs. Implementing the types in Go does not seem to bring any major advantages, whereas using CRs will be easier for external users to extend the system with new node types.</p>
+<p>Chosen option: "Custom Resources", because it will be possible to support all the cases mentioned in the decision drivers using Go templates and CRs. Implementing the types in Go does not seem to bring any major advantages, whereas using CRs will be easier for external users to extend the system with new node types.</p>
 <h3 id="positive-consequences">Positive Consequences<a class="headerlink" href="#positive-consequences" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Easy to extend during runtime</li>
@@ -1045,7 +1045,7 @@ The amount of available network interfaces is dynamic and depends on how many co
 </ul>
 <h3 id="negative-consequences">Negative Consequences<a class="headerlink" href="#negative-consequences" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Go Templates are not as powerful as Go, which could make it harder to implement certain node types.</li>
+<li>Go templates are not as powerful as Go, which could make it harder to implement certain node types.</li>
 <li>A Custom Resource is also a little bit less flexible than a Go type, but this should not be a problem for the use cases we have.</li>
 </ul>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
@@ -1089,7 +1089,7 @@ The amount of available network interfaces is dynamic and depends on how many co
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

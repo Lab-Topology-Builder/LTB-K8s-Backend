@@ -699,7 +699,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -769,7 +769,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -852,8 +852,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -866,8 +866,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -1028,15 +1028,15 @@
 <p>The <abbr title="Lab Topology Builder">LTB</abbr> Operator is a K8s Operator for the <abbr title="Lab Topology Builder">LTB</abbr> application, which is responsible for creating, configuring, and managing the emulated network topologies of the <abbr title="Lab Topology Builder">LTB</abbr> application inside a Kubernetes cluster.
 It also automatically updates the status of the labs based on the current state of the associated containers and virtual machines, ensuring accurate and real-time lab information.</p>
 <h2 id="lab-template">Lab Template<a class="headerlink" href="#lab-template" title="Permanent link">&para;</a></h2>
-<p>Lab Template is a <abbr title="Custom Resource">CR</abbr>, which defines a template for a lab. It contains information about which nodes are part of the lab, their configuration and how they are connected to each other.</p>
+<p>A <code>LabTemplate</code> is a Kubernetes custom resource (<abbr title="Custom Resource">CR</abbr>), that defines a template for a lab. It contains information about which nodes are part of the lab, their configuration, and how they are connected to each other.</p>
 <h2 id="lab-instance">Lab Instance<a class="headerlink" href="#lab-instance" title="Permanent link">&para;</a></h2>
-<p>A lab instance is a <abbr title="Custom Resource">CR</abbr> that describes a lab that you want to deploy in a Kubernetes cluster.
-It has a reference to the lab template you want to use and also has a status field that is updated by the operator, which shows how many pods and VMs are running in the lab and the status of the lab instance itself. In addition, it also has a dns address field, which will be used to access the nodes using the web-based terminal.</p>
+<p>A <code>LabInstance</code> is a custom resource (<abbr title="Custom Resource">CR</abbr>) that describes a specific lab intended for deployment within a Kubernetes cluster.
+It has a reference to the <code>LabTemplate</code> you want to use and also has a status field that is updated by the <abbr title="Lab Topology Builder">LTB</abbr> Operator. This status field shows how many pods and VMs are running in the lab and the status of the <code>LabInstance</code> itself. In addition, it also has a dns address field, that will be used to access the nodes using the web-based terminal.</p>
 <h2 id="node-type">Node Type<a class="headerlink" href="#node-type" title="Permanent link">&para;</a></h2>
-<p>In a network, a node represents any device that is part of the lab. A NodeType is a <abbr title="Custom Resource">CR</abbr> that defines a type of node that can be part of a lab. You reference the node type you want to have in your lab in the lab template.
+<p>In a network, a node represents any device that is part of the lab. A <code>NodeType</code> is a <abbr title="Custom Resource">CR</abbr> that defines a type of node that can be part of a lab. You reference the <code>NodeType</code> you want to have in your lab in the <code>LabTemplate</code>.
 Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a KubeVirt virtual machine or a regular Kubernetes pod.</p>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
-<p>If you would like to familiarize yourself with the concepts mentioned below, please refer to the following links:</p>
+<p>If you would like to familiarize yourself with the Kubernetes concepts mentioned above, please refer to the following links:</p>
 <ul>
 <li><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/">Kubernetes</a></li>
 <li><a href="https://kubernetes.io/docs/concepts/architecture/cluster-components/">Kubernetes Cluster</a></li>
@@ -1081,7 +1081,7 @@ Within <abbr title="Lab Topology Builder">LTB</abbr>, a node can be either a Kub
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 28, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

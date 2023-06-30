@@ -25,7 +25,7 @@
     
     
       
-        <title>Replace Current LTB Backend - Kubernetes LTB</title>
+        <title>Replace KVM/Docker-based LTB Backend - Kubernetes LTB</title>
       
     
     
@@ -104,7 +104,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#replace-current-ltb-backend" class="md-skip">
+        <a href="#replace-kvmdocker-based-ltb-backend" class="md-skip">
           Skip to content
         </a>
       
@@ -138,7 +138,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Replace Current LTB Backend
+              Replace KVM/Docker-based LTB Backend
             
           </span>
         </div>
@@ -611,7 +611,7 @@
   
     <li class="md-nav__item">
       <a href="../0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -690,12 +690,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Replace Current LTB Backend
+          Replace KVM/Docker-based LTB Backend
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
       
         
@@ -819,8 +819,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -833,8 +833,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -947,16 +947,16 @@
   
 
 
-<h1 id="replace-current-ltb-backend">Replace Current <abbr title="Lab Topology Builder">LTB</abbr> Backend<a class="headerlink" href="#replace-current-ltb-backend" title="Permanent link">&para;</a></h1>
+<h1 id="replace-kvmdocker-based-ltb-backend">Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend<a class="headerlink" href="#replace-kvmdocker-based-ltb-backend" title="Permanent link">&para;</a></h1>
 <h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>The <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend could replace the current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully or partially by leaving features, such as User-Management in the current <abbr title="Lab Topology Builder">LTB</abbr> Backend.</p>
+<p>The <abbr title="Lab Topology Builder">LTB</abbr> K8s Backend could replace the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend fully or partially by reusing parts, such as</p>
 <h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully</li>
-<li>Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend partially</li>
+<li>Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend fully</li>
+<li>Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend partially</li>
 </ul>
 <h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Replace current <abbr title="Lab Topology Builder">LTB</abbr> Backend fully", because huge parts of the current <abbr title="Lab Topology Builder">LTB</abbr> Backend would need to be rewritten to be compatible with the new <abbr title="Lab Topology Builder">LTB</abbr> K8s operator and it would be easier to rewrite the whole backend. Additionally, the same programming language can be used throughout the whole Backend, Go.</p>
+<p>Chosen option: "Replace <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend fully", because huge parts of the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr> Backend would need to be rewritten to be compatible with the new <abbr title="Lab Topology Builder">LTB</abbr> K8s operator and it would be easier to rewrite the whole backend. Additionally, the same programming language can be used throughout the whole Backend, being Go.</p>
 
   <!--
   Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
@@ -994,7 +994,7 @@
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

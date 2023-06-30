@@ -332,7 +332,7 @@
       
         <li class="md-nav__item">
   <a href="#installation-of-the-ltb-k8s-operator" class="md-nav__link">
-    Installation of the LTB K8s operator
+    Installation of the LTB K8s Operator
   </a>
   
 </li>
@@ -698,7 +698,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -768,7 +768,7 @@
   
     <li class="md-nav__item">
       <a href="../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -851,8 +851,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -865,8 +865,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -944,7 +944,7 @@
       
         <li class="md-nav__item">
   <a href="#installation-of-the-ltb-k8s-operator" class="md-nav__link">
-    Installation of the LTB K8s operator
+    Installation of the LTB K8s Operator
   </a>
   
 </li>
@@ -1055,15 +1055,15 @@
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-sL<span class="w"> </span>https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.25.0/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>v0.25.0
 </code></pre></div>
 <p>Change the version to the desired one.</p>
-<h2 id="installation-of-the-ltb-k8s-operator">Installation of the <abbr title="Lab Topology Builder">LTB</abbr> K8s operator<a class="headerlink" href="#installation-of-the-ltb-k8s-operator" title="Permanent link">&para;</a></h2>
+<h2 id="installation-of-the-ltb-k8s-operator">Installation of the <abbr title="Lab Topology Builder">LTB</abbr> K8s Operator<a class="headerlink" href="#installation-of-the-ltb-k8s-operator" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>Install the operator by creating a catalog source and subscription.
+<p>Install the <abbr title="Lab Topology Builder">LTB</abbr> Operator by creating a catalog source and subscription.
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/catalogsource.yaml<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/Lab-Topology-Builder/LTB-K8s-Backend/main/install/subscription.yaml
 </code></pre></div></p>
 </li>
 <li>
-<p>Wait for the operator to be installed
+<p>Wait for the <abbr title="Lab Topology Builder">LTB</abbr> Operator to be installed (this might take a few seconds).
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>csv<span class="w"> </span>-n<span class="w"> </span>operators<span class="w"> </span>-w
 </code></pre></div></p>
 </li>
@@ -1133,11 +1133,11 @@ Example: <code>{{ .Name }}</code> will be replaced with the name of the node fro
 <p>After you have defined some node types, you can create a lab template.
 A lab template defines the nodes that should be created for a lab, how they should be configured and how they should be connected.</p>
 <h3 id="example-lab-template">Example Lab Template<a class="headerlink" href="#example-lab-template" title="Permanent link">&para;</a></h3>
-<p>This is an example of a lab template, which you can use as a starting point for your own labs.
+<p>This is an example of a lab template, that can be used as a starting point for your own labs.
 It uses the previously defined node types to create a <abbr title="Virtual Machine">VM</abbr> and two pods. They are referenced via the <code>nodeTypeRef</code> field.
 The provided ports will be exposed to the host network and can be accessed via the node's IP address and the port number assigned by Kubernetes. You can retrieve the IP address of a node by running <code>kubectl get node -o wide</code> and the port number by running <code>kubectl get svc</code>.</p>
 <p>Currently, there is no support for point to point connections between nodes. Instead, they are all connected to the same network.
-In the future, we plan to add support for point to point connections, which will be able to be defined as neighbors in the lab template.
+In the future, we plan to add support for point to point connections, that can be defined as neighbors in the lab template.
 The syntax for this is not yet definite, but it will probably look something like this:</p>
 <div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">neighbors</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;sample-node-1:1,sample-node-2:1&quot;</span>
@@ -1181,7 +1181,7 @@ The syntax for this is not yet definite, but it will probably look something lik
 </code></pre></div>
 <p>With the lab template defined, you can create a lab instance.</p>
 <h2 id="example-lab-instance">Example Lab Instance<a class="headerlink" href="#example-lab-instance" title="Permanent link">&para;</a></h2>
-<p>This is an example of lab instance, which you can use as a starting point for your own labs.
+<p>This is an example of a lab instance, that can be used as a starting point for your own labs.
 The lab instance references the previously defined lab template with the <code>labTemplateReference</code> field.
 You also need to provide a DNS address via the <code>dnsAddress</code> field. This address will be used to create routes for the web terminal to the lab nodes.
 For example, if you use the address <code>example.com</code>, the console of a node called <code>sample-node-1</code> will be available at <code>https://labinstance-sample-sample-node-1.example.com/</code> via a web terminal.</p>
@@ -1259,7 +1259,7 @@ For example, if you use the address <code>example.com</code>, the console of a n
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 28, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

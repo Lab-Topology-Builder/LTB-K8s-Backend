@@ -611,7 +611,7 @@
   
     <li class="md-nav__item">
       <a href="../0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -736,7 +736,7 @@
   
     <li class="md-nav__item">
       <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -819,8 +819,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -833,8 +833,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -951,7 +951,7 @@
 <h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>For the lab instances to be useful for the students, they need to be able to access the pods (containers) and VMs.
 Access to pods/VMs should only be granted to user with the appropriate access rights.
-It should be possible to access the pods/VMs console and or access it via multiple <abbr title="Out-of-Band">OOB</abbr> protocols (SSH, RDP, VNC, etc.).</p>
+It should be possible to access the console of the pods/VMs and employ various out-of-band (<abbr title="Out-of-Band">OOB</abbr>) protocols such as SSH, RDP, VNC, and more.</p>
 <h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Kubernetes Service</li>
@@ -959,9 +959,9 @@ It should be possible to access the pods/VMs console and or access it via multip
 <li>ttyd</li>
 </ul>
 <h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "ttyd and Kubernetes Service", ttyd will be used as a jump host to access the pods/VMs console. A Kubernetes service will be used to allow access the pods/VMs via <abbr title="Out-of-Band">OOB</abbr> protocols.
-Security for the console access will likely be easy to implement.
-Secure access via <abbr title="Out-of-Band">OOB</abbr> protocols was considered, but will need to be researched further, currently it would depend on the <abbr title="Out-of-Band">OOB</abbr> protocol used and the security features it provides.</p>
+<p>Chosen option: "ttyd and Kubernetes Service", because ttyd can be used as a jump host to access the pods/VMs' console. A Kubernetes service can be used to allow access the pods/VMs via <abbr title="Out-of-Band">OOB</abbr> protocols.
+Security for the console access will be easy to implement.
+Secure access for <abbr title="Out-of-Band">OOB</abbr> protocols was considered, but needs to be researched further. Currently, it depends on the chosen <abbr title="Out-of-Band">OOB</abbr> protocol and the security features it provides.</p>
 
   <!--
   Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
@@ -999,7 +999,7 @@ Secure access via <abbr title="Out-of-Band">OOB</abbr> protocols was considered,
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

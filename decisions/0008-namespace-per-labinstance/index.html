@@ -611,7 +611,7 @@
   
     <li class="md-nav__item">
       <a href="../0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -681,7 +681,7 @@
   
     <li class="md-nav__item">
       <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -819,8 +819,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -833,8 +833,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -949,14 +949,15 @@
 
 <h1 id="namespace-per-labinstance">Namespace Per LabInstance<a class="headerlink" href="#namespace-per-labinstance" title="Permanent link">&para;</a></h1>
 <h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>LabInstances could be created in separate namespaces or one namespace for all LabInstances.</p>
+<p>Lab instances could be created in separate namespaces or one namespace for all lab instances.</p>
 <h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
-<li>One Namespace for all LabInstances</li>
-<li>Namespace per LabInstance</li>
+<li>One Namespace for all lab instances</li>
+<li>Namespace per lab instance</li>
 </ul>
 <h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Namespace per LabInstance", because it will be easier in the future to implement features like RBAC and resource quotas and limits.</p>
+<p>Chosen option: "Namespace per lab instance", because it will be easier in the future to implement features like network policies and resource quotas and limits.
+This approach ensures easier management and isolation of each lab instance within its dedicated namespace.</p>
 
   <!--
   Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
@@ -994,7 +995,7 @@
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

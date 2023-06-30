@@ -611,7 +611,7 @@
   
     <li class="md-nav__item">
       <a href="../0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -681,7 +681,7 @@
   
     <li class="md-nav__item">
       <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -819,8 +819,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -833,8 +833,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -949,7 +949,7 @@
 
 <h1 id="lab-instance-set">Lab Instance Set<a class="headerlink" href="#lab-instance-set" title="Permanent link">&para;</a></h1>
 <h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
-<p>We could create a <abbr title="Custom Resource">CR</abbr> called LabInstanceSet, and tell the operator we want e.g. 10 LabInstances by providing one LabInstance <abbr title="Custom Resource">CR</abbr> and a generator like a list of names or we could provide the operator 10 CRs to create 10 LabInstances.</p>
+<p>One approach could involve creating a custom resource (<abbr title="Custom Resource">CR</abbr>) named <code>LabInstanceSet</code> and specifying our desired quantity of <code>LabInstances</code> to the operator. For instance, we could provide a single <code>LabInstance</code> along with a generator, such as a list of names, to indicate that we want 10 <code>LabInstances</code>. Alternatively, we could directly provide the <abbr title="Lab Topology Builder">LTB</abbr> Operator with 10 separate <code>LabInstances</code> to create the desired quantity of 10.</p>
 <h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li>With LabInstanceSet</li>
@@ -994,7 +994,7 @@
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

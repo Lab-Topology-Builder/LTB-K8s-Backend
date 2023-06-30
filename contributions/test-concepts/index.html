@@ -686,7 +686,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -756,7 +756,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -839,8 +839,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -853,8 +853,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -995,14 +995,14 @@ Security and Performance tests should be added in the future as the project matu
 <h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
 <p>The following tools are used to test the <abbr title="Lab Topology Builder">LTB</abbr> Operator, you can find more information why they were chosen in the <a href="../../decisions/0012-testing-framework/">Testing Framework Decision</a>:</p>
 <ul>
-<li><a href="https://pkg.go.dev/testing">Testing</a>: The default Go testing library that provides support for automated testing of Go packages. It is intended to be used in concert with the "go test" command, which automates execution of any function of the form</li>
+<li><a href="https://pkg.go.dev/testing">Testing</a>: The default Go testing library that provides support for automated testing of Go packages. It is intended to be used together with the "go test" command, which automates execution of any function of the form <code>func TestXxx(*testing.T)</code>, where Xxx does not start with a lowercase letter.</li>
 <li><a href="https://onsi.github.io/ginkgo/">Ginkgo</a>: a Go testing framework for Go to help you write expressive, readable, and maintainable tests. It is best used with the <a href="https://onsi.github.io/gomega/">Gomega</a> matcher library.</li>
 <li><a href="https://onsi.github.io/gomega/">Gomega</a>: a Go matcher library that provides a set of matchers to perform assertions in tests. It is best used with the <a href="https://onsi.github.io/ginkgo/">Ginkgo</a> testing framework.</li>
 </ul>
 <h2 id="strategies-test-approach">Strategies: Test Approach<a class="headerlink" href="#strategies-test-approach" title="Permanent link">&para;</a></h2>
 <p>We focused on unit tests for the <abbr title="Lab Topology Builder">LTB</abbr> Operator, as they were easy to implement and provide a good coverage of the code.
 At a later stage of the project, we could add integration tests to ensure that the <abbr title="Lab Topology Builder">LTB</abbr> Operator works as expected with other components like the <abbr title="Lab Topology Builder">LTB</abbr> API.</p>
-<p>We aspire to achieve approximately 90% test coverage, to increase the maintainability and stability of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
+<p>We aspire to achieve at least 90% test coverage, to increase the maintainability and stability of the <abbr title="Lab Topology Builder">LTB</abbr> Operator.</p>
 <h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h3>
 <p>Unit rely on the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/client/fake">Fake Client</a> package from the <a href="https://pkg.go.dev/sigs.k8s.io/controller-runtime">controller-runtime</a> library to create a fake client that can be used to mock interactions with the Kubernetes API.
 This allows us to test functions that interact with the Kubernetes API without mocking the complete API or using a real Kubernetes cluster.</p>
@@ -1045,7 +1045,7 @@ This allows us to test functions that interact with the Kubernetes API without m
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 27, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

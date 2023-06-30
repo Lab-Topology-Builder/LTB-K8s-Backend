@@ -802,7 +802,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -872,7 +872,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -955,8 +955,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -969,8 +969,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -1271,7 +1271,7 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>rke2-server<span class="w"> </span>-f
 </code></pre></div>
 <h3 id="add-kubernetes-tools-to-path-and-set-kubeconfig">Add Kubernetes tools to path and set kubeconfig<a class="headerlink" href="#add-kubernetes-tools-to-path-and-set-kubeconfig" title="Permanent link">&para;</a></h3>
-<p>Adds kubectl, crictl and ctr to path</p>
+<p>Adds kubectl, crictl and ctr to path.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$PATH:/var/lib/rancher/rke2/bin&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;source &lt;(kubectl completion bash)&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;alias k=kubectl&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
@@ -1301,7 +1301,7 @@ sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w">
 <h2 id="install-cluster-network-addons-operator">Install Cluster Network Addons Operator<a class="headerlink" href="#install-cluster-network-addons-operator" title="Permanent link">&para;</a></h2>
 <p>The <a href="https://github.com/kubevirt/cluster-network-addons-operator">Cluster Network Addons Operator</a> can be used to deploy additional networking components.
 Multus and Cilium are already installed via RKE2.
-Open vSwitch CNI Plugin can be installed via this operator.</p>
+The Open vSwitch CNI Plugin can be installed via this operator.</p>
 <p>First install the operator itself:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/namespace.yaml
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubevirt/cluster-network-addons-operator/releases/download/v0.85.0/network-addons-config.crd.yaml
@@ -1356,7 +1356,7 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 <p>You're now ready to use the cluster for development or testing purposes.</p>
 </div>
 <h2 id="metallb">MetalLB<a class="headerlink" href="#metallb" title="Permanent link">&para;</a></h2>
-<p>You can optionally install MetalLB, currently it is not required to use the <abbr title="Lab Topology Builder">LTB</abbr> Operator.
+<p>Optionally, you can install MetalLB, but currently it is not required for using the <abbr title="Lab Topology Builder">LTB</abbr> Operator.
 <a href="https://metallb.universe.tf/">MetalLB</a> is a load-balancer implementation for bare metal Kubernetes clusters.</p>
 <h3 id="install-operator-lifecycle-manager-olm">Install Operator Lifecycle Manager (OLM)<a class="headerlink" href="#install-operator-lifecycle-manager-olm" title="Permanent link">&para;</a></h3>
 <p>Install Operator Lifecycle Manager (OLM), a tool to help manage the operators running on your cluster.</p>
@@ -1400,9 +1400,9 @@ kubectl<span class="w"> </span>virt<span class="w"> </span><span class="nb">help
 kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>l2advertisment.yaml
 </code></pre></div>
 <h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
-<p>To store your virtual machine images and disks you may want to use a storage backend.
+<p>To store your virtual machine images and disks, you may want to use a storage backend.
 Currently no storage backend has been tested with the <abbr title="Lab Topology Builder">LTB</abbr> Operator, but you can try to use <a href="https://docs.netapp.com/us-en/trident/index.html">Trident</a>.
-Trident is a dynamic storage provisioner for Kubernetes, it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
+Trident is a dynamic storage provisioner for Kubernetes, and it supports many storage backends, including NetApp, AWS, Azure, Google Cloud, and many more.</p>
 <p>Following you will find some instructions that may help you to install Trident on your cluster.</p>
 <p>You always can find more information about Trident in the <a href="https://docs.netapp.com/us-en/trident/index.html">official documentation</a>.</p>
 <p>Check connectivity to NetApp Storage:</p>
@@ -1488,7 +1488,7 @@ Make sure to enable nested virtualization on your local machine, if you want to 
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 27, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

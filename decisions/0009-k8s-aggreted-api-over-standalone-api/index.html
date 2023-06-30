@@ -611,7 +611,7 @@
   
     <li class="md-nav__item">
       <a href="../0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -681,7 +681,7 @@
   
     <li class="md-nav__item">
       <a href="../0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -826,8 +826,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -840,8 +840,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -964,15 +964,15 @@
 <h1 id="k8s-aggreted-api-over-standalone-api">K8s Aggreted API Over Standalone API<a class="headerlink" href="#k8s-aggreted-api-over-standalone-api" title="Permanent link">&para;</a></h1>
 <h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>We want a declarative way of creating <abbr title="Lab Topology Builder">LTB</abbr> labs inside Kubernetes using Kubernetes native pods and KubeVirt virtual machines.
-We could either create a standalone API which interacts with the Kubernetes API and does not follow the Kubernetes API conventions. And therefore is not compatible with Kubernetes tools, such as dashboards or <code>kubectl</code>, but would allow complete control over the API design.
-Or we could create an aggregated API which uses the Kubernetes aggregation layer to extend the Kubernetes API, which would allow us to use Kubernetes tools, such as dashboards or <code>kubectl</code>, but would limit the control over the API design.</p>
+We could either create a standalone API which interacts with the Kubernetes API and does not follow the Kubernetes API conventions. It would therefore not be compatible with Kubernetes tools, such as dashboards or <code>kubectl</code>, but would allow complete control over the API design.
+Or we could create an aggregated API which uses the Kubernetes aggregation layer to extend the Kubernetes API, which would allow us to use Kubernetes tools such as dashboards or <code>kubectl</code>, but would limit the control over the API design.</p>
 <h2 id="considered-options">Considered Options<a class="headerlink" href="#considered-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Standalone API</li>
 <li>Aggregated API</li>
 </ul>
 <h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
-<p>Chosen option: "Aggregated API", because Is better suited for declerative API, our new types will be readable and writeable using kubectl/Kubernetes tools, such as dashboards.
+<p>Chosen option: "Aggregated API", because our new types will be readable and writeable using kubectl and other Kubernetes tools, such as dashboards.
 We also can leverage Kuberbetes API support features this way.
 Additionally, our resources are scoped to a cluster or namespaces of a cluster.
 Finally, the Operator Pattern is simpler to implement this way.</p>
@@ -1019,7 +1019,7 @@ Finally, the Operator Pattern is simpler to implement this way.</p>
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 22, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

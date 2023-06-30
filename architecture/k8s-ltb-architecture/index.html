@@ -780,7 +780,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -850,7 +850,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -933,8 +933,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -947,8 +947,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -1198,8 +1198,8 @@ The frontend is responsible for the following tasks:</p>
 <h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
 <p>The API is responsible for the following tasks:</p>
 <ul>
-<li>To create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
-<li>Exposes status of lab instances</li>
+<li>Create, update and delete <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
+<li>Expose status of lab instances</li>
 <li>Expose information on how to access the deployed lab nodes</li>
 <li>Authentication via an external authentication provider</li>
 </ul>
@@ -1214,20 +1214,20 @@ On the other hand, it has the drawback that the <abbr title="Lab Topology Builde
 <h2 id="operator">Operator<a class="headerlink" href="#operator" title="Permanent link">&para;</a></h2>
 <p>The operator is responsible for the following tasks:</p>
 <ul>
-<li>Deploying/destroying the containers and vms</li>
+<li>Deploy and destroy the containers and vms</li>
 <li>Check validity of <abbr title="Lab Topology Builder">LTB</abbr> resources (node types, lab templates, lab instances)</li>
-<li>Enables you to access the deployed containers and vms via different protocols</li>
-<li>Providing remote access to the lab node console via a web terminal</li>
-<li>Managing reservations (create, delete, etc.)</li>
-<li>Providing remote Wireshark capture capabilities</li>
+<li>Enable the user to access the deployed containers and vms via different protocols</li>
+<li>Provide remote access to the lab node console via a web terminal</li>
+<li>Manage reservations (create, delete, etc.)</li>
+<li>Provide remote Wireshark capture capabilities</li>
 </ul>
 <p>The operator is implemented according to the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes operator pattern</a>.
 It has multiple controllers that are responsible for managing a particular custom resource like lab template.</p>
 <h3 id="network-connectivity-between-lab-nodes">Network connectivity between lab nodes<a class="headerlink" href="#network-connectivity-between-lab-nodes" title="Permanent link">&para;</a></h3>
 <p>The network connectivity between lab nodes can be implemented with <a href="https://github.com/k8snetworkplumbingwg/multus-cni">Multus</a>, which is a "meta-plugin" that enables attaching multiple CNI plugins to a kubernetes pod/vm.
 Multus uses NetworkAttachmentDefinitions (NAD) to describe, which CNI plugin should be used and how it should be configured.</p>
-<p>Currently we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
-Additionally the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
+<p>Currently, we use a linux bridge as a secondary CNI plugin, with the drawback that the links between the lab nodes are not pure layer 2 links, but layer 3 links.
+Additionally, the connection between the lab nodes only work on the same Kubernetes host, because the linux bridge does not implement any kind of cross-host networking.</p>
 <h3 id="remote-access-to-lab-nodes">Remote access to lab nodes<a class="headerlink" href="#remote-access-to-lab-nodes" title="Permanent link">&para;</a></h3>
 <p>Remote access to the lab nodes has two variants:</p>
 <ul>
@@ -1245,17 +1245,17 @@ It might be possible to use the same authentication provider as the <abbr title=
 <p>Access control needs to be implemented by the lab node itself, because the Kubernetes service of type <code>LoadBalancer</code> does not provide any authentication or authorization features.
 An example for this would be to provide SSH keys for the lab nodes inside the lab template config field.</p>
 <h3 id="scheduling-lab-instances-and-resource-reservation">Scheduling lab instances and resource reservation<a class="headerlink" href="#scheduling-lab-instances-and-resource-reservation" title="Permanent link">&para;</a></h3>
-<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding an additional fields (creationTimestamp, deletionTimestamp) to the lab instance custom resource.
-The lab instance controller then is able to check these fields and deploy or delete the lab instance at the specified time.
-There are multiple ways to implement this, either by regularly checking the lab instance custom resources, or by requeuing the lab instance creation/deletion event to the specified time.</p>
+<p>A feature to schedule the deployment and deletion of a lab instance to a specific time is not implemented, but could be implemented by adding additional fields (creationTimestamp, deletionTimestamp) to the lab instance's <abbr title="Custom Resource Definition">CRD</abbr>.
+Then, the lab instance controller can examine these fields and proceed to deploy or delete the lab instance at the specified time.
+There are multiple ways to implement this: either by regularly checking the lab instance, or by requeuing the creation/deletion event of the lab instance to the specified time.</p>
 <p>If there are any issues with the requeuing of these events over such a long period of time, writing a Kubernetes <a href="https://pkg.go.dev/k8s.io/client-go/informers">informer</a> could be a solution.</p>
-<p>Resource reservation in a capacity planning sense is not provided by Kubernetes, a manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
+<p>Resource reservation in a capacity planning sense is not provided by Kubernetes. A manual solution could be implemented by using <a href="https://kubernetes.io/docs/concepts/policy/limit-range/">limit ranges</a>, <a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">resource quotas</a> and the Kubernetes node resources.
 Planned resource management is a huge topic, and we would recommend to create a dedicated project for this.</p>
 <h2 id="comparison-to-the-kvmdocker-based-ltb">Comparison to the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr><a class="headerlink" href="#comparison-to-the-kvmdocker-based-ltb" title="Permanent link">&para;</a></h2>
 <p>The diagram below illustrates the components of the <abbr title="Kernel-based Virtual Machine">KVM</abbr>/Docker-based <abbr title="Lab Topology Builder">LTB</abbr>, highlighting the changes introduced by the Kubernetes <abbr title="Lab Topology Builder">LTB</abbr>.</p>
 <p><a class="glightbox" href="../../assets/drawings/Old-LTB-Architecture-replaced.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="Comparison to the KVM/Docker-based LTB" src="../../assets/drawings/Old-LTB-Architecture-replaced.drawio.svg" /></a></p>
 <h2 id="c4-model">C4 Model<a class="headerlink" href="#c4-model" title="Permanent link">&para;</a></h2>
-<p>The following diagrams show the C4 model of the Kubernetes based <abbr title="Lab Topology Builder">LTB</abbr>, it should provide a high level overview of the system.</p>
+<p>The following diagrams show the C4 model of the Kubernetes-based <abbr title="Lab Topology Builder">LTB</abbr>, offering a high-level overview of the application's architecture.</p>
 <h3 id="system-context-diagram">System Context Diagram<a class="headerlink" href="#system-context-diagram" title="Permanent link">&para;</a></h3>
 <p><a class="glightbox" href="../../assets/drawings/C4-System-Context.drawio.svg" data-type="image" data-width="100%" data-height="auto" data-desc-position="bottom"><img alt="C4 System Context" src="../../assets/drawings/C4-System-Context.drawio.svg" /></a></p>
 <h3 id="container-diagram">Container Diagram<a class="headerlink" href="#container-diagram" title="Permanent link">&para;</a></h3>
@@ -1306,7 +1306,7 @@ Planned resource management is a huge topic, and we would recommend to create a 
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 29, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->

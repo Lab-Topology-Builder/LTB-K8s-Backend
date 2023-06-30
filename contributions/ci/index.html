@@ -686,7 +686,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0001-operator-SDK/" class="md-nav__link">
-        Operator SDK
+        Operator-SDK
       </a>
     </li>
   
@@ -756,7 +756,7 @@
   
     <li class="md-nav__item">
       <a href="../../decisions/0005-replace-current-ltb-backend/" class="md-nav__link">
-        Replace Current LTB Backend
+        Replace KVM/Docker-based LTB Backend
       </a>
     </li>
   
@@ -839,8 +839,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0011-programming-language/" class="md-nav__link">
-        Programming Language
+      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
+        Testing Framework
       </a>
     </li>
   
@@ -853,8 +853,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0012-testing-framework/" class="md-nav__link">
-        Testing Framework
+      <a href="../../decisions/0013-programming-language/" class="md-nav__link">
+        Programming Language
       </a>
     </li>
   
@@ -996,7 +996,7 @@ Currently, we have two workflows:</p>
 </ul>
 <h2 id="deploy-docs">Deploy docs<a class="headerlink" href="#deploy-docs" title="Permanent link">&para;</a></h2>
 <p>This workflow is used to deploy the <a href="https://www.mkdocs.org/">mkdocs</a> documentation to GitHub Pages.
-It is triggered on every push to the <code>main</code> branch, that affects the documentation. Specifically, it is triggered when a file in the <code>docs</code> directory or the <code>mkdocs.yaml</code> configuration file has changed.</p>
+It is triggered on every push to the <code>main</code> branch that affects the documentation. Specifically, it is triggered when a file in the <code>docs</code> directory or the <code>mkdocs.yaml</code> configuration file has changed.</p>
 <p>Check the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/edit/main/.github/workflows/deploy-docs-ci.yml">deploy-docs-ci.yaml</a> action for more details.</p>
 <h2 id="operator-ci">Operator CI<a class="headerlink" href="#operator-ci" title="Permanent link">&para;</a></h2>
 <p>This workflow is used to test, build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image, CatalogSource and Bundle to the GitHub Container Registry.
@@ -1010,8 +1010,8 @@ Pull requests are checked for the code coverage and will block the merge if the 
 <p>We use the GitHub actions provided by <a href="https://github.com/docker">Docker</a> to build and push the <abbr title="Lab Topology Builder">LTB</abbr> Operator image to the GitHub Container Registry.
 Additionally, we use <a href="https://github.com/sigstore/cosign">cosign</a> to sign the images, so that users can verify the authenticity of the image.</p>
 <h3 id="additional-deployment-artifacts">Additional deployment artifacts<a class="headerlink" href="#additional-deployment-artifacts" title="Permanent link">&para;</a></h3>
-<p>To be able to deploy the operator with the <a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a>, a <a href="https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/">Bundle</a> and a <a href="https://olm.operatorframework.io/docs/tasks/creating-a-catalog/">CatalogSource</a> must be created.
-These artifacts are created with the [Operator-SDK], to simplify the pipeline these tasks have been exported to the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile">Makefile</a></p>
+<p>To be able to deploy the <abbr title="Lab Topology Builder">LTB</abbr> Operator with the <a href="https://olm.operatorframework.io/">Operator Lifecycle Manager</a>, a <a href="https://olm.operatorframework.io/docs/tasks/creating-operator-bundle/">Bundle</a> and a <a href="https://olm.operatorframework.io/docs/tasks/creating-a-catalog/">CatalogSource</a> must be created.
+These artifacts are created with the <a href="https://sdk.operatorframework.io/">Operator-SDK</a>, to simplify the pipeline these tasks have been exported to the <a href="https://github.com/Lab-Topology-Builder/LTB-K8s-Backend/blob/main/Makefile">Makefile</a></p>
 
   <!--
   Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
@@ -1049,7 +1049,7 @@ These artifacts are created with the [Operator-SDK], to simplify the pipeline th
     <!-- mkdocs-git-revision-date-localized-plugin -->
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 27, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 30, 2023</span>
       
 
     <!-- mkdocs-git-revision-date-plugin -->
