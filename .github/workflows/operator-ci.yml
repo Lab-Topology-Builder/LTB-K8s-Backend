@@ -4,18 +4,32 @@ on:
         branches: [ "main" ]
         # Publish semver tags as releases
         tags: [ 'v*.*.*' ]
-        paths-ignore:
-            - 'docs/**'
-            - 'mkdocs.yml'
-            - 'README.md'
-            - '.github/workflows/deploy-docs-ci.yml'
+        paths:
+            - 'main.go'
+            - 'go.*'
+            - 'api/**'
+            - 'controllers/**'
+            - 'config/**'
+            - 'utils/**'
+            - 'Dockerfile'
+            - 'bundle.Dockerfile'
+            - '.dockerignore'
+            - 'Makefile'
+            - '.github/workflows/operator-ci.yml'
     pull_request:
         branches: [ "main" ]
-        paths-ignore:
-            - 'docs/**'
-            - 'mkdocs.yml'
-            - 'README.md'
-            - '.github/workflows/deploy-docs-ci.yml'
+        paths:
+            - 'main.go'
+            - 'go.*'
+            - 'api/**'
+            - 'controllers/**'
+            - 'config/**'
+            - 'utils/**'
+            - 'Dockerfile'
+            - 'bundle.Dockerfile'
+            - '.dockerignore'
+            - 'Makefile'
+            - '.github/workflows/operator-ci.yml'
 env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
