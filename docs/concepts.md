@@ -23,7 +23,7 @@ It also automatically updates the status of the labs based on the current state 
 
 ## Lab Template
 
-A `LabTemplate` is a Kubernetes costume resource (CR), that defines a template for a lab. It contains information about which nodes are part of the lab, their configuration, and how they are connected to each other.
+A `LabTemplate` is a Kubernetes custom resource (CR), that defines a template for a lab. It contains information about which nodes are part of the lab, their configuration, and how they are connected to each other.
 
 ## Lab Instance
 
