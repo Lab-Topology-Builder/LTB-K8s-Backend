@@ -459,7 +459,7 @@ func CreateIngress(labInstance *ltbv1alpha1.LabInstance, node *ltbv1alpha1.LabIn
 	if kind != "vm" && kind != "pod" {
 		return nil, errors.NewBadRequest("Kind must be either vm or pod")
 	}
-	name := labInstance.Name + "-" + node.Name
+	name := labInstance.Namespace + "-" + labInstance.Name + "-" + node.Name
 	metadata := metav1.ObjectMeta{
 		Name:      name,
 		Namespace: labInstance.Namespace,
