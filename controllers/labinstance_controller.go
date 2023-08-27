@@ -162,7 +162,7 @@ func (r *LabInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 		// Reconcile Ingress
 		ingress := &networkingv1.Ingress{}
-		ingress.Name = labInstance.Name + "-" + node.Name
+		ingress.Name = labInstance.Namespace + "-" + labInstance.Name + "-" + node.Name
 		retValue = r.ReconcileResource(labInstance, ingress, &node, nodeType.Spec.Kind)
 		if retValue.shouldReturn {
 			return retValue.result, retValue.err
