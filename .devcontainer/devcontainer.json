@@ -14,8 +14,6 @@
 	"mounts": [
 		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.kube,target=/home/vscode/.kube,type=bind,consistency=cached"
 	],
-	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=volume",
-	"workspaceFolder": "/workspace",
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
