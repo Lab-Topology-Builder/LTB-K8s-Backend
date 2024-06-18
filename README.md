@@ -2,6 +2,10 @@
 
 # LTB K8s Operator
 
+> [!WARNING]  
+> This project has been archived in favor of [Clabernetes](https://containerlab.dev/manual/clabernetes/) as it has already a bigger userbase and basically provides the same solution.
+
+
 This Kubernetes Operator is part of the [Lab Topology Builder Backend](https://lab-topology-builder.github.io/LTB-K8s-Backend)
 
 ## Description
